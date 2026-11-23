@@ -22,7 +22,7 @@ on:
         required: true
         type: string
       gap:
-        description: Gap id, for example L-gct-101
+        description: Gap id, for example L-goldbach-004
         required: true
         type: string
 
@@ -46,7 +46,6 @@ jobs:
       PR: ${{ inputs.pr }}
       GAP: ${{ inputs.gap }}
       DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
-      GAPS_URL: https://data.pequalnp.com/data/desk/gaps.json
       API: https://api.github.com
       W: /opt/pnp
     steps:
@@ -59,7 +58,7 @@ jobs:
           ( umask 077; : > "$RUNNER_TEMP/steps.log" ); chmod 600 "$RUNNER_TEMP/steps.log"
           exec > >(tee -a "$RUNNER_TEMP/steps.log") 2>&1
           printf '%s' "$PR" | grep -Eqx '[1-9][0-9]{0,6}' || { echo "REFUSED: pr must be a number"; exit 1; }
-          printf '%s' "$GAP" | grep -Eqx 'L-[a-z0-9]+(-[a-z0-9]+)*' || { echo "REFUSED: gap must look like L-gct-101"; exit 1; }
+          printf '%s' "$GAP" | grep -Eqx 'L-[a-z0-9]+(-[a-z0-9]+)*' || { echo "REFUSED: gap must look like L-goldbach-004"; exit 1; }
           [ "${#GAP}" -le 64 ] || { echo "REFUSED: gap id too long"; exit 1; }
           # Only the default branch holds the checker and this file as they were reviewed.
           [ "$GITHUB_REF" = "refs/heads/$DEFAULT_BRANCH" ] || { echo "REFUSED: start this run from $DEFAULT_BRANCH"; exit 1; }
@@ -150,7 +149,7 @@ jobs:
           set -eu
           cd "$W/base/lean"
           export PATH="$TC_BIN:$PATH" PEQUALNP_REAL_LAKE="$TC_BIN/lake" PEQUALNP_HOME="$W/queue" LAKE_ARTIFACT_CACHE=false
-          "$TC_BIN/lake" exe cache get
+          time "$TC_BIN/lake" exe cache get
           # Base code only: the verifier, the definitions, and the base modules the gap lets the
           # file import (in/base-imports.txt). The proof file is not in the tree yet, so nothing
           # of it is compiled here. No outside-written module is named here, and none is reached:

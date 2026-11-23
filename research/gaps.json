@@ -1,0 +1,26 @@
+{
+  "gaps": [
+    {
+      "id": "L-goldbach-004",
+      "file": "lean/PEqualNP/Outside/L_goldbach_004.lean",
+      "module": "PEqualNP.Outside.L_goldbach_004",
+      "statement": "∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = 4",
+      "plain_statement": {
+        "zh": "4 是两个素数之和。",
+        "en": "4 is a sum of two primes."
+      },
+      "imports": []
+    },
+    {
+      "id": "L-goldbach-010",
+      "file": "lean/PEqualNP/Outside/L_goldbach_010.lean",
+      "module": "PEqualNP.Outside.L_goldbach_010",
+      "statement": "∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = 10",
+      "plain_statement": {
+        "zh": "10 是两个素数之和。",
+        "en": "10 is a sum of two primes."
+      },
+      "imports": []
+    }
+  ]
+}

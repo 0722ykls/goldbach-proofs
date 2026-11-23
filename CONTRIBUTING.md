@@ -1,73 +1,8 @@
-# Contributing a proof
+# 提交证明 / Submit a proof
 
-One pull request proves one posted gap. The rules below are checked by a program. A pull
-request that breaks one of them is refused, and the reason is the only reply.
+从 [命题清单](research/gaps.json) 选择一项，在清单指定路径新增唯一一个 Lean 文件。定理名称和类型使用 `module` 和 `statement` 字段。提交只含该文件的 PR。维护者在默认分支运行 authoritative，输入 PR 编号和引理 ID。合并前对照运行报告中的提交、命题哈希和结果。
 
-## The pull request
+Pick a row in the [statement registry](research/gaps.json). Add exactly one Lean file at its listed path and use the listed module as the theorem name. A maintainer dispatches authoritative on main with the PR number and lemma ID. Verify the recorded commit and statement hash before merging.
 
-1. It adds exactly one file and changes nothing else. No edits, no deletions, no renames, no
-   second file.
-2. The file is the one the desk named for your gap. Its path has the form
-   `lean/PEqualNP/Outside/L_<gap>.lean`, with lower case letters, digits and underscores only.
-3. It is a plain text file in UTF-8, at most 512 KiB. Not a link, not executable.
-4. The gap must still be posted when the pull request is checked. If someone else's proof of
-   the same gap was accepted earlier, the gap is closed.
-
-## The file
-
-1. Imports come at the top, one per line, in the plain form `import Some.Module`, with nothing
-   else among them (no comments between or before them, no `public`, `meta` or `module`).
-2. It may import only `Mathlib`, modules of Mathlib, and the project modules listed for the
-   gap. Nothing else.
-3. After the import lines, the word `import` may not appear anywhere in the file, comments
-   included.
-4. It declares one theorem, named after the module. For `lean/PEqualNP/Outside/L_gct_101.lean`
-   that is `PEqualNP.Outside.L_gct_101`.
-5. The theorem proves exactly the posted statement. A stronger, weaker or reworded statement is
-   refused. If you think the statement is false or needs another hypothesis, do not change it:
-   release the gap at the desk with `statement_seems_false` or `hypothesis_too_weak`.
-6. No `sorry`. No axioms beyond `propext`, `Classical.choice`, `Quot.sound`. No
-   `native_decide`.
-7. Helper lemmas and helper definitions go inside the same file.
-
-## The plain-file rules
-
-A proof file is only imports, then definitions, lemmas and one theorem with their proofs. A
-file that follows the five rules below is merged by a program as soon as the check accepts it.
-A file that breaks one is refused, or waits for a person to read it.
-
-1. Nothing that runs code while the file compiles: no `initialize`, no `#eval` or any other
-   `#` command, no `macro`, `syntax`, `notation` or `elab`, no `attribute` command, no
-   `native_decide`.
-2. Comments: start every comment line with two hyphens, or indent the text of a block comment.
-   Open a block comment at the start of a line and close it at the end of one. No `#` headings.
-   A word from rule 1 is refused even inside a comment, so reword it. The simplest file has no
-   comments at all.
-3. No double quotes anywhere: no string literals.
-4. Options: only `maxRecDepth`, `maxHeartbeats`, `synthInstance.maxSize` and
-   `synthInstance.maxHeartbeats`, each on its own line of the form
-   `set_option <name> <number> in`, directly above the declaration it serves. The only
-   attributes are `@[simp]` and `@[local simp]`.
-5. Use Mathlib's types where you can. A file that declares its own data type or instance is
-   not merged by the program: it waits for a person to read it.
-
-## How it is checked
-
-1. A check runs on the pull request and prints a verdict. It is a quick answer for you. It is
-   advisory.
-2. A second check is started by the maintainers from the base branch. It takes your one file as
-   data, reads the statement from the desk's public list, and runs the checker of the base
-   branch. Its verdict is the one that counts.
-3. On `ACCEPTED` the pull request is merged and the lemma is recorded as checked. Credit goes
-   to the author of the pull request.
-
-## What is not read
-
-The description of a pull request is not read. Neither are its title, its comments or its
-commit messages. Only the one file is used, and only the checker judges it. Put nothing there
-that you need anyone to see.
-
-## Words
-
-A lemma here is "checked". Please do not describe a proof in any other terms in this
-repository.
+命题进入清单前，由另一位审查者逐项比对中英文表述、Lean 类型、量词范围以及依赖。提交者不能自行更改已登记的命题。
+A second reviewer checks the English and Chinese statements against the Lean type, quantifier bounds, and dependencies before publication.

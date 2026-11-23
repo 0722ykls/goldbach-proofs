@@ -23,7 +23,6 @@ jobs:
     env:
       # Values from the event go through env and a strict pattern, never into a script as text.
       PR: ${{ github.event.pull_request.number }}
-      GAPS_URL: https://data.pequalnp.com/data/desk/gaps.json
     steps:
       - name: Fetch the pull request (plain git, no stored credentials)
         run: |
