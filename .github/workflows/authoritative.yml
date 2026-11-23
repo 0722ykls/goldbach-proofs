@@ -39,6 +39,9 @@ jobs:
   check:
     runs-on: ubuntu-24.04
     timeout-minutes: 150
+    outputs:
+      verdict: ${{ steps.verdict.outputs.verdict }}
+      manifest: ${{ steps.verdict.outputs.manifest }}
     env:
       # Inputs are free text typed by whoever starts the run. They reach the scripts only as
       # environment variables, and the next step refuses anything but digits and a plain id.
@@ -309,6 +312,7 @@ jobs:
           echo "code=$code" >> "$GITHUB_OUTPUT"
 
       - name: Print the checker's last line, MANIFEST, and the verdict
+        id: verdict
         # Always: whatever stopped the run, its last step says why in one place.
         if: always()
         env:
@@ -428,6 +432,53 @@ jobs:
             1) case "$last" in REJECTED*) verdict=REJECTED ;; esac ;;
           esac
           echo "VERDICT: $verdict (checker exit $CODE)" | tee -a "$GITHUB_STEP_SUMMARY"
+          if [ "$verdict" = ACCEPTED ] || [ "$verdict" = REJECTED ]; then
+            manifest=null
+            if [ "$verdict" = ACCEPTED ]; then
+              manifest=$(sed -n 's/^MANIFEST //p' "$RUNNER_TEMP/checker.out" | jq -ce '{rests_on,defs}')
+            fi
+            printf 'verdict=%s\nmanifest=%s\n' "$verdict" "$manifest" >> "$GITHUB_OUTPUT"
+          fi
           [ "$verdict" = ACCEPTED ] && exit 0
           [ "$verdict" = REJECTED ] && exit 1
           exit 3
+
+  report:
+    needs: check
+    if: ${{ always() && needs.check.outputs.verdict != '' && vars.GOLDBACH_WEBHOOK_URL != '' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    permissions: {}
+    env:
+      URL: ${{ vars.GOLDBACH_WEBHOOK_URL }}
+      SECRET: ${{ secrets.GOLDBACH_WEBHOOK_SECRET }}
+      GAP: ${{ inputs.gap }}
+      VERDICT: ${{ needs.check.outputs.verdict }}
+      MANIFEST: ${{ needs.check.outputs.manifest }}
+    steps:
+      - name: Send signed verdict
+        run: |
+          python3 - <<'PY'
+          import hashlib, hmac, json, os, urllib.request
+          env = os.environ
+          payload = json.dumps({
+              "lemma_id": env["GAP"],
+              "verdict": env["VERDICT"],
+              "manifest": json.loads(env["MANIFEST"]),
+              "run_id": int(env["GITHUB_RUN_ID"]),
+              "run_attempt": int(env["GITHUB_RUN_ATTEMPT"]),
+          }).encode()
+          url = env["URL"]
+          if not url.startswith("https://") or not env["SECRET"]:
+              raise SystemExit("HTTPS endpoint and signing secret required")
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, *args):
+                  return None
+          signature = hmac.new(env["SECRET"].encode(), payload, hashlib.sha256).hexdigest()
+          request = urllib.request.Request(url, payload, {
+              "Content-Type": "application/json",
+              "X-Goldbach-Signature": "sha256=" + signature,
+          })
+          with urllib.request.build_opener(NoRedirect()).open(request, timeout=15) as response:
+              print("Verdict endpoint returned", response.status)
+          PY

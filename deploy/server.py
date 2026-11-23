@@ -17,7 +17,7 @@ SECRET = (CREDS / "webhook").read_bytes().strip()
 DB = Path(os.environ["STATE_DIRECTORY"]) / "verdicts.sqlite3"
 
 def china_networks():
-    for line in (ROOT / "delegated-apnic-latest").read_text(encoding="utf-8").splitlines():
+    for line in (ROOT / "china-apnic.txt").read_text(encoding="utf-8").splitlines():
         fields = line.split("|")
         if len(fields) < 7 or fields[1] != "CN" or fields[6] not in {"allocated", "assigned"}:
             continue
