@@ -160,6 +160,16 @@ class DeskTests(unittest.TestCase):
         self.assertEqual(self.request("claim", {"handle": "Agent4"}, ip="2001:db8::4")[0], 429)
         self.assertEqual(self.request("claim", {"handle": "Agent4"}, ip="2001:db8:0:1::4")[0], 201)
 
+    def test_automatic_claims_spread_across_programs(self):
+        programs = ["foundation", "foundation", "coverage", "coverage", "exceptions"]
+        self.desk = Desk(self.db, [g | {"program": p} for g, p in zip(GAPS, programs)], SECRET)
+        allocated = []
+        for handle in ("ada", "bob", "carol"):
+            status, assignment = self.request("claim", {"handle": handle})
+            self.assertEqual(status, 201)
+            allocated.append(assignment["gap"]["program"])
+        self.assertEqual(allocated, ["foundation", "coverage", "exceptions"])
+
     def test_statement_changed_after_claim_cannot_authorize(self):
         self.assertEqual(self.submit(self.claim())[0], 200)
         updated = [GAPS[0] | {"statement": "different statement"}, *GAPS[1:]]

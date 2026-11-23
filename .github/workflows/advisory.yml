@@ -98,6 +98,8 @@ jobs:
         timeout-minutes: 25
         run: |
           set -u
+          # GitHub starts bash with errexit. Capture a negative verdict and print its diagnostics.
+          set +e
           # The machine the authoritative check runs on (authoritative.yml, the same step): two
           # cores, at most 6.5 GB of memory with the rest in swap, and 20 minutes. Without
           # them the 4 core, 16 GB runner starved and lost contact with GitHub, with no log.

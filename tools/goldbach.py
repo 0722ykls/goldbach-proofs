@@ -23,6 +23,12 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
         return None
 
 
+class DeskRefusal(SystemExit):
+    def __init__(self, action, status, reason):
+        self.reason = reason
+        super().__init__(f"Desk {action} failed ({status}): {reason}")
+
+
 def command(*args):
     return subprocess.check_output(args, encoding="utf-8").strip()
 
@@ -46,7 +52,7 @@ def desk(action, data, token=None):
             message = "request refused"
         if token:
             message = str(message).replace(token, "[hidden]")
-        raise SystemExit(f"Desk {action} failed ({error.code}): {message}") from None
+        raise DeskRefusal(action, error.code, message) from None
     except urllib.error.URLError as error:
         raise SystemExit(f"Could not reach the Goldbach desk: {error.reason}") from None
 
@@ -137,7 +143,21 @@ def submit(path, state, number):
     if state.get("requested") == {"pr": number, "head": head}:
         print(f"Verification already requested for PR {number} ({head[:12]}).")
         return
-    desk("submit", {"pr": number, "head": head}, state["token"])
+    submission = {"pr": number, "head": head}
+    try:
+        desk("submit", submission, state["token"])
+    except DeskRefusal as refusal:
+        if refusal.reason != "lease_completed" or state.get("requested", {}).get("pr") != number:
+            raise
+        # A corrected proof uses a new lease for the same gap and a new head on the same PR.
+        current = desk("claim", {"handle": state["handle"], "gap": state["gap"]["id"]})
+        token = current["lease"]["token"]
+        if any(current["gap"].get(k) != state["gap"].get(k) for k in ("id", "module", "file", "statement", "imports")):
+            desk("release", {"reason": "superseded"}, token)
+            raise SystemExit("The published lemma changed. Start again from the current default branch.")
+        state["token"] = token
+        save(path, state)
+        desk("submit", submission, token)
     instruction = f"/goldbach-check {state['gap']['id']}"
     subprocess.run(
         ["gh", "pr", "comment", str(number), "--repo", REPO, "--body", instruction],

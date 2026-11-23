@@ -5,6 +5,7 @@ import re
 import secrets
 import sqlite3
 import time
+from collections import Counter
 from contextlib import closing, contextmanager
 
 LEASE_SECONDS = 45 * 60
@@ -164,7 +165,11 @@ class Desk:
             occupied = {lease["gap"] for lease in active}
             unavailable = occupied | self.proved_gaps(conn)
             candidates = self.gaps if requested_gap is None else (requested_gap,)
-            selected = next((gap_id for gap_id in candidates if gap_id not in unavailable), None)
+            # Give each research program a worker before filling its remaining shards.
+            # The manifest order breaks ties, including legacy entries without a program.
+            program_load = Counter(self.gaps[g].get("program", "foundation") for g in occupied if g in self.gaps)
+            selected = min((g for g in candidates if g not in unavailable),
+                           key=lambda g: program_load[self.gaps[g].get("program", "foundation")], default=None)
             if selected is None:
                 return error(409, "no_available_gap")
 
