@@ -284,6 +284,7 @@ button, a, input, select { -webkit-tap-highlight-color: transparent; }
   font-weight: 720;
   overflow-wrap: anywhere;
 }
+.verdict-in-progress { color: #664b13; background: #f7efd9; }
 .verdict-accepted { color: var(--green); background: var(--green-pale); }
 .verdict-rejected { color: var(--orange); background: var(--orange-pale); }
 .evidence-link { font-size: .8rem; font-weight: 650; }

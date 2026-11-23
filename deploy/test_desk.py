@@ -74,12 +74,15 @@ class DeskTests(unittest.TestCase):
     def test_pending_is_private_and_lists_submitted_unchecked_lease(self):
         self.assertEqual(self.request("pending", {})[0], 401)
         token = self.claim()
+        self.assertEqual(self.status()["assignments"], {GAPS[0]["id"]: "working"})
         self.assertEqual(self.request("pending", {}, sign=True)[1], {"pending": []})
         self.assertEqual(self.submit(token)[0], 200)
+        self.assertEqual(self.status()["assignments"], {GAPS[0]["id"]: "submitted"})
         self.assertEqual(self.request("pending", {}, sign=True)[1], {"pending": [
             {"pr": 8, "head": "a" * 40, "handle": "alice", "gap": GAPS[0]["id"]}
         ]})
         self.assertEqual(self.request("authorize", self.authorization(), sign=True)[0], 200)
+        self.assertEqual(self.status()["assignments"], {GAPS[0]["id"]: "checking"})
         self.assertEqual(self.request("pending", {}, sign=True)[1], {"pending": []})
 
     def test_prior_proofs_are_ineligible_and_uncredited(self):

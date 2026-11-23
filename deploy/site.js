@@ -5,6 +5,7 @@ const repository = 'https://github.com/CGandGameEngineLearner/goldbach-proofs';
 const strings = {
   zh: {
     open: '待证', proved: '已通过', accepted: '已通过', rejected: '已拒绝',
+    assignments: { working: '已领取', submitted: '已提交', checking: '验证中' },
     run: '查看运行', latestRun: '最近运行', noRun: '暂无', attempt: '运行尝试',
     manifest: '查看证据清单', empty: '没有匹配的引理。', noRecords: '还没有权威验证记录。',
     count: n => '找到 ' + n + ' 条引理。',
@@ -25,6 +26,7 @@ const strings = {
   },
   en: {
     open: 'Open', proved: 'Verified', accepted: 'Accepted', rejected: 'Rejected',
+    assignments: { working: 'Claimed', submitted: 'Submitted', checking: 'Checking' },
     run: 'View run', latestRun: 'Latest run', noRun: 'Pending', attempt: 'Attempt',
     manifest: 'View evidence manifest', empty: 'No matching lemmas.', noRecords: 'No authoritative runs have been recorded.',
     count: n => n === 1 ? '1 matching lemma.' : n + ' matching lemmas.',
@@ -111,6 +113,7 @@ const locale = document.documentElement.lang;
 const eventTime = new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' });
 
 let publishedGaps = [];
+let assignments = {};
 let loading = false;
 let lastGaps = null;
 let lastResults = null;
@@ -134,7 +137,12 @@ function lemmaRow(gap) {
     element('code', gap.statement, 'formal-statement')
   );
   const status = element('td');
-  status.append(verdictTag(gap.proved ? strings.proved : strings.open, gap.proved ? 'accepted' : ''));
+  const assignment = strings.assignments[assignments[gap.id]];
+  if (gap.proved) {
+    status.append(verdictTag(strings.proved, 'accepted'));
+  } else {
+    status.append(verdictTag(assignment || strings.open, assignment ? 'in-progress' : ''));
+  }
   const evidence = element('td');
   if (gap.latest) {
     evidence.append(runLink(gap.latest, strings.latestRun));
@@ -151,6 +159,7 @@ function renderLemmas() {
   const visibleGaps = publishedGaps.filter(gap => {
     if (selection === 'proved' && !gap.proved) return false;
     if (selection === 'open' && gap.proved) return false;
+    if (selection === 'progress' && (gap.proved || !assignments[gap.id])) return false;
     const content = [gap.id, gap.statement, gap.plain_statement.zh, gap.plain_statement.en];
     return content.some(text => text.toLocaleLowerCase().includes(query));
   });
@@ -276,7 +285,8 @@ async function loadStatus() {
     });
     if (!response.ok) throw new Error('Status request failed');
     const { gaps, counts, results, desk } = await response.json();
-    const gapsSnapshot = JSON.stringify(gaps);
+    assignments = desk?.assignments ?? assignments;
+    const gapsSnapshot = JSON.stringify([gaps, assignments]);
     if (lastGaps !== gapsSnapshot) {
       publishedGaps = gaps;
       renderLemmas();

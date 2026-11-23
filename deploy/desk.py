@@ -294,6 +294,13 @@ class Desk:
                 SELECT COUNT(*), COALESCE(SUM(expires_at > ? AND released_at IS NULL AND finished_at IS NULL), 0)
                 FROM goldbach_leases
             """, (now,)).fetchone()
+            assignments = dict(conn.execute("""
+                SELECT gap, CASE WHEN run_id IS NOT NULL THEN 'checking'
+                                 WHEN submitted_at IS NOT NULL THEN 'submitted'
+                                 ELSE 'working' END
+                FROM goldbach_leases
+                WHERE expires_at > ? AND released_at IS NULL AND finished_at IS NULL
+            """, (now,)))
             activities = [
                 {key: value for key, value in dict(row).items() if value is not None}
                 for row in conn.execute("""
@@ -330,4 +337,7 @@ class Desk:
                     WHERE verdict = 'ACCEPTED' GROUP BY handle ORDER BY accepted DESC, handle LIMIT 20
                 """)
             ]
-        return {"active": active, "sessions": sessions, "activities": activities, "leaderboard": leaderboard}
+        return {
+            "active": active, "sessions": sessions, "assignments": assignments,
+            "activities": activities, "leaderboard": leaderboard,
+        }
