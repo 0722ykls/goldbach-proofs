@@ -342,6 +342,84 @@ function mapNode(gap) {
   return button;
 }
 
+const graph = document.getElementById('network-map');
+const palette = { available: '#a6ae9e', occupied: '#f2be63', verified: '#86ca92' };
+let graphGaps = [];
+let graphTargets = [];
+function drawNetwork() {
+  const w = graph.clientWidth;
+  const h = graph.clientHeight;
+  const ctx = graph.getContext('2d');
+  if (!ctx || !w || !h) return;
+  const scale = Math.min(window.devicePixelRatio || 1, 2);
+  graph.width = Math.round(w * scale);
+  graph.height = Math.round(h * scale);
+  ctx.scale(scale, scale);
+  graphTargets = [];
+  const center = { x: w / 2, y: h / 2 };
+  function edge(a, b, color) {
+    ctx.strokeStyle = color;
+    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+  }
+  function dot(p, radius, color) {
+    ctx.fillStyle = color; ctx.beginPath(); ctx.arc(p.x, p.y, radius, 0, 2 * Math.PI); ctx.fill();
+  }
+  function caption(p, text) {
+    ctx.font = '500 13px system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    const width = ctx.measureText(text).width;
+    ctx.fillStyle = '#222421'; ctx.fillRect(p.x - width / 2 - 4, p.y - 9, width + 8, 18);
+    ctx.fillStyle = '#f3eee0'; ctx.fillText(text, p.x, p.y + 4);
+  }
+  const keys = selectedProgram ? [selectedProgram] : [...programs.keys()];
+  keys.forEach((key, index) => {
+    const gaps = graphGaps.filter(gap => programOf(gap) === key);
+    if (!gaps.length) return;
+    const hub = selectedProgram ? center : {
+      x: w * (index % 2 ? 0.75 : 0.25), y: h * (index < 2 ? 0.25 : 0.75)
+    };
+    if (!selectedProgram) edge(center, hub, '#7b806c');
+    const radiusX = w * (selectedProgram ? .44 : .19);
+    const radiusY = h * (selectedProgram ? .43 : .20);
+    gaps.forEach((gap, i) => {
+      const angle = i * Math.PI * (3 - Math.sqrt(5));
+      const radius = Math.sqrt((i + 1) / gaps.length);
+      const p = { x: hub.x + radius * radiusX * Math.cos(angle),
+        y: hub.y + radius * radiusY * Math.sin(angle) };
+      edge(hub, p, '#43493e');
+      dot(p, selectedProgram ? 4 : 3, palette[gapStatus(gap).kind]);
+      graphTargets.push({ ...p, gap, radius: 7 });
+    });
+    caption(hub, programName(key));
+    graphTargets.push({ ...hub, program: key, radius: 15 });
+  });
+  if (!selectedProgram || !graphGaps.length) {
+    caption(center, graphGaps.length ? (lang === 'zh' ? '强哥德巴赫' : 'Binary Goldbach') : strings.empty);
+  }
+}
+function graphTarget(event) {
+  const bounds = graph.getBoundingClientRect();
+  const x = event.clientX - bounds.left;
+  const y = event.clientY - bounds.top;
+  let nearest, distance = Infinity;
+  for (const target of graphTargets) {
+    const d = Math.hypot(x - target.x, y - target.y);
+    if (d <= target.radius && d < distance) { nearest = target; distance = d; }
+  }
+  return nearest;
+}
+graph.addEventListener('pointermove', event => {
+  const target = graphTarget(event);
+  graph.style.cursor = target ? 'pointer' : 'default';
+  graph.title = target?.gap?.plain_statement[lang] || (target ? programName(target.program) : '');
+});
+graph.addEventListener('click', event => {
+  const target = graphTarget(event);
+  if (target?.gap) openGap(target.gap.id);
+  else if (target) chooseProgram(selectedProgram ? '' : target.program);
+});
+new ResizeObserver(drawNetwork).observe(graph);
+
 function renderLemmas() {
   const query = lemmaSearch.value.trim().toLocaleLowerCase();
   const selection = lemmaState.value;
@@ -359,6 +437,8 @@ function renderLemmas() {
     ];
     return content.some(text => text.toLocaleLowerCase().includes(query));
   });
+  graphGaps = visibleGaps;
+  drawNetwork();
   const maxPage = Math.max(1, Math.ceil(visibleGaps.length / pageSize));
   lemmaPage = Math.min(lemmaPage, maxPage);
   const offset = (lemmaPage - 1) * pageSize;

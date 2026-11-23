@@ -506,6 +506,7 @@ button, a, input, select { -webkit-tap-highlight-color: transparent; }
 .map-node:hover { background:#45483e; }
 .map-program-button:hover,.map-program-button[aria-pressed=true] { outline-color:#e2daba; }
 .map-dot.available { border-color:#b8bbb0; }
+.network-map { display:block; width:100%; height:clamp(19rem,32vw,28rem); border-block:1px solid #484a40; margin-bottom:.9rem; }
 .menu-toggle { display:none; }
 @media(max-width:725px) {
   .masthead .menu-toggle { display:inline-flex; padding:.3rem .6rem; border:1px solid var(--line); border-radius:4px; background:white; color:var(--ink); }
