@@ -3,7 +3,7 @@ import PEqualNP.Defs
 import PEqualNP.MetaComplexity.L104
 import PEqualNP.MetaComplexity.L105
 
-namespace PEqualNP.Outside.L759
+namespace PEqualNP.Outside.L_meta_759_aux
 open PEqualNP.MetaComplexity
 
 private def links : List (Fin 6 × Fin 6) := [(0,1),(0,2),(0,3),(1,4),(4,5)]
@@ -42,11 +42,10 @@ private lemma same : (fun x : Fin 6 → Bool =>
   funext x
   exact (by decide +kernel : ∀ z : Fin 6 → Bool, decide (∃ i j, tree.Adj i j ∧ z i = true ∧ z j = true) = target z) x
 
-end PEqualNP.Outside.L759
+end PEqualNP.Outside.L_meta_759_aux
 
-namespace PEqualNP.Outside
-open L759 PEqualNP.MetaComplexity
-theorem L_meta_759 : ∀ s : ℕ, PEqualNP.MetaComplexity.HasCircuitSize 6 (fun x : Fin 6 → Bool => (x 0 && x 1) || (x 0 && x 2) || (x 0 && x 3) || (x 1 && x 4) || (x 4 && x 5)) s ↔ 6 ≤ s := by
+open PEqualNP.Outside.L_meta_759_aux PEqualNP.MetaComplexity
+theorem PEqualNP.Outside.L_meta_759 : ∀ s : ℕ, PEqualNP.MetaComplexity.HasCircuitSize 6 (fun x : Fin 6 → Bool => (x 0 && x 1) || (x 0 && x 2) || (x 0 && x 3) || (x 1 && x 4) || (x 4 && x 5)) s ↔ 6 ≤ s := by
   intro s
   change HasCircuitSize 6 target s ↔ _
   rw [← same]
@@ -64,7 +63,3 @@ theorem L_meta_759 : ∀ s : ℕ, PEqualNP.MetaComplexity.HasCircuitSize 6 (fun 
     refine ⟨C,hC,?_,he⟩
     rw [edges,hc] at hsz
     omega
-
-end PEqualNP.Outside
-
-
