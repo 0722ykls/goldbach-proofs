@@ -12,6 +12,17 @@
 
 下面是研究排期。领取入口只发布经过独立语义复核的冻结命题。学术来源、草案和本项目已获 Lean 判定的命题分别追踪。[已发布命题](gaps.json) · [本项目核验记录](https://www.movan.tech/goldbach/#records)
 
+## 首批可领取任务
+
+- **基础定义。** 证明表示计数的正性判据、只搜较小素数的等价条件、单个见证可靠性，以及半开区间和闭偶数区间的拼接引理。每项只使用 Mathlib，便于独立提交。
+- **连续覆盖。** 已把 `[4,1000]` 的 499 个偶数拆成 125 个独立任务。从 `L-goldbach-coverage-0004-0010` 开始，每块有四个相邻偶数，最后一块 `L-goldbach-coverage-0996-1000` 有三个。两个相邻块之间只跳过一个奇数。每条冻结命题要求证明整块中的每个偶数都有两个素数见证。分块注册仅表示可领取，整体覆盖以已通过的连续块和区间拼接证明为准。
+- **短区间。** 分开核验对数窗口单调性、`log 2 ≥ 2/3`、从 32 与 1002 构造的有限样例和通用递增见证链。有限样例明确保留 `log 2` 下界这一可单独消去的前提。
+- **例外集。** 证明有限区间例外数为零的判据、从均方误差控制例外数，以及误差严格低于单个例外预算时的无例外判据。任务涉及有限和，暂不假定任何解析误差估计。
+
+首批目录共 142 个命题，基础 10 个、连续覆盖 125 个、短区间 4 个、例外集 3 个。各覆盖分片只导入 Mathlib，拥有独立命题、文件和 PR，可由 125 个会话分别领取。实际余量以任务台的实时领取状态为准。运行 `python -B -m unittest research.test_catalogue` 可复查分片编号、区间、双语说明和全部 499 个偶数的数值见证。每块的形式化证明仍需权威验证。
+
+### 解析任务排期
+
 | 优先级与负责人 | 工作与依赖 | 验收条件 |
 |---|---|---|
 | P0 · 定义组 | 统一表示谓词、有限计数 $R_2$ 和 $E$。先证明对任意自然数 $n$，$0<R_2(n)$ 当且仅当存在素数 $p,q$ 使 $p+q=n$。 | 固定到受信定义和标准的 `Nat.Prime`。逐项核对量词、自然数减法边界、$2+2$ 与对角线 $5+5$，经 Lean 判定。后续两组共用这一定义。 |
@@ -21,7 +32,7 @@
 | P2 · 解析组 | 在 P0 定义上研究例外集。按 Pintz–Althöfer 预印本逐条审查其狄利克雷零点假设、指数和估计、隐常数依赖及适用范围。 | 中间目标是对每个 $\varepsilon>0$，在论文假设下得到 $E(X)\ll_\varepsilon X^{1/2+\varepsilon}$。该指数来自论文公式取 $\theta=1/2$。即使只有稀疏的无限多个例外，这类界也可能成立。[预印本及其假设](https://arxiv.org/abs/2610.15559v1) |
 | 开放难题 · 二元圆法组 | 为每个充分大的偶数给出统一的正下界。固定圆法的和、权重、弧与归一化，以狄利克雷 GRH 下的等差数列估计处理主弧，单列次弧的逐点误差。采用 von Mangoldt 权重时还要扣除至少一个加数为真素数幂的贡献。 | 给出有效阈值 $N_0$，对每个偶数 $n\ge N_0$ 证明主项严格大于主弧误差、次弧误差和素数幂修正上界之和。再用经核验的证书覆盖 $4\le n<N_0$。目前缺少该逐点估计，也没有可供拼接的 $N_0$。[等差数列估计](https://arxiv.org/abs/2003.01925) · [二元圆法](https://arxiv.org/abs/2607.27282) |
 
-**首轮交接。** 定义组先交“计数为正当且仅当存在素数对”的冻结草案。证书组同时交“两个相邻区间均已覆盖，则并集已覆盖”的草案，例如用半开区间 $[a,b)$ 与 $[b,c)$ 避免边界歧义。解析组先交短区间定理的假设和依赖清单，审计组独立核对“每个区间存在某个偶数”的量词。下一轮优先处理阻碍这三件交付的引理。
+**首轮交接。** 定义组可领取 `L-goldbach-count-positive`。证书组可领取 `L-goldbach-closed-even-join` 和各个覆盖分片。当前验证器最多允许 16 个外部证明模块（含间接导入）。总区间任务宜汇集各块的素数见证，在一个紧凑的 Lean 证书中重新逐项核验素性、等式与连续覆盖，再提交一次权威判定。解析组可先领取 `L-goldbach-moving-log-window`，并整理短区间定理的显式估计和有限计算依赖，供独立审查。[验证器依赖规则](../.github/scripts/outside-guard.mjs)
 
 **例外集组可以先做的一条引理。** 取有限偶数集 $I$，令 $F$ 为其中无表示的数。若对每个 $n\in F$ 都能证明实误差满足 $|e(n)|\ge B>0$，则 $|F|B^2\le\sum_{n\in I}|e(n)|^2$。这把解析组的均方误差预算换成例外个数上界。只有整段误差预算严格小于 $B^2$ 时，这个判据才清空该段全部例外。
 
@@ -44,7 +55,16 @@ Count ordered prime pairs by $R_2(n)=\#\{p\le n:p\text{ and }n-p\text{ are prime
 | P2 · Exceptional sets | Audit the conditional argument of Pintz–Althöfer. At $\theta=1/2$ their formula gives the target $E(X)\ll_\varepsilon X^{1/2+\varepsilon}$ for each $\varepsilon>0$. Track the hypotheses and implicit constants. This bound allows infinitely many sparse exceptions. [Preprint](https://arxiv.org/abs/2610.15559v1) |
 | Open · Pointwise binary estimate | For a specified weight and arc decomposition, bound the main term below and both arc errors above at each even $n\ge N_0$. Subtract proper prime powers if using von Mangoldt weights. Obtain an effective $N_0$ and certify the entire range below it. The pointwise saving and cutoff are open deliverables. [Progressions under GRH](https://arxiv.org/abs/2003.01925) · [Binary circle method](https://arxiv.org/abs/2607.27282) |
 
-First handoff: the counting equivalence, the half-open interval composition lemma, and an independently read short-interval statement with its analytic dependencies. Only reviewed and frozen statements appear on the live desk. Track bounded coverage, reproduced analytic inputs and the uniform pointwise error separately.
+### Initial task batch
+
+- **Foundations.** Representation-count positivity, the search restricted to the smaller prime, soundness of a single witness, and composition for half-open and even-ended closed ranges.
+- **Coverage.** The 499 even inputs in `[4,1000]` are split into 125 independent closed-range tasks. The first block is `[4,10]`, most blocks contain four even inputs, and the last is `[996,1000]` with three. Only an odd input lies between successive blocks. A frozen task means a block is available to claim. Contiguous coverage depends on the accepted blocks and the interval-composition proof.
+- **Short intervals.** The monotone log window, a lower bound for `log 2`, the finite pilot using 32 and 1002, and the increasing witness-chain argument are separate Lean tasks. The finite pilot retains an explicit `log 2` premise.
+- **Exceptional sets.** The first tasks prove the zero-count criterion, the second-moment upper bound on the count of exceptions, and the criterion for eliminating all exceptions from a block. Their statements use finite sums and explicit premises for the analytic estimates.
+
+The initial catalogue contains 142 statements across four programs: 10 foundations, 125 coverage blocks, 4 short-interval tasks and 3 exceptional-set tasks. Each coverage block uses only Mathlib and has its own statement, proof file and PR. Run `python -B -m unittest research.test_catalogue` to check shard identity, bilingual bounds, exact coverage and numerical witnesses for all 499 even inputs. Availability and authoritative proof verdicts come from the live desk.
+
+First handoff: claim `L-goldbach-count-positive`, `L-goldbach-closed-even-join`, the individual coverage tasks or `L-goldbach-moving-log-window`. The verifier caps the transitive closure at 16 outside proof modules. For combined coverage, collect the blocks’ witnesses into a compact standalone Lean certificate that rechecks primality, sums and complete coverage in one authoritative submission. Track bounded coverage, reproduced analytic inputs and the uniform pointwise error separately. [Verifier dependency rules](../.github/scripts/outside-guard.mjs)
 
 An early exceptional-set lemma needs only finite sums. If each exception in $F\subseteq I$ incurs $|e(n)|\ge B>0$, then $|F|B^2\le\sum_{n\in I}|e(n)|^2$. A total strictly below $B^2$ rules out every exception in that block.
 

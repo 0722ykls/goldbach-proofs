@@ -9,7 +9,8 @@
         "zh": "4 是两个素数之和。",
         "en": "4 is a sum of two primes."
       },
-      "imports": []
+      "imports": [],
+      "program": "foundation"
     },
     {
       "id": "L-goldbach-010",
@@ -20,7 +21,8 @@
         "zh": "10 是两个素数之和。",
         "en": "10 is a sum of two primes."
       },
-      "imports": []
+      "imports": [],
+      "program": "foundation"
     },
     {
       "id": "L-goldbach-018",
@@ -31,7 +33,8 @@
         "zh": "18 是两个素数之和。",
         "en": "18 is a sum of two primes."
       },
-      "imports": []
+      "imports": [],
+      "program": "foundation"
     },
     {
       "id": "L-goldbach-ordered",
@@ -42,7 +45,8 @@
         "zh": "若一个自然数可写成两个素数之和，则可选取一组使第一个素数不大于第二个。",
         "en": "If a natural number is a sum of two primes, it has such a representation with the first prime at most the second."
       },
-      "imports": []
+      "imports": [],
+      "program": "foundation"
     },
     {
       "id": "L-goldbach-odd-summands",
@@ -53,7 +57,2313 @@
         "zh": "大于 4 的偶数若写成两个素数之和，则这两个素数都是奇数。",
         "en": "In any representation of an even natural number greater than 4 as two primes, both primes are odd."
       },
-      "imports": []
+      "imports": [],
+      "program": "foundation"
+    },
+    {
+      "id": "L-goldbach-count-positive",
+      "file": "lean/PEqualNP/Outside/L_goldbach_count_positive.lean",
+      "module": "PEqualNP.Outside.L_goldbach_count_positive",
+      "statement": "∀ n : ℕ, 0 < ((Finset.range (n + 1)).filter (fun p => Nat.Prime p ∧ Nat.Prime (n - p))).card ↔ (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "对每个自然数 n，满足 p≤n 且 p 和 n−p 均为素数的自然数 p 的个数为正，当且仅当 n 可写成两个素数之和。",
+        "en": "For every natural number n, the count of natural numbers p ≤ n for which p and n − p are prime is positive exactly when n is a sum of two primes."
+      },
+      "imports": [],
+      "program": "foundation",
+      "brief": {
+        "zh": "处理自然数减法时保留 p≤n。这个计数把 (3,7) 和 (7,3) 分别计入。",
+        "en": "Keep p ≤ n when reasoning about natural subtraction. This count includes (3,7) and (7,3) separately."
+      }
+    },
+    {
+      "id": "L-goldbach-half-search",
+      "file": "lean/PEqualNP/Outside/L_goldbach_half_search.lean",
+      "module": "PEqualNP.Outside.L_goldbach_half_search",
+      "statement": "∀ n : ℕ, (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n) ↔ (∃ p : ℕ, p ≤ n / 2 ∧ Nat.Prime p ∧ Nat.Prime (n - p))",
+      "plain_statement": {
+        "zh": "一个自然数 n 可写成两个素数之和，当且仅当能找到不超过 n 除以 2 向下取整的素数 p，且 n−p 也是素数。",
+        "en": "A natural number n is a sum of two primes exactly when a prime p at most floor(n/2) exists for which n − p is prime."
+      },
+      "imports": [],
+      "program": "foundation",
+      "brief": {
+        "zh": "选择较小的加数，再把配对素数写成 n−p。",
+        "en": "Choose the smaller summand and express the other prime as n − p."
+      }
+    },
+    {
+      "id": "L-goldbach-witness-sound",
+      "file": "lean/PEqualNP/Outside/L_goldbach_witness_sound.lean",
+      "module": "PEqualNP.Outside.L_goldbach_witness_sound",
+      "statement": "∀ n p : ℕ, p ≤ n → Nat.Prime p → Nat.Prime (n - p) → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "若自然数 p 不超过 n，且 p 与 n−p 都是素数，则 n 可写成两个素数之和。",
+        "en": "If natural numbers n and p satisfy p ≤ n and both p and n − p are prime, then n is a sum of two primes."
+      },
+      "imports": [],
+      "program": "foundation"
+    },
+    {
+      "id": "L-goldbach-half-open-join",
+      "file": "lean/PEqualNP/Outside/L_goldbach_half_open_join.lean",
+      "module": "PEqualNP.Outside.L_goldbach_half_open_join",
+      "statement": "∀ a b c : ℕ, a ≤ b → b ≤ c → (∀ n : ℕ, a ≤ n → n < b → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)) → (∀ n : ℕ, b ≤ n → n < c → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)) → ∀ n : ℕ, a ≤ n → n < c → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "对自然数 a≤b≤c，若半开区间 [a,b) 和 [b,c) 内的每个偶数均可写成两个素数之和，则 [a,c) 内的每个偶数也可以。",
+        "en": "For natural numbers a ≤ b ≤ c, if every even number in each of the half-open intervals [a,b) and [b,c) is a sum of two primes, then so is every even number in [a,c)."
+      },
+      "imports": [],
+      "program": "foundation"
+    },
+    {
+      "id": "L-goldbach-closed-even-join",
+      "file": "lean/PEqualNP/Outside/L_goldbach_closed_even_join.lean",
+      "module": "PEqualNP.Outside.L_goldbach_closed_even_join",
+      "statement": "∀ a b c : ℕ, a ≤ b → b + 2 ≤ c → Even b → (∀ n : ℕ, a ≤ n → n ≤ b → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)) → (∀ n : ℕ, b + 2 ≤ n → n ≤ c → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)) → ∀ n : ℕ, a ≤ n → n ≤ c → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "设自然数 a≤b、b+2≤c 且 b 为偶数。若闭区间 [a,b] 与 [b+2,c] 内的每个偶数都可写成两个素数之和，则闭区间 [a,c] 内的每个偶数也可以。",
+        "en": "Let natural numbers a, b and c satisfy a ≤ b and b + 2 ≤ c, with b even. If every even number in the closed intervals [a,b] and [b+2,c] is a sum of two primes, so is every even number in [a,c]."
+      },
+      "imports": [],
+      "program": "foundation",
+      "brief": {
+        "zh": "两段之间唯一缺少的整数 b+1 是奇数。这就是闭区间分块可以拼接的原因。",
+        "en": "The only integer between the two blocks is b + 1, which is odd. This fact allows adjacent closed even blocks to compose."
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0004-0010",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0004_0010.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0004_0010",
+      "statement": "∀ n : ℕ, 4 ≤ n → n ≤ 10 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [4, 10] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [4, 10] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 4,
+        "hi": 10,
+        "index": 1
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0012-0018",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0012_0018.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0012_0018",
+      "statement": "∀ n : ℕ, 12 ≤ n → n ≤ 18 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [12, 18] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [12, 18] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 12,
+        "hi": 18,
+        "index": 2
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0020-0026",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0020_0026.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0020_0026",
+      "statement": "∀ n : ℕ, 20 ≤ n → n ≤ 26 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [20, 26] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [20, 26] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 20,
+        "hi": 26,
+        "index": 3
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0028-0034",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0028_0034.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0028_0034",
+      "statement": "∀ n : ℕ, 28 ≤ n → n ≤ 34 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [28, 34] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [28, 34] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 28,
+        "hi": 34,
+        "index": 4
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0036-0042",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0036_0042.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0036_0042",
+      "statement": "∀ n : ℕ, 36 ≤ n → n ≤ 42 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [36, 42] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [36, 42] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 36,
+        "hi": 42,
+        "index": 5
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0044-0050",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0044_0050.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0044_0050",
+      "statement": "∀ n : ℕ, 44 ≤ n → n ≤ 50 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [44, 50] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [44, 50] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 44,
+        "hi": 50,
+        "index": 6
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0052-0058",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0052_0058.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0052_0058",
+      "statement": "∀ n : ℕ, 52 ≤ n → n ≤ 58 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [52, 58] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [52, 58] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 52,
+        "hi": 58,
+        "index": 7
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0060-0066",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0060_0066.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0060_0066",
+      "statement": "∀ n : ℕ, 60 ≤ n → n ≤ 66 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [60, 66] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [60, 66] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 60,
+        "hi": 66,
+        "index": 8
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0068-0074",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0068_0074.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0068_0074",
+      "statement": "∀ n : ℕ, 68 ≤ n → n ≤ 74 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [68, 74] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [68, 74] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 68,
+        "hi": 74,
+        "index": 9
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0076-0082",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0076_0082.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0076_0082",
+      "statement": "∀ n : ℕ, 76 ≤ n → n ≤ 82 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [76, 82] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [76, 82] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 76,
+        "hi": 82,
+        "index": 10
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0084-0090",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0084_0090.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0084_0090",
+      "statement": "∀ n : ℕ, 84 ≤ n → n ≤ 90 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [84, 90] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [84, 90] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 84,
+        "hi": 90,
+        "index": 11
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0092-0098",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0092_0098.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0092_0098",
+      "statement": "∀ n : ℕ, 92 ≤ n → n ≤ 98 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [92, 98] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [92, 98] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 92,
+        "hi": 98,
+        "index": 12
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0100-0106",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0100_0106.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0100_0106",
+      "statement": "∀ n : ℕ, 100 ≤ n → n ≤ 106 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [100, 106] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [100, 106] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 100,
+        "hi": 106,
+        "index": 13
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0108-0114",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0108_0114.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0108_0114",
+      "statement": "∀ n : ℕ, 108 ≤ n → n ≤ 114 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [108, 114] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [108, 114] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 108,
+        "hi": 114,
+        "index": 14
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0116-0122",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0116_0122.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0116_0122",
+      "statement": "∀ n : ℕ, 116 ≤ n → n ≤ 122 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [116, 122] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [116, 122] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 116,
+        "hi": 122,
+        "index": 15
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0124-0130",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0124_0130.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0124_0130",
+      "statement": "∀ n : ℕ, 124 ≤ n → n ≤ 130 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [124, 130] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [124, 130] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 124,
+        "hi": 130,
+        "index": 16
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0132-0138",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0132_0138.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0132_0138",
+      "statement": "∀ n : ℕ, 132 ≤ n → n ≤ 138 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [132, 138] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [132, 138] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 132,
+        "hi": 138,
+        "index": 17
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0140-0146",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0140_0146.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0140_0146",
+      "statement": "∀ n : ℕ, 140 ≤ n → n ≤ 146 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [140, 146] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [140, 146] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 140,
+        "hi": 146,
+        "index": 18
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0148-0154",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0148_0154.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0148_0154",
+      "statement": "∀ n : ℕ, 148 ≤ n → n ≤ 154 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [148, 154] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [148, 154] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 148,
+        "hi": 154,
+        "index": 19
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0156-0162",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0156_0162.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0156_0162",
+      "statement": "∀ n : ℕ, 156 ≤ n → n ≤ 162 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [156, 162] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [156, 162] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 156,
+        "hi": 162,
+        "index": 20
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0164-0170",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0164_0170.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0164_0170",
+      "statement": "∀ n : ℕ, 164 ≤ n → n ≤ 170 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [164, 170] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [164, 170] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 164,
+        "hi": 170,
+        "index": 21
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0172-0178",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0172_0178.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0172_0178",
+      "statement": "∀ n : ℕ, 172 ≤ n → n ≤ 178 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [172, 178] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [172, 178] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 172,
+        "hi": 178,
+        "index": 22
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0180-0186",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0180_0186.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0180_0186",
+      "statement": "∀ n : ℕ, 180 ≤ n → n ≤ 186 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [180, 186] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [180, 186] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 180,
+        "hi": 186,
+        "index": 23
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0188-0194",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0188_0194.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0188_0194",
+      "statement": "∀ n : ℕ, 188 ≤ n → n ≤ 194 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [188, 194] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [188, 194] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 188,
+        "hi": 194,
+        "index": 24
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0196-0202",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0196_0202.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0196_0202",
+      "statement": "∀ n : ℕ, 196 ≤ n → n ≤ 202 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [196, 202] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [196, 202] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 196,
+        "hi": 202,
+        "index": 25
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0204-0210",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0204_0210.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0204_0210",
+      "statement": "∀ n : ℕ, 204 ≤ n → n ≤ 210 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [204, 210] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [204, 210] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 204,
+        "hi": 210,
+        "index": 26
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0212-0218",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0212_0218.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0212_0218",
+      "statement": "∀ n : ℕ, 212 ≤ n → n ≤ 218 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [212, 218] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [212, 218] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 212,
+        "hi": 218,
+        "index": 27
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0220-0226",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0220_0226.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0220_0226",
+      "statement": "∀ n : ℕ, 220 ≤ n → n ≤ 226 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [220, 226] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [220, 226] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 220,
+        "hi": 226,
+        "index": 28
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0228-0234",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0228_0234.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0228_0234",
+      "statement": "∀ n : ℕ, 228 ≤ n → n ≤ 234 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [228, 234] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [228, 234] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 228,
+        "hi": 234,
+        "index": 29
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0236-0242",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0236_0242.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0236_0242",
+      "statement": "∀ n : ℕ, 236 ≤ n → n ≤ 242 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [236, 242] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [236, 242] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 236,
+        "hi": 242,
+        "index": 30
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0244-0250",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0244_0250.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0244_0250",
+      "statement": "∀ n : ℕ, 244 ≤ n → n ≤ 250 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [244, 250] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [244, 250] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 244,
+        "hi": 250,
+        "index": 31
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0252-0258",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0252_0258.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0252_0258",
+      "statement": "∀ n : ℕ, 252 ≤ n → n ≤ 258 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [252, 258] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [252, 258] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 252,
+        "hi": 258,
+        "index": 32
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0260-0266",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0260_0266.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0260_0266",
+      "statement": "∀ n : ℕ, 260 ≤ n → n ≤ 266 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [260, 266] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [260, 266] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 260,
+        "hi": 266,
+        "index": 33
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0268-0274",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0268_0274.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0268_0274",
+      "statement": "∀ n : ℕ, 268 ≤ n → n ≤ 274 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [268, 274] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [268, 274] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 268,
+        "hi": 274,
+        "index": 34
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0276-0282",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0276_0282.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0276_0282",
+      "statement": "∀ n : ℕ, 276 ≤ n → n ≤ 282 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [276, 282] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [276, 282] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 276,
+        "hi": 282,
+        "index": 35
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0284-0290",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0284_0290.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0284_0290",
+      "statement": "∀ n : ℕ, 284 ≤ n → n ≤ 290 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [284, 290] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [284, 290] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 284,
+        "hi": 290,
+        "index": 36
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0292-0298",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0292_0298.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0292_0298",
+      "statement": "∀ n : ℕ, 292 ≤ n → n ≤ 298 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [292, 298] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [292, 298] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 292,
+        "hi": 298,
+        "index": 37
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0300-0306",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0300_0306.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0300_0306",
+      "statement": "∀ n : ℕ, 300 ≤ n → n ≤ 306 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [300, 306] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [300, 306] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 300,
+        "hi": 306,
+        "index": 38
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0308-0314",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0308_0314.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0308_0314",
+      "statement": "∀ n : ℕ, 308 ≤ n → n ≤ 314 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [308, 314] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [308, 314] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 308,
+        "hi": 314,
+        "index": 39
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0316-0322",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0316_0322.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0316_0322",
+      "statement": "∀ n : ℕ, 316 ≤ n → n ≤ 322 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [316, 322] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [316, 322] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 316,
+        "hi": 322,
+        "index": 40
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0324-0330",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0324_0330.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0324_0330",
+      "statement": "∀ n : ℕ, 324 ≤ n → n ≤ 330 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [324, 330] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [324, 330] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 324,
+        "hi": 330,
+        "index": 41
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0332-0338",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0332_0338.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0332_0338",
+      "statement": "∀ n : ℕ, 332 ≤ n → n ≤ 338 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [332, 338] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [332, 338] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 332,
+        "hi": 338,
+        "index": 42
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0340-0346",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0340_0346.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0340_0346",
+      "statement": "∀ n : ℕ, 340 ≤ n → n ≤ 346 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [340, 346] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [340, 346] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 340,
+        "hi": 346,
+        "index": 43
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0348-0354",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0348_0354.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0348_0354",
+      "statement": "∀ n : ℕ, 348 ≤ n → n ≤ 354 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [348, 354] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [348, 354] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 348,
+        "hi": 354,
+        "index": 44
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0356-0362",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0356_0362.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0356_0362",
+      "statement": "∀ n : ℕ, 356 ≤ n → n ≤ 362 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [356, 362] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [356, 362] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 356,
+        "hi": 362,
+        "index": 45
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0364-0370",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0364_0370.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0364_0370",
+      "statement": "∀ n : ℕ, 364 ≤ n → n ≤ 370 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [364, 370] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [364, 370] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 364,
+        "hi": 370,
+        "index": 46
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0372-0378",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0372_0378.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0372_0378",
+      "statement": "∀ n : ℕ, 372 ≤ n → n ≤ 378 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [372, 378] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [372, 378] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 372,
+        "hi": 378,
+        "index": 47
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0380-0386",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0380_0386.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0380_0386",
+      "statement": "∀ n : ℕ, 380 ≤ n → n ≤ 386 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [380, 386] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [380, 386] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 380,
+        "hi": 386,
+        "index": 48
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0388-0394",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0388_0394.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0388_0394",
+      "statement": "∀ n : ℕ, 388 ≤ n → n ≤ 394 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [388, 394] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [388, 394] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 388,
+        "hi": 394,
+        "index": 49
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0396-0402",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0396_0402.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0396_0402",
+      "statement": "∀ n : ℕ, 396 ≤ n → n ≤ 402 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [396, 402] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [396, 402] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 396,
+        "hi": 402,
+        "index": 50
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0404-0410",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0404_0410.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0404_0410",
+      "statement": "∀ n : ℕ, 404 ≤ n → n ≤ 410 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [404, 410] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [404, 410] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 404,
+        "hi": 410,
+        "index": 51
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0412-0418",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0412_0418.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0412_0418",
+      "statement": "∀ n : ℕ, 412 ≤ n → n ≤ 418 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [412, 418] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [412, 418] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 412,
+        "hi": 418,
+        "index": 52
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0420-0426",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0420_0426.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0420_0426",
+      "statement": "∀ n : ℕ, 420 ≤ n → n ≤ 426 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [420, 426] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [420, 426] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 420,
+        "hi": 426,
+        "index": 53
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0428-0434",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0428_0434.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0428_0434",
+      "statement": "∀ n : ℕ, 428 ≤ n → n ≤ 434 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [428, 434] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [428, 434] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 428,
+        "hi": 434,
+        "index": 54
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0436-0442",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0436_0442.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0436_0442",
+      "statement": "∀ n : ℕ, 436 ≤ n → n ≤ 442 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [436, 442] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [436, 442] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 436,
+        "hi": 442,
+        "index": 55
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0444-0450",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0444_0450.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0444_0450",
+      "statement": "∀ n : ℕ, 444 ≤ n → n ≤ 450 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [444, 450] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [444, 450] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 444,
+        "hi": 450,
+        "index": 56
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0452-0458",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0452_0458.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0452_0458",
+      "statement": "∀ n : ℕ, 452 ≤ n → n ≤ 458 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [452, 458] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [452, 458] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 452,
+        "hi": 458,
+        "index": 57
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0460-0466",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0460_0466.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0460_0466",
+      "statement": "∀ n : ℕ, 460 ≤ n → n ≤ 466 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [460, 466] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [460, 466] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 460,
+        "hi": 466,
+        "index": 58
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0468-0474",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0468_0474.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0468_0474",
+      "statement": "∀ n : ℕ, 468 ≤ n → n ≤ 474 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [468, 474] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [468, 474] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 468,
+        "hi": 474,
+        "index": 59
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0476-0482",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0476_0482.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0476_0482",
+      "statement": "∀ n : ℕ, 476 ≤ n → n ≤ 482 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [476, 482] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [476, 482] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 476,
+        "hi": 482,
+        "index": 60
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0484-0490",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0484_0490.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0484_0490",
+      "statement": "∀ n : ℕ, 484 ≤ n → n ≤ 490 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [484, 490] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [484, 490] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 484,
+        "hi": 490,
+        "index": 61
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0492-0498",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0492_0498.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0492_0498",
+      "statement": "∀ n : ℕ, 492 ≤ n → n ≤ 498 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [492, 498] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [492, 498] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 492,
+        "hi": 498,
+        "index": 62
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0500-0506",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0500_0506.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0500_0506",
+      "statement": "∀ n : ℕ, 500 ≤ n → n ≤ 506 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [500, 506] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [500, 506] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 500,
+        "hi": 506,
+        "index": 63
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0508-0514",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0508_0514.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0508_0514",
+      "statement": "∀ n : ℕ, 508 ≤ n → n ≤ 514 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [508, 514] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [508, 514] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 508,
+        "hi": 514,
+        "index": 64
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0516-0522",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0516_0522.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0516_0522",
+      "statement": "∀ n : ℕ, 516 ≤ n → n ≤ 522 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [516, 522] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [516, 522] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 516,
+        "hi": 522,
+        "index": 65
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0524-0530",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0524_0530.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0524_0530",
+      "statement": "∀ n : ℕ, 524 ≤ n → n ≤ 530 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [524, 530] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [524, 530] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 524,
+        "hi": 530,
+        "index": 66
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0532-0538",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0532_0538.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0532_0538",
+      "statement": "∀ n : ℕ, 532 ≤ n → n ≤ 538 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [532, 538] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [532, 538] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 532,
+        "hi": 538,
+        "index": 67
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0540-0546",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0540_0546.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0540_0546",
+      "statement": "∀ n : ℕ, 540 ≤ n → n ≤ 546 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [540, 546] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [540, 546] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 540,
+        "hi": 546,
+        "index": 68
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0548-0554",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0548_0554.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0548_0554",
+      "statement": "∀ n : ℕ, 548 ≤ n → n ≤ 554 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [548, 554] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [548, 554] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 548,
+        "hi": 554,
+        "index": 69
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0556-0562",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0556_0562.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0556_0562",
+      "statement": "∀ n : ℕ, 556 ≤ n → n ≤ 562 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [556, 562] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [556, 562] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 556,
+        "hi": 562,
+        "index": 70
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0564-0570",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0564_0570.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0564_0570",
+      "statement": "∀ n : ℕ, 564 ≤ n → n ≤ 570 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [564, 570] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [564, 570] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 564,
+        "hi": 570,
+        "index": 71
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0572-0578",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0572_0578.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0572_0578",
+      "statement": "∀ n : ℕ, 572 ≤ n → n ≤ 578 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [572, 578] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [572, 578] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 572,
+        "hi": 578,
+        "index": 72
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0580-0586",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0580_0586.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0580_0586",
+      "statement": "∀ n : ℕ, 580 ≤ n → n ≤ 586 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [580, 586] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [580, 586] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 580,
+        "hi": 586,
+        "index": 73
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0588-0594",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0588_0594.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0588_0594",
+      "statement": "∀ n : ℕ, 588 ≤ n → n ≤ 594 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [588, 594] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [588, 594] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 588,
+        "hi": 594,
+        "index": 74
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0596-0602",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0596_0602.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0596_0602",
+      "statement": "∀ n : ℕ, 596 ≤ n → n ≤ 602 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [596, 602] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [596, 602] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 596,
+        "hi": 602,
+        "index": 75
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0604-0610",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0604_0610.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0604_0610",
+      "statement": "∀ n : ℕ, 604 ≤ n → n ≤ 610 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [604, 610] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [604, 610] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 604,
+        "hi": 610,
+        "index": 76
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0612-0618",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0612_0618.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0612_0618",
+      "statement": "∀ n : ℕ, 612 ≤ n → n ≤ 618 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [612, 618] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [612, 618] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 612,
+        "hi": 618,
+        "index": 77
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0620-0626",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0620_0626.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0620_0626",
+      "statement": "∀ n : ℕ, 620 ≤ n → n ≤ 626 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [620, 626] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [620, 626] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 620,
+        "hi": 626,
+        "index": 78
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0628-0634",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0628_0634.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0628_0634",
+      "statement": "∀ n : ℕ, 628 ≤ n → n ≤ 634 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [628, 634] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [628, 634] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 628,
+        "hi": 634,
+        "index": 79
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0636-0642",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0636_0642.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0636_0642",
+      "statement": "∀ n : ℕ, 636 ≤ n → n ≤ 642 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [636, 642] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [636, 642] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 636,
+        "hi": 642,
+        "index": 80
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0644-0650",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0644_0650.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0644_0650",
+      "statement": "∀ n : ℕ, 644 ≤ n → n ≤ 650 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [644, 650] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [644, 650] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 644,
+        "hi": 650,
+        "index": 81
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0652-0658",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0652_0658.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0652_0658",
+      "statement": "∀ n : ℕ, 652 ≤ n → n ≤ 658 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [652, 658] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [652, 658] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 652,
+        "hi": 658,
+        "index": 82
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0660-0666",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0660_0666.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0660_0666",
+      "statement": "∀ n : ℕ, 660 ≤ n → n ≤ 666 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [660, 666] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [660, 666] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 660,
+        "hi": 666,
+        "index": 83
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0668-0674",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0668_0674.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0668_0674",
+      "statement": "∀ n : ℕ, 668 ≤ n → n ≤ 674 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [668, 674] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [668, 674] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 668,
+        "hi": 674,
+        "index": 84
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0676-0682",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0676_0682.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0676_0682",
+      "statement": "∀ n : ℕ, 676 ≤ n → n ≤ 682 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [676, 682] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [676, 682] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 676,
+        "hi": 682,
+        "index": 85
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0684-0690",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0684_0690.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0684_0690",
+      "statement": "∀ n : ℕ, 684 ≤ n → n ≤ 690 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [684, 690] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [684, 690] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 684,
+        "hi": 690,
+        "index": 86
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0692-0698",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0692_0698.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0692_0698",
+      "statement": "∀ n : ℕ, 692 ≤ n → n ≤ 698 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [692, 698] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [692, 698] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 692,
+        "hi": 698,
+        "index": 87
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0700-0706",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0700_0706.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0700_0706",
+      "statement": "∀ n : ℕ, 700 ≤ n → n ≤ 706 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [700, 706] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [700, 706] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 700,
+        "hi": 706,
+        "index": 88
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0708-0714",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0708_0714.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0708_0714",
+      "statement": "∀ n : ℕ, 708 ≤ n → n ≤ 714 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [708, 714] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [708, 714] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 708,
+        "hi": 714,
+        "index": 89
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0716-0722",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0716_0722.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0716_0722",
+      "statement": "∀ n : ℕ, 716 ≤ n → n ≤ 722 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [716, 722] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [716, 722] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 716,
+        "hi": 722,
+        "index": 90
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0724-0730",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0724_0730.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0724_0730",
+      "statement": "∀ n : ℕ, 724 ≤ n → n ≤ 730 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [724, 730] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [724, 730] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 724,
+        "hi": 730,
+        "index": 91
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0732-0738",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0732_0738.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0732_0738",
+      "statement": "∀ n : ℕ, 732 ≤ n → n ≤ 738 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [732, 738] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [732, 738] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 732,
+        "hi": 738,
+        "index": 92
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0740-0746",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0740_0746.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0740_0746",
+      "statement": "∀ n : ℕ, 740 ≤ n → n ≤ 746 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [740, 746] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [740, 746] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 740,
+        "hi": 746,
+        "index": 93
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0748-0754",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0748_0754.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0748_0754",
+      "statement": "∀ n : ℕ, 748 ≤ n → n ≤ 754 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [748, 754] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [748, 754] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 748,
+        "hi": 754,
+        "index": 94
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0756-0762",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0756_0762.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0756_0762",
+      "statement": "∀ n : ℕ, 756 ≤ n → n ≤ 762 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [756, 762] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [756, 762] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 756,
+        "hi": 762,
+        "index": 95
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0764-0770",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0764_0770.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0764_0770",
+      "statement": "∀ n : ℕ, 764 ≤ n → n ≤ 770 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [764, 770] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [764, 770] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 764,
+        "hi": 770,
+        "index": 96
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0772-0778",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0772_0778.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0772_0778",
+      "statement": "∀ n : ℕ, 772 ≤ n → n ≤ 778 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [772, 778] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [772, 778] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 772,
+        "hi": 778,
+        "index": 97
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0780-0786",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0780_0786.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0780_0786",
+      "statement": "∀ n : ℕ, 780 ≤ n → n ≤ 786 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [780, 786] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [780, 786] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 780,
+        "hi": 786,
+        "index": 98
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0788-0794",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0788_0794.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0788_0794",
+      "statement": "∀ n : ℕ, 788 ≤ n → n ≤ 794 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [788, 794] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [788, 794] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 788,
+        "hi": 794,
+        "index": 99
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0796-0802",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0796_0802.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0796_0802",
+      "statement": "∀ n : ℕ, 796 ≤ n → n ≤ 802 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [796, 802] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [796, 802] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 796,
+        "hi": 802,
+        "index": 100
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0804-0810",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0804_0810.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0804_0810",
+      "statement": "∀ n : ℕ, 804 ≤ n → n ≤ 810 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [804, 810] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [804, 810] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 804,
+        "hi": 810,
+        "index": 101
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0812-0818",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0812_0818.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0812_0818",
+      "statement": "∀ n : ℕ, 812 ≤ n → n ≤ 818 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [812, 818] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [812, 818] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 812,
+        "hi": 818,
+        "index": 102
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0820-0826",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0820_0826.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0820_0826",
+      "statement": "∀ n : ℕ, 820 ≤ n → n ≤ 826 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [820, 826] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [820, 826] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 820,
+        "hi": 826,
+        "index": 103
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0828-0834",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0828_0834.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0828_0834",
+      "statement": "∀ n : ℕ, 828 ≤ n → n ≤ 834 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [828, 834] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [828, 834] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 828,
+        "hi": 834,
+        "index": 104
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0836-0842",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0836_0842.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0836_0842",
+      "statement": "∀ n : ℕ, 836 ≤ n → n ≤ 842 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [836, 842] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [836, 842] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 836,
+        "hi": 842,
+        "index": 105
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0844-0850",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0844_0850.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0844_0850",
+      "statement": "∀ n : ℕ, 844 ≤ n → n ≤ 850 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [844, 850] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [844, 850] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 844,
+        "hi": 850,
+        "index": 106
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0852-0858",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0852_0858.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0852_0858",
+      "statement": "∀ n : ℕ, 852 ≤ n → n ≤ 858 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [852, 858] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [852, 858] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 852,
+        "hi": 858,
+        "index": 107
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0860-0866",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0860_0866.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0860_0866",
+      "statement": "∀ n : ℕ, 860 ≤ n → n ≤ 866 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [860, 866] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [860, 866] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 860,
+        "hi": 866,
+        "index": 108
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0868-0874",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0868_0874.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0868_0874",
+      "statement": "∀ n : ℕ, 868 ≤ n → n ≤ 874 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [868, 874] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [868, 874] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 868,
+        "hi": 874,
+        "index": 109
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0876-0882",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0876_0882.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0876_0882",
+      "statement": "∀ n : ℕ, 876 ≤ n → n ≤ 882 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [876, 882] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [876, 882] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 876,
+        "hi": 882,
+        "index": 110
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0884-0890",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0884_0890.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0884_0890",
+      "statement": "∀ n : ℕ, 884 ≤ n → n ≤ 890 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [884, 890] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [884, 890] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 884,
+        "hi": 890,
+        "index": 111
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0892-0898",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0892_0898.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0892_0898",
+      "statement": "∀ n : ℕ, 892 ≤ n → n ≤ 898 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [892, 898] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [892, 898] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 892,
+        "hi": 898,
+        "index": 112
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0900-0906",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0900_0906.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0900_0906",
+      "statement": "∀ n : ℕ, 900 ≤ n → n ≤ 906 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [900, 906] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [900, 906] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 900,
+        "hi": 906,
+        "index": 113
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0908-0914",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0908_0914.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0908_0914",
+      "statement": "∀ n : ℕ, 908 ≤ n → n ≤ 914 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [908, 914] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [908, 914] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 908,
+        "hi": 914,
+        "index": 114
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0916-0922",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0916_0922.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0916_0922",
+      "statement": "∀ n : ℕ, 916 ≤ n → n ≤ 922 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [916, 922] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [916, 922] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 916,
+        "hi": 922,
+        "index": 115
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0924-0930",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0924_0930.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0924_0930",
+      "statement": "∀ n : ℕ, 924 ≤ n → n ≤ 930 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [924, 930] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [924, 930] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 924,
+        "hi": 930,
+        "index": 116
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0932-0938",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0932_0938.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0932_0938",
+      "statement": "∀ n : ℕ, 932 ≤ n → n ≤ 938 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [932, 938] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [932, 938] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 932,
+        "hi": 938,
+        "index": 117
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0940-0946",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0940_0946.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0940_0946",
+      "statement": "∀ n : ℕ, 940 ≤ n → n ≤ 946 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [940, 946] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [940, 946] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 940,
+        "hi": 946,
+        "index": 118
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0948-0954",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0948_0954.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0948_0954",
+      "statement": "∀ n : ℕ, 948 ≤ n → n ≤ 954 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [948, 954] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [948, 954] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 948,
+        "hi": 954,
+        "index": 119
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0956-0962",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0956_0962.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0956_0962",
+      "statement": "∀ n : ℕ, 956 ≤ n → n ≤ 962 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [956, 962] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [956, 962] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 956,
+        "hi": 962,
+        "index": 120
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0964-0970",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0964_0970.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0964_0970",
+      "statement": "∀ n : ℕ, 964 ≤ n → n ≤ 970 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [964, 970] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [964, 970] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 964,
+        "hi": 970,
+        "index": 121
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0972-0978",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0972_0978.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0972_0978",
+      "statement": "∀ n : ℕ, 972 ≤ n → n ≤ 978 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [972, 978] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [972, 978] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 972,
+        "hi": 978,
+        "index": 122
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0980-0986",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0980_0986.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0980_0986",
+      "statement": "∀ n : ℕ, 980 ≤ n → n ≤ 986 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [980, 986] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [980, 986] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 980,
+        "hi": 986,
+        "index": 123
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0988-0994",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0988_0994.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0988_0994",
+      "statement": "∀ n : ℕ, 988 ≤ n → n ≤ 994 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [988, 994] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [988, 994] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 988,
+        "hi": 994,
+        "index": 124
+      }
+    },
+    {
+      "id": "L-goldbach-coverage-0996-1000",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coverage_0996_1000.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coverage_0996_1000",
+      "statement": "∀ n : ℕ, 996 ≤ n → n ≤ 1000 → Even n → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "闭区间 [996, 1000] 内的每个偶数都可以写成两个素数之和。",
+        "en": "Every even natural number in the closed interval [996, 1000] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "coverage",
+      "shard": {
+        "lo": 996,
+        "hi": 1000,
+        "index": 125
+      }
+    },
+    {
+      "id": "L-goldbach-moving-log-window",
+      "file": "lean/PEqualNP/Outside/L_goldbach_moving_log_window.lean",
+      "module": "PEqualNP.Outside.L_goldbach_moving_log_window",
+      "statement": "∀ a x b : ℝ, 2 ≤ a → a ≤ x → x < b → b - a ≤ 123 * (Real.log a) ^ 2 → x < b ∧ b ≤ x + 123 * (Real.log x) ^ 2",
+      "plain_statement": {
+        "zh": "对实数 2≤a≤x<b，若 b−a≤123(log a)²，则 b 落在 (x,x+123(log x)²] 内。",
+        "en": "For real numbers 2 ≤ a ≤ x < b, if b − a ≤ 123(log a)², then b belongs to (x,x+123(log x)²]."
+      },
+      "imports": [],
+      "program": "short-interval",
+      "brief": {
+        "zh": "在 [2,∞) 上比较非负对数的平方，再比较区间右端点。",
+        "en": "Compare squares of nonnegative logarithms on [2,∞), then compare the right endpoints."
+      }
+    },
+    {
+      "id": "L-goldbach-log-two-lower",
+      "file": "lean/PEqualNP/Outside/L_goldbach_log_two_lower.lean",
+      "module": "PEqualNP.Outside.L_goldbach_log_two_lower",
+      "statement": "(2 / 3 : ℝ) ≤ Real.log 2",
+      "plain_statement": {
+        "zh": "自然对数 log 2 至少为 2/3。",
+        "en": "The natural logarithm of 2 is at least 2/3."
+      },
+      "imports": [],
+      "program": "short-interval",
+      "brief": {
+        "zh": "这个显式下界可用于证明有限短区间样例的间距预算。",
+        "en": "This explicit bound supplies the gap budget for the finite short-interval pilot."
+      }
+    },
+    {
+      "id": "L-goldbach-log-window-pilot",
+      "file": "lean/PEqualNP/Outside/L_goldbach_log_window_pilot.lean",
+      "module": "PEqualNP.Outside.L_goldbach_log_window_pilot",
+      "statement": "(2 / 3 : ℝ) ≤ Real.log 2 → ∀ x : ℝ, 2 ≤ x → x ≤ 1000 → ∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ Odd p ∧ Odd q ∧ x < ((p + q : ℕ) : ℝ) ∧ ((p + q : ℕ) : ℝ) ≤ x + 123 * (Real.log x) ^ 2",
+      "plain_statement": {
+        "zh": "若 log 2≥2/3，则对每个闭区间 [2,1000] 内的实数 x，开左闭右区间 (x,x+123(log x)²] 内至少有一个数是两个奇素数之和。",
+        "en": "Assuming log 2 ≥ 2/3, for every real x in [2,1000] the interval (x,x+123(log x)²] contains a sum of two odd primes."
+      },
+      "imports": [],
+      "program": "short-interval",
+      "brief": {
+        "zh": "用 32 和 1002 分成两段，在 x=32 时用较大的见证。",
+        "en": "Use 32 and 1002 to split the proof. Choose the larger witness when x = 32."
+      }
+    },
+    {
+      "id": "L-goldbach-log-window-chain",
+      "file": "lean/PEqualNP/Outside/L_goldbach_log_window_chain.lean",
+      "module": "PEqualNP.Outside.L_goldbach_log_window_chain",
+      "statement": "∀ (g : ℕ → ℕ) (k : ℕ) (X : ℝ), g 0 = 2 → X < (g k : ℝ) → (∀ i : ℕ, i < k → g i < g (i + 1)) → (∀ i : ℕ, i < k → (g (i + 1) : ℝ) - (g i : ℝ) ≤ 123 * (Real.log (g i : ℝ)) ^ 2) → (∀ i : ℕ, 0 < i → i ≤ k → ∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ Odd p ∧ Odd q ∧ p + q = g i) → ∀ x : ℝ, 2 ≤ x → x ≤ X → ∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ Odd p ∧ Odd q ∧ x < ((p + q : ℕ) : ℝ) ∧ ((p + q : ℕ) : ℝ) ≤ x + 123 * (Real.log x) ^ 2",
+      "plain_statement": {
+        "zh": "设 k 为自然数、X 为实数，序列 g₀,…,gₖ 严格递增，g₀=2、gₖ>X。若每个 i<k 满足 gᵢ₊₁−gᵢ≤123(log gᵢ)²，且每个 1≤i≤k 的 gᵢ 都是两个奇素数之和，则对每个实数 x∈[2,X]，区间 (x,x+123(log x)²] 内存在两个奇素数之和。",
+        "en": "Let k be natural and X real, with a strictly increasing natural-number sequence g₀,…,gₖ satisfying g₀ = 2 and gₖ > X. Suppose each step i < k is at most 123(log gᵢ)² and each gᵢ with 1 ≤ i ≤ k is a sum of two odd primes. Then (x,x+123(log x)²] contains such a sum for every real x in [2,X]."
+      },
+      "imports": [],
+      "program": "short-interval",
+      "brief": {
+        "zh": "取最小的 i 使 gᵢ>x。它不是 0，且前一项不超过 x。",
+        "en": "Take the first i with gᵢ > x. It is nonzero and its predecessor is at most x."
+      }
+    },
+    {
+      "id": "L-goldbach-exceptions-zero-iff",
+      "file": "lean/PEqualNP/Outside/L_goldbach_exceptions_zero_iff.lean",
+      "module": "PEqualNP.Outside.L_goldbach_exceptions_zero_iff",
+      "statement": "∀ X : ℕ, ((Finset.range (X + 1)).filter (fun n => 4 ≤ n ∧ n % 2 = 0 ∧ ((Finset.range (n + 1)).filter (fun p => Nat.Prime p ∧ Nat.Prime (n - p))).card = 0)).card = 0 ↔ (∀ n : ℕ, 4 ≤ n → n ≤ X → n % 2 = 0 → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n))",
+      "plain_statement": {
+        "zh": "对每个自然数 X，若按 p≤n 且 p、n−p 均为素数来计数，则 [4,X] 内表示数为零的偶数有零个，当且仅当该区间内每个偶数都是两个素数之和。",
+        "en": "For every natural number X, count representations by the number of p ≤ n such that p and n − p are prime. The number of even n in [4,X] with zero representations is zero exactly when every even number in [4,X] is a sum of two primes."
+      },
+      "imports": [],
+      "program": "exceptions"
+    },
+    {
+      "id": "L-goldbach-exception-second-moment",
+      "file": "lean/PEqualNP/Outside/L_goldbach_exception_second_moment.lean",
+      "module": "PEqualNP.Outside.L_goldbach_exception_second_moment",
+      "statement": "∀ (I F : Finset ℕ) (e : ℕ → ℝ) (B : ℝ), F ⊆ I → 0 < B → (∀ n ∈ F, B ≤ |e n|) → (F.card : ℝ) * B ^ 2 ≤ Finset.sum I (fun n => |e n| ^ 2)",
+      "plain_statement": {
+        "zh": "设 F⊆I 为有限自然数集合、e 为实值函数且 B>0。若 F 中每个 n 均满足 |e(n)|≥B，则 |F|·B² 不超过 I 上的误差平方和。",
+        "en": "Let F ⊆ I be finite sets of natural numbers, e a real-valued function, and B > 0. If |e(n)| ≥ B for every n in F, then the cardinality of F times B² is at most the sum of squared errors over I."
+      },
+      "imports": [],
+      "program": "exceptions",
+      "brief": {
+        "zh": "先在 F 上逐项比较，再利用平方项非负把求和范围扩大到 I。",
+        "en": "First compare summands on F, then use nonnegativity of squares to enlarge the sum to I."
+      }
+    },
+    {
+      "id": "L-goldbach-exception-empty-by-energy",
+      "file": "lean/PEqualNP/Outside/L_goldbach_exception_empty_by_energy.lean",
+      "module": "PEqualNP.Outside.L_goldbach_exception_empty_by_energy",
+      "statement": "∀ (I F : Finset ℕ) (e : ℕ → ℝ) (B : ℝ), F ⊆ I → 0 < B → (∀ n ∈ F, B ≤ |e n|) → Finset.sum I (fun n => |e n| ^ 2) < B ^ 2 → F = ∅",
+      "plain_statement": {
+        "zh": "设 F⊆I 为有限自然数集合、e 为实值函数且 B>0。若 F 中每个 n 均满足 |e(n)|≥B，而 I 上的误差平方和严格小于 B²，则 F 为空集。",
+        "en": "Let F ⊆ I be finite sets of natural numbers, e a real-valued function, and B > 0. If |e(n)| ≥ B for every n in F and the sum of squared errors over I is strictly less than B², then F is empty."
+      },
+      "imports": [],
+      "program": "exceptions",
+      "brief": {
+        "zh": "若 F 里有一项，其平方已用完至少 B² 的误差预算。",
+        "en": "If F contains one point, its square alone uses at least B² of the error budget."
+      }
     }
   ]
 }
