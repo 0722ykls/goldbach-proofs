@@ -1,5 +1,5 @@
-# AUTHORITATIVE check of one pull request. Started by hand (workflow_dispatch) from the base
-# repository, with the pull request number and the gap id. Its verdict is the one that counts.
+# AUTHORITATIVE check of one pull request. A maintainer can dispatch by hand. A PR author
+# can request a check using a registered desk lease and a /goldbach-check comment.
 #
 # The rule behind every guard below: the only thing taken from the pull request is the bytes of
 # one Lean file. The fork is never checked out. Nothing from it runs, except that Lean compiles
@@ -13,8 +13,11 @@
 # that imports an outside proof can never be a listed import (the guard refuses it). A file that
 # builds on outside proofs imports the outside modules themselves, and the gap lists them.
 name: authoritative
+run-name: 'Goldbach PR #${{ inputs.pr || github.event.issue.number }}'
 
 on:
+  issue_comment:
+    types: [created]
   workflow_dispatch:
     inputs:
       pr:
@@ -32,21 +35,29 @@ permissions:
   pull-requests: read
 
 concurrency:
-  group: authoritative-${{ inputs.pr }}
+  group: authoritative-${{ inputs.pr || github.event.issue.number }}
   cancel-in-progress: false
 
 jobs:
   check:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.repository == 'CGandGameEngineLearner/goldbach-proofs' &&
+      github.event.issue.pull_request &&
+      github.event.comment.user.type == 'User' &&
+      github.event.comment.user.login == github.event.issue.user.login &&
+      startsWith(github.event.comment.body, '/goldbach-check '))
     runs-on: ubuntu-24.04
     timeout-minutes: 150
     outputs:
       verdict: ${{ steps.verdict.outputs.verdict }}
+      lemma: ${{ steps.verdict.outputs.lemma }}
       manifest: ${{ steps.verdict.outputs.manifest }}
     env:
       # Inputs are free text typed by whoever starts the run. They reach the scripts only as
       # environment variables, and the next step refuses anything but digits and a plain id.
       # They are never pasted into a script with the workflow's own expression syntax.
-      PR: ${{ inputs.pr }}
+      PR: ${{ inputs.pr || github.event.issue.number }}
       GAP: ${{ inputs.gap }}
       DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
       API: https://api.github.com
@@ -60,6 +71,13 @@ jobs:
           # write to it: this one and the three guard steps below.
           ( umask 077; : > "$RUNNER_TEMP/steps.log" ); chmod 600 "$RUNNER_TEMP/steps.log"
           exec > >(tee -a "$RUNNER_TEMP/steps.log") 2>&1
+          if [ "$GITHUB_EVENT_NAME" = issue_comment ]; then
+            command=$(jq -er '.comment.body' "$GITHUB_EVENT_PATH")
+            pattern='^/goldbach-check (L-goldbach-[a-z0-9]+(-[a-z0-9]+)*)$'
+            [[ "$command" =~ $pattern ]] || { echo "REFUSED: use /goldbach-check followed by one gap id"; exit 1; }
+            GAP=${BASH_REMATCH[1]}
+            printf 'GAP=%s\n' "$GAP" >> "$GITHUB_ENV"
+          fi
           printf '%s' "$PR" | grep -Eqx '[1-9][0-9]{0,6}' || { echo "REFUSED: pr must be a number"; exit 1; }
           printf '%s' "$GAP" | grep -Eqx 'L-[a-z0-9]+(-[a-z0-9]+)*' || { echo "REFUSED: gap must look like L-goldbach-004"; exit 1; }
           [ "${#GAP}" -le 64 ] || { echo "REFUSED: gap id too long"; exit 1; }
@@ -134,6 +152,48 @@ jobs:
           # locked account). It refuses an outside module whose text fails the proof-file rules,
           # and a base module that imports an outside one.
           node "$W/base/.github/scripts/outside-guard.mjs" closure "$W/base" "$W/in/imports.json" "$(cat "$W/in/pr.file")" "$W/in"
+
+      - name: Authorize the author's submitted lease
+        if: github.event_name == 'issue_comment'
+        env:
+          DESK_URL: ${{ vars.GOLDBACH_DESK_URL }}
+          DESK_SECRET: ${{ secrets.GOLDBACH_WEBHOOK_SECRET }}
+        run: |
+          python3 - <<'PY'
+          import hashlib, hmac, json, os, urllib.error, urllib.request
+          from pathlib import Path
+
+          env = os.environ
+          work = Path(env["W"]) / "in"
+          author = (work / "pr.author").read_text().strip()
+          event = json.loads(Path(env["GITHUB_EVENT_PATH"]).read_bytes())
+          if author.casefold() != event["comment"]["user"]["login"].casefold():
+              raise SystemExit("REFUSED: only the PR author can request verification")
+          url = env["DESK_URL"].rstrip("/") + "/authorize"
+          if not url.startswith("https://") or not env["DESK_SECRET"]:
+              raise SystemExit("Desk authorization is not configured")
+          payload = json.dumps({
+              "pr": int(env["PR"]),
+              "head": (work / "pr.head").read_text().strip(),
+              "handle": author,
+              "gap": env["GAP"],
+              "run_id": int(env["GITHUB_RUN_ID"]),
+              "statement_sha256": hashlib.sha256((work / "statement.txt").read_bytes()).hexdigest(),
+          }).encode()
+          signature = hmac.new(env["DESK_SECRET"].encode(), payload, hashlib.sha256).hexdigest()
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, *args):
+                  return None
+          request = urllib.request.Request(url, payload, {
+              "Content-Type": "application/json",
+              "X-Goldbach-Signature": "sha256=" + signature,
+          })
+          try:
+              with urllib.request.build_opener(NoRedirect()).open(request, timeout=15) as response:
+                  print("Desk authorized this proof check", response.status)
+          except urllib.error.HTTPError as error:
+              raise SystemExit(f"Desk authorization failed (HTTP {error.code}). Check the lease, PR head, and gap.") from None
+          PY
 
       - name: Install the pinned Lean toolchain
         run: |
@@ -437,7 +497,7 @@ jobs:
             if [ "$verdict" = ACCEPTED ]; then
               manifest=$(sed -n 's/^MANIFEST //p' "$RUNNER_TEMP/checker.out" | jq -ce '{rests_on,defs}')
             fi
-            printf 'verdict=%s\nmanifest=%s\n' "$verdict" "$manifest" >> "$GITHUB_OUTPUT"
+            printf 'verdict=%s\nmanifest=%s\nlemma=%s\n' "$verdict" "$manifest" "$GAP" >> "$GITHUB_OUTPUT"
           fi
           [ "$verdict" = ACCEPTED ] && exit 0
           [ "$verdict" = REJECTED ] && exit 1
@@ -452,7 +512,7 @@ jobs:
     env:
       URL: ${{ vars.GOLDBACH_WEBHOOK_URL }}
       SECRET: ${{ secrets.GOLDBACH_WEBHOOK_SECRET }}
-      GAP: ${{ inputs.gap }}
+      GAP: ${{ needs.check.outputs.lemma }}
       VERDICT: ${{ needs.check.outputs.verdict }}
       MANIFEST: ${{ needs.check.outputs.manifest }}
     steps:

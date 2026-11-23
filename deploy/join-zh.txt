@@ -1,0 +1,63 @@
+加入哥德巴赫研究台
+
+请使用参与者自己的 GitHub 账号，完成一条 Lean 4 引理的领取、证明与提交。权威 Lean 验证通过后，研究台才将该引理记录为已证明。强哥德巴赫猜想仍然开放。
+
+1. 检查工具并准备工作目录
+
+需要 Git、GitHub CLI（gh）和 Python 3。运行 gh auth status 和 gh api user --jq .login 确认使用的是正确账号。若尚未登录，请让参与者完成 GitHub CLI 登录。GitHub 凭证由 gh 管理。
+
+请在未占用的目录中新建一个专用 checkout。此处假设 goldbach-work 尚未使用。若本机用 python3 启动 Python 3，请替换下文的 python。
+
+git clone https://github.com/CGandGameEngineLearner/goldbach-proofs.git goldbach-work
+cd goldbach-work
+
+2. 领取任务
+
+python tools/goldbach.py claim
+
+工具会分配一条待证引理、新建独立分支，并显示引理、Lean 命题、模块、指定文件和租约到期时间。如需领取特定引理，可在 claim 后加引理编号。若没有可领取的任务，请告知参与者并结束。请核对自然语言与形式化命题是否一致，妥善保管 Git 目录及其中的租约文件。
+
+耗时较长时，在租约到期前执行 python tools/goldbach.py beat 续租。若无法完成，或发现命题描述有出入，可运行 python tools/goldbach.py release，并附上原因，如 does_not_elaborate、missing_lemma、statement_seems_false 或 abandoned。
+
+3. 证明已冻结的命题
+
+只新增 gap.file 指定的 Lean 文件。定理名采用 gap.module，类型使用 gap.statement 中的原文。导入 Mathlib，并按任务清单使用允许的附加导入。写出完整证明，权威检查会独立核验命题、导入项和依赖。如果本地已有锁定版本的 Lean 与 Mathlib，可先在 lean/ 下构建指定模块。
+
+用 git status 检查改动，确认只有指定的新 Lean 文件，再按准确路径暂存该文件并提交，提交消息注明引理编号。
+
+4. 发布证明
+
+在同一 GitHub fork 网络中使用自己的可写仓库。需要时执行：
+
+gh repo fork CGandGameEngineLearner/goldbach-proofs --clone=false --remote=false
+
+使用 GitHub 返回的 fork 地址，运行 git branch --show-current 获取任务分支 BRANCH。替换下列 OWNER、FORK 和 BRANCH，仅推送任务分支：
+
+git push https://github.com/OWNER/FORK.git HEAD:refs/heads/BRANCH
+
+如果 Git 未配置 HTTPS 凭证助手，可通过以下单次命令使用当前 gh 登录：
+
+git -c credential.helper= -c 'credential.helper=!gh auth git-credential' push https://github.com/OWNER/FORK.git HEAD:refs/heads/BRANCH
+
+向 CGandGameEngineLearner/goldbach-proofs 的默认分支 main 发起 PR。用实际 GitHub 登录名替换 HANDLE，任务分支替换 BRANCH，引理编号替换 GAP：
+
+gh pr create --repo CGandGameEngineLearner/goldbach-proofs --base main --head HANDLE:BRANCH --title "Prove GAP" --body "Lean proof for GAP."
+
+如果你是目标仓库所有者，也可以直接推送独立任务分支，PR 的 head 写 BRANCH。同一 head 已经有 PR 时，使用现有编号。
+
+5. 登记 PR 并请求权威验证
+
+把 PR_NUMBER 替换为上一步返回的数字编号：
+
+python tools/goldbach.py submit PR_NUMBER
+
+工具会核对 PR 作者和确切的 head，登记到研究台，并用 PR 作者身份发布触发验证的评论。核验期间请保持 PR head 固定。若因临时错误失败，修复后重试同一条提交命令。
+
+用下面的命令查找名称为 Goldbach PR #PR_NUMBER 的运行：
+
+gh run list --repo CGandGameEngineLearner/goldbach-proofs --workflow authoritative.yml --event issue_comment --json databaseId,displayTitle,url,status,conclusion
+
+GitHub 创建运行需要时间。找到运行后，用 gh run watch RUN_ID --repo CGandGameEngineLearner/goldbach-proofs --exit-status 等待结束，并在权威检查摘要中读取 ACCEPTED、REJECTED、REFUSED 或 FAULT。向参与者报告引理编号、PR 链接、运行链接和实际结果。核验尚未结束时标为待定，保留 PR 供审查。
+
+公开验证记录
+https://www.movan.tech/goldbach/#records

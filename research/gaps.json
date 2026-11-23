@@ -21,6 +21,39 @@
         "en": "10 is a sum of two primes."
       },
       "imports": []
+    },
+    {
+      "id": "L-goldbach-018",
+      "file": "lean/PEqualNP/Outside/L_goldbach_018.lean",
+      "module": "PEqualNP.Outside.L_goldbach_018",
+      "statement": "∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = 18",
+      "plain_statement": {
+        "zh": "18 是两个素数之和。",
+        "en": "18 is a sum of two primes."
+      },
+      "imports": []
+    },
+    {
+      "id": "L-goldbach-ordered",
+      "file": "lean/PEqualNP/Outside/L_goldbach_ordered.lean",
+      "module": "PEqualNP.Outside.L_goldbach_ordered",
+      "statement": "∀ n : ℕ, (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p + q = n) → (∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p ≤ q ∧ p + q = n)",
+      "plain_statement": {
+        "zh": "若一个自然数可写成两个素数之和，则可选取一组使第一个素数不大于第二个。",
+        "en": "If a natural number is a sum of two primes, it has such a representation with the first prime at most the second."
+      },
+      "imports": []
+    },
+    {
+      "id": "L-goldbach-odd-summands",
+      "file": "lean/PEqualNP/Outside/L_goldbach_odd_summands.lean",
+      "module": "PEqualNP.Outside.L_goldbach_odd_summands",
+      "statement": "∀ n p q : ℕ, 4 < n → Even n → Nat.Prime p → Nat.Prime q → p + q = n → Odd p ∧ Odd q",
+      "plain_statement": {
+        "zh": "大于 4 的偶数若写成两个素数之和，则这两个素数都是奇数。",
+        "en": "In any representation of an even natural number greater than 4 as two primes, both primes are odd."
+      },
+      "imports": []
     }
   ]
 }

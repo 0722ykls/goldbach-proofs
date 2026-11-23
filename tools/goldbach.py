@@ -1,0 +1,190 @@
+#!/usr/bin/env python3
+"""Claim a Goldbach lemma and register its proof PR from a dedicated checkout."""
+
+import argparse
+import json
+import os
+import re
+import secrets
+import subprocess
+import sys
+import tempfile
+import urllib.error
+import urllib.request
+from pathlib import Path
+
+REPO = "CGandGameEngineLearner/goldbach-proofs"
+DESK = "https://www.movan.tech/goldbach/api/desk"
+GAP_ID = re.compile(r"L-goldbach-[a-z0-9-]+")
+
+
+class NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, *args, **kwargs):
+        return None
+
+
+def command(*args):
+    return subprocess.check_output(args, encoding="utf-8").strip()
+
+
+def desk(action, data, token=None):
+    headers = {"Content-Type": "application/json", "Accept": "application/json"}
+    if token:
+        headers["Authorization"] = "Bearer " + token
+    request = urllib.request.Request(
+        f"{DESK}/{action}", data=json.dumps(data).encode(), headers=headers
+    )
+    try:
+        with urllib.request.build_opener(NoRedirect()).open(request, timeout=20) as response:
+            return json.loads(response.read())
+    except urllib.error.HTTPError as error:
+        try:
+            message = json.loads(error.read(4096)).get("error", "request refused")
+        except (ValueError, AttributeError):
+            message = "request refused"
+        if token:
+            message = str(message).replace(token, "[hidden]")
+        raise SystemExit(f"Desk {action} failed ({error.code}): {message}") from None
+    except urllib.error.URLError as error:
+        raise SystemExit(f"Could not reach the Goldbach desk: {error.reason}") from None
+
+
+def save(path, state):
+    # A private tempfile and atomic replacement protect the lease across retries.
+    fd, temporary = tempfile.mkstemp(dir=path.parent, prefix=".goldbach-lease-")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            json.dump(state, stream)
+        os.replace(temporary, path)
+    finally:
+        Path(temporary).unlink(missing_ok=True)
+
+
+def current_branch():
+    return command("git", "branch", "--show-current")
+
+
+def authenticated_login():
+    return command("gh", "api", "user", "--jq", ".login")
+
+
+def claim(path, requested):
+    if path.exists():
+        raise SystemExit("This checkout already has a task. Finish it or use a fresh checkout.")
+    if command("git", "status", "--porcelain", "--untracked-files=all"):
+        raise SystemExit("Use a clean, dedicated clone of the upstream Goldbach repository.")
+    base = command("git", "rev-parse", "HEAD")
+    registry = json.loads(command("git", "show", f"{base}:research/gaps.json"))
+    handle = authenticated_login()
+    request = {"handle": handle}
+    if requested:
+        request["gap"] = requested
+    response = desk("claim", request)
+    gap = response["gap"]
+    lease = response["lease"]
+    expected = next((item for item in registry["gaps"] if item["id"] == gap["id"]), None)
+    fields = ("id", "file", "module", "statement", "imports")
+    if not expected or not GAP_ID.fullmatch(gap["id"]) or any(
+        gap.get(field) != expected.get(field) for field in fields
+    ):
+        desk("release", {"reason": "superseded"}, lease["token"])
+        raise SystemExit("The desk and this checkout disagree. Clone the current default branch and retry.")
+
+    branch = f"goldbach/{gap['id']}/{secrets.token_hex(4)}"
+    state = {
+        "base": base, "branch": branch, "handle": handle, "gap": expected,
+        "token": lease["token"],
+    }
+    try:
+        save(path, state)
+        subprocess.run(["git", "switch", "-c", branch], check=True)
+    except (OSError, subprocess.CalledProcessError):
+        desk("release", {"reason": "other"}, lease["token"])
+        path.unlink(missing_ok=True)
+        raise
+    print(json.dumps({
+        "gap": expected, "branch": branch, "handle": handle, "expires_at": lease["expires_at"],
+    }, ensure_ascii=False, indent=2))
+
+
+def submit(path, state, number):
+    if current_branch() != state["branch"]:
+        raise SystemExit(f"Switch to the task branch {state['branch']} before submitting.")
+    if authenticated_login().casefold() != state["handle"].casefold():
+        raise SystemExit("Use the same GitHub account that claimed this assignment.")
+    if command("git", "status", "--porcelain", "--untracked-files=all"):
+        raise SystemExit("Commit the assigned proof file and leave the task checkout clean.")
+    head = command("git", "rev-parse", "HEAD")
+    expected_diff = "A\0" + state["gap"]["file"] + "\0"
+    diff = subprocess.check_output(
+        ["git", "diff", "--name-status", "-z", state["base"], head, "--"], encoding="utf-8"
+    )
+    if diff != expected_diff:
+        raise SystemExit("The task branch must add exactly the assigned Lean file.")
+    pr = json.loads(command("gh", "api", f"repos/{REPO}/pulls/{number}"))
+    base = pr["base"]
+    if (
+        pr["state"] != "open"
+        or pr["user"]["login"].casefold() != state["handle"].casefold()
+        or pr["head"]["sha"] != head
+        or base["repo"]["full_name"].casefold() != REPO.casefold()
+        or base["ref"] != base["repo"]["default_branch"]
+        or pr["changed_files"] != 1
+    ):
+        raise SystemExit("The PR must be yours, open, based on the Goldbach default branch, and match this one-file checkout.")
+    if state.get("requested") == {"pr": number, "head": head}:
+        print(f"Verification already requested for PR {number} ({head[:12]}).")
+        return
+    desk("submit", {"pr": number, "head": head}, state["token"])
+    instruction = f"/goldbach-check {state['gap']['id']}"
+    subprocess.run(
+        ["gh", "pr", "comment", str(number), "--repo", REPO, "--body", instruction],
+        check=True,
+    )
+    state["requested"] = {"pr": number, "head": head}
+    save(path, state)
+    print(f"Requested authoritative verification for PR {number} ({head[:12]}).")
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    modes = parser.add_subparsers(dest="action", required=True)
+    request = modes.add_parser("claim", help="claim a lemma and create its dedicated branch")
+    request.add_argument("gap", nargs="?")
+    modes.add_parser("beat", help="renew the current lease")
+    release = modes.add_parser("release", help="return an unfinished lemma")
+    release.add_argument("reason", nargs="?", default="abandoned")
+    submission = modes.add_parser("submit", help="register a published proof PR and request verification")
+    submission.add_argument("pr", type=int)
+    args = parser.parse_args()
+    git_dir = Path(command("git", "rev-parse", "--absolute-git-dir"))
+    path = git_dir / "goldbach-lease.json"
+    if args.action == "claim":
+        if args.gap and not GAP_ID.fullmatch(args.gap):
+            parser.error("invalid Goldbach lemma ID")
+        claim(path, args.gap)
+        return
+    if not path.is_file():
+        parser.error("no lease in this checkout; run claim first")
+    state = json.loads(path.read_text(encoding="utf-8"))
+    if args.action == "beat":
+        response = desk("beat", {}, state["token"])
+        lease = response.get("lease", response)
+        print("Lease renewed.", lease.get("expires_at", ""))
+    elif args.action == "release":
+        desk("release", {"reason": args.reason}, state["token"])
+        path.unlink()
+        print("Unfinished assignment returned to the desk.")
+    else:
+        if args.pr < 1:
+            parser.error("PR number must be positive")
+        submit(path, state, args.pr)
+
+
+if __name__ == "__main__":
+    sys.stdout.reconfigure(encoding="utf-8")
+    try:
+        main()
+    except subprocess.CalledProcessError as error:
+        raise SystemExit(f"{error.cmd[0]} failed with exit status {error.returncode}.") from None
+

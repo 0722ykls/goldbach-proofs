@@ -11,14 +11,19 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
+from desk import Desk
+
 ROOT = Path(__file__).resolve().parent
 CREDS = Path(os.environ["CREDENTIALS_DIRECTORY"])
 SECRET = (CREDS / "webhook").read_bytes().strip()
 DB = Path(os.environ["STATE_DIRECTORY"]) / "verdicts.sqlite3"
 GAPS = json.loads((ROOT / "gaps.json").read_text(encoding="utf-8"))["gaps"]
+DESK = Desk(DB, GAPS, SECRET)
 ASSETS = {
     "/site.css": "text/css",
     "/site.js": "text/javascript",
+    "/join.txt": "text/plain",
+    "/join-zh.txt": "text/plain",
 }
 
 
@@ -62,6 +67,7 @@ def research_status():
     return {
         "gaps": gaps,
         "results": results,
+        "desk": DESK.public_status(),
         "counts": {
             "published": len(gaps),
             "accepted": accepted,
@@ -97,6 +103,18 @@ class Handler(BaseHTTPRequestHandler):
         if self.command != "HEAD":
             self.wfile.write(body)
 
+    def client_ip(self):
+        peer = ipaddress.ip_address(self.client_address[0])
+        peer = getattr(peer, "ipv4_mapped", None) or peer
+        if peer.is_loopback:
+            forwarded = self.headers.get("X-Goldbach-Client-IP")
+            if forwarded:
+                try:
+                    return ipaddress.ip_address(forwarded)
+                except ValueError:
+                    pass
+        return peer
+
     def do_GET(self):
         url = urlsplit(self.path)
         if url.path == "/health":
@@ -117,21 +135,33 @@ class Handler(BaseHTTPRequestHandler):
             return self.reply(404, b'{}')
         lang = parse_qs(url.query).get("lang", [""])[0]
         if lang not in {"zh", "en"}:
-            peer = ipaddress.ip_address(self.client_address[0])
-            peer = getattr(peer, "ipv4_mapped", None) or peer
-            if peer.is_loopback:
-                forwarded = self.headers.get("X-Goldbach-Client-IP")
-                if forwarded:
-                    try:
-                        peer = ipaddress.ip_address(forwarded)
-                    except ValueError:
-                        pass
+            peer = self.client_ip()
             lang = "zh" if any(peer in net for net in NETWORKS) else "en"
         self.reply(200, (ROOT / f"{lang}.html").read_bytes(), "text/html", lang)
 
     do_HEAD = do_GET
 
+    def desk_post(self):
+        try:
+            size = int(self.headers.get("Content-Length", "0"))
+            if not 1 <= size <= 8192:
+                return self.reply(413, b'{"error":"request body must be between 1 and 8192 bytes"}')
+            self.connection.settimeout(10)
+            raw = self.rfile.read(size)
+            body = json.loads(raw)
+            if not isinstance(body, dict):
+                raise ValueError()
+            status, result = DESK.dispatch(self.path, body, self.headers, str(self.client_ip()), raw)
+        except (ValueError, OSError):
+            return self.reply(400, b'{"error":"invalid request body"}')
+        except sqlite3.Error as error:
+            self.log_error("Desk unavailable: %s", error)
+            return self.reply(503, b'{"error":"task desk temporarily unavailable"}')
+        return self.reply(status, json.dumps(result, ensure_ascii=False).encode())
+
     def do_POST(self):
+        if self.path.startswith("/api/desk/"):
+            return self.desk_post()
         if self.path != "/api/verdict":
             return self.reply(404, b'{}')
         try:
@@ -169,7 +199,9 @@ class Handler(BaseHTTPRequestHandler):
             return self.reply(400, b'{}')
         with closing(sqlite3.connect(DB)) as conn, conn:
             conn.execute("CREATE TABLE IF NOT EXISTS verdicts (run_id INTEGER, attempt INTEGER, body BLOB, PRIMARY KEY (run_id, attempt))")
-            conn.execute("INSERT OR IGNORE INTO verdicts VALUES (?, ?, ?)", (run_id, attempt, body))
+            inserted = conn.execute("INSERT OR IGNORE INTO verdicts VALUES (?, ?, ?)", (run_id, attempt, body))
+            if inserted.rowcount == 1:
+                DESK.record_verdict(record, conn)
         self.reply(200, b'{"status":"stored"}')
 
 class Server(HTTPServer):

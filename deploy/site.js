@@ -9,7 +9,19 @@ const strings = {
     manifest: '查看证据清单', empty: '没有匹配的引理。', noRecords: '还没有权威验证记录。',
     count: n => '找到 ' + n + ' 条引理。',
     failure: '暂时无法获取实时数据。', published: '查看 GitHub 命题清单', actions: '查看 GitHub Actions',
-    copied: '已复制', copyManual: '请复制已选中的任务说明。'
+    copied: '已复制', copyManual: '请复制已选中的提示词。',
+    stale: '暂时无法刷新，正在显示上次获取的数据。',
+    deskUnavailable: '暂时无法获取社区数据。',
+    noActivity: '暂无参与记录。',
+    noContributors: '暂无有署名的通过记录。',
+    participant: '参与者',
+    activities: {
+      claimed: '领取引理', submitted: '登记提交', checking: '开始验证',
+      released: '归还引理', accepted: '验证通过', rejected: '验证拒绝', expired: '任务凭证过期'
+    },
+    event: '任务状态更新',
+    verifiedCount: n => '通过 ' + n + ' 条',
+    pullRequest: '查看 PR'
   },
   en: {
     open: 'Open', proved: 'Verified', accepted: 'Accepted', rejected: 'Rejected',
@@ -17,7 +29,19 @@ const strings = {
     manifest: 'View evidence manifest', empty: 'No matching lemmas.', noRecords: 'No authoritative runs have been recorded.',
     count: n => n === 1 ? '1 matching lemma.' : n + ' matching lemmas.',
     failure: 'Live data is temporarily unavailable.', published: 'View statements on GitHub', actions: 'View GitHub Actions',
-    copied: 'Copied', copyManual: 'Copy the selected instructions.'
+    copied: 'Copied', copyManual: 'Copy the selected prompt.',
+    stale: 'Refresh failed. Showing the last available data.',
+    deskUnavailable: 'Community data is temporarily unavailable.',
+    noActivity: 'No community activity yet.',
+    noContributors: 'No attributed proofs have passed verification yet.',
+    participant: 'Participant',
+    activities: {
+      claimed: 'Claimed a lemma', submitted: 'Registered a submission', checking: 'Started verification',
+      released: 'Returned a lemma', accepted: 'Proof accepted', rejected: 'Proof rejected', expired: 'Lease expired'
+    },
+    event: 'Task status changed',
+    verifiedCount: n => n === 1 ? '1 accepted' : n + ' accepted',
+    pullRequest: 'View PR'
   }
 }[lang];
 
@@ -80,7 +104,17 @@ const lemmaRows = document.getElementById('lemma-rows');
 const lemmaSearch = document.getElementById('lemma-search');
 const lemmaState = document.getElementById('lemma-state');
 const verificationLog = document.getElementById('verification-log');
+const deskNotice = document.getElementById('desk-notice');
+const deskActivity = document.getElementById('desk-activity');
+const deskLeaderboard = document.getElementById('desk-leaderboard');
+const locale = document.documentElement.lang;
+const eventTime = new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' });
+
 let publishedGaps = [];
+let loading = false;
+let lastGaps = null;
+let lastResults = null;
+let lastDesk = null;
 
 function messageRow(label, link) {
   const row = element('tr');
@@ -126,6 +160,7 @@ function renderLemmas() {
 
 function renderLogEntry(run) {
   const article = element('article');
+  article.dataset.run = run.run_id + '/' + run.run_attempt;
   const row = element('div', undefined, 'log-entry');
   const judgement = run.verdict === 'ACCEPTED' ? 'accepted' : 'rejected';
   const label = element('div');
@@ -146,26 +181,126 @@ function renderLogEntry(run) {
   return article;
 }
 
-async function loadStatus() {
-  try {
-    const response = await fetch('api/status', { headers: { Accept: 'application/json' } });
-    if (!response.ok) throw new Error('Status request failed');
-    const { gaps, counts, results } = await response.json();
-    publishedGaps = gaps;
-    renderLemmas();
-    for (const name of ['accepted', 'open', 'published', 'attempts']) {
-      document.getElementById('count-' + name).textContent = counts[name].toLocaleString(document.documentElement.lang);
+function renderActivity(event) {
+  const item = element('li', undefined, 'activity-item');
+  const details = element('div', undefined, 'activity-details');
+  const label = Object.hasOwn(strings.activities, event.kind) ? strings.activities[event.kind] : strings.event;
+  const byline = element('div', undefined, 'activity-byline');
+  byline.append(element('span', event.handle || strings.participant), element('code', event.lemma_id));
+  details.append(element('strong', label), byline);
+
+  const links = element('div', undefined, 'activity-links');
+  const date = new Date(typeof event.at === 'number' ? event.at * 1000 : event.at);
+  if (Number.isFinite(date.getTime())) {
+    const timestamp = element('time', eventTime.format(date));
+    timestamp.dateTime = date.toISOString();
+    links.append(timestamp);
+  }
+  if (Number.isSafeInteger(event.run_id) && event.run_id > 0) {
+    links.append(runLink(event, strings.run));
+  } else if (Number.isSafeInteger(event.pr) && event.pr > 0) {
+    links.append(anchor(strings.pullRequest + ' ↗', repository + '/pull/' + event.pr, 'evidence-link'));
+  }
+  item.append(details, links);
+  return item;
+}
+
+function renderContributor(contributor, position) {
+  const item = element('li', undefined, 'contributor-item');
+  const name = '@' + contributor.handle;
+  const profile = anchor(name, 'https://github.com/' + encodeURIComponent(contributor.handle), 'contributor-name');
+  item.append(
+    element('span', position + 1, 'contributor-position'),
+    profile,
+    element('span', strings.verifiedCount(contributor.accepted), 'contributor-score')
+  );
+  return item;
+}
+
+function showDeskNotice(message) {
+  if (deskNotice.textContent !== message) deskNotice.textContent = message;
+  deskNotice.hidden = !message;
+}
+
+function renderDesk(desk) {
+  if (!desk) {
+    showDeskNotice(lastDesk === null ? strings.deskUnavailable : strings.stale);
+    if (lastDesk === null) {
+      deskActivity.replaceChildren();
+      deskLeaderboard.replaceChildren();
     }
-    verificationLog.replaceChildren(...(results.length ? results.map(renderLogEntry) : [element('p', strings.noRecords, 'empty-state')]));
-    lemmaSearch.addEventListener('input', renderLemmas);
-    lemmaState.addEventListener('change', renderLemmas);
+    return;
+  }
+  showDeskNotice('');
+  const snapshot = JSON.stringify(desk);
+  if (lastDesk === snapshot) return;
+  lastDesk = snapshot;
+  document.getElementById('desk-active').textContent = desk.active.toLocaleString(locale);
+  document.getElementById('desk-sessions').textContent = desk.sessions.toLocaleString(locale);
+  deskActivity.replaceChildren(...(desk.activities.length
+    ? desk.activities.map(renderActivity) : [element('li', strings.noActivity, 'empty-state')]));
+  deskLeaderboard.replaceChildren(...(desk.leaderboard.length
+    ? desk.leaderboard.map(renderContributor) : [element('li', strings.noContributors, 'empty-state')]));
+}
+
+function renderResults(results) {
+  const snapshot = JSON.stringify(results);
+  if (lastResults === snapshot) return;
+  lastResults = snapshot;
+  const expanded = new Set(Array.from(
+    verificationLog.querySelectorAll('details[open]'), details => details.parentElement.dataset.run
+  ));
+  const entries = results.map(run => {
+    const entry = renderLogEntry(run);
+    if (expanded.has(entry.dataset.run)) {
+      const manifest = entry.querySelector('details');
+      if (manifest) manifest.open = true;
+    }
+    return entry;
+  });
+  verificationLog.replaceChildren(...(entries.length ? entries : [element('p', strings.noRecords, 'empty-state')]));
+}
+
+lemmaSearch.addEventListener('input', renderLemmas);
+lemmaState.addEventListener('change', renderLemmas);
+
+async function loadStatus() {
+  if (loading || document.hidden) return;
+  loading = true;
+  try {
+    const response = await fetch('api/status', {
+      headers: { Accept: 'application/json' },
+      signal: AbortSignal.timeout(10000),
+    });
+    if (!response.ok) throw new Error('Status request failed');
+    const { gaps, counts, results, desk } = await response.json();
+    const gapsSnapshot = JSON.stringify(gaps);
+    if (lastGaps !== gapsSnapshot) {
+      publishedGaps = gaps;
+      renderLemmas();
+      lastGaps = gapsSnapshot;
+    }
+    lemmaSearch.disabled = false;
+    lemmaState.disabled = false;
+    for (const name of ['accepted', 'open', 'published', 'attempts']) {
+      document.getElementById('count-' + name).textContent = counts[name].toLocaleString(locale);
+    }
+    renderResults(results);
+    renderDesk(desk);
   } catch {
-    lemmaRows.replaceChildren(messageRow(strings.failure, anchor(strings.published, repository + '/blob/main/research/gaps.json')));
-    const error = element('p', strings.failure, 'empty-state');
-    error.append(anchor(strings.actions, repository + '/actions'));
-    verificationLog.replaceChildren(error);
-    lemmaSearch.disabled = true;
-    lemmaState.disabled = true;
+    if (lastGaps === null) {
+      lemmaRows.replaceChildren(messageRow(strings.failure, anchor(strings.published, repository + '/blob/main/research/gaps.json')));
+      lemmaSearch.disabled = true;
+      lemmaState.disabled = true;
+    }
+    if (lastResults === null) {
+      const error = element('p', strings.failure, 'empty-state');
+      error.append(anchor(strings.actions, repository + '/actions'));
+      verificationLog.replaceChildren(error);
+    }
+    renderDesk(null);
+  } finally {
+    loading = false;
   }
 }
 
@@ -196,4 +331,5 @@ copyButton.addEventListener('click', async () => {
 });
 
 loadStatus();
-
+window.setInterval(loadStatus, 45000);
+document.addEventListener('visibilitychange', loadStatus);
