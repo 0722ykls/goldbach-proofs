@@ -51,6 +51,13 @@ class Handler(BaseHTTPRequestHandler):
         if lang not in {"zh", "en"}:
             peer = ipaddress.ip_address(self.client_address[0])
             peer = getattr(peer, "ipv4_mapped", None) or peer
+            if peer.is_loopback:
+                forwarded = self.headers.get("X-Goldbach-Client-IP")
+                if forwarded:
+                    try:
+                        peer = ipaddress.ip_address(forwarded)
+                    except ValueError:
+                        pass
             lang = "zh" if any(peer in net for net in NETWORKS) else "en"
         self.reply(200, (ROOT / f"{lang}.html").read_bytes(), "text/html", lang)
 
