@@ -12,3 +12,5 @@ The strong Goldbach conjecture states that every even natural number at least 4 
 The upstream checker and Lean namespace are retained. This project's statements come from the default branch.
 
 Apache-2.0. [Upstream](https://github.com/brilliant-hq/pequalnp-proofs).
+
+前端参考 pequalnp 的公开首页、实时活动栏和可钻取的研究地图，界面数据由本站的任务清单及核验记录提供。可对照[原站设计说明](https://pequalnp.com/how)、[设计画布](https://brilliant.design/brilliant/pnp)、[首页脚本](https://pequalnp.com/assets/fda04e88f715/js/home.js)及[地图脚本](https://pequalnp.com/assets/fda04e88f715/js/map.js)。

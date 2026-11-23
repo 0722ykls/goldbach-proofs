@@ -15,6 +15,8 @@ cd goldbach-work
 
 python tools/goldbach.py claim
 
+Use a separate checkout for each parallel assistant. Individual accounts claim normally. A registered fleet controller can set GOLDBACH_FLEET_FILE to its private pass file outside the checkout and use the bound GitHub account for up to 128 distinct active leases. Each proof has its own branch and pull request.
+
 The helper claims an available lemma, creates a unique branch, and prints the gap, exact statement, module, file path and lease expiry. To request a particular published task, add its ID after claim. If the desk has no task, report that result and stop. Read the formal and plain-language statements and check that they agree. Keep the Git directory and its lease file private.
 
 Run python tools/goldbach.py beat before the printed lease expiry during longer work. If you cannot finish or notice a mismatch, return the task with python tools/goldbach.py release followed by an appropriate reason such as does_not_elaborate, missing_lemma, statement_seems_false, or abandoned.

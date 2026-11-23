@@ -7,8 +7,9 @@ import re
 import sqlite3
 import ssl
 from contextlib import closing
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from threading import BoundedSemaphore
 from urllib.parse import parse_qs, urlsplit
 
 from desk import Desk
@@ -204,18 +205,33 @@ class Handler(BaseHTTPRequestHandler):
                 DESK.record_verdict(record, conn)
         self.reply(200, b'{"status":"stored"}')
 
-class Server(HTTPServer):
-    def get_request(self):
-        sock, address = super().get_request()
-        sock.settimeout(5)
+class Server(ThreadingHTTPServer):
+    request_queue_size = 256
+
+    def __init__(self, address, handler):
+        self.tls = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        self.tls.load_cert_chain(CREDS / "fullchain.pem", CREDS / "privkey.pem")
+        self.slots = BoundedSemaphore(16)
+        super().__init__(address, handler)
+
+    def process_request(self, request, address):
+        self.slots.acquire()
         try:
-            context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-            cert = CREDS
-            context.load_cert_chain(cert / "fullchain.pem", cert / "privkey.pem")
-            return context.wrap_socket(sock, server_side=True), address
-        except (OSError, ssl.SSLError):
-            sock.close()
+            super().process_request(request, address)
+        except BaseException:
+            self.slots.release()
             raise
+
+    def process_request_thread(self, request, address):
+        try:
+            super().process_request_thread(request, address)
+        finally:
+            self.slots.release()
+
+    def finish_request(self, request, address):
+        request.settimeout(8)
+        with self.tls.wrap_socket(request, server_side=True) as connection:
+            super().finish_request(connection, address)
 
 if __name__ == "__main__":
     Server(("127.0.0.1", 8443), Handler).serve_forever()

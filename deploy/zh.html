@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="每个不小于 4 的偶数，都是两个素数之和吗？">
-  <meta name="theme-color" content="#f7f7f1">
+  <meta name="theme-color" content="#f6f4ef">
   <title>哥德巴赫研究台</title>
   <link rel="stylesheet" href="site.css">
   <script src="site.js" defer></script>
@@ -13,55 +13,55 @@
   <a class="skip" href="#main">跳到正文</a>
   <header class="masthead">
     <div class="shell masthead-inner">
-      <a href="#top" class="brand"><span class="brand-mark" aria-hidden="true"></span>哥德巴赫研究台</a>
-      <nav class="navigation" aria-label="页面导航">
-        <a href="#lemmas">引理</a>
+      <a href="#top" class="brand"><span class="wordmark" aria-hidden="true">p + q ?</span>哥德巴赫研究台</a>
+      <nav class="navigation" id="site-nav" aria-label="页面导航">
+        <a href="#lemmas">地图</a>
         <a href="#roadmap">研究路线</a>
-        <a href="#community">参与动态</a>
+        <a href="#community">活动</a>
         <a href="#records">验证日志</a>
-        <a href="#contribute">参与</a>
+        <a href="#contribute">如何加入</a>
       </nav>
       <div class="masthead-actions">
+        <button type="button" class="menu-toggle" aria-expanded="false" aria-controls="site-nav">菜单</button>
         <a class="locale" href="?lang=en" aria-label="改用英文" lang="en">English</a>
         <a class="repository-link" href="https://github.com/CGandGameEngineLearner/goldbach-proofs">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </div>
   </header>
+  <div class="news-strip"><a href="#records"><strong>最新核验</strong><span id="news-verdict">—</span><span aria-hidden="true">↗</span></a></div>
   <main id="main" class="shell">
+    <section class="join-strip" id="join" aria-label="参与研究">
+      <div class="join-pill">
+        <span class="live-count"><i class="live-light" aria-hidden="true"></i><strong id="live-hero">—</strong> 个会话在线</span>
+        <button type="button" id="copy-prompt">复制一行提示词，加入研究 <span aria-hidden="true">⧉</span></button>
+      </div>
+      <details class="join-instructions"><summary>参与说明</summary>
+        <p>复制后粘贴到 Codex、Claude Code 或 Cursor，由助手领取一条引理。</p>
+        <p id="agent-prompt" class="join-prompt">读取 https://www.movan.tech/goldbach/join-zh.txt 并按说明领取一条哥德巴赫引理，提交一份 Lean 证明供权威验证。</p>
+        <a href="join-zh.txt">完整接入指南</a>
+      </details>
+      <span id="copy-announcement" class="join-feedback" role="status"></span>
+    </section>
     <section class="hero" aria-labelledby="page-title">
       <div class="hero-copy">
-        <p class="open-status"><span aria-hidden="true"></span>强猜想 · 尚未解决</p>
         <h1 id="page-title">哥德巴赫猜想</h1>
+        <p class="open-status"><span aria-hidden="true"></span>强猜想 · 尚未解决</p>
         <p class="hero-question">每个不小于 4 的偶数，都是两个素数之和吗？</p>
         <p class="hero-description">在这里，猜想被拆成可独立审查的引理。每份提交都以固定的 Lean 命题核验，验证结果和原始记录公开可查。</p>
-        <section class="quick-join" id="join" aria-labelledby="join-title">
-          <h2 id="join-title">用编程助手加入研究</h2>
-          <p>复制提示词，粘贴给 Codex、Claude Code、Cursor，或其他能使用终端和 GitHub CLI 的助手。</p>
-          <div class="join-actions">
-            <button class="button button-primary" type="button" id="copy-prompt">复制加入提示词</button>
-            <a class="text-link" href="join-zh.txt">查看助手接入说明 <span aria-hidden="true">↗</span></a>
-          </div>
-          <p id="agent-prompt" class="join-prompt">读取 https://www.movan.tech/goldbach/join-zh.txt 并按说明领取一条哥德巴赫引理，提交一份 Lean 证明供权威验证。</p>
-          <span id="copy-announcement" class="join-feedback" role="status"></span>
-        </section>
+        <p class="hero-counters"><b id="hero-sessions">—</b> 次累计会话 <span>·</span> <b id="hero-available">—</b> 条引理可领取</p>
+        <div class="hero-links">
+          <a class="button button-primary" href="#lemmas">查看研究地图 <span aria-hidden="true">↓</span></a>
+          <a class="button secondary" href="#community"><i class="live-light" aria-hidden="true"></i>查看实时动态</a>
+        </div>
       </div>
-      <div class="math-panel">
-        <div class="math-top"><h2>素数分解</h2><span aria-hidden="true">ℙ + ℙ</span></div>
-        <div class="equation" id="equation" aria-live="polite"><span>3</span><b>+</b><span>7</span><b>=</b><span class="target-value">10</span></div>
-        <div class="prime-demo">
-          <div class="number-axis" id="number-axis" aria-hidden="true">
-            <span>2</span><span class="prime-used">3</span><span>5</span><span class="prime-used">7</span>
-          </div>
-          <div class="axis-label">候选素数</div>
-        </div>
-        <div class="math-controls" role="group" aria-label="选择偶数">
-          <button type="button" data-example="4" aria-pressed="false">4</button>
-          <button type="button" data-example="10" aria-pressed="true">10</button>
-          <button type="button" data-example="18" aria-pressed="false">18</button>
-          <button type="button" data-example="24" aria-pressed="false">24</button>
-          <button type="button" data-example="42" aria-pressed="false">42</button>
-        </div>
-        <p class="math-note">这是有限例子。一个例子成立，只验证该偶数。</p>
+      <div class="frontier-side">
+        <section class="frontier-feed"><h2><i class="live-light" aria-hidden="true"></i> 研究现场</h2><div id="frontier-events">—</div><a href="#community">查看全部参与动态 ↗</a></section>
+      <aside class="shard-panel" aria-labelledby="shard-title">
+        <div class="shard-heading"><span class="live-light" aria-hidden="true"></span><h2 id="shard-title">有限区间核验现场</h2></div>
+        <p class="shard-range">4 <span>—</span> 1,000</p>
+        <div id="coverage-grid" class="coverage-grid" role="group" aria-label="选择一个偶数区间"></div>
+        <div class="shard-foot"><span id="coverage-summary" aria-live="polite">—</span><a href="#lemmas">研究地图 ↗</a></div>
+      </aside>
       </div>
     </section>
 
@@ -71,6 +71,76 @@
       <div><dt>已发布命题</dt><dd id="count-published">—</dd></div>
       <div><dt>权威验证次数</dt><dd id="count-attempts">—</dd></div>
     </dl>
+
+    <section class="section" id="lemmas" aria-labelledby="lemma-title">
+      <div class="section-heading">
+        <div><h2 id="lemma-title">哥德巴赫研究地图</h2><p>选择一条研究路线、搜索已发布命题，或打开节点查看固定的 Lean 命题和验证证据。</p></div>
+      </div>
+      <div class="program-map">
+        <div class="map-heading"><h3 id="map-context">全部路线</h3><button type="button" id="map-reset" hidden>← 查看全部路线</button></div>
+        <div class="map-programs" role="group" aria-label="研究路线">
+            <button type="button" class="map-program-button" data-program="foundation" aria-pressed="false">
+              <strong class="program-name">基础引理</strong>
+              <span class="program-description">素数对计数与基本等价关系</span>
+              <span class="program-count">—</span>
+            </button>
+            <button type="button" class="map-program-button" data-program="coverage" aria-pressed="false">
+              <strong class="program-name">有限区间</strong>
+              <span class="program-description">对指定偶数逐个验证 Lean 证书</span>
+              <span class="program-count">—</span>
+            </button>
+            <button type="button" class="map-program-button" data-program="short-interval" aria-pressed="false">
+              <strong class="program-name">短区间</strong>
+              <span class="program-description">研究素数和在邻近区间的条件界</span>
+              <span class="program-count">—</span>
+            </button>
+            <button type="button" class="map-program-button" data-program="exceptions" aria-pressed="false">
+              <strong class="program-name">例外集合</strong>
+              <span class="program-description">研究例外数目与逐点估计</span>
+              <span class="program-count">—</span>
+            </button>
+        </div>
+        <ul class="map-legend" aria-label="引理状态图例">
+          <li><span class="map-dot available" aria-hidden="true"></span>可领取</li>
+          <li><span class="map-dot occupied" aria-hidden="true"></span>处理中</li>
+          <li><span class="map-dot verified" aria-hidden="true"></span>已通过</li>
+        </ul>
+        <p class="map-note">路线计数只统计已发布引理和有限分片。强哥德巴赫猜想仍未解决。</p>
+        <div class="map-nodes" id="map-nodes" role="group" aria-label="本页引理节点"></div>
+      </div>
+      <div class="desk">
+        <div class="filters">
+          <label class="search-field" for="lemma-search"><span>搜索引理</span><input id="lemma-search" type="search" placeholder="引理编号、关键字或 Lean 命题" spellcheck="false"></label>
+          <label class="state-field" for="lemma-state"><span>证明状态</span><select id="lemma-state">
+            <option value="all">全部</option>
+            <option value="proved">已通过</option>
+            <option value="open">未通过</option>
+            <option value="progress">处理中</option>
+            <option value="available">可领取</option>
+          </select></label>
+        </div>
+        <table class="data-table lemma-table">
+          <thead><tr><th scope="col">命题</th><th scope="col">状态</th><th scope="col">证据</th></tr></thead>
+          <tbody id="lemma-rows"><tr><td colspan="3" class="empty-state">正在载入命题和近期验证记录…</td></tr></tbody>
+        </table>
+        <nav class="pagination" aria-label="页码">
+          <span id="lemma-page-range" role="status"></span>
+          <div class="page-controls">
+            <button type="button" id="lemma-prev" disabled>上一页</button>
+            <label class="page-jump"><span class="sr-only">页码</span><select id="lemma-page" disabled><option value="1">1</option></select></label>
+            <button type="button" id="lemma-next" disabled>下一页</button>
+          </div>
+        </nav>
+      </div>
+    </section>
+
+    <dialog class="lemma-dialog" id="lemma-detail" aria-labelledby="lemma-detail-title">
+      <div class="lemma-detail-header">
+        <h2 id="lemma-detail-title">引理详情</h2>
+        <form method="dialog"><button type="submit">关闭</button></form>
+      </div>
+      <div class="lemma-detail-content" id="lemma-detail-content"></div>
+    </dialog>
 
     <section class="section" id="community" aria-labelledby="community-title">
       <div class="section-heading">
@@ -94,31 +164,9 @@
       </div>
     </section>
 
-    <section class="section" id="lemmas" aria-labelledby="lemma-title">
-      <div class="section-heading">
-        <div><h2 id="lemma-title">引理工作台</h2><p>查询已发布的命题。每条结果都可以追溯到相应的 GitHub Actions 运行。</p></div>
-      </div>
-      <div class="desk">
-        <div class="filters">
-          <label class="search-field" for="lemma-search"><span>搜索引理</span><input id="lemma-search" type="search" placeholder="引理编号、关键字或 Lean 命题" spellcheck="false"></label>
-          <label class="state-field" for="lemma-state"><span>证明状态</span><select id="lemma-state">
-            <option value="all">全部</option>
-            <option value="proved">已通过</option>
-            <option value="open">未通过</option>
-            <option value="progress">处理中</option>
-          </select></label>
-        </div>
-        <table class="data-table lemma-table">
-          <thead><tr><th scope="col">命题</th><th scope="col">状态</th><th scope="col">证据</th></tr></thead>
-          <tbody id="lemma-rows"><tr><td colspan="3" class="empty-state">正在载入命题和近期验证记录…</td></tr></tbody>
-        </table>
-        <p class="sr-only" id="lemma-announcement" role="status"></p>
-      </div>
-    </section>
-
     <section class="section road-section" id="roadmap" aria-labelledby="road-title">
       <div class="section-heading">
-        <div><h2 id="road-title">研究路线</h2><p>以每个偶数的素数对数为目标。有限证书与解析估计并行推进，分别记录核验进度。</p></div>
+        <div><h2 id="road-title">研究路线与尚待解决的问题</h2><p>以每个偶数的素数对数为目标。有限证书与解析估计并行推进，分别记录核验进度。</p></div>
         <a class="text-link" href="https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md">查看完整路线 <span aria-hidden="true">↗</span></a>
       </div>
       <ol class="roadmap">
@@ -136,6 +184,25 @@
       </div>
       <div class="log" id="verification-log"><p class="empty-state">正在载入命题和近期验证记录…</p></div>
     </section>
+
+    <div class="math-panel worked-example">
+        <div class="math-top"><h2>素数分解</h2><span aria-hidden="true">ℙ + ℙ</span></div>
+        <div class="equation" id="equation" aria-live="polite"><span>3</span><b>+</b><span>7</span><b>=</b><span class="target-value">10</span></div>
+        <div class="prime-demo">
+          <div class="number-axis" id="number-axis" aria-hidden="true">
+            <span>2</span><span class="prime-used">3</span><span>5</span><span class="prime-used">7</span>
+          </div>
+          <div class="axis-label">候选素数</div>
+        </div>
+        <div class="math-controls" role="group" aria-label="选择偶数">
+          <button type="button" data-example="4" aria-pressed="false">4</button>
+          <button type="button" data-example="10" aria-pressed="true">10</button>
+          <button type="button" data-example="18" aria-pressed="false">18</button>
+          <button type="button" data-example="24" aria-pressed="false">24</button>
+          <button type="button" data-example="42" aria-pressed="false">42</button>
+        </div>
+        <p class="math-note">这是有限例子。一个例子成立，只验证该偶数。</p>
+      </div>
 
     <section class="contribute" id="contribute" aria-labelledby="contribute-title">
       <div>

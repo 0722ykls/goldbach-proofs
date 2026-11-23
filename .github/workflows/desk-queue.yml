@@ -17,7 +17,7 @@ jobs:
   dispatch:
     if: github.repository == 'CGandGameEngineLearner/goldbach-proofs'
     runs-on: ubuntu-24.04
-    timeout-minutes: 2
+    timeout-minutes: 8
     env:
       DESK_URL: ${{ vars.GOLDBACH_DESK_URL }}
       DESK_SECRET: ${{ secrets.GOLDBACH_WEBHOOK_SECRET }}
@@ -76,7 +76,7 @@ jobs:
               "Desk queue",
           )
           rows = json.loads(response)["pending"]
-          if not isinstance(rows, list) or len(rows) > 12:
+          if not isinstance(rows, list) or len(rows) > 16:
               raise SystemExit("Invalid desk batch")
 
           pending = []
@@ -139,8 +139,6 @@ jobs:
                     github_headers, "Authoritative dispatch")
               dispatched.add(pr)
               print(f"Dispatched PR {pr} for {gap}")
-              if len(dispatched) == 3:
-                  break
           if not pending:
               print("No queued proofs")
           PY

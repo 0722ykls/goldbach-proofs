@@ -9,9 +9,13 @@ from contextlib import closing, contextmanager
 
 LEASE_SECONDS = 45 * 60
 MAX_RESEARCH_SECONDS = 6 * 60 * 60
+SUBMISSION_SECONDS = 12 * 60 * 60
 CHECK_SECONDS = 3 * 60 * 60
 NETWORK_ACTIVE_LIMIT = 3
 NETWORK_HOURLY_LIMIT = 12
+FLEET_ACTIVE_LIMIT = 128
+QUEUE_BATCH = 16
+QUEUE_RETRY_SECONDS = 15 * 60
 HANDLE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*", re.ASCII)
 HEAD = re.compile(r"[0-9a-f]{40}", re.ASCII)
 TOKEN = re.compile(r"Bearer ([A-Za-z0-9_-]{43})", re.ASCII)
@@ -39,6 +43,12 @@ def positive_id(value, maximum=(1 << 63) - 1):
     return type(value) is int and 0 < value <= maximum
 
 
+def fleet_pass(secret, handle, expires):
+    message = f"goldbach/fleet/v1/{handle}/{expires}".encode("ascii")
+    signature = hmac.new(secret, message, hashlib.sha256).hexdigest()
+    return f"v1.{expires}.{signature}"
+
+
 def error(status, code):
     return status, {"error": code}
 
@@ -53,6 +63,7 @@ class Desk:
         }
         self.secret = secret
         with closing(sqlite3.connect(db_path)) as conn:
+            conn.execute("PRAGMA journal_mode=WAL")
             conn.executescript("""
                 CREATE TABLE IF NOT EXISTS goldbach_leases (
                     token_hash TEXT PRIMARY KEY,
@@ -78,10 +89,13 @@ class Desk:
                 CREATE UNIQUE INDEX IF NOT EXISTS goldbach_leases_authorized_head
                     ON goldbach_leases(pr, head) WHERE run_id IS NOT NULL;
             """)
+            columns = {row[1] for row in conn.execute("PRAGMA table_info(goldbach_leases)")}
+            if "last_polled_at" not in columns:
+                conn.execute("ALTER TABLE goldbach_leases ADD COLUMN last_polled_at INTEGER")
 
     @contextmanager
     def transaction(self, write=False):
-        with closing(sqlite3.connect(self.db_path)) as conn, conn:
+        with closing(sqlite3.connect(self.db_path, timeout=15)) as conn, conn:
             conn.row_factory = sqlite3.Row
             conn.execute("BEGIN IMMEDIATE" if write else "BEGIN")
             yield conn
@@ -115,7 +129,7 @@ class Desk:
     def token_hash(token):
         return hashlib.sha256(token.encode("ascii")).hexdigest()
 
-    def claim(self, body, client_ip, now):
+    def claim(self, body, client_ip, now, fleet=None):
         handle = canonical_handle(body.get("handle"))
         ip_key = self.network_key(client_ip)
         requested_gap = body.get("gap")
@@ -123,18 +137,28 @@ class Desk:
             return error(400, "invalid_claim")
         if requested_gap is not None and requested_gap not in self.gaps:
             return error(404, "unknown_gap")
+        if fleet is not None:
+            match = re.fullmatch(r"v1\.([0-9]{1,12})\.[a-f0-9]{64}", fleet)
+            if (not match or int(match[1]) <= now
+                    or not hmac.compare_digest(fleet, fleet_pass(self.secret, handle, int(match[1])))):
+                return error(401, "invalid_fleet_pass")
+            # A registered fleet has its own bucket, including behind a shared university NAT.
+            ip_key = "fleet:" + handle
         with self.transaction(write=True) as conn:
             active = conn.execute("""
                 SELECT gap, handle, ip_key FROM goldbach_leases
                 WHERE expires_at > ? AND released_at IS NULL AND finished_at IS NULL
             """, (now,)).fetchall()
-            if any(lease["handle"] == handle for lease in active):
+            handle_count = sum(lease["handle"] == handle for lease in active)
+            if fleet is None and handle_count:
                 return error(409, "handle_already_active")
-            if sum(lease["ip_key"] == ip_key for lease in active) >= NETWORK_ACTIVE_LIMIT:
+            if fleet is not None and handle_count >= FLEET_ACTIVE_LIMIT:
+                return error(429, "fleet_active_limit")
+            if fleet is None and sum(lease["ip_key"] == ip_key for lease in active) >= NETWORK_ACTIVE_LIMIT:
                 return error(429, "network_active_limit")
             if conn.execute("""
                 SELECT COUNT(*) FROM goldbach_leases WHERE ip_key = ? AND claimed_at > ?
-            """, (ip_key, now - 3600)).fetchone()[0] >= NETWORK_HOURLY_LIMIT:
+            """, (ip_key, now - 3600)).fetchone()[0] >= (4 * FLEET_ACTIVE_LIMIT if fleet else NETWORK_HOURLY_LIMIT):
                 return error(429, "network_claim_limit")
 
             occupied = {lease["gap"] for lease in active}
@@ -176,7 +200,7 @@ class Desk:
 
             if action == "beat":
                 times = self.lease_times(lease)
-                if lease["run_id"] is None:
+                if lease["pr"] is None:
                     times["expires_at"] = min(now + LEASE_SECONDS, lease["absolute_expires_at"])
                     conn.execute("UPDATE goldbach_leases SET expires_at = ? WHERE token_hash = ?",
                                  (times["expires_at"], digest))
@@ -200,7 +224,8 @@ class Desk:
                     return 200, {"submitted": True, **self.lease_times(lease)}
                 return error(409, "lease_already_submitted")
 
-            expires = min(now + LEASE_SECONDS, lease["absolute_expires_at"])
+            # A submitted proof waits for a hosted runner independently of its authoring lease.
+            expires = now + SUBMISSION_SECONDS
             conn.execute("""
                 UPDATE goldbach_leases SET pr = ?, head = ?, submitted_at = ?, expires_at = ?
                 WHERE token_hash = ?
@@ -213,13 +238,16 @@ class Desk:
         return hmac.compare_digest(expected.encode("ascii"), supplied.encode("utf-8"))
 
     def pending(self, now):
-        with self.transaction() as conn:
+        with self.transaction(write=True) as conn:
             rows = conn.execute("""
-                SELECT pr, head, handle, gap FROM goldbach_leases
+                SELECT token_hash, pr, head, handle, gap FROM goldbach_leases
                 WHERE pr IS NOT NULL AND run_id IS NULL AND released_at IS NULL AND expires_at > ?
-                ORDER BY submitted_at, rowid LIMIT 12
-            """, (now,))
-            return 200, {"pending": [dict(row) for row in rows]}
+                  AND (last_polled_at IS NULL OR last_polled_at <= ?)
+                ORDER BY last_polled_at IS NOT NULL, last_polled_at, submitted_at, rowid LIMIT ?
+            """, (now, now - QUEUE_RETRY_SECONDS, QUEUE_BATCH)).fetchall()
+            conn.executemany("UPDATE goldbach_leases SET last_polled_at = ? WHERE token_hash = ?",
+                             [(now, row["token_hash"]) for row in rows])
+            return 200, {"pending": [{key: row[key] for key in ("pr", "head", "handle", "gap")} for row in rows]}
 
     def authorize(self, body, supplied, raw_body, now):
         if not self.signed(supplied, raw_body):
@@ -266,7 +294,7 @@ class Desk:
             return error(400, "invalid_json")
         now = int(time.time())
         if path == "/api/desk/claim":
-            return self.claim(body, client_ip, now)
+            return self.claim(body, client_ip, now, headers.get("X-Goldbach-Fleet"))
         if path == "/api/desk/pending":
             if not self.signed(headers.get("X-Goldbach-Signature", ""), raw_body):
                 return error(401, "invalid_signature")

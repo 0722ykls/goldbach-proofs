@@ -2,6 +2,15 @@
 
 const lang = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
 const repository = 'https://github.com/CGandGameEngineLearner/goldbach-proofs';
+const menu = document.querySelector('.menu-toggle');
+const navigation = document.getElementById('site-nav');
+menu.addEventListener('click', () => {
+  menu.setAttribute('aria-expanded', String(navigation.classList.toggle('expanded')));
+});
+navigation.addEventListener('click', () => {
+  navigation.classList.remove('expanded');
+  menu.setAttribute('aria-expanded', 'false');
+});
 const strings = {
   zh: {
     open: '待证', proved: '已通过', accepted: '已通过', rejected: '已拒绝',
@@ -22,7 +31,16 @@ const strings = {
     },
     event: '任务状态更新',
     verifiedCount: n => '通过 ' + n + ' 条',
-    pullRequest: '查看 PR'
+    pullRequest: '查看 PR',
+    allPrograms: '全部路线',
+    programCount: (verified, published) => verified + ' / ' + published + ' 已通过',
+    pageRange: (first, last, total) => '第 ' + first + '–' + last + ' 条，共 ' + total + ' 条',
+    shard: (lo, hi, index) => '分片 #' + index + '，闭区间 [' + lo + ', ' + hi + ']',
+    file: '证明文件',
+    copyLemma: '复制这条引理的参与提示词',
+    occupied: '这条引理当前正在处理。',
+    alreadyVerified: '这条引理已通过权威验证。',
+    lemmaPrompt: id => '读取 https://www.movan.tech/goldbach/join-zh.txt，按指南用 python tools/goldbach.py claim ' + id + ' 领取并验证这一条引理。如果无法领取这条引理，请说明原因，不要改领其他题。'
   },
   en: {
     open: 'Open', proved: 'Verified', accepted: 'Accepted', rejected: 'Rejected',
@@ -43,7 +61,16 @@ const strings = {
     },
     event: 'Task status changed',
     verifiedCount: n => n === 1 ? '1 accepted' : n + ' accepted',
-    pullRequest: 'View PR'
+    pullRequest: 'View PR',
+    allPrograms: 'All programs',
+    programCount: (verified, published) => verified + ' / ' + published + ' verified',
+    pageRange: (first, last, total) => first + '–' + last + ' of ' + total + ' lemmas',
+    shard: (lo, hi, index) => 'Shard #' + index + ', inclusive range [' + lo + ', ' + hi + ']',
+    file: 'Proof file',
+    copyLemma: 'Copy this lemma’s join prompt',
+    occupied: 'This lemma is currently in progress.',
+    alreadyVerified: 'The authoritative verifier has accepted this lemma.',
+    lemmaPrompt: id => 'Read https://www.movan.tech/goldbach/join.txt and follow it to claim and verify exactly ' + id + ' with python tools/goldbach.py claim ' + id + '. If that lemma is unavailable, report why and do not choose another.'
   }
 }[lang];
 
@@ -112,8 +139,24 @@ const deskLeaderboard = document.getElementById('desk-leaderboard');
 const locale = document.documentElement.lang;
 const eventTime = new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' });
 
+const mapNodes = document.getElementById('map-nodes');
+const mapContext = document.getElementById('map-context');
+const mapReset = document.getElementById('map-reset');
+const programButtons = Array.from(document.querySelectorAll('[data-program]'));
+const programs = new Map(programButtons.map(button => [button.dataset.program, button]));
+const lemmaDialog = document.getElementById('lemma-detail');
+const detailContent = document.getElementById('lemma-detail-content');
+const pageRange = document.getElementById('lemma-page-range');
+const previousPage = document.getElementById('lemma-prev');
+const nextPage = document.getElementById('lemma-next');
+const pageSelect = document.getElementById('lemma-page');
+const pageSize = 24;
+
 let publishedGaps = [];
 let assignments = {};
+let selectedProgram = '';
+let selectedGap = null;
+let lemmaPage = 1;
 let loading = false;
 let lastGaps = null;
 let lastResults = null;
@@ -128,44 +171,218 @@ function messageRow(label, link) {
   return row;
 }
 
+function programOf(gap) {
+  return gap.program || 'foundation';
+}
+
+function programName(key) {
+  return programs.get(key)?.querySelector('.program-name').textContent ?? '';
+}
+
+function assigned(gap) {
+  return !gap.proved && Object.hasOwn(strings.assignments, assignments[gap.id]);
+}
+
+function gapStatus(gap) {
+  if (gap.proved) return { label: strings.proved, kind: 'verified', style: 'accepted' };
+  if (assigned(gap)) {
+    return { label: strings.assignments[assignments[gap.id]], kind: 'occupied', style: 'in-progress' };
+  }
+  return { label: strings.open, kind: 'available', style: '' };
+}
+
+function shardText(gap) {
+  const shard = gap.shard;
+  if (!shard || ![shard.lo, shard.hi, shard.index].every(Number.isSafeInteger)) return '';
+  return strings.shard(shard.lo, shard.hi, shard.index);
+}
+
+function renderProgramCounts() {
+  const counts = new Map(Array.from(programs.keys(), key => [key, { published: 0, verified: 0 }]));
+  for (const gap of publishedGaps) {
+    const count = counts.get(programOf(gap));
+    if (!count) continue;
+    count.published += 1;
+    if (gap.proved) count.verified += 1;
+  }
+  for (const [key, count] of counts) {
+    programs.get(key).querySelector('.program-count').textContent = strings.programCount(count.verified, count.published);
+  }
+  const shards = publishedGaps.filter(gap => gap.program === 'coverage' && gap.shard)
+    .sort((a, b) => a.shard.index - b.shard.index);
+  const grid = document.getElementById('coverage-grid');
+  grid.replaceChildren(...shards.map((gap, index) => {
+    const status = gapStatus(gap);
+    const tile = element('button', undefined, 'shard-tile ' + status.kind);
+    tile.type = 'button';
+    tile.tabIndex = index === 0 ? 0 : -1;
+    tile.title = gap.shard.lo + '–' + gap.shard.hi + ' · ' + status.label;
+    tile.setAttribute('aria-label', tile.title);
+    tile.addEventListener('click', () => openGap(gap.id));
+    return tile;
+  }));
+  const accepted = shards.filter(gap => gap.proved).length;
+  const working = shards.filter(assigned).length;
+  document.getElementById('coverage-summary').textContent = lang === 'zh'
+    ? accepted + ' / ' + shards.length + ' 分片通过 · ' + working + ' 处理中'
+    : accepted + ' / ' + shards.length + ' verified · ' + working + ' working';
+}
+
+document.getElementById('coverage-grid').addEventListener('keydown', event => {
+  const steps = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -25, ArrowDown: 25 };
+  if (!Object.hasOwn(steps, event.key)) return;
+  event.preventDefault();
+  const tiles = [...event.currentTarget.children];
+  const index = Math.max(0, Math.min(tiles.length - 1, tiles.indexOf(event.target) + steps[event.key]));
+  if (tiles[index]) {
+    for (const tile of tiles) tile.tabIndex = -1;
+    tiles[index].tabIndex = 0;
+    tiles[index].focus();
+  }
+});
+
+function chooseProgram(program) {
+  selectedProgram = program;
+  for (const [key, button] of programs) {
+    button.setAttribute('aria-pressed', String(key === program));
+  }
+  mapContext.textContent = programName(program) || strings.allPrograms;
+  mapReset.hidden = !program;
+  lemmaPage = 1;
+  if (lastGaps !== null) renderLemmas();
+}
+
+for (const [key, button] of programs) {
+  button.addEventListener('click', () => chooseProgram(selectedProgram === key ? '' : key));
+}
+mapReset.addEventListener('click', () => {
+  programs.get(selectedProgram)?.focus();
+  chooseProgram('');
+});
+
+function openGap(id) {
+  selectedGap = id;
+  renderGapDetail();
+  if (!lemmaDialog.open) lemmaDialog.showModal();
+  detailContent.scrollTop = 0;
+}
+
+function renderGapDetail() {
+  const gap = publishedGaps.find(entry => entry.id === selectedGap);
+  if (!gap) return;
+  const status = gapStatus(gap);
+  const identity = element('div', undefined, 'detail-identity');
+  identity.append(element('code', gap.id), verdictTag(status.label, status.style));
+  const context = [programName(programOf(gap)), shardText(gap)].filter(Boolean).join(' · ');
+  detailContent.replaceChildren(
+    identity,
+    element('h3', gap.plain_statement[lang]),
+    element('p', context, 'detail-context'),
+    element('pre', gap.statement, 'detail-statement')
+  );
+
+  if (gap.file) {
+    const file = element('p', undefined, 'detail-file');
+    file.append(element('strong', strings.file), element('code', gap.file));
+    detailContent.append(file);
+  }
+  if (gap.latest) {
+    detailContent.append(runLink(gap.latest, strings.latestRun));
+  }
+  if (gap.proved || assigned(gap)) {
+    detailContent.append(element('p', gap.proved ? strings.alreadyVerified : strings.occupied, 'detail-context'));
+    return;
+  }
+  const join = element('div', undefined, 'detail-join');
+  const copy = element('button', strings.copyLemma, 'button button-primary');
+  copy.type = 'button';
+  const prompt = element('p', strings.lemmaPrompt(gap.id), 'join-prompt');
+  const announcement = element('span', undefined, 'join-feedback');
+  announcement.setAttribute('role', 'status');
+  bindPromptCopy(copy, prompt, announcement);
+  join.append(copy, prompt, announcement);
+  detailContent.append(join);
+}
+
+lemmaDialog.addEventListener('close', () => { selectedGap = null; });
+
 function lemmaRow(gap) {
   const row = element('tr');
   const claim = element('td');
-  claim.append(
-    element('code', gap.id, 'statement-id'),
-    element('span', gap.plain_statement[lang]),
-    element('code', gap.statement, 'formal-statement')
-  );
-  const status = element('td');
-  const assignment = strings.assignments[assignments[gap.id]];
-  if (gap.proved) {
-    status.append(verdictTag(strings.proved, 'accepted'));
-  } else {
-    status.append(verdictTag(assignment || strings.open, assignment ? 'in-progress' : ''));
-  }
+  const button = element('button', gap.plain_statement[lang], 'statement-link');
+  button.type = 'button';
+  button.addEventListener('click', () => openGap(gap.id));
+  claim.append(element('code', gap.id, 'statement-id'), button);
+  const context = [programName(programOf(gap)), shardText(gap)].filter(Boolean).join(' · ');
+  if (context) claim.append(element('span', context, 'row-context'));
+
+  const statusCell = element('td');
+  const status = gapStatus(gap);
+  statusCell.append(verdictTag(status.label, status.style));
   const evidence = element('td');
   if (gap.latest) {
     evidence.append(runLink(gap.latest, strings.latestRun));
   } else {
     evidence.append(element('span', strings.noRun));
   }
-  row.append(claim, status, evidence);
+  row.append(claim, statusCell, evidence);
   return row;
+}
+
+function mapNode(gap) {
+  const status = gapStatus(gap);
+  const button = element('button', undefined, 'map-node');
+  const dot = element('span', undefined, 'map-dot ' + status.kind);
+  dot.setAttribute('aria-hidden', 'true');
+  button.type = 'button';
+  button.setAttribute('aria-label', gap.id + ' · ' + status.label);
+  button.title = gap.plain_statement[lang];
+  button.append(dot, element('code', gap.id.replace(/^L-goldbach-/, '')));
+  button.addEventListener('click', () => openGap(gap.id));
+  return button;
 }
 
 function renderLemmas() {
   const query = lemmaSearch.value.trim().toLocaleLowerCase();
   const selection = lemmaState.value;
   const visibleGaps = publishedGaps.filter(gap => {
+    if (selectedProgram && programOf(gap) !== selectedProgram) return false;
     if (selection === 'proved' && !gap.proved) return false;
     if (selection === 'open' && gap.proved) return false;
-    if (selection === 'progress' && (gap.proved || !assignments[gap.id])) return false;
-    const content = [gap.id, gap.statement, gap.plain_statement.zh, gap.plain_statement.en];
+    if (selection === 'progress' && !assigned(gap)) return false;
+    if (selection === 'available' && (gap.proved || assigned(gap))) return false;
+    if (!query) return true;
+    const program = programOf(gap);
+    const content = [
+      gap.id, gap.statement, gap.plain_statement.zh, gap.plain_statement.en,
+      program, programName(program), shardText(gap)
+    ];
     return content.some(text => text.toLocaleLowerCase().includes(query));
   });
-  lemmaRows.replaceChildren(...(visibleGaps.length ? visibleGaps.map(lemmaRow) : [messageRow(strings.empty)]));
-  document.getElementById('lemma-announcement').textContent = strings.count(visibleGaps.length);
+  const maxPage = Math.max(1, Math.ceil(visibleGaps.length / pageSize));
+  lemmaPage = Math.min(lemmaPage, maxPage);
+  const offset = (lemmaPage - 1) * pageSize;
+  const current = visibleGaps.slice(offset, offset + pageSize);
+  mapNodes.replaceChildren(...current.map(mapNode));
+  lemmaRows.replaceChildren(...(current.length ? current.map(lemmaRow) : [messageRow(strings.empty)]));
+  pageRange.textContent = current.length ? strings.pageRange(offset + 1, offset + current.length, visibleGaps.length) : strings.empty;
+  previousPage.disabled = lemmaPage === 1;
+  nextPage.disabled = lemmaPage === maxPage;
+  pageSelect.disabled = maxPage === 1;
+  if (pageSelect.options.length !== maxPage) {
+    pageSelect.replaceChildren(...Array.from({ length: maxPage }, (_, index) => new Option(index + 1, index + 1)));
+  }
+  pageSelect.value = String(lemmaPage);
 }
+
+function setPage(page) {
+  lemmaPage = page;
+  renderLemmas();
+}
+
+previousPage.addEventListener('click', () => setPage(lemmaPage - 1));
+nextPage.addEventListener('click', () => setPage(lemmaPage + 1));
+pageSelect.addEventListener('change', () => setPage(Number(pageSelect.value)));
 
 function renderLogEntry(run) {
   const article = element('article');
@@ -245,6 +462,17 @@ function renderDesk(desk) {
   if (lastDesk === snapshot) return;
   lastDesk = snapshot;
   document.getElementById('desk-active').textContent = desk.active.toLocaleString(locale);
+  document.getElementById('live-hero').textContent = desk.active.toLocaleString(locale);
+  document.getElementById('hero-sessions').textContent = desk.sessions.toLocaleString(locale);
+  const frontier = document.getElementById('frontier-events');
+  frontier.replaceChildren(...desk.activities.slice(0, 2).map(activity => {
+    const item = element('div', undefined, 'frontier-entry');
+    item.append(element('small', eventTime.format(new Date(activity.at * 1000))),
+      element('strong', strings.activities[activity.kind] || strings.event),
+      element('code', activity.lemma_id));
+    return item;
+  }));
+  if (!desk.activities.length) frontier.textContent = strings.noActivity;
   document.getElementById('desk-sessions').textContent = desk.sessions.toLocaleString(locale);
   deskActivity.replaceChildren(...(desk.activities.length
     ? desk.activities.map(renderActivity) : [element('li', strings.noActivity, 'empty-state')]));
@@ -270,8 +498,15 @@ function renderResults(results) {
   verificationLog.replaceChildren(...(entries.length ? entries : [element('p', strings.noRecords, 'empty-state')]));
 }
 
-lemmaSearch.addEventListener('input', renderLemmas);
-lemmaState.addEventListener('change', renderLemmas);
+lemmaSearch.addEventListener('input', () => setPage(1));
+lemmaState.addEventListener('change', () => setPage(1));
+
+document.addEventListener('keydown', event => {
+  if (event.key !== '/' || event.altKey || event.ctrlKey || event.metaKey ||
+      lemmaDialog.open || lemmaSearch.disabled || event.target.closest('input, textarea, select, [contenteditable]')) return;
+  event.preventDefault();
+  lemmaSearch.focus();
+});
 
 async function loadStatus() {
   if (loading || document.hidden) return;
@@ -286,10 +521,17 @@ async function loadStatus() {
     if (!response.ok) throw new Error('Status request failed');
     const { gaps, counts, results, desk } = await response.json();
     assignments = desk?.assignments ?? assignments;
+    document.getElementById('hero-available').textContent = gaps.filter(gap => !gap.proved && !assigned(gap)).length;
+    const latest = results[0];
+    document.getElementById('news-verdict').textContent = latest
+      ? latest.lemma_id + ' · ' + (latest.verdict === 'ACCEPTED' ? strings.accepted : strings.rejected)
+      : strings.noRecords;
     const gapsSnapshot = JSON.stringify([gaps, assignments]);
     if (lastGaps !== gapsSnapshot) {
       publishedGaps = gaps;
+      renderProgramCounts();
       renderLemmas();
+      if (lemmaDialog.open) renderGapDetail();
       lastGaps = gapsSnapshot;
     }
     lemmaSearch.disabled = false;
@@ -317,31 +559,37 @@ async function loadStatus() {
   }
 }
 
-const copyButton = document.getElementById('copy-prompt');
-const copyLabel = copyButton.textContent;
-const announcement = document.getElementById('copy-announcement');
-let resetCopy;
+function bindPromptCopy(button, prompt, announcement) {
+  const label = button.textContent;
+  let reset;
+  button.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(prompt.textContent);
+      button.textContent = strings.copied;
+      announcement.textContent = strings.copied;
+      window.clearTimeout(reset);
+      reset = window.setTimeout(() => {
+        button.textContent = label;
+        announcement.textContent = '';
+      }, 1900);
+    } catch {
+      const disclosure = prompt.closest('details');
+      if (disclosure) disclosure.open = true;
+      const range = document.createRange();
+      range.selectNodeContents(prompt);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      announcement.textContent = strings.copyManual;
+    }
+  });
+}
 
-copyButton.addEventListener('click', async () => {
-  const prompt = document.getElementById('agent-prompt');
-  try {
-    await navigator.clipboard.writeText(prompt.textContent);
-    copyButton.textContent = strings.copied;
-    announcement.textContent = strings.copied;
-    clearTimeout(resetCopy);
-    resetCopy = setTimeout(() => {
-      copyButton.textContent = copyLabel;
-      announcement.textContent = '';
-    }, 1700);
-  } catch {
-    const range = document.createRange();
-    range.selectNodeContents(prompt);
-    const selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
-    announcement.textContent = strings.copyManual;
-  }
-});
+bindPromptCopy(
+  document.getElementById('copy-prompt'),
+  document.getElementById('agent-prompt'),
+  document.getElementById('copy-announcement')
+);
 
 loadStatus();
 window.setInterval(loadStatus, 45000);

@@ -31,6 +31,8 @@ def desk(action, data, token=None):
     headers = {"Content-Type": "application/json", "Accept": "application/json"}
     if token:
         headers["Authorization"] = "Bearer " + token
+    if action == "claim" and os.environ.get("GOLDBACH_FLEET_FILE"):
+        headers["X-Goldbach-Fleet"] = Path(os.environ["GOLDBACH_FLEET_FILE"]).read_text(encoding="ascii").strip()
     request = urllib.request.Request(
         f"{DESK}/{action}", data=json.dumps(data).encode(), headers=headers
     )
