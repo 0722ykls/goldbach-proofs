@@ -4,7 +4,6 @@ import ipaddress
 import json
 import os
 import re
-import socket
 import sqlite3
 import ssl
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -103,7 +102,6 @@ class Handler(BaseHTTPRequestHandler):
         self.reply(200, b'{"status":"stored"}')
 
 class Server(HTTPServer):
-    address_family = socket.AF_INET6
     def get_request(self):
         sock, address = super().get_request()
         sock.settimeout(5)
@@ -117,4 +115,4 @@ class Server(HTTPServer):
             raise
 
 if __name__ == "__main__":
-    Server(("::", 8443), Handler).serve_forever()
+    Server(("127.0.0.1", 8443), Handler).serve_forever()
