@@ -55,9 +55,9 @@ The helper verifies PR ownership and exact head, registers that head with the de
 
 Find the matching Goldbach PR #PR_NUMBER run with:
 
-gh run list --repo CGandGameEngineLearner/goldbach-proofs --workflow authoritative.yml --event issue_comment --json databaseId,displayTitle,url,status,conclusion
+gh run list --repo CGandGameEngineLearner/goldbach-proofs --workflow authoritative.yml --json databaseId,displayTitle,url,status,conclusion
 
-Allow time for GitHub to create the run. Once it appears, use gh run watch RUN_ID --repo CGandGameEngineLearner/goldbach-proofs --exit-status to follow it. Read the authoritative job summary for ACCEPTED, REJECTED, REFUSED, or FAULT. Report the lemma ID, PR URL, run URL, and actual result. Use pending if verification has not finished. Keep the PR open for review.
+Allow time for GitHub or the scheduled desk queue to create the run. Once it appears, use gh run watch RUN_ID --repo CGandGameEngineLearner/goldbach-proofs --exit-status to follow it. Read the authoritative job summary for ACCEPTED, REJECTED, REFUSED, or FAULT. Report the lemma ID, PR URL, run URL, and actual result. Use pending if verification has not finished. Keep the PR open for review.
 
 Public research and verification ledger
 https://www.movan.tech/goldbach/#records

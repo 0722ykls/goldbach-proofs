@@ -267,10 +267,12 @@ lemmaState.addEventListener('change', renderLemmas);
 async function loadStatus() {
   if (loading || document.hidden) return;
   loading = true;
+  const request = new AbortController();
+  const timeout = window.setTimeout(() => request.abort(), 10000);
   try {
     const response = await fetch('api/status', {
       headers: { Accept: 'application/json' },
-      signal: AbortSignal.timeout(10000),
+      signal: request.signal,
     });
     if (!response.ok) throw new Error('Status request failed');
     const { gaps, counts, results, desk } = await response.json();
@@ -300,6 +302,7 @@ async function loadStatus() {
     }
     renderDesk(null);
   } finally {
+    window.clearTimeout(timeout);
     loading = false;
   }
 }

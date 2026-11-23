@@ -30,7 +30,7 @@ RELEASE_REASONS = {
 
 
 def canonical_handle(value):
-    if isinstance(value, str) and len(value) <= 39 and HANDLE.fullmatch(value.lower()):
+    if isinstance(value, str) and value.isascii() and len(value) <= 39 and HANDLE.fullmatch(value.lower()):
         return value.lower()
     return None
 
@@ -208,9 +208,21 @@ class Desk:
             return 200, {"submitted": True, "expires_at": expires,
                          "absolute_expires_at": lease["absolute_expires_at"]}
 
-    def authorize(self, body, supplied, raw_body, now):
+    def signed(self, supplied, raw_body):
         expected = "sha256=" + hmac.new(self.secret, raw_body, hashlib.sha256).hexdigest()
-        if not hmac.compare_digest(expected.encode("ascii"), supplied.encode("utf-8")):
+        return hmac.compare_digest(expected.encode("ascii"), supplied.encode("utf-8"))
+
+    def pending(self, now):
+        with self.transaction() as conn:
+            rows = conn.execute("""
+                SELECT pr, head, handle, gap FROM goldbach_leases
+                WHERE pr IS NOT NULL AND run_id IS NULL AND released_at IS NULL AND expires_at > ?
+                ORDER BY submitted_at, rowid LIMIT 12
+            """, (now,))
+            return 200, {"pending": [dict(row) for row in rows]}
+
+    def authorize(self, body, supplied, raw_body, now):
+        if not self.signed(supplied, raw_body):
             return error(401, "invalid_signature")
 
         pr, head, run_id = body.get("pr"), body.get("head"), body.get("run_id")
@@ -224,7 +236,7 @@ class Desk:
         with self.transaction(write=True) as conn:
             lease = conn.execute("""
                 SELECT * FROM goldbach_leases WHERE pr = ? AND head = ? AND handle = ? AND gap = ?
-                ORDER BY (run_id = ?) DESC, claimed_at DESC LIMIT 1
+                ORDER BY (run_id = ?) DESC, claimed_at DESC, rowid DESC LIMIT 1
             """, (pr, head, handle, gap, run_id)).fetchone()
             if (lease is None or lease["released_at"] is not None
                     or lease["statement_sha256"] != statement_hash
@@ -255,6 +267,10 @@ class Desk:
         now = int(time.time())
         if path == "/api/desk/claim":
             return self.claim(body, client_ip, now)
+        if path == "/api/desk/pending":
+            if not self.signed(headers.get("X-Goldbach-Signature", ""), raw_body):
+                return error(401, "invalid_signature")
+            return self.pending(now)
         if path == "/api/desk/authorize":
             return self.authorize(body, headers.get("X-Goldbach-Signature", ""), raw_body, now)
         if path in {"/api/desk/beat", "/api/desk/release", "/api/desk/submit"}:
@@ -263,15 +279,13 @@ class Desk:
 
     @staticmethod
     def record_verdict(record, conn):
-        if record["verdict"] == "ACCEPTED":
-            condition = "AND (verdict IS NULL OR verdict = 'REJECTED')"
-        else:
-            condition = "AND verdict IS NULL"
         # An accepted rerun supersedes a rejection, while a failed rerun cannot erase credit.
-        conn.execute(f"""
+        verdict = record["verdict"]
+        conn.execute("""
             UPDATE goldbach_leases SET finished_at = ?, verdict = ?
-            WHERE run_id = ? AND gap = ? {condition}
-        """, (int(time.time()), record["verdict"], record["run_id"], record["lemma_id"]))
+            WHERE run_id = ? AND gap = ?
+              AND (verdict IS NULL OR (verdict = 'REJECTED' AND ? = 'ACCEPTED'))
+        """, (int(time.time()), verdict, record["run_id"], record["lemma_id"], verdict))
 
     def public_status(self):
         now = int(time.time())

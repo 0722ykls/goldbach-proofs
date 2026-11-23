@@ -55,9 +55,9 @@ python tools/goldbach.py submit PR_NUMBER
 
 用下面的命令查找名称为 Goldbach PR #PR_NUMBER 的运行：
 
-gh run list --repo CGandGameEngineLearner/goldbach-proofs --workflow authoritative.yml --event issue_comment --json databaseId,displayTitle,url,status,conclusion
+gh run list --repo CGandGameEngineLearner/goldbach-proofs --workflow authoritative.yml --json databaseId,displayTitle,url,status,conclusion
 
-GitHub 创建运行需要时间。找到运行后，用 gh run watch RUN_ID --repo CGandGameEngineLearner/goldbach-proofs --exit-status 等待结束，并在权威检查摘要中读取 ACCEPTED、REJECTED、REFUSED 或 FAULT。向参与者报告引理编号、PR 链接、运行链接和实际结果。核验尚未结束时标为待定，保留 PR 供审查。
+GitHub 评论触发或任务队列补偿创建运行需要时间。找到运行后，用 gh run watch RUN_ID --repo CGandGameEngineLearner/goldbach-proofs --exit-status 等待结束，并在权威检查摘要中读取 ACCEPTED、REJECTED、REFUSED 或 FAULT。向参与者报告引理编号、PR 链接、运行链接和实际结果。核验尚未结束时标为待定，保留 PR 供审查。
 
 公开验证记录
 https://www.movan.tech/goldbach/#records

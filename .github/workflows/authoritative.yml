@@ -28,11 +28,16 @@ on:
         description: Gap id, for example L-goldbach-004
         required: true
         type: string
+      desk:
+        description: Require the automatic desk authorization and PR author command
+        type: boolean
+        default: false
 
 # Least privilege: read the code and read the pull request. This run cannot write anything.
 permissions:
   contents: read
   pull-requests: read
+  issues: read
 
 concurrency:
   group: authoritative-${{ inputs.pr || github.event.issue.number }}
@@ -154,8 +159,9 @@ jobs:
           node "$W/base/.github/scripts/outside-guard.mjs" closure "$W/base" "$W/in/imports.json" "$(cat "$W/in/pr.file")" "$W/in"
 
       - name: Authorize the author's submitted lease
-        if: github.event_name == 'issue_comment'
+        if: github.event_name == 'issue_comment' || inputs.desk
         env:
+          GH_TOKEN: ${{ github.token }}
           DESK_URL: ${{ vars.GOLDBACH_DESK_URL }}
           DESK_SECRET: ${{ secrets.GOLDBACH_WEBHOOK_SECRET }}
         run: |
@@ -167,7 +173,32 @@ jobs:
           work = Path(env["W"]) / "in"
           author = (work / "pr.author").read_text().strip()
           event = json.loads(Path(env["GITHUB_EVENT_PATH"]).read_bytes())
-          if author.casefold() != event["comment"]["user"]["login"].casefold():
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, *args):
+                  return None
+          opener = urllib.request.build_opener(NoRedirect())
+          command = "/goldbach-check " + env["GAP"]
+          def is_author_request(comment):
+              return (comment["user"]["type"] == "User"
+                      and comment["user"]["login"].casefold() == author.casefold()
+                      and comment["body"].rstrip("\n") == command)
+          if env["GITHUB_EVENT_NAME"] == "issue_comment":
+              requested = is_author_request(event["comment"])
+          else:
+              # The queue workflow requests a dispatch on the author's behalf.
+              addr = f"{env['API']}/repos/{env['GITHUB_REPOSITORY']}/issues/{int(env['PR'])}/comments"
+              requested = False
+              for page in range(1, 11):
+                  get = urllib.request.Request(f"{addr}?per_page=100&page={page}", headers={
+                      "Authorization": "Bearer " + env["GH_TOKEN"],
+                      "Accept": "application/vnd.github+json",
+                  })
+                  with opener.open(get, timeout=12) as response:
+                      comments = json.load(response)
+                  requested = any(is_author_request(comment) for comment in comments)
+                  if requested or len(comments) < 100:
+                      break
+          if not requested:
               raise SystemExit("REFUSED: only the PR author can request verification")
           url = env["DESK_URL"].rstrip("/") + "/authorize"
           if not url.startswith("https://") or not env["DESK_SECRET"]:
@@ -181,15 +212,12 @@ jobs:
               "statement_sha256": hashlib.sha256((work / "statement.txt").read_bytes()).hexdigest(),
           }).encode()
           signature = hmac.new(env["DESK_SECRET"].encode(), payload, hashlib.sha256).hexdigest()
-          class NoRedirect(urllib.request.HTTPRedirectHandler):
-              def redirect_request(self, *args):
-                  return None
           request = urllib.request.Request(url, payload, {
               "Content-Type": "application/json",
               "X-Goldbach-Signature": "sha256=" + signature,
           })
           try:
-              with urllib.request.build_opener(NoRedirect()).open(request, timeout=15) as response:
+              with opener.open(request, timeout=15) as response:
                   print("Desk authorized this proof check", response.status)
           except urllib.error.HTTPError as error:
               raise SystemExit(f"Desk authorization failed (HTTP {error.code}). Check the lease, PR head, and gap.") from None
