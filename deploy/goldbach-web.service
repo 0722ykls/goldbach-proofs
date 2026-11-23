@@ -1,0 +1,22 @@
+[Unit]
+Description=Goldbach research site and verdict receiver
+After=network-online.target
+
+[Service]
+DynamicUser=yes
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+PrivateDevices=yes
+StateDirectory=goldbach-web
+LoadCredential=webhook:/etc/goldbach-web/webhook
+LoadCredential=fullchain.pem:/etc/letsencrypt/live/www.movan.tech/fullchain.pem
+LoadCredential=privkey.pem:/etc/letsencrypt/live/www.movan.tech/privkey.pem
+ExecStart=/usr/bin/python3 /opt/goldbach-web/server.py
+Restart=on-failure
+MemoryMax=100M
+CPUQuota=35%
+
+[Install]
+WantedBy=multi-user.target

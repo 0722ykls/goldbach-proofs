@@ -119,7 +119,7 @@ jobs:
           set -eu
           exec > >(tee -a "$RUNNER_TEMP/steps.log") 2>&1   # kept for the verdict step
           # The statement comes from the desk's public list, never from the pull request.
-          curl -sSf --proto '=https' --max-redirs 0 --max-filesize 5000000 -o "$W/in/gaps.json" "$GAPS_URL"
+          cp "$W/base/research/gaps.json" "$W/in/gaps.json"
           node "$W/base/.github/scripts/outside-guard.mjs" gap "$W/in/gaps.json" "$GAP" "$(cat "$W/in/pr.file")" "$W/in"
           # Before anything is built: the file may import Mathlib and the modules the gap lists.
           node "$W/base/.github/scripts/outside-guard.mjs" imports "$W/in/proof.lean" "$W/in/imports.json"
