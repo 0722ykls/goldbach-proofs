@@ -7,3 +7,5 @@ The public site is https://www.movan.tech/goldbach/. Nginx strips the /goldbach/
 请求字段为 lemma_id、verdict、manifest、run_id、run_attempt。ACCEPTED 的 manifest 含 rests_on 与 defs，各为包含 module 和 sha256 的数组。REJECTED 使用 null。SQLite 按 run_id 和 run_attempt 去重。
 
 服务端目录 /opt/goldbach-web，状态目录 /var/lib/goldbach-web。公网入口使用 nginx 的 HTTPS 443 端口。
+
+发布站点时，将 deploy/server.py、zh.html、en.html、site.css、site.js 和 research/gaps.json 部署到 /opt/goldbach-web，再重启 goldbach-web。GET /goldbach/api/status 从命题清单和 SQLite 返回公开引理、最近的验证结果及累计统计。

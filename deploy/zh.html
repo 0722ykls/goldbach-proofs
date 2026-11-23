@@ -1,10 +1,128 @@
 <!doctype html>
-<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>哥德巴赫证明项目</title>
-<style>body{max-width:46rem;margin:4rem auto;padding:0 1.2rem;font:1.1rem/1.8 system-ui;background:#f7f8f3;color:#172b25}a{color:#165b49}h1{line-height:1.2}</style>
-<nav><a href="?lang=en" lang="en">English</a></nav>
-<h1>哥德巴赫证明项目</h1>
-<p>强哥德巴赫猜想：每个不小于 4 的偶数都可以表示为两个素数之和。这个猜想仍然开放。</p>
-<h2>研究路线</h2>
-<ol><li>用 4 和 10 的素数分解检验 Lean 验证流程。</li><li>形式化有限区间搜索，逐段检查证书和覆盖边界。</li><li>研究筛法与表示数下界，独立复现三素数定理及陈氏定理的相关结果。</li><li>若得到严格的最终阈值，用有限区间证书覆盖阈值以下。</li></ol>
-<p><a href="https://github.com/CGandGameEngineLearner/goldbach-proofs">GitHub 仓库</a> · <a href="https://github.com/CGandGameEngineLearner/goldbach-proofs/actions">Lean 验证记录</a></p>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="每个不小于 4 的偶数，都是两个素数之和吗？">
+  <meta name="theme-color" content="#f7f7f1">
+  <title>哥德巴赫研究台</title>
+  <link rel="stylesheet" href="site.css">
+  <script src="site.js" defer></script>
+</head>
+<body id="top">
+  <a class="skip" href="#main">跳到正文</a>
+  <header class="masthead">
+    <div class="shell masthead-inner">
+      <a href="#top" class="brand"><span class="brand-mark" aria-hidden="true"></span>哥德巴赫研究台</a>
+      <nav class="navigation" aria-label="页面导航">
+        <a href="#lemmas">引理</a>
+        <a href="#roadmap">研究路线</a>
+        <a href="#records">验证日志</a>
+        <a href="#contribute">参与</a>
+      </nav>
+      <div class="masthead-actions">
+        <a class="locale" href="?lang=en" aria-label="改用英文" lang="en">English</a>
+        <a class="repository-link" href="https://github.com/CGandGameEngineLearner/goldbach-proofs">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </header>
+  <main id="main" class="shell">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy">
+        <p class="open-status"><span aria-hidden="true"></span>强猜想 · 尚未解决</p>
+        <h1 id="page-title">哥德巴赫猜想</h1>
+        <p class="hero-question">每个不小于 4 的偶数，都是两个素数之和吗？</p>
+        <p class="hero-description">在这里，猜想被拆成可独立审查的引理。每份提交都以固定的 Lean 命题核验，验证结果和原始记录公开可查。</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#lemmas">浏览引理<span aria-hidden="true">↓</span></a>
+          <a class="button button-subtle" href="#contribute">提交证明<span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+      <div class="math-panel">
+        <div class="math-top"><h2>素数分解</h2><span aria-hidden="true">ℙ + ℙ</span></div>
+        <div class="equation" id="equation" aria-live="polite"><span>3</span><b>+</b><span>7</span><b>=</b><span class="target-value">10</span></div>
+        <div class="prime-demo">
+          <div class="number-axis" id="number-axis" aria-hidden="true">
+            <span>2</span><span class="prime-used">3</span><span>5</span><span class="prime-used">7</span>
+          </div>
+          <div class="axis-label">候选素数</div>
+        </div>
+        <div class="math-controls" role="group" aria-label="选择偶数">
+          <button type="button" data-example="4" aria-pressed="false">4</button>
+          <button type="button" data-example="10" aria-pressed="true">10</button>
+          <button type="button" data-example="18" aria-pressed="false">18</button>
+          <button type="button" data-example="24" aria-pressed="false">24</button>
+          <button type="button" data-example="42" aria-pressed="false">42</button>
+        </div>
+        <p class="math-note">这是有限例子。一个例子成立，只验证该偶数。</p>
+      </div>
+    </section>
+
+    <dl class="metrics">
+      <div><dt>已通过的引理</dt><dd id="count-accepted">—</dd></div>
+      <div><dt>待证引理</dt><dd id="count-open">—</dd></div>
+      <div><dt>已发布命题</dt><dd id="count-published">—</dd></div>
+      <div><dt>权威验证次数</dt><dd id="count-attempts">—</dd></div>
+    </dl>
+
+    <section class="section" id="lemmas" aria-labelledby="lemma-title">
+      <div class="section-heading">
+        <div><h2 id="lemma-title">引理工作台</h2><p>查询已发布的命题。每条结果都可以追溯到相应的 GitHub Actions 运行。</p></div>
+      </div>
+      <div class="desk">
+        <div class="filters">
+          <label class="search-field" for="lemma-search"><span>搜索引理</span><input id="lemma-search" type="search" placeholder="引理编号、关键字或 Lean 命题" spellcheck="false"></label>
+          <label class="state-field" for="lemma-state"><span>证明状态</span><select id="lemma-state">
+            <option value="all">全部</option>
+            <option value="proved">已通过</option>
+            <option value="open">待证</option>
+          </select></label>
+        </div>
+        <table class="data-table lemma-table">
+          <thead><tr><th scope="col">命题</th><th scope="col">状态</th><th scope="col">证据</th></tr></thead>
+          <tbody id="lemma-rows"><tr><td colspan="3" class="empty-state">正在载入命题和近期验证记录…</td></tr></tbody>
+        </table>
+        <p class="sr-only" id="lemma-announcement" role="status"></p>
+      </div>
+    </section>
+
+    <section class="section road-section" id="roadmap" aria-labelledby="road-title">
+      <div class="section-heading">
+        <div><h2 id="road-title">研究路线</h2><p>先验证小规模见证，再建立有限搜索和证明无界结论所需的数学基础。</p></div>
+        <a class="text-link" href="https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md">查看完整路线 <span aria-hidden="true">↗</span></a>
+      </div>
+      <ol class="roadmap">
+        <li><span class="stage-marker" aria-hidden="true">1</span><h3>核验基线</h3><p>用 4 和 10 的素数分解验证提交、内核检查和回传。</p></li>
+        <li><span class="stage-marker" aria-hidden="true">2</span><h3>有限区间</h3><p>在 Lean 中证明搜索正确，生成并验证区间证书。</p></li>
+        <li><span class="stage-marker" aria-hidden="true">3</span><h3>分析数论</h3><p>研究筛法和表示数下界，独立复现三素数定理及陈氏定理。</p></li>
+        <li><span class="stage-marker" aria-hidden="true">4</span><h3>无界目标</h3><p>若取得严格阈值，证明阈值以上成立，并补齐阈值以下的证书。</p></li>
+      </ol>
+    </section>
+
+    <section class="section" id="records" aria-labelledby="records-title">
+      <div class="section-heading">
+        <div><h2 id="records-title">验证日志</h2><p>按运行从新到旧。一次验证尝试只判定它对应的引理。</p></div>
+        <a class="text-link" href="https://github.com/CGandGameEngineLearner/goldbach-proofs/actions">查看全部 Actions 运行 <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="log" id="verification-log"><p class="empty-state">正在载入命题和近期验证记录…</p></div>
+    </section>
+
+    <section class="contribute" id="contribute" aria-labelledby="contribute-title">
+      <div>
+        <h2 id="contribute-title">提交一份证明</h2>
+        <p>人工和 AI 都可以参与。选择一条待证引理，在指定文件中证明已发布的 Lean 命题，然后提交单文件 PR。</p>
+        <div class="contribute-actions">
+          <a class="button button-inverse" href="https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/CONTRIBUTING.md">阅读贡献指南 <span aria-hidden="true">↗</span></a>
+          <a class="text-link" href="https://github.com/CGandGameEngineLearner/goldbach-proofs">打开 GitHub 仓库 <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+      <div class="prompt-box">
+        <div class="prompt-heading"><h3>用于编程助手的任务说明</h3><button type="button" id="copy-prompt">复制任务说明</button></div>
+        <p id="agent-prompt">阅读 https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/CONTRIBUTING.md，在研究台选择一条待证引理。以 research/gaps.json 中冻结的 Lean 命题为准，只提交清单指定的 Lean 文件。让项目的 GitHub Actions 运行权威验证。</p>
+        <span id="copy-announcement" class="sr-only" role="status"></span>
+      </div>
+    </section>
+  </main>
+  <footer class="footer shell"><span>开放研究 · Lean 4 形式化验证</span><a href="https://github.com/CGandGameEngineLearner/goldbach-proofs">GitHub <span aria-hidden="true">↗</span></a></footer>
+</body>
 </html>

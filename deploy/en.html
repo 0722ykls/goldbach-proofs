@@ -1,10 +1,128 @@
 <!doctype html>
-<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Goldbach Proofs</title>
-<style>body{max-width:46rem;margin:4rem auto;padding:0 1.2rem;font:1.1rem/1.8 system-ui;background:#f7f8f3;color:#172b25}a{color:#165b49}h1{line-height:1.2}</style>
-<nav><a href="?lang=zh" lang="zh-CN">简体中文</a></nav>
-<h1>Goldbach Proofs</h1>
-<p>The strong Goldbach conjecture states that every even natural number at least 4 is a sum of two primes. It remains open.</p>
-<h2>Research roadmap</h2>
-<ol><li>Exercise the Lean verifier with prime decompositions of 4 and 10.</li><li>Formalize bounded search and certify contiguous ranges.</li><li>Develop sieve and representation bounds, with ternary Goldbach and Chen results as separate reproduction targets.</li><li>If a rigorous eventual threshold is proved, certify the finite range below it.</li></ol>
-<p><a href="https://github.com/CGandGameEngineLearner/goldbach-proofs">GitHub repository</a> · <a href="https://github.com/CGandGameEngineLearner/goldbach-proofs/actions">Lean verification runs</a></p>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Is every even integer of at least 4 a sum of two primes?">
+  <meta name="theme-color" content="#f7f7f1">
+  <title>Goldbach Research</title>
+  <link rel="stylesheet" href="site.css">
+  <script src="site.js" defer></script>
+</head>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="masthead">
+    <div class="shell masthead-inner">
+      <a href="#top" class="brand"><span class="brand-mark" aria-hidden="true"></span>Goldbach Research</a>
+      <nav class="navigation" aria-label="Sections">
+        <a href="#lemmas">Lemmas</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#records">Verification</a>
+        <a href="#contribute">Contribute</a>
+      </nav>
+      <div class="masthead-actions">
+        <a class="locale" href="?lang=zh" aria-label="Switch to Chinese" lang="zh-CN">简体中文</a>
+        <a class="repository-link" href="https://github.com/CGandGameEngineLearner/goldbach-proofs">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </header>
+  <main id="main" class="shell">
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy">
+        <p class="open-status"><span aria-hidden="true"></span>Strong conjecture · Open</p>
+        <h1 id="page-title">Goldbach’s Conjecture</h1>
+        <p class="hero-question">Is every even integer of at least 4 a sum of two primes?</p>
+        <p class="hero-description">We break the question into lemmas that can be checked independently. Every submission is verified against a fixed Lean statement, with results and original run logs available to all.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#lemmas">Explore lemmas<span aria-hidden="true">↓</span></a>
+          <a class="button button-subtle" href="#contribute">Submit a proof<span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+      <div class="math-panel">
+        <div class="math-top"><h2>Prime decomposition</h2><span aria-hidden="true">ℙ + ℙ</span></div>
+        <div class="equation" id="equation" aria-live="polite"><span>3</span><b>+</b><span>7</span><b>=</b><span class="target-value">10</span></div>
+        <div class="prime-demo">
+          <div class="number-axis" id="number-axis" aria-hidden="true">
+            <span>2</span><span class="prime-used">3</span><span>5</span><span class="prime-used">7</span>
+          </div>
+          <div class="axis-label">Candidate primes</div>
+        </div>
+        <div class="math-controls" role="group" aria-label="Choose an even integer">
+          <button type="button" data-example="4" aria-pressed="false">4</button>
+          <button type="button" data-example="10" aria-pressed="true">10</button>
+          <button type="button" data-example="18" aria-pressed="false">18</button>
+          <button type="button" data-example="24" aria-pressed="false">24</button>
+          <button type="button" data-example="42" aria-pressed="false">42</button>
+        </div>
+        <p class="math-note">Each example illustrates a single even integer.</p>
+      </div>
+    </section>
+
+    <dl class="metrics">
+      <div><dt>Verified lemmas</dt><dd id="count-accepted">—</dd></div>
+      <div><dt>Open lemmas</dt><dd id="count-open">—</dd></div>
+      <div><dt>Published statements</dt><dd id="count-published">—</dd></div>
+      <div><dt>Verification runs</dt><dd id="count-attempts">—</dd></div>
+    </dl>
+
+    <section class="section" id="lemmas" aria-labelledby="lemma-title">
+      <div class="section-heading">
+        <div><h2 id="lemma-title">Lemma desk</h2><p>Search the published statements and open the GitHub Actions run behind each result.</p></div>
+      </div>
+      <div class="desk">
+        <div class="filters">
+          <label class="search-field" for="lemma-search"><span>Search lemmas</span><input id="lemma-search" type="search" placeholder="Lemma ID, keyword, or Lean statement" spellcheck="false"></label>
+          <label class="state-field" for="lemma-state"><span>Proof status</span><select id="lemma-state">
+            <option value="all">All</option>
+            <option value="proved">Verified</option>
+            <option value="open">Open</option>
+          </select></label>
+        </div>
+        <table class="data-table lemma-table">
+          <thead><tr><th scope="col">Statement</th><th scope="col">Status</th><th scope="col">Evidence</th></tr></thead>
+          <tbody id="lemma-rows"><tr><td colspan="3" class="empty-state">Loading statements and recent verification runs…</td></tr></tbody>
+        </table>
+        <p class="sr-only" id="lemma-announcement" role="status"></p>
+      </div>
+    </section>
+
+    <section class="section road-section" id="roadmap" aria-labelledby="road-title">
+      <div class="section-heading">
+        <div><h2 id="road-title">Research roadmap</h2><p>Start with small witnesses, then develop bounded search and the mathematics needed for an unbounded result.</p></div>
+        <a class="text-link" href="https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md">Read the full roadmap <span aria-hidden="true">↗</span></a>
+      </div>
+      <ol class="roadmap">
+        <li><span class="stage-marker" aria-hidden="true">1</span><h3>Verify the baseline</h3><p>Use prime decompositions of 4 and 10 to check submission, kernel replay, and delivery.</p></li>
+        <li><span class="stage-marker" aria-hidden="true">2</span><h3>Bounded ranges</h3><p>Prove search correctness in Lean and verify certificates for contiguous intervals.</p></li>
+        <li><span class="stage-marker" aria-hidden="true">3</span><h3>Analytic number theory</h3><p>Develop sieve and representation bounds, with ternary Goldbach and Chen’s theorem as independent projects.</p></li>
+        <li><span class="stage-marker" aria-hidden="true">4</span><h3>Unbounded target</h3><p>If a rigorous threshold is established, prove the claim above it and certify the range below.</p></li>
+      </ol>
+    </section>
+
+    <section class="section" id="records" aria-labelledby="records-title">
+      <div class="section-heading">
+        <div><h2 id="records-title">Verification log</h2><p>Newest runs first. Each verdict covers the lemma submitted for that run.</p></div>
+        <a class="text-link" href="https://github.com/CGandGameEngineLearner/goldbach-proofs/actions">View all Actions runs <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="log" id="verification-log"><p class="empty-state">Loading statements and recent verification runs…</p></div>
+    </section>
+
+    <section class="contribute" id="contribute" aria-labelledby="contribute-title">
+      <div>
+        <h2 id="contribute-title">Submit a proof</h2>
+        <p>Everyone can contribute, including AI agents. Choose an open lemma, prove its published Lean statement, and open a pull request with the one requested file.</p>
+        <div class="contribute-actions">
+          <a class="button button-inverse" href="https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/CONTRIBUTING.md">Read the contribution guide <span aria-hidden="true">↗</span></a>
+          <a class="text-link" href="https://github.com/CGandGameEngineLearner/goldbach-proofs">Open GitHub repository <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+      <div class="prompt-box">
+        <div class="prompt-heading"><h3>Instructions for a coding assistant</h3><button type="button" id="copy-prompt">Copy instructions</button></div>
+        <p id="agent-prompt">Read https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/CONTRIBUTING.md and pick an open lemma from the research desk. Use the frozen Lean statement in research/gaps.json, submit only the Lean file named in that registry, and use the project’s authoritative GitHub Actions verifier.</p>
+        <span id="copy-announcement" class="sr-only" role="status"></span>
+      </div>
+    </section>
+  </main>
+  <footer class="footer shell"><span>Open research · Lean 4 formal verification</span><a href="https://github.com/CGandGameEngineLearner/goldbach-proofs">GitHub <span aria-hidden="true">↗</span></a></footer>
+</body>
 </html>
