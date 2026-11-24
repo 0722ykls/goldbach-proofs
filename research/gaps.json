@@ -3881,6 +3881,106 @@
       "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
       "track": "rh-grh-windows",
       "role": "conditional"
+    },
+    {
+      "id": "L-goldbach-square-norm",
+      "file": "lean/PEqualNP/Outside/L_goldbach_square_norm.lean",
+      "module": "PEqualNP.Outside.L_goldbach_square_norm",
+      "statement": "∀ (S M : ℂ) (E : ℝ), ‖S-M‖≤E → ‖S^2-M^2‖≤E*(2*‖M‖+E)",
+      "plain_statement": {
+        "zh": "主弧上将指数和误差传到平方",
+        "en": "Square an exponential-sum approximation"
+      },
+      "brief": {
+        "zh": "写成 (S−M)(2M+(S−M))。",
+        "en": "Factor the difference and use the triangle inequality."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/gaps.json",
+      "track": "arc-perturbation",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-signed-phase",
+      "file": "lean/PEqualNP/Outside/L_goldbach_signed_phase.lean",
+      "module": "PEqualNP.Outside.L_goldbach_signed_phase",
+      "statement": "∀ (u S M : ℂ) (E : ℝ), ‖u‖=1 → ‖S-M‖≤E → (u*M^2).re-E*(2*‖M‖+E)≤(u*S^2).re",
+      "plain_statement": {
+        "zh": "保留傅里叶相位的实部下界",
+        "en": "Lower bound for the signed Fourier integrand"
+      },
+      "brief": {
+        "zh": "相位乘法不增大平方误差，再比较实部。",
+        "en": "Multiply the squared error by a unit phase and bound its real part."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/gaps.json",
+      "track": "arc-perturbation",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-integrated-loss",
+      "file": "lean/PEqualNP/Outside/L_goldbach_integrated_loss.lean",
+      "module": "PEqualNP.Outside.L_goldbach_integrated_loss",
+      "statement": "∀ (f g : ℝ → ℝ) (a b D : ℝ), a≤b → Continuous f → Continuous g → (∀ t∈Set.Icc a b, g t-D≤f t) → intervalIntegral g a b MeasureTheory.volume-(b-a)*D ≤ intervalIntegral f a b MeasureTheory.volume",
+      "plain_statement": {
+        "zh": "在单条弧上积分点态损失",
+        "en": "Integrate the pointwise loss on one arc"
+      },
+      "brief": {
+        "zh": "通过连续性获得可积性，并显式保留弧长。",
+        "en": "Integrate the constant envelope, retaining the arc length."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/gaps.json",
+      "track": "arc-perturbation",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-offset-cost",
+      "file": "lean/PEqualNP/Outside/L_goldbach_offset_cost.lean",
+      "module": "PEqualNP.Outside.L_goldbach_offset_cost",
+      "statement": "∀ X h : ℝ, 0≤h → intervalIntegral (fun t : ℝ => (1+X*t)^2) (0:ℝ) h MeasureTheory.volume=h+X*h^2+X^2*h^3/3",
+      "plain_statement": {
+        "zh": "积分主弧误差中的频移因子",
+        "en": "Integrate the frequency-offset factor"
+      },
+      "brief": {
+        "zh": "展开平方后积分，给出之后选弧宽所需的三项。",
+        "en": "Integrate the expanded polynomial to expose the three width costs."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/gaps.json",
+      "track": "arc-perturbation",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-summed-width",
+      "file": "lean/PEqualNP/Outside/L_goldbach_summed_width.lean",
+      "module": "PEqualNP.Outside.L_goldbach_summed_width",
+      "statement": "∀ (Q : ℕ) (h : ℕ → ℝ), (∀ q,0≤h q) → (∑ q ∈ Finset.Icc 1 Q, (Nat.totient q:ℝ)*(2*h q)) ≤ 2*∑ q ∈ Finset.Icc 1 Q,(q:ℝ)*h q",
+      "plain_statement": {
+        "zh": "按分母汇总有理弧的总宽度",
+        "en": "Sum major-arc widths over reduced numerators"
+      },
+      "brief": {
+        "zh": "每个模数按单位类计弧；在固定 Q 内汇总。",
+        "en": "Count reduced numerators for each modulus before summing to Q."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/gaps.json",
+      "track": "arc-perturbation",
+      "role": "lemma"
     }
   ],
   "tracks": [
@@ -4131,6 +4231,20 @@
       "description": {
         "zh": "在中央窗口做集合计数；将密度输入同真正的逐点配对输入分开。",
         "en": "Count candidates on the central window. Distinguish marginal density from a pointwise overlap bound."
+      },
+      "feeds": [
+        "arc-budget"
+      ]
+    },
+    {
+      "id": "arc-perturbation",
+      "title": {
+        "zh": "从单变量主弧逼近到二元系数误差",
+        "en": "Propagate major-arc approximation into the binary coefficient"
+      },
+      "description": {
+        "zh": "沿用有理频率附近的 Λ 指数和估计，量化平方、积分和多个弧段累加的损失。最后仍须单独证明逐点次弧下界。",
+        "en": "Start with the Mangoldt estimate near a rational frequency. Track the cost of squaring and integrating across arcs; pointwise minor-arc cancellation remains open."
       },
       "feeds": [
         "arc-budget"

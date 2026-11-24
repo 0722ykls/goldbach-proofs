@@ -314,6 +314,96 @@
         "imports": [],
         "parallel": true,
         "source": "https://www.goldbach.tech/problems/no-three-in-line/?lang=en#roadmap"
+      },
+      {
+        "id": "L-no-three-in-line-secant-insert",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_secant_insert.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_secant_insert",
+        "statement": "let d := fun (a b c : ℤ × ℤ) => (b.1-a.1)*(c.2-a.2)-(b.2-a.2)*(c.1-a.1); let ok := fun (S : Finset (ℤ × ℤ)) => ∀ a∈S, ∀ b∈S, ∀ c∈S, a≠b → b≠c → a≠c → d a b c≠0; ∀ (S : Finset (ℤ × ℤ)) (x : ℤ × ℤ), x∉S → (ok (insert x S) ↔ ok S ∧ ∀ a∈S, ∀ b∈S,a≠b → d a b x≠0)",
+        "plain_statement": {
+          "zh": "单点增广的充要判据",
+          "en": "Exact criterion for inserting one site"
+        },
+        "brief": {
+          "zh": "区分三元组是否包含 x，并处理行列式置换。",
+          "en": "Split triples on membership of x and permute the determinant."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
+      },
+      {
+        "id": "L-no-three-in-line-secant-exchange",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_secant_exchange.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_secant_exchange",
+        "statement": "let d := fun (a b c : ℤ × ℤ) => (b.1-a.1)*(c.2-a.2)-(b.2-a.2)*(c.1-a.1); let ok := fun (S : Finset (ℤ × ℤ)) => ∀ a∈S, ∀ b∈S, ∀ c∈S, a≠b → b≠c → a≠c → d a b c≠0; ∀ (S : Finset (ℤ × ℤ)) (r x y : ℤ × ℤ), let T := S.erase r; ok S → x≠y → (∀ a∈T,∀ b∈T,a≠b → d a b x≠0 ∧ d a b y≠0) → (∀ a∈T,d x y a≠0) → ok (insert x (insert y T))",
+        "plain_statement": {
+          "zh": "删一点加两点的合法性证书",
+          "en": "Certificate for replacing one site by two"
+        },
+        "brief": {
+          "zh": "检查旧旧新和旧新新两种割线。",
+          "en": "Check old–old–new and old–new–new triples separately."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
+      },
+      {
+        "id": "L-no-three-in-line-secant-slice",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_secant_slice.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_secant_slice",
+        "statement": "let d := fun (a b c : ℤ × ℤ) => (b.1-a.1)*(c.2-a.2)-(b.2-a.2)*(c.1-a.1); let ok := fun (S : Finset (ℤ × ℤ)) => ∀ a∈S, ∀ b∈S, ∀ c∈S, a≠b → b≠c → a≠c → d a b c≠0; ∀ (a b : ℤ × ℤ) (y x u : ℤ), a.2≠b.2 → d a b (x,y)=0 → d a b (u,y)=0 → x=u",
+        "plain_statement": {
+          "zh": "非水平割线在一行至多排除一格",
+          "en": "A nonhorizontal secant forbids at most one site per row"
+        },
+        "brief": {
+          "zh": "将两个行列式相减，再消去非零纵坐标差。",
+          "en": "Subtract determinants and cancel the nonzero vertical difference."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
+      },
+      {
+        "id": "L-no-three-in-line-secant-parabola",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_secant_parabola.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_secant_parabola",
+        "statement": "let d := fun (a b c : ℤ × ℤ) => (b.1-a.1)*(c.2-a.2)-(b.2-a.2)*(c.1-a.1); let ok := fun (S : Finset (ℤ × ℤ)) => ∀ a∈S, ∀ b∈S, ∀ c∈S, a≠b → b≠c → a≠c → d a b c≠0; ∀ a b t : ℤ, d (a,a^2) (b,b^2) (t,t^2)=(b-a)*(t-a)*(t-b)",
+        "plain_statement": {
+          "zh": "抛物线候选代入割线的整式",
+          "en": "Secant obstruction on parabola candidates"
+        },
+        "brief": {
+          "zh": "将行列式分解，供同余和提升构造共用。",
+          "en": "Factor the determinant for later reduction and lifting."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
+      },
+      {
+        "id": "L-no-three-in-line-secant-grid-count",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_secant_grid_count.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_secant_grid_count",
+        "statement": "let d := fun (a b c : ℤ × ℤ) => (b.1-a.1)*(c.2-a.2)-(b.2-a.2)*(c.1-a.1); let ok := fun (S : Finset (ℤ × ℤ)) => ∀ a∈S, ∀ b∈S, ∀ c∈S, a≠b → b≠c → a≠c → d a b c≠0; ∀ (S : Finset (ℤ × ℤ)) (y : ℤ) (X : Finset ℤ), ok S → (∀ a∈S,a.2≠y) → S.card*(S.card-1)/2<X.card → ∃ x∈X,ok (insert (x,y) S)",
+        "plain_statement": {
+          "zh": "无水平点对时的空行增广保证",
+          "en": "Free site in an empty row with a secant budget"
+        },
+        "brief": {
+          "zh": "按无序点对计数；水平割线与空行没有交点。",
+          "en": "Count unordered pairs. Horizontal secants miss the empty row."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
       }
     ],
     "roadmap": [
@@ -468,6 +558,43 @@
             "id": "L-no-three-in-line-sparse-rows",
             "zh": "欠饱和行数受总缺口控制",
             "en": "Bound unsaturated rows by the total deficit"
+          }
+        ]
+      },
+      {
+        "zh": [
+          "逐点增广与割线冲突",
+          "从现有无三点共线构型出发，用割线筛除非法候选，寻找净增益。"
+        ],
+        "en": [
+          "Augment configurations using secant conflicts",
+          "Extend a valid configuration by certifying candidate sites against its secants."
+        ],
+        "tasks": [
+          {
+            "id": "L-no-three-in-line-secant-insert",
+            "zh": "单点增广的充要判据",
+            "en": "Exact criterion for inserting one site"
+          },
+          {
+            "id": "L-no-three-in-line-secant-exchange",
+            "zh": "删一点加两点的合法性证书",
+            "en": "Certificate for replacing one site by two"
+          },
+          {
+            "id": "L-no-three-in-line-secant-slice",
+            "zh": "非水平割线在一行至多排除一格",
+            "en": "A nonhorizontal secant forbids at most one site per row"
+          },
+          {
+            "id": "L-no-three-in-line-secant-parabola",
+            "zh": "抛物线候选代入割线的整式",
+            "en": "Secant obstruction on parabola candidates"
+          },
+          {
+            "id": "L-no-three-in-line-secant-grid-count",
+            "zh": "无水平点对时的空行增广保证",
+            "en": "Free site in an empty row with a secant budget"
           }
         ]
       }
@@ -774,6 +901,96 @@
         "imports": [],
         "parallel": true,
         "source": "https://www.goldbach.tech/problems/square-packing/?lang=en#roadmap"
+      },
+      {
+        "id": "L-square-packing-rational-rotation",
+        "file": "lean/PEqualNP/Outside/L_square_packing_rational_rotation.lean",
+        "module": "PEqualNP.Outside.L_square_packing_rational_rotation",
+        "statement": "∀ t:ℝ, ((1-t^2)/(1+t^2))^2+(2*t/(1+t^2))^2=1",
+        "plain_statement": {
+          "zh": "有理斜率参数产生精确单位朝向",
+          "en": "Exact rational parameterization of a unit orientation"
+        },
+        "brief": {
+          "zh": "清除正分母后用多项式恒等式。",
+          "en": "Clear the positive denominator before expanding."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
+      },
+      {
+        "id": "L-square-packing-rational-inverse",
+        "file": "lean/PEqualNP/Outside/L_square_packing_rational_inverse.lean",
+        "module": "PEqualNP.Outside.L_square_packing_rational_inverse",
+        "statement": "∀ c s:ℝ,c^2+s^2=1 → c≠ -1 → let t:=s/(1+c); (1-t^2)/(1+t^2)=c ∧ 2*t/(1+t^2)=s",
+        "plain_statement": {
+          "zh": "从朝向恢复半角参数",
+          "en": "Recover a half-angle parameter from the orientation"
+        },
+        "brief": {
+          "zh": "单独排除半角参数的极点。",
+          "en": "Remove the pole of the half-angle chart."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
+      },
+      {
+        "id": "L-square-packing-support-axis",
+        "file": "lean/PEqualNP/Outside/L_square_packing_support_axis.lean",
+        "module": "PEqualNP.Outside.L_square_packing_support_axis",
+        "statement": "∀ A B u v:ℝ, |u|<1/2 → |v|<1/2 → 0<|A|+|B| → |A*u+B*v|< (|A|+|B|)/2",
+        "plain_statement": {
+          "zh": "内点投影受支撑半径约束",
+          "en": "Bound the projection of a square interior point"
+        },
+        "brief": {
+          "zh": "对两个局部坐标逐项估计；至少一个系数非零。",
+          "en": "Estimate in local coordinates and use a nonzero coefficient for strictness."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
+      },
+      {
+        "id": "L-square-packing-contact-safe",
+        "file": "lean/PEqualNP/Outside/L_square_packing_contact_safe.lean",
+        "module": "PEqualNP.Outside.L_square_packing_contact_safe",
+        "statement": "∀ a b r s x:ℝ,r+s≤b-a → |x-a|<r → ¬ |x-b|<s",
+        "plain_statement": {
+          "zh": "投影恰好接触时开内部仍不相交",
+          "en": "Touching projected intervals have disjoint interiors"
+        },
+        "brief": {
+          "zh": "严格内部与可接触边界使用不同不等号。",
+          "en": "Retain strictness for interiors and weak separation for contact."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
+      },
+      {
+        "id": "L-square-packing-axis-dot-certificate",
+        "file": "lean/PEqualNP/Outside/L_square_packing_axis_dot_certificate.lean",
+        "module": "PEqualNP.Outside.L_square_packing_axis_dot_certificate",
+        "statement": "let rad := fun (a b c s : ℝ) => (|a*c+b*s|+|b*c-a*s|)/2; ∀ a b c s k l x y u v i j m n : ℝ, |i|<1/2 → |j|<1/2 → |m|<1/2 → |n|<1/2 → 0<rad a b c s → 0<rad a b k l → rad a b c s+rad a b k l≤a*(u-x)+b*(v-y) → (x+c*i-s*j,y+s*i+c*j)≠(u+k*m-l*n,v+l*m+k*n)",
+        "plain_statement": {
+          "zh": "两个旋转方块的单轴分离证书",
+          "en": "One-axis certificate for two oriented squares"
+        },
+        "brief": {
+          "zh": "若有相同内点，投影将严格落入两个已分离的开区间。",
+          "en": "Project a hypothetical common interior point onto the proposed axis."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
       }
     ],
     "roadmap": [
@@ -882,6 +1099,43 @@
             "id": "L-square-packing-interval-hull",
             "zh": "中心和半径给出精确边界余量",
             "en": "Exact containment test for a centered interval"
+          }
+        ]
+      },
+      {
+        "zh": [
+          "用有理参数和分离轴认证旋转构型",
+          "把候选构型变成精确坐标与投影不等式，供五块和十一块装填上界使用。"
+        ],
+        "en": [
+          "Certify rotated layouts with rational parameters and separating axes",
+          "Convert candidate layouts into exact coordinates and projection inequalities for the five- and eleven-square upper certificates."
+        ],
+        "tasks": [
+          {
+            "id": "L-square-packing-rational-rotation",
+            "zh": "有理斜率参数产生精确单位朝向",
+            "en": "Exact rational parameterization of a unit orientation"
+          },
+          {
+            "id": "L-square-packing-rational-inverse",
+            "zh": "从朝向恢复半角参数",
+            "en": "Recover a half-angle parameter from the orientation"
+          },
+          {
+            "id": "L-square-packing-support-axis",
+            "zh": "内点投影受支撑半径约束",
+            "en": "Bound the projection of a square interior point"
+          },
+          {
+            "id": "L-square-packing-contact-safe",
+            "zh": "投影恰好接触时开内部仍不相交",
+            "en": "Touching projected intervals have disjoint interiors"
+          },
+          {
+            "id": "L-square-packing-axis-dot-certificate",
+            "zh": "两个旋转方块的单轴分离证书",
+            "en": "One-axis certificate for two oriented squares"
           }
         ]
       }
@@ -1333,6 +1587,96 @@
         "imports": [],
         "parallel": true,
         "source": "https://www.goldbach.tech/problems/quadratic-primes/?lang=en#roadmap"
+      },
+      {
+        "id": "L-quadratic-primes-shift-divisor",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_shift_divisor.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_shift_divisor",
+        "statement": "∀ n h d:ℕ,d∣n^2+1 → d∣(n+h)^2+1 → d∣h*(2*n+h)",
+        "plain_statement": {
+          "zh": "两个二次值的公因子约束",
+          "en": "Common divisors of shifted quadratic values"
+        },
+        "brief": {
+          "zh": "相减消去常数项并提取位移。",
+          "en": "Subtract the polynomial values and factor the shift."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
+      },
+      {
+        "id": "L-quadratic-primes-shift-resultant",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_shift_resultant.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_shift_resultant",
+        "statement": "∀ n h d:ℤ,d∣n^2+1 → d∣(n+h)^2+1 → d∣h^2*(h^2+4)",
+        "plain_statement": {
+          "zh": "消去基点后的整系数公因子界",
+          "en": "Eliminate the base point from the shared-divisor bound"
+        },
+        "brief": {
+          "zh": "组合两个二次多项式的消元式；保留 h 的因子。",
+          "en": "Take an integral combination eliminating n; retain the shift factors."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
+      },
+      {
+        "id": "L-quadratic-primes-middle-simple",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_middle_simple.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_middle_simple",
+        "statement": "∀ p n:ℕ,Nat.Prime p → p∣n^2+1 → n^2+1<p^2 → (n^2+1).factorization p=1",
+        "plain_statement": {
+          "zh": "中段大素数在小于平方的值中只出现一次",
+          "en": "A large divisor below the square cutoff has multiplicity one"
+        },
+        "brief": {
+          "zh": "将指数至少为 2 转为平方整除。",
+          "en": "Convert multiplicity at least two into square divisibility."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
+      },
+      {
+        "id": "L-quadratic-primes-short-root-injective",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_short_root_injective.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_short_root_injective",
+        "statement": "∀ p x m n:ℕ,m∈Finset.Ico x (x+p) → n∈Finset.Ico x (x+p) → m%p=n%p → m=n",
+        "plain_statement": {
+          "zh": "短窗口内同余点不能重复",
+          "en": "Inject residues on a short half-open interval"
+        },
+        "brief": {
+          "zh": "用间距小于 p 消去同余歧义。",
+          "en": "Use distance strictly below the modulus."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
+      },
+      {
+        "id": "L-quadratic-primes-middle-root-cap",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_middle_root_cap.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_middle_root_cap",
+        "statement": "∀ p x H:ℕ,Nat.Prime p → 2<p → H≤p → ((Finset.Ico x (x+H)).filter (fun n => p∣n^2+1)).card≤2",
+        "plain_statement": {
+          "zh": "每个中段奇素数在短窗口至多命中两次",
+          "en": "At most two hits per odd middle prime in a short window"
+        },
+        "brief": {
+          "zh": "先用二次根的同号或反号关系，再用短区间模 p 的单射性。",
+          "en": "Combine the two possible residue roots with interval injectivity."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
       }
     ],
     "roadmap": [
@@ -1463,6 +1807,43 @@
             "id": "L-quadratic-primes-mass-witness",
             "zh": "截断对数质量为正推出大素因子见证",
             "en": "Extract a large factor from positive truncated log mass"
+          }
+        ]
+      },
+      {
+        "zh": [
+          "从间距约束估计中段素因子的重复贡献",
+          "固定素数，将同根和反根分开计数；把每个区间内少量解的结论交给中段筛估计。"
+        ],
+        "en": [
+          "Control repeated middle-prime contributions through root spacing",
+          "For each prime, separate equal and opposite roots and pass the resulting interval count to the middle-prime sieve bound."
+        ],
+        "tasks": [
+          {
+            "id": "L-quadratic-primes-shift-divisor",
+            "zh": "两个二次值的公因子约束",
+            "en": "Common divisors of shifted quadratic values"
+          },
+          {
+            "id": "L-quadratic-primes-shift-resultant",
+            "zh": "消去基点后的整系数公因子界",
+            "en": "Eliminate the base point from the shared-divisor bound"
+          },
+          {
+            "id": "L-quadratic-primes-middle-simple",
+            "zh": "中段大素数在小于平方的值中只出现一次",
+            "en": "A large divisor below the square cutoff has multiplicity one"
+          },
+          {
+            "id": "L-quadratic-primes-short-root-injective",
+            "zh": "短窗口内同余点不能重复",
+            "en": "Inject residues on a short half-open interval"
+          },
+          {
+            "id": "L-quadratic-primes-middle-root-cap",
+            "zh": "每个中段奇素数在短窗口至多命中两次",
+            "en": "At most two hits per odd middle prime in a short window"
           }
         ]
       }
@@ -1875,6 +2256,96 @@
         "imports": [],
         "parallel": true,
         "source": "https://www.goldbach.tech/problems/hash-collision-lab/?lang=en#roadmap"
+      },
+      {
+        "id": "L-hash-collision-lab-triple-drop",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_triple_drop.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_triple_drop",
+        "statement": "∀ a b:ℕ, Nat.choose (a+1) 3+Nat.choose b 3+Nat.choose b 2=Nat.choose a 3+Nat.choose (b+1) 3+Nat.choose a 2",
+        "plain_statement": {
+          "zh": "移动一项的精确代价差",
+          "en": "Exact triple-count drop for one move"
+        },
+        "brief": {
+          "zh": "使用相邻二项系数递推两次。",
+          "en": "Apply adjacent binomial recurrences twice."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
+      },
+      {
+        "id": "L-hash-collision-lab-balancing-potential",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_balancing_potential.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_balancing_potential",
+        "statement": "∀ a b:ℕ,b<a → a^2+(b+1)^2<(a+1)^2+b^2",
+        "plain_statement": {
+          "zh": "均衡移动严格降低平方势能",
+          "en": "Balancing strictly lowers squared occupancy"
+        },
+        "brief": {
+          "zh": "用平方势能处理三元组代价打平的移动。",
+          "en": "Use squared load to order moves even if triple cost is tied."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
+      },
+      {
+        "id": "L-hash-collision-lab-balanced-profile",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_balanced_profile.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_balanced_profile",
+        "statement": "∀ (q k:ℕ) (b:Fin q→ℕ), (∀ i,b i=k ∨ b i=k+1) → (∑ i,b i)=q*k+((Finset.univ:Finset (Fin q)).filter (fun i => b i=k+1)).card",
+        "plain_statement": {
+          "zh": "差至多一时的重桶个数",
+          "en": "Count fuller buckets in a balanced profile"
+        },
+        "brief": {
+          "zh": "分开 k 与 k+1 两种负载。",
+          "en": "Partition the load vector into its two levels."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
+      },
+      {
+        "id": "L-hash-collision-lab-triple-sharp",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_triple_sharp.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_triple_sharp",
+        "statement": "∀ (q:ℕ) (b:Fin q→ℕ),0<q → let M:=∑ i,b i; let k:=M/q; let r:=M%q; (q-r)*Nat.choose k 3+r*Nat.choose (k+1) 3≤∑ i,Nat.choose (b i) 3",
+        "plain_statement": {
+          "zh": "有限桶的精确三元组下界",
+          "en": "Sharp triple-count floor for arbitrary loads"
+        },
+        "brief": {
+          "zh": "用平衡化与平方势能归纳，或从离散支撑直线求和。",
+          "en": "Induct on the balancing potential or sum a discrete supporting-line bound."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
+      },
+      {
+        "id": "L-hash-collision-lab-triple-attainment",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_triple_attainment.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_triple_attainment",
+        "statement": "∀ q M:ℕ,0<q → ∃ b:Fin q→ℕ,(∑ i,b i)=M ∧ (∑ i,Nat.choose (b i) 3)=(q-M%q)*Nat.choose (M/q) 3+(M%q)*Nat.choose (M/q+1) 3",
+        "plain_statement": {
+          "zh": "构造达到精确下界的桶向量",
+          "en": "Construct an occupancy vector attaining the floor"
+        },
+        "brief": {
+          "zh": "把余数分给前 r 个桶，其余各放 k 项。",
+          "en": "Give the first r buckets one extra item."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
       }
     ],
     "roadmap": [
@@ -2032,6 +2503,43 @@
             "id": "L-hash-collision-lab-heavy-buckets",
             "zh": "用三元组总数控制重桶数",
             "en": "Triple counts bound the number of heavy buckets"
+          }
+        ]
+      },
+      {
+        "zh": [
+          "固定总占用下的三元组最小值",
+          "研究有限桶的离散极值：证明平衡化过程终止，求精确下界，并区分低占用时的平局。"
+        ],
+        "en": [
+          "Minimize triple counts at fixed occupancy",
+          "Prove termination of balancing, compute the sharp finite-bucket bound and account for ties at low occupancy."
+        ],
+        "tasks": [
+          {
+            "id": "L-hash-collision-lab-triple-drop",
+            "zh": "移动一项的精确代价差",
+            "en": "Exact triple-count drop for one move"
+          },
+          {
+            "id": "L-hash-collision-lab-balancing-potential",
+            "zh": "均衡移动严格降低平方势能",
+            "en": "Balancing strictly lowers squared occupancy"
+          },
+          {
+            "id": "L-hash-collision-lab-balanced-profile",
+            "zh": "差至多一时的重桶个数",
+            "en": "Count fuller buckets in a balanced profile"
+          },
+          {
+            "id": "L-hash-collision-lab-triple-sharp",
+            "zh": "有限桶的精确三元组下界",
+            "en": "Sharp triple-count floor for arbitrary loads"
+          },
+          {
+            "id": "L-hash-collision-lab-triple-attainment",
+            "zh": "构造达到精确下界的桶向量",
+            "en": "Construct an occupancy vector attaining the floor"
           }
         ]
       }
@@ -2432,6 +2940,96 @@
         "imports": [],
         "parallel": true,
         "source": "https://www.goldbach.tech/problems/log-rank/?lang=en#roadmap"
+      },
+      {
+        "id": "L-log-rank-minority-double-count",
+        "file": "lean/PEqualNP/Outside/L_log_rank_minority_double_count.lean",
+        "module": "PEqualNP.Outside.L_log_rank_minority_double_count",
+        "statement": "∀ (m n : ℕ) (A : Fin m → Fin n → Bool) (R : Finset (Fin m)) (C : Finset (Fin n)), let bad := fun i => C.filter (fun j => A i j=false); (∑ i ∈ R,(bad i).card)=∑ j ∈ C,(R.filter (fun i => A i j=false)).card",
+        "plain_statement": {
+          "zh": "按行或按列得到相同的反色数",
+          "en": "Double-count opposite entries by rows and columns"
+        },
+        "brief": {
+          "zh": "对 R×C 中反色点作两次纤维计数。",
+          "en": "Count the false entries of the product by its two projections."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
+      },
+      {
+        "id": "L-log-rank-trim-bad-rows",
+        "file": "lean/PEqualNP/Outside/L_log_rank_trim_bad_rows.lean",
+        "module": "PEqualNP.Outside.L_log_rank_trim_bad_rows",
+        "statement": "∀ (m n : ℕ) (A : Fin m → Fin n → Bool) (R : Finset (Fin m)) (C : Finset (Fin n)), let bad := fun i => C.filter (fun j => A i j=false); ∀ t:ℕ,(t+1)*(R.filter (fun i => t<(bad i).card)).card≤∑ i ∈ R,(bad i).card",
+        "plain_statement": {
+          "zh": "截去高错误行的数量预算",
+          "en": "Bound the number of high-error rows"
+        },
+        "brief": {
+          "zh": "对阈值以上的每行至少计入 t+1 个错误。",
+          "en": "Charge at least t+1 entries to each removed row."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
+      },
+      {
+        "id": "L-log-rank-common-good",
+        "file": "lean/PEqualNP/Outside/L_log_rank_common_good.lean",
+        "module": "PEqualNP.Outside.L_log_rank_common_good",
+        "statement": "∀ (m n : ℕ) (A : Fin m → Fin n → Bool) (R : Finset (Fin m)) (C : Finset (Fin n)), let bad := fun i => C.filter (fun j => A i j=false); let D:=R.biUnion bad; C.card≤(C \\ D).card+(∑ i ∈ R,(bad i).card)",
+        "plain_statement": {
+          "zh": "保留指定行时共同好列的下界",
+          "en": "Lower bound common good columns for selected rows"
+        },
+        "brief": {
+          "zh": "用并集界控制需要删除的列。",
+          "en": "Bound the union of forbidden columns."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
+      },
+      {
+        "id": "L-log-rank-choose-light-rows",
+        "file": "lean/PEqualNP/Outside/L_log_rank_choose_light_rows.lean",
+        "module": "PEqualNP.Outside.L_log_rank_choose_light_rows",
+        "statement": "∀ (m n : ℕ) (A : Fin m → Fin n → Bool) (R : Finset (Fin m)) (C : Finset (Fin n)), let bad := fun i => C.filter (fun j => A i j=false); ∀ k:ℕ,k≤R.card → ∃ U:Finset (Fin m), U⊆R ∧ U.card=k ∧ R.card*(∑ i ∈ U,(bad i).card)≤k*(∑ i ∈ R,(bad i).card)",
+        "plain_statement": {
+          "zh": "选择总错误量较小的指定数量行",
+          "en": "Select a prescribed number of rows with low total error"
+        },
+        "brief": {
+          "zh": "对所有 k 行子集平均，或按行的错误数排序。",
+          "en": "Average over all k-row subsets or sort by row error."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
+      },
+      {
+        "id": "L-log-rank-sparse-to-rectangle",
+        "file": "lean/PEqualNP/Outside/L_log_rank_sparse_to_rectangle.lean",
+        "module": "PEqualNP.Outside.L_log_rank_sparse_to_rectangle",
+        "statement": "∀ (m n : ℕ) (A : Fin m → Fin n → Bool) (R : Finset (Fin m)) (C : Finset (Fin n)), let bad := fun i => C.filter (fun j => A i j=false); ∀ k d:ℕ,0<R.card → k≤R.card → k*(∑ i ∈ R,(bad i).card)≤d*R.card → ∃ U:Finset (Fin m), ∃ V:Finset (Fin n), U⊆R ∧ V⊆C ∧ U.card=k ∧ C.card≤V.card+d ∧ ∀ i∈U,∀ j∈V,A i j=true",
+        "plain_statement": {
+          "zh": "由总错误预算构造定量单色矩形",
+          "en": "Extract a quantitative monochromatic rectangle from total error"
+        },
+        "brief": {
+          "zh": "组合轻行选择与共同好列估计，量化矩形的两条边。",
+          "en": "Combine light-row selection with the common-column bound."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/54f3ab5/research/problems.json"
       }
     ],
     "roadmap": [
@@ -2592,6 +3190,43 @@
             "id": "L-log-rank-cover-area",
             "zh": "任意矩形覆盖的面积和控制矩阵面积",
             "en": "Area lower bound on a rectangle cover"
+          }
+        ]
+      },
+      {
+        "zh": [
+          "从稀疏反色项中抽出单色矩形",
+          "给出可直接接到谱估计的有限计数接口，记录删行、删列的损失；谱路线仍需提供足够大的低错误子矩阵。"
+        ],
+        "en": [
+          "Extract monochromatic rectangles from sparse opposite entries",
+          "Expose the exact row and column costs of purification; spectral arguments must still supply a large low-error submatrix."
+        ],
+        "tasks": [
+          {
+            "id": "L-log-rank-minority-double-count",
+            "zh": "按行或按列得到相同的反色数",
+            "en": "Double-count opposite entries by rows and columns"
+          },
+          {
+            "id": "L-log-rank-trim-bad-rows",
+            "zh": "截去高错误行的数量预算",
+            "en": "Bound the number of high-error rows"
+          },
+          {
+            "id": "L-log-rank-common-good",
+            "zh": "保留指定行时共同好列的下界",
+            "en": "Lower bound common good columns for selected rows"
+          },
+          {
+            "id": "L-log-rank-choose-light-rows",
+            "zh": "选择总错误量较小的指定数量行",
+            "en": "Select a prescribed number of rows with low total error"
+          },
+          {
+            "id": "L-log-rank-sparse-to-rectangle",
+            "zh": "由总错误预算构造定量单色矩形",
+            "en": "Extract a quantitative monochromatic rectangle from total error"
           }
         ]
       }
