@@ -10,3 +10,27 @@
 
 # the agent helper keeps its leases here
 .pnp/
+
+# Local credentials, private keys and downloaded certificate bundles
+.env
+.env.*
+!.env.example
+.secrets/
+.ssh/
+github_lihuamao
+id_ed25519
+id_rsa
+*.pem
+*.key
+*.p12
+*.pfx
+*_nginx.zip
+
+# Goldbach systemd credential files and runtime state
+webhook
+zhihu-oauth
+zhihu-oauth.json
+goldbach-lease.json
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm

@@ -12,6 +12,12 @@ The public site is https://www.movan.tech/goldbach/. Nginx strips the /goldbach/
 
 权威工作流仅在生成 ACCEPTED 或 REJECTED 时回传。配置 GitHub Actions 仓库变量 GOLDBACH_WEBHOOK_URL 与密钥 GOLDBACH_WEBHOOK_SECRET 后，由单独的 runner 向 https://www.movan.tech/goldbach/api/verdict 发送 HTTPS POST。端点校验 X-Goldbach-Signature，格式为 sha256=<对原始请求体的 HMAC-SHA256>。
 
+服务器的 `/etc/goldbach-web/webhook` 与 Actions Secret `GOLDBACH_WEBHOOK_SECRET` 使用同一个签名密钥。可在具备仓库管理权限的受信终端运行下方命令，从仓库外的私有文件通过标准输入设置。供 `gh` 访问 GitHub 的凭据使用 `gh auth login` 或进程环境变量 `GH_TOKEN`。知乎 App Key 只在上述 systemd 凭据中配置。
+
+```sh
+gh secret set GOLDBACH_WEBHOOK_SECRET --repo CGandGameEngineLearner/goldbach-proofs < /etc/goldbach-web/webhook
+```
+
 请求字段为 lemma_id、verdict、manifest、run_id、run_attempt。ACCEPTED 的 manifest 含 rests_on 与 defs，各为包含 module 和 sha256 的数组。REJECTED 使用 null。SQLite 按 run_id 和 run_attempt 去重。
 
 服务端目录 /opt/goldbach-web，状态目录 /var/lib/goldbach-web。公网入口使用 nginx 的 HTTPS 443 端口。
