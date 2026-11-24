@@ -680,7 +680,7 @@ async function loadStatus() {
   }
 }
 
-function bindPromptCopy(button, prompt, announcement) {
+function bindPromptCopy(button, prompt, announcement, manualMessage = strings.copyManual) {
   const label = button.textContent;
   let reset;
   button.addEventListener('click', async () => {
@@ -701,7 +701,7 @@ function bindPromptCopy(button, prompt, announcement) {
       const selection = window.getSelection();
       selection.removeAllRanges();
       selection.addRange(range);
-      announcement.textContent = strings.copyManual;
+      announcement.textContent = manualMessage;
     }
   });
 }
@@ -719,6 +719,37 @@ bindPromptCopy(
   rankingsPrompt,
   document.getElementById('rankings-copy-announcement')
 );
+
+const participation = document.getElementById('participation');
+if (participation) {
+  const prompt = document.getElementById('participation-prompt');
+  prompt.textContent = document.getElementById('agent-prompt').textContent;
+  bindPromptCopy(
+    document.getElementById('copy-participation-prompt'),
+    prompt,
+    document.getElementById('participation-copy-announcement')
+  );
+  bindPromptCopy(
+    document.getElementById('copy-github-auth'),
+    document.getElementById('github-auth-command'),
+    document.getElementById('github-auth-announcement'),
+    '请复制已选中的命令。'
+  );
+
+  const source = new URLSearchParams(window.location.search).get('from');
+  const referrerHost = document.referrer ? new URL(document.referrer).hostname : '';
+  if (source === 'zhihu' || referrerHost === 'zhihu.com' || referrerHost.endsWith('.zhihu.com')) {
+    participation.open = true;
+  }
+  const openParticipationAnchor = () => {
+    if (window.location.hash === '#participation') {
+      participation.open = true;
+      participation.scrollIntoView();
+    }
+  };
+  openParticipationAnchor();
+  window.addEventListener('hashchange', openParticipationAnchor);
+}
 
 loadStatus();
 window.setInterval(loadStatus, 45000);

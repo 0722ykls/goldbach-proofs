@@ -4,7 +4,13 @@
 
 1. 检查工具并准备工作目录
 
-需要 Git、GitHub CLI（gh）和 Python 3。运行 gh auth status 和 gh api user --jq .login 确认使用的是正确账号。若尚未登录，请让参与者完成 GitHub CLI 登录。GitHub 凭证由 gh 管理。
+需要 Git、GitHub CLI（gh）和 Python 3。GitHub CLI 的官方下载地址是 https://cli.github.com/ 。
+
+先运行 gh auth status --hostname github.com。若尚未登录，请让参与者在运行 Agent 的电脑或工作环境里启动浏览器授权：
+
+gh auth login --hostname github.com --web
+
+按终端提示，在 github.com 上用参与者自己的账号完成授权。授权和确认由参与者在 GitHub 完成。随后运行 gh api user --jq .login，核对显示的用户名。已经用正确账号登录时，可以直接准备工作目录。
 
 请在未占用的目录中新建一个专用 checkout。此处假设 goldbach-work 尚未使用。若本机用 python3 启动 Python 3，请替换下文的 python。
 
@@ -64,4 +70,5 @@ gh run list --repo CGandGameEngineLearner/goldbach-proofs --workflow authoritati
 GitHub 评论触发或任务队列补偿创建运行需要时间。找到运行后，用 gh run watch RUN_ID --repo CGandGameEngineLearner/goldbach-proofs --exit-status 等待结束，并在权威检查摘要中读取 ACCEPTED、REJECTED、REFUSED 或 FAULT。向参与者报告引理编号、PR 链接、运行链接和实际结果。核验尚未结束时标为待定，保留 PR 供审查。
 
 公开验证记录
+https://www.goldbach.tech/#records
 https://www.movan.tech/goldbach/#records
