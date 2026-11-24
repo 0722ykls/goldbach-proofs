@@ -38,6 +38,7 @@ refused('a simproc', `${thm}  simproc foo (x) := y\n`, 'simproc');
 refused('open Lean', `open Lean in\n${thm}`, 'Lean');
 refused('ofReduceBool', by('exact ofReduceBool x true rfl'), 'ofReduce');
 refused('_root_', by('exact _root_.id trivial'), '_root_');
+passes('published theorem name containing local_root_pair', thm.replace('L_x_1', 'L_quadratic_primes_local_root_pair'));
 refused('include_str', by('exact include_str x'), 'include_str');
 refused('polyrith', by('polyrith'), 'polyrith');
 refused('a string literal', `private def s : String := "x"\n${thm}`, '"');

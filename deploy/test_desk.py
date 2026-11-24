@@ -71,6 +71,17 @@ class DeskTests(unittest.TestCase):
         with patch("deploy.desk.time.time", return_value=now):
             return self.desk.public_status()
 
+    def test_pending_pr_keeps_authorization_while_next_task_is_claimed(self):
+        first = self.claim()
+        self.assertEqual(self.submit(first)[0], 200)
+        status, second = self.request("claim", {"handle": "Alice"})
+        self.assertEqual(status, 201)
+        self.assertNotEqual(second["gap"]["id"], GAPS[0]["id"])
+        self.assertEqual(self.request("claim", {"handle": "Alice"})[0], 409)
+        self.assertEqual(self.submit(second["lease"]["token"], pr=9, head="b"*40)[0], 200)
+        self.assertEqual(self.request("claim", {"handle": "Alice"})[0], 409)
+        self.assertEqual(self.request("authorize", self.authorization(), sign=True)[0], 200)
+
     def test_pending_is_private_and_lists_submitted_unchecked_lease(self):
         self.assertEqual(self.request("pending", {})[0], 401)
         token = self.claim()

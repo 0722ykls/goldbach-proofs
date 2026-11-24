@@ -147,11 +147,13 @@ class Desk:
             ip_key = "fleet:" + handle
         with self.transaction(write=True) as conn:
             active = conn.execute("""
-                SELECT gap, handle, ip_key FROM goldbach_leases
+                SELECT gap, handle, ip_key, submitted_at FROM goldbach_leases
                 WHERE expires_at > ? AND released_at IS NULL AND finished_at IS NULL
             """, (now,)).fetchall()
-            handle_count = sum(lease["handle"] == handle for lease in active)
-            if fleet is None and handle_count:
+            owned = [lease for lease in active if lease["handle"] == handle]
+            handle_count = len(owned)
+            # One extra checkout while a registered PR waits for a verdict.
+            if fleet is None and (handle_count >= 2 or any(row["submitted_at"] is None for row in owned)):
                 return error(409, "handle_already_active")
             if fleet is not None and handle_count >= FLEET_ACTIVE_LIMIT:
                 return error(429, "fleet_active_limit")
@@ -165,6 +167,8 @@ class Desk:
             load = Counter(lease["gap"] for lease in active)
             proved = self.proved_gaps(conn)
             candidates = self.gaps if requested_gap is None else (requested_gap,)
+            if fleet is None and owned:
+                candidates = (gap for gap in candidates if gap != owned[0]["gap"])
             program_load = Counter(self.gaps[row["gap"]].get("program", "foundation")
                                    for row in active if row["gap"] in self.gaps)
             available = (g for g in candidates if g not in proved and
