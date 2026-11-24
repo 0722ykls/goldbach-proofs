@@ -67,6 +67,7 @@ with closing(sqlite3.connect(PAGE_VIEWS_DB)) as conn, conn:
 
 ASSETS = {
     sponsors.STYLE: "text/css",
+    sponsors.SCRIPT: "text/javascript",
     "/wechat.svg": "image/svg+xml",
     "/discussion-qr.png": "image/png",
     "/discussion.js": "text/javascript",
@@ -391,23 +392,11 @@ class Handler(BaseHTTPRequestHandler):
             return self.reply(405, b'{}')
         if self.command == "GET" and path == sponsors.DESK + "/upload-limit":
             return self.oauth_response(path, sponsors.upload_error(self.language(urlsplit(self.path))))
+        if self.command == "POST" and path == sponsors.DESK + "/upload":
+            return self.sponsor_upload(path)
         try:
             if self.command == "POST":
                 size = int(self.headers.get("Content-Length", "0"))
-                if path == sponsors.DESK + "/upload" and self.headers.get_content_type() == "multipart/form-data":
-                    lang = self.language(urlsplit(self.path))
-                    self.connection.settimeout(8)
-                    if not 0 < size <= sponsors.LIMIT:
-                        self.discard_upload(size)
-                        return self.oauth_response(path, sponsors.upload_error(lang))
-                    if not SPONSOR_UPLOAD_SLOT.acquire(blocking=False):
-                        self.discard_upload(size)
-                        return self.oauth_response(path, sponsors.upload_error(lang, busy=True))
-                    try:
-                        fields = sponsors.upload_fields(self.headers["Content-Type"], self.rfile.read(size))
-                        return self.oauth_response(path, ZHIHU.handle(self.command, path, fields, self.headers))
-                    finally:
-                        SPONSOR_UPLOAD_SLOT.release()
                 if not 0 < size <= 8192 or self.headers.get_content_type() != "application/x-www-form-urlencoded":
                     return self.reply(400, b'{}')
                 self.connection.settimeout(8)
@@ -421,6 +410,44 @@ class Handler(BaseHTTPRequestHandler):
         except (ValueError, OSError, sqlite3.Error):
             return self.reply(400, b'{}')
         return self.oauth_response(path, (status, headers, body))
+
+    def sponsor_upload(self, path):
+        lang = self.language(urlsplit(self.path))
+        def notice(status, zh, en):
+            return self.oauth_response(path, sponsors.upload_notice(status, lang, zh if lang == "zh" else en))
+
+        self.connection.settimeout(8)
+        try:
+            size = int(self.headers.get("Content-Length", "0"))
+            if size > sponsors.LIMIT:
+                self.discard_upload(size)
+                return self.oauth_response(path, sponsors.upload_error(lang))
+            if self.headers.get("Origin") != sponsors.ORIGIN:
+                self.discard_upload(size)
+                return notice(403, "请从本站设置页重新提交。", "Resubmit from the site settings page.")
+            if not ZHIHU.can_upload_sponsor(self.headers):
+                self.discard_upload(size)
+                return notice(403, "登录已过期，请重新登录知乎后提交。", "Your session expired. Sign in with Zhihu and retry.")
+            if not SPONSOR_UPLOAD_SLOT.acquire(blocking=False):
+                self.discard_upload(size)
+                return self.oauth_response(path, sponsors.upload_error(lang, busy=True))
+            try:
+                raw = self.rfile.read(size) if size > 0 else b""
+                if len(raw) != size or self.headers.get_content_type() != "multipart/form-data":
+                    raise ValueError("incomplete upload")
+                fields = sponsors.upload_fields(self.headers["Content-Type"], raw)
+                fields["lang"] = lang
+                result = ZHIHU.handle("POST", path, fields, self.headers)
+            finally:
+                SPONSOR_UPLOAD_SLOT.release()
+        except (ValueError, RecursionError):
+            return notice(400, "上传表单不完整，请重新选择图片后再试。", "The upload was incomplete. Select the image again and retry.")
+        except TimeoutError:
+            return notice(408, "上传超时，请重新提交。", "The upload timed out. Try again.")
+        except sqlite3.Error:
+            self.log_error("Sponsor submission database unavailable")
+            return notice(503, "暂时无法保存投稿，请稍后重试。", "Submission could not be saved. Try again shortly.")
+        return self.oauth_response(path, result)
 
     def discard_upload(self, size):
         # Drain a buffered proxy request so closing the TLS connection keeps the error response.
@@ -440,7 +467,7 @@ class Handler(BaseHTTPRequestHandler):
         # Form pages must preserve Origin on same-site POSTs for CSRF validation.
         policy = "same-origin" if path != ZHIHU_PATH + "/callback" else "no-referrer"
         self.send_header("Referrer-Policy", policy)
-        self.send_header("Content-Security-Policy", "default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; form-action 'self' https://openapi.zhihu.com https://www.zhihu.com; frame-ancestors 'none'; base-uri 'none'")
+        self.send_header("Content-Security-Policy", "default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; form-action 'self' https://openapi.zhihu.com https://www.zhihu.com; frame-ancestors 'none'; base-uri 'none'")
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()

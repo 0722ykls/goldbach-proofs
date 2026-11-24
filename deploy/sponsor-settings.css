@@ -30,6 +30,8 @@ h2 { font-size: 1.1rem; margin-bottom: 1rem; }
 .upload input[type=file] { border-style: dashed; }
 .hint { color: var(--muted); font-size: .84rem; overflow-wrap: anywhere; }
 .upload button { margin-top: 1rem; }
+.upload-feedback { margin-top: .8rem; padding: .65rem; border-radius: .4rem; background: #f6e0dd; color: #842e2b; }
+button:disabled { opacity: .65; cursor: wait; }
 button { font: inherit; font-weight: 650; padding: .45rem .85rem; border: 1px solid var(--line); border-radius: .4rem; background: white; color: var(--ink); cursor: pointer; }
 button.primary { background: var(--ink); border-color: var(--ink); color: var(--sheet); }
 button.danger { color: #842e2b; }

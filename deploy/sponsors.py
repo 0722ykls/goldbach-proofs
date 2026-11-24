@@ -13,6 +13,7 @@ from PIL import Image, UnidentifiedImageError
 
 DESK = "/auth/zhihu/sponsors"
 STYLE = "/sponsor-settings.css"
+SCRIPT = "/sponsor-upload.js"
 PUBLIC = "/sponsors/logo/"
 ORIGIN = "https://www.goldbach.tech"
 FILE_LIMIT = 4 * 1024 * 1024
@@ -41,9 +42,12 @@ def upload_fields(content_type, raw):
     msg = BytesParser(policy=policy.default).parsebytes(
         b"Content-Type: " + content_type.encode("ascii") + b"\r\n\r\n" + raw)
     fields = {}
+    if msg.defects or not msg.is_multipart():
+        raise ValueError("invalid multipart form")
     for part in msg.iter_parts():
         key = part.get_param("name", header="content-disposition")
-        if key not in ("name", "csrf", "logo") or key in fields or part.is_multipart():
+        if (key not in ("name", "csrf", "logo") or key in fields or part.is_multipart()
+                or part.defects or part.get_content_disposition() != "form-data"):
             raise ValueError("invalid form")
         value = part.get_payload(decode=True)
         fields[key] = value if key == "logo" else value.decode("utf-8")
@@ -52,12 +56,18 @@ def upload_fields(content_type, raw):
     return fields
 
 
+class InvalidLogo(ValueError):
+    pass
+
+
 def logo_png(raw):
     if not isinstance(raw, bytes) or len(raw) > FILE_LIMIT:
         raise ValueError("image size")
     with Image.open(io.BytesIO(raw), formats=("PNG", "JPEG", "WEBP")) as im:
-        if max(im.size) > 4096 or im.width * im.height > 8_000_000 or getattr(im, "n_frames", 1) != 1:
-            raise ValueError("image dimensions")
+        if max(im.size) > 4096 or im.width * im.height > 8_000_000:
+            raise InvalidLogo("dimensions")
+        if getattr(im, "n_frames", 1) != 1:
+            raise InvalidLogo("animated")
         im.thumbnail((480, 240))
         clean = im.convert("RGBA")
         clean.info.clear()
@@ -87,7 +97,7 @@ def settings_page(status, lang, title, content):
     back = "返回研究台" if lang == "zh" else "Research desk"
     html = f"""<!doctype html><html lang="{lang}"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{title} · {back}</title><link rel="stylesheet" href="{STYLE}">
+<title>{title} · {back}</title><link rel="stylesheet" href="{STYLE}"><script src="{SCRIPT}" defer></script>
 <link rel="icon" href="/goldbach-icon.svg"></head><body>
 <header><div class="shell masthead"><a href="/?lang={lang}">
 <img src="/goldbach-icon.svg" width="40" height="40" alt=""><span>{back}</span></a></div></header>
@@ -100,9 +110,14 @@ def upload_error(lang, busy=False):
     title = ("上传繁忙" if zh else "Upload busy") if busy else ("Logo 文件过大" if zh else "Logo file is too large")
     hint = ("请稍后重试。" if zh else "Try again shortly.") if busy else (
         "请选择不超过 4 MiB 的 PNG、JPEG 或 WebP 图片。" if zh else "Choose a PNG, JPEG or WebP file up to 4 MiB.")
-    back = "返回投稿" if zh else "Back to submission"
-    return settings_page(503 if busy else 413, lang, title,
-                         f'<section class="card"><p>{hint}</p><a href="{DESK}?lang={lang}">{back}</a></section>')
+    return upload_notice(503 if busy else 413, lang, f"{title}。{hint}" if zh else f"{title}. {hint}")
+
+
+def upload_notice(status, lang, text):
+    title = "提交未完成" if lang == "zh" else "Submission incomplete"
+    back = "返回投稿或登录" if lang == "zh" else "Return to submission or sign in"
+    return settings_page(status, lang, title, f'<section class="card"><p role="alert">{text}</p>'
+                         f'<a href="{DESK}?lang={lang}">{back}</a></section>')
 
 
 def handle(method, path, params, headers, db, row, lang, redirect):
@@ -110,6 +125,8 @@ def handle(method, path, params, headers, db, row, lang, redirect):
         return en if lang == "en" else zh
     title = tr("赞助单位 Logo", "Sponsor logos")
     def msg(code, text):
+        if path == DESK + "/upload":
+            return upload_notice(code, lang, text)
         return settings_page(code, lang, title,
                              f'<section class="card"><p>{text}</p><a href="{DESK}?lang={lang}">{tr("返回设置","Back to settings")}</a></section>')
     uid = row["subject"]
@@ -136,8 +153,15 @@ def handle(method, path, params, headers, db, row, lang, redirect):
                 return upload_error(lang)
             try:
                 png = logo_png(params.get("logo",b""))
-            except (UnidentifiedImageError, Image.DecompressionBombError, OSError, ValueError, TypeError):
-                return msg(400, tr("请上传符合大小要求的静态图片。","Choose a static image within the size limits."))
+            except Image.DecompressionBombError:
+                return upload_notice(400, lang, tr("图片尺寸过大，请缩小后重试。", "The image dimensions are too large. Resize it and retry."))
+            except InvalidLogo as error:
+                message = (tr("请上传静态图片，动态图片不受支持。", "Choose a static image; animated images are unsupported.")
+                           if str(error) == "animated" else
+                           tr("图片最多 800 万像素，单边最多 4096 像素，请缩小后重试。", "Resize the image to at most 8 MP and 4096 pixels per side."))
+                return upload_notice(400, lang, message)
+            except (UnidentifiedImageError, OSError, ValueError, TypeError, SyntaxError):
+                return upload_notice(400, lang, tr("图片无法读取，请重新导出为 PNG、JPEG 或 WebP 后重试。", "Export the image again as PNG, JPEG or WebP and retry."))
             now = int(time.time())
             db.execute("BEGIN IMMEDIATE")
             count = db.execute("SELECT count(*) FROM sponsor_logos WHERE owner=? AND (state='pending' OR submitted>?)",(uid,now-86400)).fetchone()[0]
@@ -167,10 +191,11 @@ def handle(method, path, params, headers, db, row, lang, redirect):
     if path != DESK:
         return msg(404, "404")
     upload = (f'<section class="card upload"><h2>{tr("提交单位 Logo","Submit a logo")}</h2>'
-            f'<form method="post" action="{DESK}/upload?lang={lang}" enctype="multipart/form-data">{csrf}'
+            f'<form id="logo-upload" data-max-bytes="{FILE_LIMIT}" method="post" action="{DESK}/upload?lang={lang}" enctype="multipart/form-data">{csrf}'
             f'<label>{tr("单位名称","Organization")} <input name="name" maxlength="80" required></label>'
             '<label>Logo <input type="file" name="logo" accept="image/png,image/jpeg,image/webp" required></label>'
             f'<p class="hint">{tr("PNG、JPEG 或 WebP，最大 4 MiB、800 万像素，单边最多 4096 像素。仅上传获授权的标识，审核通过后公开。","PNG, JPEG or WebP, up to 4 MiB, 8 MP and 4096 px per side. Submit authorized artwork for public display after review.")}</p>'
+            f'<p class="upload-feedback" role="alert" hidden></p>'
             f'<button class="primary">{tr("提交审核","Submit for review")}</button></form></section>')
     labels = {"pending":tr("待审核","Pending"),"approved":tr("已展示","Approved"),"rejected":tr("已拒绝","Rejected"),"withdrawn":tr("已撤下","Withdrawn")}
     items = db.execute("SELECT id,name,state FROM sponsor_logos WHERE owner=? OR ? ORDER BY (state='pending') DESC,id DESC",

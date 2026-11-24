@@ -146,6 +146,16 @@ class ZhihuOAuth:
                 return f'<a class="account-link" href="{url}" title="{name}">{avatar}{"设置" if zh else "Settings"}</a>'
         return f'<a class="account-link" href="{url}&amp;entry=home">{"知乎登录" if zh else "Zhihu login"}</a>'
 
+    def can_upload_sponsor(self, headers):
+        if not self.config or headers.get("Host", "").lower() not in ("www.goldbach.tech", "www.goldbach.tech:443"):
+            return False
+        sid = self.session_id(headers)
+        if not sid:
+            return False
+        with closing(sqlite3.connect(self.db, timeout=5)) as db:
+            return db.execute("SELECT 1 FROM sessions WHERE sid=? AND expires>? AND subject IS NOT NULL",
+                              (sid, int(time.time()))).fetchone() is not None
+
     def handle(self, method, path, params, headers):
         lang = "en" if params.get("lang") == "en" else "zh"
         canonical = headers.get("Host", "").lower() in ("www.goldbach.tech", "www.goldbach.tech:443")
@@ -168,6 +178,9 @@ class ZhihuOAuth:
             if path == sponsors.DESK or path.startswith(sponsors.DESK + "/"):
                 fresh = None
                 if not row:
+                    if method == "POST" and path == sponsors.DESK + "/upload":
+                        message = "Your session expired. Sign in with Zhihu and retry." if lang == "en" else "登录已过期，请重新登录知乎后提交。"
+                        return sponsors.upload_notice(403, lang, message)
                     if method != "GET" or path != sponsors.DESK:
                         return err(403, "请先登录知乎", "Sign in with Zhihu")
                     fresh = self.session(db, lang)

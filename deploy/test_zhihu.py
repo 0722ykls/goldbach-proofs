@@ -144,6 +144,11 @@ class ZhihuLinkTests(unittest.TestCase):
         png = io.BytesIO()
         Image.new("RGB",(4,2)).save(png,"PNG")
         upload = {"csrf":csrf,"name":"Example <Org>","logo":png.getvalue()}
+        self.assertFalse(self.app.can_upload_sponsor({"Host":"www.goldbach.tech"}))
+        self.assertTrue(self.app.can_upload_sponsor({"Host":"www.goldbach.tech","Cookie":user}))
+        status, _, failure = self.request("POST",desk+"/upload",{**upload,"logo":b"<svg/>"},user)
+        self.assertEqual(status, 400)
+        self.assertIn("图片无法读取", failure.decode())
         self.assertEqual(self.request("POST",desk+"/upload",upload,user,origin="https://invalid.example")[0],403)
         self.assertEqual(self.request("POST",desk+"/upload",upload,user)[0],303)
         self.assertIsNone(sponsors.public_logo(self.app.db,1))
