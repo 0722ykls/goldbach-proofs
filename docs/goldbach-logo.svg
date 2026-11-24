@@ -1,15 +1,179 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 310" role="img" aria-label="Goldbach Conjecture logo">
-  <rect width="360" height="310" rx="18" fill="#111111"/>
-  <g fill="none" stroke="#ffffff" stroke-width="6">
-    <circle cx="143" cy="112" r="56"/>
-    <circle cx="217" cy="112" r="56"/>
-  </g>
-  <g fill="#ffffff" font-size="38" font-family="Georgia, serif" font-style="italic" text-anchor="middle">
-    <text x="126" y="124">p</text>
-    <text x="234" y="124">q</text>
-  </g>
-  <path d="M180 99V125 M167 112H193" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
-  <text x="180" y="211" fill="#ffffff" font-family="Arial, sans-serif" font-size="25" font-weight="bold" letter-spacing="5" text-anchor="middle">GOLDBACH</text>
-  <text x="180" y="235" fill="#aaaaaa" font-family="Arial, sans-serif" font-size="11" letter-spacing="5" text-anchor="middle">CONJECTURE</text>
-  <text x="180" y="277" fill="#ffffff" font-family="Georgia, serif" font-size="18" text-anchor="middle">2n = p + q</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="900" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+<title id="title">The Pelican and Goldbach's Conjecture</title>
+<desc id="desc">An imaginary triumph of a pelican mathematician in a classical study. Original editable vector illustration.</desc>
+<defs>
+ <linearGradient id="paper" x2="0" y2="1"><stop stop-color="#f9efd7"/><stop offset="1" stop-color="#e5cfaa"/></linearGradient>
+ <linearGradient id="wall" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f3e6cb"/><stop offset="1" stop-color="#dac5a1"/></linearGradient>
+ <linearGradient id="board" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#294b42"/><stop offset="1" stop-color="#112e2b"/></linearGradient>
+ <linearGradient id="wood" x2="0" y2="1"><stop stop-color="#ad7546"/><stop offset=".48" stop-color="#79442e"/><stop offset="1" stop-color="#4c3028"/></linearGradient>
+ <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe3a0"/><stop offset=".45" stop-color="#cf9b46"/><stop offset="1" stop-color="#a36c30"/></linearGradient>
+ <linearGradient id="cream" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#fffdf0"/><stop offset=".6" stop-color="#f5e8cc"/><stop offset="1" stop-color="#d8bb92"/></linearGradient>
+ <linearGradient id="beak" x2="0" y2="1"><stop stop-color="#ffdc78"/><stop offset=".48" stop-color="#efa746"/><stop offset="1" stop-color="#c6712e"/></linearGradient>
+ <linearGradient id="pouch" x2=".3" y2="1"><stop stop-color="#ffd783"/><stop offset="1" stop-color="#df873b"/></linearGradient>
+ <linearGradient id="robe" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3d5361"/><stop offset=".53" stop-color="#263c48"/><stop offset="1" stop-color="#15272e"/></linearGradient>
+ <linearGradient id="red" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b55448"/><stop offset="1" stop-color="#6e2834"/></linearGradient>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#a8c5c4"/><stop offset="1" stop-color="#f4dfb7"/></linearGradient>
+ <pattern id="dots" width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r=".7" fill="#f6e6be" opacity=".16"/></pattern>
+ <pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(28)"><path d="M0 0V7" stroke="#664e43" stroke-width=".7" opacity=".22"/></pattern>
+ <clipPath id="windowclip"><path d="M80 480V244A144 144 0 0 1 368 244V480Z"/></clipPath>
+ <g id="star"><path d="M0-11Q2-2 11 0Q2 2 0 11Q-2 2-11 0Q-2-2 0-11Z" fill="#c28c3b"/></g>
+ <g id="laurel" fill="#d7b16a" stroke="#c7984d" stroke-width=".7"><path d="M0 0Q32-16 50-58" fill="none" stroke-width="1.7"/><path d="M9-6Q-12-9-14-23Q4-22 9-6M18-13Q3-26 7-38Q22-30 18-13M27-24Q17-41 24-51Q36-39 27-24M36-37Q31-55 42-64Q48-47 36-37M44-49Q43-67 54-74Q58-56 44-49M9-6Q25-20 36-11Q25-1 9-6M19-15Q35-30 46-23Q36-10 19-15M29-27Q43-45 55-39Q47-24 29-27M40-42Q52-57 64-52Q56-38 40-42"/></g>
+ <g id="corner" fill="none" stroke="#cfaa65" stroke-width="1.6"><path d="M0 46V0H46M7 35V7H35M13 29Q29 29 29 13M14 14Q23 13 23 23Q13 23 14 14Z"/><circle cx="36" cy="7" r="2" fill="#cfaa65"/><circle cx="7" cy="36" r="2" fill="#cfaa65"/></g>
+ <g id="bookbands" fill="none" stroke="#d5b16b" stroke-width="2"><path d="M14 5V38M20 5V38M205 5V38M211 5V38"/><path d="M7 6H220M7 37H220" stroke-width=".8" opacity=".65"/></g>
+</defs>
+<!-- Paper and architectural frame -->
+<rect width="1200" height="900" fill="url(#paper)"/>
+<rect x="22" y="22" width="1156" height="856" rx="20" fill="#f9eed6" stroke="#735341" stroke-width="1.5"/>
+<rect x="31" y="31" width="1138" height="838" rx="15" fill="none" stroke="#c4a16b"/>
+<path d="M52 98H1148V790H52Z" fill="url(#wall)"/>
+<path d="M52 99H1148M52 790H1148" stroke="#ad895d" stroke-width="2"/>
+<path d="M52 112H1148M52 775H1148" stroke="#c8ac7f"/>
+<g fill="#725845" font-family="Georgia, 'Times New Roman', serif" text-anchor="middle">
+ <text x="600" y="68" font-size="13" letter-spacing="4.5">THE PELICAN &amp; THE PRIME NUMBERS</text>
+</g>
+<g stroke="#b89156" stroke-width="1" fill="none"><path d="M88 64H320M880 64H1112"/><path d="M78 64l5-5 5 5-5 5zM1112 64l5-5 5 5-5 5z"/></g>
+<!-- Arched window and soft exterior -->
+<path d="M64 501V244A160 160 0 0 1 384 244V501Z" fill="#b29a76"/>
+<path d="M72 491V244A152 152 0 0 1 376 244V491Z" fill="#81644c"/>
+<g clip-path="url(#windowclip)">
+ <rect x="80" y="98" width="288" height="385" fill="url(#sky)"/>
+ <circle cx="140" cy="215" r="42" fill="#fff0bf" opacity=".8"/>
+ <g fill="#fff2d6" opacity=".73"><path d="M75 262Q104 234 124 259Q145 242 166 269H75Z"/><path d="M225 186Q244 166 269 182Q291 164 322 194H225Z"/></g>
+ <path d="M77 387Q130 326 175 364Q225 320 279 360Q333 334 380 370V483H77Z" fill="#acaf8c"/>
+ <path d="M80 419Q130 370 176 406Q243 367 293 405Q327 374 370 404V483H80Z" fill="#899579"/>
+ <g stroke="#877a64" stroke-width="1.5" fill="#e8d6ac">
+  <path d="M157 410V346H286V410Z"/><path d="M146 347L222 305L297 347Z"/><path d="M156 348H286V356H156Z"/>
+  <path d="M186 327V295H258V327Z"/><path d="M183 295Q190 255 222 245Q254 255 261 295Z" fill="#9ca9a1"/><path d="M222 245V229M216 231H228" fill="none"/>
+  <path d="M197 294Q205 266 222 247Q238 268 247 294" fill="none"/>
+  <path d="M170 365H182V405H170ZM193 365H205V405H193ZM239 365H251V405H239ZM262 365H274V405H262Z" fill="#c0ab85"/>
+  <path d="M213 407V377Q222 361 231 377V407Z" fill="#a99b7c"/>
+ </g>
+ <g fill="#738a69"><circle cx="107" cy="423" r="28"/><circle cx="137" cy="435" r="34"/><circle cx="323" cy="420" r="34"/><circle cx="355" cy="437" r="32"/></g>
+ <path d="M224 100V485M81 244H367M81 363H367M123 137L224 244L327 137" stroke="#775844" stroke-width="10" fill="none"/>
+ <path d="M221 106V483M82 241H366M82 360H366" stroke="#c4a080" stroke-width="2" fill="none"/>
+</g>
+<path d="M80 480V244A144 144 0 0 1 368 244V480Z" fill="none" stroke="#654b3c" stroke-width="5"/>
+<path d="M62 488H387L394 499H55Z" fill="#8c694d" stroke="#654b3c" stroke-width="2"/>
+<!-- paneling -->
+<g fill="none" stroke="#b99d77" stroke-width="1.3" opacity=".8"><path d="M53 525H1148M53 536H1148M53 753H1148"/><rect x="68" y="549" width="290" height="189" rx="3"/><rect x="77" y="558" width="272" height="171" rx="2"/><rect x="382" y="549" width="224" height="189" rx="3"/><rect x="615" y="549" width="250" height="189" rx="3"/><rect x="875" y="549" width="253" height="189" rx="3"/></g>
+<!-- Prime pennant -->
+<g transform="translate(400 120)"><path d="M0 0H105V155L52.5 181 0 155Z" fill="#283c50" stroke="#674c3d" stroke-width="2"/><path d="M7 7H98V151L52.5 173 7 151Z" fill="none" stroke="#d4af64" stroke-width="2"/><path d="M-9 0H114" stroke="#916135" stroke-width="6" stroke-linecap="round"/><circle cx="-9" cy="0" r="6" fill="url(#gold)"/><circle cx="114" cy="0" r="6" fill="url(#gold)"/><g fill="#f1d28a" text-anchor="middle" font-family="Georgia, serif"><text x="52" y="49" font-size="37" font-style="italic">P</text><text x="52" y="77" font-size="13">2 · 3 · 5 · 7</text><text x="52" y="96" font-size="13">11 · 13 · 17</text><text x="52" y="114" font-size="13">19 · 23 · …</text></g><g transform="translate(52 154) scale(.39)"><use href="#laurel" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#laurel" transform="scale(-1 1)"/><use href="#laurel" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#laurel"/></g></g>
+<!-- Chalkboard -->
+<rect x="541" y="140" width="588" height="501" rx="8" fill="#604a3a" opacity=".15" transform="translate(6 10)"/>
+<rect x="529" y="130" width="600" height="508" rx="6" fill="url(#wood)" stroke="#53392f" stroke-width="3"/>
+<rect x="537" y="138" width="584" height="492" rx="3" fill="none" stroke="#e3ad68" stroke-width="2"/>
+<rect x="550" y="151" width="558" height="464" rx="2" fill="url(#board)" stroke="#4a352a" stroke-width="3"/>
+<rect x="550" y="151" width="558" height="464" fill="url(#dots)"/>
+<rect x="560" y="161" width="538" height="444" rx="1" fill="none" stroke="#97a386" stroke-width=".8" opacity=".43"/>
+<g><use href="#corner" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#corner" transform="translate(566 167)"/><use href="#corner" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#corner" transform="translate(1092 167) scale(-1 1)"/><use href="#corner" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#corner" transform="translate(566 599) scale(1 -1)"/><use href="#corner" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#corner" transform="translate(1092 599) scale(-1 -1)"/></g>
+<g font-family="Georgia, 'Times New Roman', serif" text-anchor="middle">
+ <text x="829" y="190" fill="#d9b76f" font-size="12" letter-spacing="4">ADDITIVE NUMBER THEORY</text>
+ <text x="829" y="230" fill="#f8e6b8" font-size="34" font-style="italic">Goldbach’s Conjecture</text>
+ <path d="M623 244Q829 250 1035 244" fill="none" stroke="#d0ab69" stroke-width="1.4"/>
+ <rect x="651" y="263" width="356" height="77" rx="3" fill="#f6eacb" fill-opacity=".035" stroke="#ede1c5" stroke-width="1.6"/>
+ <text x="829" y="315" font-size="47" font-style="italic" fill="#fff4d7">2n = p + q</text>
+ <text x="829" y="365" font-size="18" fill="#e4dfc8">n ≥ 2,  p and q are prime.</text>
+ <g fill="#d8dfc8" font-size="20" font-style="italic"><text x="716" y="406">8 = 3 + 5</text><text x="935" y="406">28 = 11 + 17</text><text x="716" y="437">42 = 19 + 23</text><text x="935" y="437">100 = 47 + 53</text></g>
+ <path d="M829 387V441" stroke="#9dbaa3" stroke-dasharray="2 5" opacity=".65"/>
+ <text x="829" y="462" font-size="21" fill="#e5ddc0">⋯</text>
+ <g transform="translate(829 515)"><path d="M-147-30H147L138 29H-138Z" fill="#e6b65f" fill-opacity=".045" stroke="#dfba71" stroke-width="1.8"/><path d="M-159-22L-174-29M-161 0H-181M-159 22L-174 29M159-22L174-29M161 0H181M159 22L174 29" stroke="#d5af65" stroke-width="2" stroke-linecap="round"/><text y="15" fill="#f4d48c" font-size="42" font-style="italic">Solved!</text></g>
+ <text x="829" y="581" fill="#eae4cb" font-size="19" letter-spacing="4">Q.E.D.  □</text>
+</g>
+<g transform="translate(616 493) rotate(-19) scale(.66)"><use href="#laurel" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#laurel" transform="scale(-1 1)"/></g>
+<g transform="translate(1042 493) rotate(19) scale(.66)"><use href="#laurel" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#laurel"/></g>
+<path d="M521 615H1137V631L1127 640H531L521 631Z" fill="url(#wood)" stroke="#543b2b" stroke-width="2"/><path d="M526 619H1131" stroke="#e1a963" stroke-width="3"/>
+<g transform="translate(989 606)"><path d="M0 10L6 0H40L45 10Z" fill="#c9a67b" stroke="#725440"/><path d="M1 10H45V14H1Z" fill="#58453a"/></g><rect x="1045" y="610" width="33" height="5" rx="2" fill="#efe1bd"/>
+<!-- floor -->
+<path d="M52 754H1148V790H52Z" fill="#c19a70"/><path d="M52 754H1148" stroke="#946748" stroke-width="2"/><path d="M52 780H1148M242 754L218 790M534 754L530 790M827 754L853 790" stroke="#986f50" opacity=".5"/>
+<ellipse cx="313" cy="758" rx="203" ry="18" fill="#624b38" opacity=".15"/>
+<!-- Pelican: rear tail and raised robe -->
+<g stroke="#594338" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+ <path d="M159 556Q113 550 71 573Q98 584 117 602L75 617Q113 645 171 645Z" fill="#576165"/><path d="M83 575Q116 579 145 605M86 617Q124 613 151 628" fill="none" stroke="#313e43" stroke-width="2"/>
+ <!-- legs and webbed feet -->
+ <path d="M245 657L237 717Q226 730 198 735Q178 739 164 752Q182 754 207 752Q227 749 242 749L260 757Q267 752 259 739Q255 728 264 711L278 658Z" fill="url(#beak)"/>
+ <path d="M326 663L335 718Q348 729 376 735Q398 740 413 752Q388 754 369 750L345 749L326 757Q320 749 325 738Q326 726 314 710L298 666Z" fill="url(#beak)"/>
+ <path d="M177 748Q211 742 236 739M260 749L245 736M399 748Q368 741 343 737M328 748L337 737" fill="none" stroke="#a96737" stroke-width="1.5"/>
+ <!-- robe underlayer -->
+ <path d="M180 455Q125 482 112 551Q99 625 119 698L88 739Q167 752 215 717L288 691Q345 735 422 731L397 684Q425 593 390 502Q353 449 305 442Z" fill="url(#robe)"/>
+ <path d="M128 695Q156 675 159 590M395 680Q368 640 376 591M109 724Q152 731 198 708M312 694Q357 720 409 719" fill="none" stroke="#59717a" stroke-width="2"/>
+ <!-- main body -->
+ <path d="M203 437Q145 477 150 558Q155 643 229 685Q269 704 311 691Q369 669 380 597Q390 520 337 463L292 430Z" fill="url(#cream)"/>
+ <path d="M211 627Q240 662 277 672Q305 662 329 640Q312 681 278 685Q237 678 211 627Z" fill="#e2c7a0" stroke="none"/>
+ <!-- waistcoat -->
+ <path d="M221 463L276 487L327 463L349 590L307 632L277 611L248 633L210 593Z" fill="#89715c"/>
+ <path d="M221 463L276 487L327 463L349 590L307 632L277 611L248 633L210 593Z" fill="url(#hatch)" stroke="none"/>
+ <path d="M275 491L277 611M242 598L261 592M295 592L317 598" stroke="#594338" fill="none" stroke-width="1.5"/>
+ <g fill="url(#gold)" stroke="#785332" stroke-width="1.5"><circle cx="283" cy="531" r="5.5"/><circle cx="284" cy="554" r="5.5"/><circle cx="284" cy="577" r="5.5"/></g>
+ <!-- raised wing sleeve -->
+ <path d="M337 478Q388 448 424 415Q449 388 472 359L515 394Q490 462 454 503Q416 556 368 562Z" fill="url(#robe)"/>
+ <path d="M387 519Q448 478 474 408" fill="none" stroke="#69818a" stroke-width="2.5"/>
+ <path d="M466 365L515 394L507 412L452 381Z" fill="#9c7042"/><path d="M464 368L512 397M457 378L508 407" stroke="#e5c17a" fill="none" stroke-width="2"/>
+ <!-- raised feathered wing -->
+ <path d="M456 376Q466 333 503 300Q528 277 553 265Q571 258 568 273Q560 289 539 306Q572 281 585 282Q601 281 590 297L556 327Q580 308 592 316Q599 323 586 336L553 361Q576 348 580 357Q582 369 557 384Q540 399 519 401Q489 398 456 376Z" fill="url(#cream)"/>
+ <path d="M468 371Q484 332 534 299M486 380Q527 354 556 327M500 387Q531 379 553 361M522 394Q540 389 552 382" stroke="#b68f67" stroke-width="1.7" fill="none"/>
+ <path d="M478 365Q497 336 524 322Q515 351 493 369Z" fill="#fff9e8" stroke="none"/>
+ <!-- chalk stick between feathers -->
+ <path d="M545 306L590 256Q594 253 599 258L601 261L555 313Z" fill="#f9e9cb" stroke="#967c64" stroke-width="1.5"/>
+ <path d="M555 307L597 260" stroke="#fffdf1" stroke-width="2"/>
+ <path d="M536 319Q546 303 558 300Q568 302 563 311L547 330" fill="url(#cream)"/>
+ <!-- neck and head, long pelican silhouette -->
+ <path d="M211 474Q183 444 184 410Q184 375 204 341Q220 314 200 291Q174 270 177 235Q179 201 203 184Q201 173 186 170Q208 162 229 174Q223 157 208 148Q243 150 256 173Q268 157 278 151Q280 168 277 177Q319 178 339 208Q357 234 343 263Q333 285 308 300Q287 316 286 344Q286 377 314 414Q331 439 327 469L280 497Z" fill="url(#cream)"/>
+ <path d="M187 233Q191 202 222 188Q207 202 208 221Q216 206 233 197Q224 219 228 232" fill="none" stroke="#c0a17e" stroke-width="1.7"/>
+ <path d="M203 296Q231 307 239 337Q248 367 222 418Q218 445 241 470L224 471Q199 442 201 419Q199 391 221 346Q231 322 203 296Z" fill="#dcc39f" stroke="none"/>
+ <path d="M271 311Q262 343 269 371Q275 394 288 409" stroke="#c1a17e" stroke-width="1.5" fill="none"/>
+ <!-- head feather highlights -->
+ <path d="M202 194Q230 175 263 186Q239 186 220 204Z" fill="#fffef1" stroke="none"/>
+ <!-- bill, big elastic pelican pouch -->
+ <path d="M310 244Q349 244 381 259Q431 279 476 274Q489 272 493 280Q472 300 446 318Q407 348 368 335Q335 324 314 296Q301 278 301 258Z" fill="url(#pouch)" stroke="#87522f" stroke-width="2.7"/>
+ <path d="M317 252Q361 263 391 274Q440 288 484 278Q462 295 438 305Q397 313 358 292Q336 280 317 266Z" fill="#71372e" stroke="#85482c" stroke-width="1.5"/>
+ <path d="M360 291Q390 287 418 307Q390 311 360 291Z" fill="#d27a66" stroke="none"/>
+ <path d="M313 229Q339 222 379 240Q422 253 476 248Q499 248 511 267Q501 263 488 268Q458 277 414 275Q355 274 311 252Q302 242 313 229Z" fill="url(#beak)" stroke="#925c31" stroke-width="2.4"/>
+ <path d="M329 233Q359 231 384 244Q432 260 484 254Q497 254 505 261" fill="none" stroke="#ffe5a2" stroke-width="3.3"/>
+ <path d="M337 242Q345 238 351 244Q344 246 337 242Z" fill="#88562e" stroke="none"/>
+ <path d="M333 287Q351 317 378 323Q411 333 450 307" fill="none" stroke="#f7c36f" stroke-width="2.6"/>
+ <!-- eyes and glasses -->
+ <path d="M256 229Q254 208 270 202Q285 201 292 220" fill="#fffdf2" stroke="#8e7054" stroke-width="1.6"/>
+ <ellipse cx="276" cy="221" rx="8" ry="12" fill="#705237" stroke="#3e342b" stroke-width="1.1"/><ellipse cx="279" cy="221" rx="4.6" ry="8.5" fill="#252f2d" stroke="none"/><circle cx="280" cy="217" r="2.8" fill="#fffdf3" stroke="none"/>
+ <path d="M304 220Q306 204 317 205Q330 208 330 224" fill="#fffdf2" stroke="#8e7054" stroke-width="1.4"/><ellipse cx="322" cy="217" rx="5.5" ry="8" fill="#4d3c2c" stroke="none"/><circle cx="323" cy="214" r="2" fill="#fffdf3" stroke="none"/>
+ <path d="M253 199Q267 190 281 195M307 195Q316 191 325 198" fill="none" stroke="#79553e" stroke-width="3"/>
+ <g fill="none" stroke="#473a31" stroke-width="3.2"><ellipse cx="272" cy="224" rx="28" ry="30" transform="rotate(-9 272 224)"/><ellipse cx="319" cy="220" rx="19" ry="25" transform="rotate(-9 319 220)"/><path d="M299 218Q304 214 305 217M244 222L200 209"/></g>
+ <path d="M251 213Q257 202 268 199M308 206Q313 200 320 199" fill="none" stroke="#e2b66c" stroke-width="2"/>
+ <!-- shirt collar and bow -->
+ <path d="M208 446L274 471L321 441L327 471L299 504L276 487L245 505L208 475Z" fill="#fff8e4"/>
+ <path d="M274 472L246 456Q235 451 236 467L240 486Q242 495 253 490L274 480Q282 491 288 481L313 492Q321 494 322 482L320 462Q318 454 309 458L287 471Z" fill="url(#red)" stroke="#623641" stroke-width="2.2"/>
+ <path d="M245 464Q261 469 275 476M313 465L289 476" stroke="#d48974" stroke-width="1.4" fill="none"/><rect x="273" y="466" width="17" height="20" rx="6" fill="#963d43" stroke="#64323a" stroke-width="1.6"/>
+ <!-- tailored lapels -->
+ <path d="M195 443Q151 453 131 487L173 512L151 530Q175 588 215 625L206 553L227 489Z" fill="url(#robe)"/>
+ <path d="M325 446Q358 453 378 478L352 510L374 527Q359 579 332 616L341 552L320 489Z" fill="url(#robe)"/>
+ <path d="M194 448L222 489L202 552L211 602M327 451L324 489L345 552L336 603" fill="none" stroke="#d3af68" stroke-width="2.2"/>
+ <!-- lower left wing with layered feather scallops -->
+ <path d="M180 501Q125 480 105 531Q83 589 129 642Q149 665 169 652Q183 663 197 647Q212 650 222 632Q238 635 243 616Q252 595 232 562Q214 526 180 501Z" fill="url(#cream)"/>
+ <path d="M111 536Q135 507 165 515Q185 522 185 535Q181 552 156 564Q128 579 110 566" fill="#f8edda" stroke="#bea17e" stroke-width="1.5"/>
+ <path d="M119 578Q146 578 183 550Q198 539 207 554Q214 572 189 593Q158 618 134 615" fill="#f5e7ce" stroke="#bda17e" stroke-width="1.5"/>
+ <path d="M137 619Q160 626 191 601Q213 581 222 591Q235 607 212 631Q188 653 169 646" fill="#eddbbb" stroke="#bda17e" stroke-width="1.5"/>
+ <path d="M115 549Q137 530 155 532M132 589Q153 582 170 570M155 628Q175 624 189 611" fill="none" stroke="#fff8e7" stroke-width="3"/>
+ <!-- medallion -->
+ <path d="M195 496L205 523L224 504" fill="none" stroke="#b88d51" stroke-width="2"/><circle cx="205" cy="521" r="22" fill="#62422f" stroke="#e8c57c" stroke-width="2"/><circle cx="205" cy="521" r="18" fill="url(#gold)" stroke="#936332" stroke-width="1"/><circle cx="205" cy="521" r="14" fill="none" stroke="#fff0ac" stroke-width="1"/><text x="205" y="529" text-anchor="middle" font-family="Georgia,serif" font-size="23" fill="#5f402b" stroke="none">π</text>
+ <!-- gold embroidery on robe -->
+ <g stroke="none" transform="translate(147 710) rotate(18) scale(.63)"><use href="#laurel" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#laurel"/></g>
+ <g stroke="none" transform="translate(384 708) rotate(-18) scale(-.6 .6)"><use href="#laurel" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#laurel"/></g>
+</g>
+<!-- foreground books and paper -->
+<g stroke-linejoin="round" stroke-linecap="round">
+ <ellipse cx="816" cy="757" rx="301" ry="12" fill="#654a38" opacity=".12"/>
+ <g transform="translate(872 706)"><rect x="0" y="0" width="224" height="43" rx="7" fill="#314e47" stroke="#513d30" stroke-width="2"/><path d="M224 4H260Q252 22 260 39H224Z" fill="#ecd8ac" stroke="#6a4e39" stroke-width="1.5"/><path d="M228 11H255M228 17H253M228 25H253M228 33H255" stroke="#b89a70" stroke-width=".8"/><path d="M219 1H261M219 42H261" stroke="#314e47" stroke-width="4"/><use href="#bookbands" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#bookbands"/><text x="115" y="27" font-family="Georgia,serif" font-size="14" text-anchor="middle" fill="#f2d18d">Additive Number Theory</text></g>
+ <g transform="translate(855 665)"><rect x="0" y="0" width="224" height="42" rx="7" fill="#8d4443" stroke="#513d30" stroke-width="2"/><path d="M224 4H261Q254 21 261 38H224Z" fill="#e9d2a7" stroke="#6a4e39" stroke-width="1.5"/><path d="M228 12H255M228 19H255M228 26H255M228 33H255" stroke="#b69a70" stroke-width=".8"/><path d="M220 1H262M220 41H262" stroke="#8d4443" stroke-width="4"/><use href="#bookbands" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#bookbands"/><text x="114" y="27" font-family="Georgia,serif" font-size="20" font-style="italic" text-anchor="middle" fill="#f4d69a">Prime Numbers</text></g>
+ <g transform="translate(880 632)"><rect x="0" y="0" width="200" height="33" rx="6" fill="#37475d" stroke="#513d30" stroke-width="2"/><path d="M200 3H235Q228 17 235 30H200Z" fill="#f1dbaf" stroke="#6a4e39" stroke-width="1.5"/><path d="M203 10H231M203 17H230M203 24H231" stroke="#b89a70" stroke-width=".8"/><path d="M197 1H237M197 32H237" stroke="#37475d" stroke-width="3"/><path d="M13 3V30M20 3V30M180 3V30M187 3V30" stroke="#d9b368" stroke-width="2"/><text x="100" y="22" font-family="Georgia,serif" font-size="17" font-style="italic" text-anchor="middle" fill="#f4d69a">Number Theory</text></g>
+ <!-- manuscript -->
+ <path d="M590 702Q656 686 701 680Q753 709 829 726L793 770Q703 760 622 769L568 753Z" fill="#b69b72" opacity=".3"/>
+ <path d="M586 697Q648 688 704 677Q750 704 822 719L789 762Q697 749 619 763L562 747Z" fill="#fff0c8" stroke="#a88a61" stroke-width="1.6"/>
+ <path d="M581 742Q628 747 660 742M607 712L687 697M614 721L708 706M635 730L733 716M654 738L755 725" fill="none" stroke="#b49b76" stroke-width="1.2" opacity=".75"/>
+ <path d="M715 740L710 765L723 759L734 766L741 739" fill="#803d3a" stroke="#65382c" stroke-width="1.3"/>
+ <circle cx="727" cy="738" r="19" fill="#913e3c" stroke="#71312c" stroke-width="2"/><circle cx="727" cy="738" r="14" fill="none" stroke="#d69070" stroke-width="1.5"/><text x="727" y="745" fill="#edc28b" font-family="Georgia,serif" font-style="italic" font-size="19" text-anchor="middle">G</text>
+</g>
+<!-- tiny sparks of discovery -->
+<g><use href="#star" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#star" transform="translate(149 172) scale(.9)"/><use href="#star" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#star" transform="translate(376 196) scale(.7)"/><use href="#star" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#star" transform="translate(506 315) scale(.6)"/><circle cx="161" cy="146" r="2.5" fill="#b68b45"/><circle cx="385" cy="180" r="2" fill="#b68b45"/></g>
+<!-- Editorial footer -->
+<g text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"><text x="600" y="827" fill="#4b4235" font-size="25" font-style="italic">A most improbable proof.</text><text x="600" y="850" fill="#88745b" font-size="10.5" letter-spacing="3.4">A MATHEMATICAL FABLE  ·  AN IMAGINED BREAKTHROUGH</text></g>
+<g stroke="#b59159" fill="none" stroke-width="1"><path d="M80 825H376M824 825H1120"/><path d="M80 825l5-5 5 5-5 5zM1110 825l5-5 5 5-5 5z"/></g>
 </svg>

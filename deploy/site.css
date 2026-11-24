@@ -725,6 +725,15 @@ button, a, input, select { -webkit-tap-highlight-color: transparent; }
   border-radius: 4px;
   font-size: 1.08rem;
 }
+body:not([data-problem]) .brand .wordmark {
+  width: 2.25rem;
+  height: 2.25rem;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: url("goldbach-icon.svg?v=pelican") center / contain no-repeat;
+  font-size: 0;
+}
 .news-strip { background: var(--desk-dark); }
 .news-strip a { width: min(100% - 2rem, 76rem); justify-content: flex-start; min-width: 0; }
 .news-strip strong { color: var(--desk-gold); white-space: nowrap; }

@@ -1,8 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Goldbach Conjecture">
-  <rect width="96" height="96" rx="14" fill="#111111"/>
-  <g fill="none" stroke="#ffffff" stroke-width="5">
-    <circle cx="32" cy="48" r="24"/>
-    <circle cx="64" cy="48" r="24"/>
-  </g>
-  <path d="M48 43v10m-5-5h10" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="151 80 384 384" role="img" aria-label="Goldbach pelican">
+<title>Goldbach pelican</title>
+<defs>
+<linearGradient id="cream" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#fffdf0"/><stop offset=".6" stop-color="#f5e8cc"/><stop offset="1" stop-color="#d8bb92"/></linearGradient>
+<linearGradient id="beak" x2="0" y2="1"><stop stop-color="#ffdc78"/><stop offset=".48" stop-color="#efa746"/><stop offset="1" stop-color="#c6712e"/></linearGradient>
+<linearGradient id="pouch" x2=".3" y2="1"><stop stop-color="#ffd783"/><stop offset="1" stop-color="#df873b"/></linearGradient>
+</defs>
+<rect x="151" y="80" width="384" height="384" rx="58" fill="#214039"/>
+<g stroke="#594338" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+<path d="M211 474Q183 444 184 410Q184 375 204 341Q220 314 200 291Q174 270 177 235Q179 201 203 184Q201 173 186 170Q208 162 229 174Q223 157 208 148Q243 150 256 173Q268 157 278 151Q280 168 277 177Q319 178 339 208Q357 234 343 263Q333 285 308 300Q287 316 286 344Q286 377 314 414Q331 439 327 469L280 497Z" fill="url(#cream)"/>
+ <path d="M187 233Q191 202 222 188Q207 202 208 221Q216 206 233 197Q224 219 228 232" fill="none" stroke="#c0a17e" stroke-width="1.7"/>
+ <path d="M203 296Q231 307 239 337Q248 367 222 418Q218 445 241 470L224 471Q199 442 201 419Q199 391 221 346Q231 322 203 296Z" fill="#dcc39f" stroke="none"/>
+ <path d="M271 311Q262 343 269 371Q275 394 288 409" stroke="#c1a17e" stroke-width="1.5" fill="none"/>
+ <!-- head feather highlights -->
+ <path d="M202 194Q230 175 263 186Q239 186 220 204Z" fill="#fffef1" stroke="none"/>
+ <!-- bill, big elastic pelican pouch -->
+ <path d="M310 244Q349 244 381 259Q431 279 476 274Q489 272 493 280Q472 300 446 318Q407 348 368 335Q335 324 314 296Q301 278 301 258Z" fill="url(#pouch)" stroke="#87522f" stroke-width="2.7"/>
+ <path d="M317 252Q361 263 391 274Q440 288 484 278Q462 295 438 305Q397 313 358 292Q336 280 317 266Z" fill="#71372e" stroke="#85482c" stroke-width="1.5"/>
+ <path d="M360 291Q390 287 418 307Q390 311 360 291Z" fill="#d27a66" stroke="none"/>
+ <path d="M313 229Q339 222 379 240Q422 253 476 248Q499 248 511 267Q501 263 488 268Q458 277 414 275Q355 274 311 252Q302 242 313 229Z" fill="url(#beak)" stroke="#925c31" stroke-width="2.4"/>
+ <path d="M329 233Q359 231 384 244Q432 260 484 254Q497 254 505 261" fill="none" stroke="#ffe5a2" stroke-width="3.3"/>
+ <path d="M337 242Q345 238 351 244Q344 246 337 242Z" fill="#88562e" stroke="none"/>
+ <path d="M333 287Q351 317 378 323Q411 333 450 307" fill="none" stroke="#f7c36f" stroke-width="2.6"/>
+ <!-- eyes and glasses -->
+ <path d="M256 229Q254 208 270 202Q285 201 292 220" fill="#fffdf2" stroke="#8e7054" stroke-width="1.6"/>
+ <ellipse cx="276" cy="221" rx="8" ry="12" fill="#705237" stroke="#3e342b" stroke-width="1.1"/><ellipse cx="279" cy="221" rx="4.6" ry="8.5" fill="#252f2d" stroke="none"/><circle cx="280" cy="217" r="2.8" fill="#fffdf3" stroke="none"/>
+ <path d="M304 220Q306 204 317 205Q330 208 330 224" fill="#fffdf2" stroke="#8e7054" stroke-width="1.4"/><ellipse cx="322" cy="217" rx="5.5" ry="8" fill="#4d3c2c" stroke="none"/><circle cx="323" cy="214" r="2" fill="#fffdf3" stroke="none"/>
+ <path d="M253 199Q267 190 281 195M307 195Q316 191 325 198" fill="none" stroke="#79553e" stroke-width="3"/>
+ <g fill="none" stroke="#473a31" stroke-width="3.2"><ellipse cx="272" cy="224" rx="28" ry="30" transform="rotate(-9 272 224)"/><ellipse cx="319" cy="220" rx="19" ry="25" transform="rotate(-9 319 220)"/><path d="M299 218Q304 214 305 217M244 222L200 209"/></g>
+ <path d="M251 213Q257 202 268 199M308 206Q313 200 320 199" fill="none" stroke="#e2b66c" stroke-width="2"/>
+</g>
 </svg>
