@@ -50,7 +50,15 @@ GAP_DESKS = {
 }
 PRESENCE = SitePresence(DESKS.values())
 PAGE_VIEWS_DB = DB.with_name("page-views.sqlite3")
+IP_KEY_PATH = DB.with_name("ip-count.key")
+if not IP_KEY_PATH.exists():
+    with os.fdopen(os.open(IP_KEY_PATH, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600), "wb") as key_file:
+        key_file.write(os.urandom(32))
+IP_KEY = IP_KEY_PATH.read_bytes()
+if len(IP_KEY) != 32:
+    raise ValueError("Invalid IP statistics key")
 with closing(sqlite3.connect(PAGE_VIEWS_DB)) as conn, conn:
+    conn.execute("CREATE TABLE IF NOT EXISTS visitor_ips (digest BLOB PRIMARY KEY) WITHOUT ROWID")
     conn.execute("CREATE TABLE IF NOT EXISTS page_views (source TEXT PRIMARY KEY, total INTEGER NOT NULL)")
     conn.execute("INSERT OR IGNORE INTO page_views VALUES ('live', 0)")
 
@@ -91,16 +99,20 @@ def site_dock(lang, prefix):
     visitors = "在线访客" if zh else "Visitors online"
     agents = "在研 Agent" if zh else "Working agents"
     views = "累计浏览量" if zh else "Total page views"
+    ips = "累计独立 IP" if zh else "Unique IP addresses"
     detail = ("累计浏览量统计首页、问题目录和研究页的成功访问，刷新也计一次。近 90 秒内浏览可见页面的浏览器，同一域名多标签合计一次。"
+              "自 2026 年 11 月 24 日开启 IP 统计，两个域名下同一来源 IP 合计一次。"
               "在研 Agent 按尚未提交且有效的任务租约计，每份一席。每 30 秒刷新。" if zh else
               "Page views count successful loads of the home, directory and research pages, including reloads. "
               "Online visitors have a visible page in the last 90 seconds. Tabs on the same domain count once. "
+              "Since 24 November 2026, each source IP counts once across both domains. "
               "Each active, unsubmitted research lease counts as one agent seat. Updates every 30 seconds.")
     return f"""<aside class="discussion-dock" aria-label="{'研究台动态' if zh else 'Research desk activity'}">
 <details class="presence-widget" data-endpoint="{prefix}api/presence" hidden>
 <summary><span><i aria-hidden="true"></i>{visitors} <b data-count="visitors">—</b></span>
 <span>{agents} <b data-count="agents">—</b></span>
-<span class="total-views">{views} <b data-count="page_views">—</b></span></summary>
+<span class="total-views">{views} <b data-count="page_views">—</b></span>
+<span class="total-views">{ips} <b data-count="unique_ips">—</b></span></summary>
 <p>{detail}</p></details>
 {discussion_widget(lang, prefix)}</aside><script src="{prefix}presence.js" defer></script>"""
 
@@ -386,6 +398,11 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 with closing(sqlite3.connect(PAGE_VIEWS_DB)) as conn, conn:
                     conn.execute("UPDATE page_views SET total = total + 1 WHERE source = 'live'")
+                    ip = self.client_ip()
+                    ip = getattr(ip, "ipv4_mapped", None) or ip
+                    if not ip.is_loopback:
+                        digest = hmac.digest(IP_KEY, ip.packed, "sha256")
+                        conn.execute("INSERT OR IGNORE INTO visitor_ips VALUES (?)", (digest,))
             except sqlite3.Error:
                 self.log_error("Page view counter unavailable")
         self.send_response(status)
@@ -431,8 +448,9 @@ class Handler(BaseHTTPRequestHandler):
         try:
             with closing(sqlite3.connect(PAGE_VIEWS_DB)) as conn:
                 counts["page_views"] = conn.execute("SELECT sum(total) FROM page_views").fetchone()[0]
+                counts["unique_ips"] = conn.execute("SELECT count(*) FROM visitor_ips").fetchone()[0]
         except sqlite3.Error:
-            counts["page_views"] = None
+            counts["page_views"] = counts["unique_ips"] = None
         return self.reply(200, json.dumps(counts).encode())
 
     def do_GET(self):

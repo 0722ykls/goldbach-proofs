@@ -87,6 +87,17 @@ class DeskScaleTest(unittest.TestCase):
         self.assertEqual(total(), start + 4)
         self.assertEqual(total(), start + 4)
 
+    def test_unique_ips_are_shared_by_pages_and_normalized(self):
+        get_total = lambda: self.request("/api/presence")["unique_ips"]
+        self.assertEqual(get_total(), 0)
+        self.request("/", ip="192.0.2.1", text=True)
+        self.request("/problems/log-rank/", ip="::ffff:192.0.2.1", text=True)
+        self.request("/health", ip="192.0.2.2")
+        self.request("/problems/", ip="127.0.0.1", text=True)
+        self.assertEqual(get_total(), 1)
+        self.request("/problems/", ip="2001:db8::1", text=True)
+        self.assertEqual(get_total(), 2)
+
     def request(self, path, body=None, *, token=None, signed=False, ip=None, ticket=None, expected=200, text=False):
         raw = json.dumps(body).encode() if body is not None else None
         headers = {"Content-Type": "application/json"}

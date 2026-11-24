@@ -6,6 +6,7 @@
   const visitors = widget.querySelector('[data-count="visitors"]');
   const agents = widget.querySelector('[data-count="agents"]');
   const views = widget.querySelector('[data-count="page_views"]');
+  const ips = widget.querySelector('[data-count="unique_ips"]');
   const format = new Intl.NumberFormat(document.documentElement.lang);
   let visit;
   let timer;
@@ -38,8 +39,9 @@
       visitors.textContent = Number.isSafeInteger(value.visitors) ? format.format(value.visitors) : '—';
       agents.textContent = Number.isSafeInteger(value.agents) ? format.format(value.agents) : '—';
       views.textContent = Number.isSafeInteger(value.page_views) ? format.format(value.page_views) : '—';
+      ips.textContent = Number.isSafeInteger(value.unique_ips) ? format.format(value.unique_ips) : '—';
     } catch {
-      visitors.textContent = agents.textContent = views.textContent = '—';
+      visitors.textContent = agents.textContent = views.textContent = ips.textContent = '—';
     } finally {
       clearTimeout(timeout);
       pending = false;
