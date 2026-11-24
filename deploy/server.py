@@ -8,6 +8,7 @@ import sqlite3
 import ssl
 import time
 from contextlib import closing
+from datetime import datetime
 from html import escape
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -47,12 +48,34 @@ GAP_DESKS = {
 }
 
 ASSETS = {
+    "/discussion-qr.png": "image/png",
+    "/discussion.js": "text/javascript",
     "/goldbach-icon.svg": "image/svg+xml",
     "/site.css": "text/css",
     "/site.js": "text/javascript",
     "/join.txt": "text/plain",
     "/join-zh.txt": "text/plain",
 }
+
+DISCUSSION_EXPIRES = datetime.fromisoformat("2026-12-01T00:00:00+08:00")
+
+
+def discussion_widget(lang, prefix):
+    if time.time() >= DISCUSSION_EXPIRES.timestamp():
+        return ""
+    zh = lang == "zh"
+    label = "进群讨论" if zh else "Discussion group"
+    name = "知乎 AI4S 讨论组" if zh else "Zhihu AI4S discussion group"
+    instructions = "微信扫码，讨论研究进度" if zh else "Scan in WeChat to discuss research progress"
+    cutoff = DISCUSSION_EXPIRES.date()
+    validity = f"{cutoff.month} 月 {cutoff.day} 日前有效" if zh else f"Valid before {cutoff:%Y-%m-%d} (UTC+8)"
+    alt = "知乎 AI4S 讨论组微信群二维码" if zh else "WeChat QR code for the Zhihu AI4S discussion group"
+    return f"""<aside class="discussion-dock" aria-label="{name}">
+<details class="discussion-widget"><summary>{label}<span aria-hidden="true"></span></summary>
+<div class="discussion-body"><strong>{name}</strong><p>{instructions}</p>
+<img src="{prefix}discussion-qr.png" alt="{alt}" width="180" height="180">
+<small>{validity}</small></div></details></aside>
+<script src="{prefix}discussion.js" defer></script>"""
 
 
 def research_status(desk=DESK):
@@ -219,7 +242,7 @@ def directory_page(lang):
 <title>{heading} · Goldbach Research</title><link rel="icon" type="image/svg+xml" sizes="any" href="../goldbach-icon.svg"><link rel="stylesheet" href="../site.css"></head>
 <body><header class="masthead"><div class="shell masthead-inner"><a class="brand" href="../?lang={lang}">{back}</a>
 <a class="locale" href="?lang={'en' if zh else 'zh'}">{'English' if zh else '简体中文'}</a></div></header>
-<main class="shell problem-directory"><h1>{heading}</h1><p>{intro}</p><div class="problem-list">{cards}</div></main></body></html>"""
+<main class="shell problem-directory"><h1>{heading}</h1><p>{intro}</p><div class="problem-list">{cards}</div></main>{discussion_widget(lang, "../")}</body></html>"""
 
 
 def queue_pending(raw_body, headers):
@@ -391,6 +414,7 @@ class Handler(BaseHTTPRequestHandler):
         page = (ROOT / f"{lang}.html").read_text(encoding="utf-8")
         if slug != "goldbach":
             page = problem_page(page, slug, lang)
+        page = page.replace("</body>", discussion_widget(lang, "" if slug == "goldbach" else "../../") + "</body>", 1)
         self.reply(200, page.encode(), "text/html", lang)
 
     do_HEAD = do_GET

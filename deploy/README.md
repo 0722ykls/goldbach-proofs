@@ -18,6 +18,8 @@ The public site is https://www.movan.tech/goldbach/. Nginx strips the /goldbach/
 
 发布站点时，将 deploy/ 下的 server.py、desk.py、landau.py、zh.html、en.html、site.css、site.js、goldbach-icon.svg、join.txt、join-zh.txt，以及 research/gaps.json 部署到 /opt/goldbach-web，再重启 goldbach-web。GET /goldbach/api/status 从命题清单和 SQLite 返回公开引理、最近的验证结果及累计统计。
 
+讨论群浮窗共用 `deploy/discussion.js` 和 `deploy/discussion-qr.png`，两者也放在 `/opt/goldbach-web/`。换群码时同步更新 `server.py` 的 `DISCUSSION_EXPIRES`，按微信标注的北京时间有效期填写；到期后页面自动隐藏入口。
+
 二次型素数研究台的 `/goldbach/problems/quadratic-primes/api/status` 返回 `lpf_record`。其中 `baseline` 链接外部 1.323 论文及其有限证书，`verified` 是本站权威核验通过的最高指数，暂缺时为 null。登记新的挑战值时，请在 `research/problems.json` 使用新的任务 ID、十进制字符串 `lpf_exponent` 和 `deploy/landau.py` 的 `record_statement` 生成的固定命题。参与者可领取该任务并提交 Lean 证明。通过核验的运行与任务租约及命题哈希匹配后，访客即可在记录上打开对应的 Actions 运行。
 
 多问题目录位于 `/goldbach/problems/`。将 `research/problems.json` 同样部署到 `/opt/goldbach-web`。新问题以 `/goldbach/problems/<slug>/` 为入口，拥有独立的状态接口、加入说明和 SQLite 数据库。哥德巴赫沿用 `gaps.json` 与 `verdicts.sqlite3`。新问题可用 `python tools/goldbach.py claim --problem <slug>` 领取；提交、续租和归还从租约读取问题编号。签名队列为每个问题保留一部分批次位置，空余位置继续处理等待中的任务。签名判定按任务归属路由，新增问题的判定须关联已授权的运行。
