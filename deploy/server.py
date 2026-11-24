@@ -21,6 +21,8 @@ from presence import SitePresence
 from zhihu_oauth import BASE as ZHIHU_PATH, ZhihuOAuth
 import sponsors
 
+SPONSOR_UPLOAD_SLOT = BoundedSemaphore(1)
+
 ROOT = Path(__file__).resolve().parent
 CREDS = Path(os.environ["CREDENTIALS_DIRECTORY"])
 SECRET = (CREDS / "webhook").read_bytes().strip()
@@ -387,15 +389,23 @@ class Handler(BaseHTTPRequestHandler):
     def zhihu_request(self, path, query=""):
         if self.command == "HEAD":
             return self.reply(405, b'{}')
+        if self.command == "GET" and path == sponsors.DESK + "/upload-limit":
+            return self.oauth_response(path, sponsors.upload_error(self.language(urlsplit(self.path))))
         try:
             if self.command == "POST":
                 size = int(self.headers.get("Content-Length", "0"))
                 if path == sponsors.DESK + "/upload" and self.headers.get_content_type() == "multipart/form-data":
+                    lang = self.language(urlsplit(self.path))
                     if not 0 < size <= sponsors.LIMIT:
-                        return self.reply(413, b'{"error":"upload too large"}')
-                    self.connection.settimeout(8)
-                    fields = sponsors.upload_fields(self.headers["Content-Type"], self.rfile.read(size))
-                    return self.oauth_response(path, ZHIHU.handle(self.command, path, fields, self.headers))
+                        return self.oauth_response(path, sponsors.upload_error(lang))
+                    if not SPONSOR_UPLOAD_SLOT.acquire(blocking=False):
+                        return self.oauth_response(path, sponsors.upload_error(lang, busy=True))
+                    try:
+                        self.connection.settimeout(8)
+                        fields = sponsors.upload_fields(self.headers["Content-Type"], self.rfile.read(size))
+                        return self.oauth_response(path, ZHIHU.handle(self.command, path, fields, self.headers))
+                    finally:
+                        SPONSOR_UPLOAD_SLOT.release()
                 if not 0 < size <= 8192 or self.headers.get_content_type() != "application/x-www-form-urlencoded":
                     return self.reply(400, b'{}')
                 self.connection.settimeout(8)

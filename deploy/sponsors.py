@@ -15,7 +15,8 @@ DESK = "/auth/zhihu/sponsors"
 STYLE = "/sponsor-settings.css"
 PUBLIC = "/sponsors/logo/"
 ORIGIN = "https://www.goldbach.tech"
-LIMIT = 192 * 1024
+FILE_LIMIT = 4 * 1024 * 1024
+LIMIT = FILE_LIMIT + 16 * 1024
 
 
 def setup(db):
@@ -52,10 +53,10 @@ def upload_fields(content_type, raw):
 
 
 def logo_png(raw):
-    if not isinstance(raw,bytes) or len(raw)>180*1024:
+    if not isinstance(raw, bytes) or len(raw) > FILE_LIMIT:
         raise ValueError("image size")
     with Image.open(io.BytesIO(raw), formats=("PNG", "JPEG", "WEBP")) as im:
-        if max(im.size) > 2048 or im.width * im.height > 2_000_000 or getattr(im, "n_frames", 1) != 1:
+        if max(im.size) > 4096 or im.width * im.height > 8_000_000 or getattr(im, "n_frames", 1) != 1:
             raise ValueError("image dimensions")
         im.thumbnail((480, 240))
         clean = im.convert("RGBA")
@@ -94,6 +95,16 @@ def settings_page(status, lang, title, content):
     return status, {"Content-Type": "text/html; charset=utf-8"}, html.encode()
 
 
+def upload_error(lang, busy=False):
+    zh = lang == "zh"
+    title = ("上传繁忙" if zh else "Upload busy") if busy else ("Logo 文件过大" if zh else "Logo file is too large")
+    hint = ("请稍后重试。" if zh else "Try again shortly.") if busy else (
+        "请选择不超过 4 MiB 的 PNG、JPEG 或 WebP 图片。" if zh else "Choose a PNG, JPEG or WebP file up to 4 MiB.")
+    back = "返回投稿" if zh else "Back to submission"
+    return settings_page(503 if busy else 413, lang, title,
+                         f'<section class="card"><p>{hint}</p><a href="{DESK}?lang={lang}">{back}</a></section>')
+
+
 def handle(method, path, params, headers, db, row, lang, redirect):
     def tr(zh, en):
         return en if lang == "en" else zh
@@ -121,6 +132,8 @@ def handle(method, path, params, headers, db, row, lang, redirect):
             name = params.get("name","").strip()
             if not 1 <= len(name) <= 80:
                 return msg(400, tr("单位名须为 1–80 字。","Use a name of 1–80 characters."))
+            if len(params.get("logo", b"")) > FILE_LIMIT:
+                return upload_error(lang)
             try:
                 png = logo_png(params.get("logo",b""))
             except (UnidentifiedImageError, Image.DecompressionBombError, OSError, ValueError, TypeError):
@@ -154,10 +167,10 @@ def handle(method, path, params, headers, db, row, lang, redirect):
     if path != DESK:
         return msg(404, "404")
     upload = (f'<section class="card upload"><h2>{tr("提交单位 Logo","Submit a logo")}</h2>'
-            f'<form method="post" action="{DESK}/upload" enctype="multipart/form-data">{csrf}'
+            f'<form method="post" action="{DESK}/upload?lang={lang}" enctype="multipart/form-data">{csrf}'
             f'<label>{tr("单位名称","Organization")} <input name="name" maxlength="80" required></label>'
             '<label>Logo <input type="file" name="logo" accept="image/png,image/jpeg,image/webp" required></label>'
-            f'<p class="hint">{tr("PNG、JPEG 或 WebP，最大 180 KiB、200 万像素，单边最多 2048 像素。仅上传获授权的标识，审核通过后公开。","PNG, JPEG or WebP, up to 180 KiB, 2 MP and 2048 px per side. Submit authorized artwork for public display after review.")}</p>'
+            f'<p class="hint">{tr("PNG、JPEG 或 WebP，最大 4 MiB、800 万像素，单边最多 4096 像素。仅上传获授权的标识，审核通过后公开。","PNG, JPEG or WebP, up to 4 MiB, 8 MP and 4096 px per side. Submit authorized artwork for public display after review.")}</p>'
             f'<button class="primary">{tr("提交审核","Submit for review")}</button></form></section>')
     labels = {"pending":tr("待审核","Pending"),"approved":tr("已展示","Approved"),"rejected":tr("已拒绝","Rejected"),"withdrawn":tr("已撤下","Withdrawn")}
     items = db.execute("SELECT id,name,state FROM sponsor_logos WHERE owner=? OR ? ORDER BY (state='pending') DESC,id DESC",
