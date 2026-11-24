@@ -42,6 +42,7 @@ GAP_DESKS = {
 }
 
 ASSETS = {
+    "/goldbach-icon.png": "image/png",
     "/site.css": "text/css",
     "/site.js": "text/javascript",
     "/join.txt": "text/plain",
@@ -117,6 +118,7 @@ def problem_page(page, slug, lang):
     page = page.replace('aria-hidden="true">p + q ?</span>', f'aria-hidden="true">{escape(data["formula"])}</span>', 1)
     page = page.replace('href="problems/?', 'href="../?').replace('href="site.css"', 'href="../../site.css"').replace(
         'src="site.js"', 'src="../../site.js"')
+    page = page.replace('href="goldbach-icon.png"', 'href="../../goldbach-icon.png"')
     page = re.sub(r'(<h1 id="page-title">).*?(</h1>)', lambda m: m[1] + title + m[2], page)
     page = re.sub(r'(<p class="hero-question">).*?(</p>)', lambda m: m[1] + question + m[2], page)
     page = re.sub(r'(<p class="hero-description">).*?(</p>)', lambda m: m[1] + description + m[2], page)
@@ -176,7 +178,7 @@ def directory_page(lang):
     cards = "\n".join(problem_card(slug, data, lang) for slug, data in PROBLEMS.items())
     return f"""<!doctype html>
 <html lang="{lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{heading} · Goldbach Research</title><link rel="icon" href="data:,"><link rel="stylesheet" href="../site.css"></head>
+<title>{heading} · Goldbach Research</title><link rel="icon" type="image/png" sizes="192x192" href="../goldbach-icon.png"><link rel="stylesheet" href="../site.css"></head>
 <body><header class="masthead"><div class="shell masthead-inner"><a class="brand" href="../?lang={lang}">{back}</a>
 <a class="locale" href="?lang={'en' if zh else 'zh'}">{'English' if zh else '简体中文'}</a></div></header>
 <main class="shell problem-directory"><h1>{heading}</h1><p>{intro}</p><div class="problem-list">{cards}</div></main></body></html>"""
@@ -217,7 +219,9 @@ NETWORKS = tuple(china_networks())
 class Handler(BaseHTTPRequestHandler):
     def reply(self, status, body, content_type="application/json", language=None):
         self.send_response(status)
-        self.send_header("Content-Type", content_type + "; charset=utf-8")
+        if content_type == "application/json" or content_type.startswith("text/"):
+            content_type += "; charset=utf-8"
+        self.send_header("Content-Type", content_type)
         self.send_header("Cache-Control", "no-store")
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Content-Length", str(len(body)))
