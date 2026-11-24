@@ -329,7 +329,7 @@ jobs:
           # each matching base/lean/PEqualNP/Outside/L_<gap>.lean, so word splitting is safe).
           ( cd "$W" && sha256sum "base/$file" in/statement.txt base/tools/check-lean.mjs base/tools/build.sh \
               base/tools/bin/lake base/lean/CheckLemma.lean base/lean/.lake/build/bin/checklemma \
-              base/.github/scripts/lake-locked.sh $(cat in/outside-sources.txt) ) | tee "$RUNNER_TEMP/before.sha256"
+              base/.github/scripts/lake-locked.sh base/.github/scripts/build-ownership.sh $(cat in/outside-sources.txt) ) | tee "$RUNNER_TEMP/before.sha256"
 
       - name: Run the BASE checker on the file (the only step that runs outside code)
         id: run
@@ -384,6 +384,8 @@ jobs:
           limit=$(( 1200 + 240 * $(grep -c . "$W/in/outside-imports.txt" || true) ))
           [ "$limit" -le 2700 ] || limit=2700
           echo "time limit for the checker: $limit s"
+          marker="$RUNNER_TEMP/sampler/build.marker"
+          touch "$marker" || exit 3
           sudo systemd-run --quiet --scope --collect -p MemoryMax="${cap}K" \
               --uid="$(id -u)" --gid="$(id -g)" \
           taskset -c 0,1 env -i HOME="$HOME" LANG=C.UTF-8 PATH="$TC_BIN:$node_bin:/usr/bin:/bin" \
@@ -398,6 +400,10 @@ jobs:
           # Nothing the compile started may outlive it, and neither may the verifier.
           sudo pkill -KILL -u outsider || true
           pkill -KILL -f "$W/base/lean/.lake/build/bin/checklemma" || true
+          build="$W/base/lean/.lake/build"
+          module=${file#lean/}
+          bash "$W/base/.github/scripts/build-ownership.sh" "$build" "$marker" \
+            "$build/lib/lean/${module%.lean}.olean" "$code" 2>> "$RUNNER_TEMP/checker.err" || code=3
           echo "code=$code" >> "$GITHUB_OUTPUT"
 
       - name: Print the checker's last line, MANIFEST, and the verdict
@@ -452,7 +458,7 @@ jobs:
           # The trusted files must be what they were before the hostile step.
           ( cd "$W" && sha256sum "base/$file" in/statement.txt base/tools/check-lean.mjs base/tools/build.sh \
               base/tools/bin/lake base/lean/CheckLemma.lean base/lean/.lake/build/bin/checklemma \
-              base/.github/scripts/lake-locked.sh $(cat in/outside-sources.txt) ) > "$RUNNER_TEMP/after.sha256"
+              base/.github/scripts/lake-locked.sh base/.github/scripts/build-ownership.sh $(cat in/outside-sources.txt) ) > "$RUNNER_TEMP/after.sha256"
           same=yes; cmp -s "$RUNNER_TEMP/before.sha256" "$RUNNER_TEMP/after.sha256" || same=no
           last=$(tail -n 1 "$RUNNER_TEMP/checker.out")
           manifests=$(grep -c '^MANIFEST {' "$RUNNER_TEMP/checker.out" || true)
