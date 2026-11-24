@@ -388,7 +388,9 @@ class Handler(BaseHTTPRequestHandler):
         for name, value in headers.items():
             self.send_header(name, value)
         self.send_header("Cache-Control", "no-store")
-        self.send_header("Referrer-Policy", "no-referrer")
+        # Form pages must preserve Origin on same-site POSTs for CSRF validation.
+        policy = "same-origin" if path != ZHIHU_PATH + "/callback" else "no-referrer"
+        self.send_header("Referrer-Policy", policy)
         self.send_header("Content-Security-Policy", "default-src 'none'; style-src 'unsafe-inline'; form-action 'self' https://openapi.zhihu.com https://www.zhihu.com; frame-ancestors 'none'; base-uri 'none'")
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Content-Length", str(len(body)))
