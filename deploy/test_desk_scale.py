@@ -13,6 +13,7 @@ import tempfile
 import threading
 import time
 import unittest
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import closing
 from http.client import HTTPSConnection
@@ -189,7 +190,7 @@ class DeskScaleTest(unittest.TestCase):
             self.assertEqual(result["desk"]["rankings"]["proofs"], 1)
             self.assertEqual(result["results"][0]["lemma_id"], claim["gap"]["id"])
 
-    def test_simultaneous_fleet_claims_across_problems(self):
+    def test_simultaneous_fleet_claims_and_submissions_across_problems(self):
         paths = ["", *(f"/problems/{slug}" for slug in PROBLEMS)]
         ticket = fleet_pass(self.secret, "lab", int(time.time()) + 3600)
 
@@ -202,6 +203,7 @@ class DeskScaleTest(unittest.TestCase):
         with ThreadPoolExecutor(max_workers=SESSIONS) as pool:
             claims = self.wave(pool, "four problems", "claims", claim)
             self.assertEqual(len({token for _, token, _ in claims}), SESSIONS)
+            scopes = {gap: path for path, _, gap in claims}
             for path in paths:
                 expected = [gap for owner, _, gap in claims if owner == path]
                 status = self.request(path + "/api/status")
@@ -209,6 +211,18 @@ class DeskScaleTest(unittest.TestCase):
                 self.assertEqual(status["desk"]["active"], len(expected))
                 self.assertEqual(set(status["desk"]["assignments"]), set(expected))
                 self.assertEqual(set(expected), {gap["id"] for gap in status["gaps"]})
+            self.wave(pool, "four problems", "submissions", lambda i: self.request(
+                claims[i][0] + "/api/desk/submit", {"pr": i + 1, "head": f"{i + 1:040x}"}, token=claims[i][1]
+            ))
+            queued = []
+            for _ in range(0, SESSIONS, QUEUE_BATCH):
+                batch = self.request("/api/desk/pending", {}, signed=True)["pending"]
+                self.assertEqual(len(batch), QUEUE_BATCH)
+                self.assertEqual(Counter(scopes[row["gap"]] for row in batch),
+                                 {path: QUEUE_BATCH // len(paths) for path in paths})
+                queued.extend((row["pr"], row["gap"]) for row in batch)
+            self.assertCountEqual(queued, [(i + 1, gap) for i, (_, _, gap) in enumerate(claims)])
+            self.assertEqual(self.request("/api/desk/pending", {}, signed=True)["pending"], [])
             self.wave(pool, "four problems", "returns", lambda i: self.request(
                 claims[i][0] + "/api/desk/release", {"reason": "abandoned"}, token=claims[i][1]
             ))

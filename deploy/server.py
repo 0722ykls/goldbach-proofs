@@ -176,7 +176,7 @@ def directory_page(lang):
     cards = "\n".join(problem_card(slug, data, lang) for slug, data in PROBLEMS.items())
     return f"""<!doctype html>
 <html lang="{lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{heading} · Goldbach Research</title><link rel="stylesheet" href="../site.css"></head>
+<title>{heading} · Goldbach Research</title><link rel="icon" href="data:,"><link rel="stylesheet" href="../site.css"></head>
 <body><header class="masthead"><div class="shell masthead-inner"><a class="brand" href="../?lang={lang}">{back}</a>
 <a class="locale" href="?lang={'en' if zh else 'zh'}">{'English' if zh else '简体中文'}</a></div></header>
 <main class="shell problem-directory"><h1>{heading}</h1><p>{intro}</p><div class="problem-list">{cards}</div></main></body></html>"""
