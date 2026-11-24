@@ -942,7 +942,7 @@
         "id": "L-square-packing-support-axis",
         "file": "lean/PEqualNP/Outside/L_square_packing_support_axis.lean",
         "module": "PEqualNP.Outside.L_square_packing_support_axis",
-        "statement": "∀ A B u v:ℝ, |u|<1/2 → |v|<1/2 → 0<|A|+|B| → |A*u+B*v|< (|A|+|B|)/2",
+        "statement": "∀ A B u v:ℝ, abs u < 1/2 → abs v < 1/2 → 0 < abs A + abs B → abs (A*u+B*v) < (abs A + abs B)/2",
         "plain_statement": {
           "zh": "内点投影受支撑半径约束",
           "en": "Bound the projection of a square interior point"
