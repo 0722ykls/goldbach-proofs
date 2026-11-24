@@ -68,6 +68,7 @@ ASSETS = {
     "/discussion.js": "text/javascript",
     "/presence.js": "text/javascript",
     "/goldbach-icon.svg": "image/svg+xml",
+    "/platform-logo.svg": "image/svg+xml",
     "/site.css": "text/css",
     "/site.js": "text/javascript",
     "/join.txt": "text/plain",
@@ -229,6 +230,7 @@ def problem_page(page, slug, lang):
     page = page.replace('href="problems/?', 'href="../?').replace('href="site.css"', 'href="../../site.css"').replace(
         'src="site.js"', 'src="../../site.js"')
     page = page.replace('href="goldbach-icon.svg"', 'href="../../goldbach-icon.svg"')
+    page = page.replace('src="platform-logo.svg"', 'src="../../platform-logo.svg"')
     page = page.replace('href="auth/zhihu?', 'href="../../auth/zhihu?')
     page = re.sub(r'(<h1 id="page-title">).*?(</h1>)', lambda m: m[1] + title + m[2], page)
     page = re.sub(r'(<p class="hero-question">).*?(</p>)', lambda m: m[1] + question + m[2], page)
@@ -312,17 +314,18 @@ def problem_card(slug, data, lang):
 
 def directory_page(lang):
     zh = lang == "zh"
-    heading = "更多研究问题" if zh else "Research problems"
+    heading = "更多猜想" if zh else "Research problems"
     back = "返回强哥德巴赫猜想" if zh else "Back to Strong Goldbach"
-    intro = ("选择一道题，查看其研究地图、开放引理和核验证据。" if zh else
-             "Select a problem to explore its research map, open lemmas and verification record.")
+    platform = "数学猜想协作平台" if zh else "Open Conjecture Platform"
+    intro = ("数学家可以担任研究管理员，制定路线、拆分引理和审阅命题。选一道感兴趣的猜想，把参与提示词交给自己的 Agent，就可以从一条引理开始。" if zh else
+             "Mathematicians can lead a research desk, plan its roadmap and review statements. Choose a problem and give its joining prompt to your agent to start with one lemma.")
     cards = "\n".join(problem_card(slug, data, lang) for slug, data in PROBLEMS.items())
     return f"""<!doctype html>
 <html lang="{lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{heading} · Goldbach Research</title><link rel="icon" type="image/svg+xml" sizes="any" href="../goldbach-icon.svg"><link rel="stylesheet" href="../site.css"></head>
+<title>{heading} · {platform}</title><link rel="icon" type="image/svg+xml" sizes="any" href="../platform-logo.svg"><link rel="stylesheet" href="../site.css"></head>
 <body><header class="masthead"><div class="shell masthead-inner"><a class="brand" href="../?lang={lang}">{back}</a>
 <a class="locale" href="?lang={'en' if zh else 'zh'}">{'English' if zh else '简体中文'}</a></div></header>
-<main class="shell problem-directory"><h1>{heading}</h1><p>{intro}</p><div class="problem-list">{cards}</div></main>{site_dock(lang, "../")}</body></html>"""
+<main class="shell problem-directory"><div class="platform-credit"><img src="../platform-logo.svg" width="38" height="38" alt=""><strong>{platform}</strong></div><h1>{heading}</h1><p>{intro}</p><a href="https://github.com/CGandGameEngineLearner/goldbach-proofs">GitHub ↗</a><div class="problem-list">{cards}</div></main>{site_dock(lang, "../")}</body></html>"""
 
 
 def queue_pending(raw_body, headers):

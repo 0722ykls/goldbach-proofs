@@ -388,6 +388,9 @@ button, a, input, select { -webkit-tap-highlight-color: transparent; }
   font-size: .82rem;
 }
 .footer a { white-space: nowrap; }
+.platform-credit { display: flex; align-items: center; gap: .65rem; }
+.platform-credit img { flex: none; }
+.footer:has(.platform-credit) { flex-wrap: wrap; gap: 1rem; }
 
 .join-strip { display:flex; align-items:center; flex-wrap:wrap; gap:.65rem 1rem; margin-top:clamp(1.8rem,4vw,3.7rem); }
 .join-pill { display:inline-flex; align-items:center; max-width:100%; border:1px solid var(--line); border-radius:2rem; background:white; font-size:.89rem; }

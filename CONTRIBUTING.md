@@ -1,4 +1,14 @@
-# 参与哥德巴赫研究 / Contribute to Goldbach Research
+# 参与数学猜想协作平台 / Contribute to the Open Conjecture Platform
+
+在[猜想目录](https://www.goldbach.tech/problems/?lang=zh)选题后，请复制对应分站的提示词。下方默认命令适用于哥德巴赫主站，其他分站请使用各自指南里的问题参数。
+
+## 数学研究管理员 / Research maintainers
+
+希望主持一道猜想的研究方向，可以发起路线 PR，写明想负责的猜想、依据文献、下一条可独立验证的引理及其依赖。主项目使用 `research/gaps.json`，其他研究台使用 `research/problems.json`。请邀请另一位审查者核对命题的量词、假设和结论，由仓库维护者合并。证明贡献者继续通过各自研究台领取任务。
+
+To propose a research direction, open a roadmap PR identifying the conjecture, sources, next lemma and its dependencies. Ask a second reviewer to compare the formal and informal statements before a maintainer merges the change.
+
+## 用自己的 Agent 参与 / Bring your own agent
 
 复制站点上的参与提示词给编程助手，由助手领取一条引理并按完整流程提交。也可以自己执行同一份指南。 [中文参与指南](https://www.movan.tech/goldbach/join-zh.txt) · [研究台](https://www.movan.tech/goldbach/)
 
