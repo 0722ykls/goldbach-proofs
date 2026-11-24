@@ -59,6 +59,7 @@ jobs:
       verdict: ${{ steps.verdict.outputs.verdict }}
       lemma: ${{ steps.verdict.outputs.lemma }}
       manifest: ${{ steps.verdict.outputs.manifest }}
+      check_attempt: ${{ steps.verdict.outputs.check_attempt }}
     env:
       # Inputs are free text typed by whoever starts the run. They reach the scripts only as
       # environment variables, and the next step refuses anything but digits and a plain id.
@@ -536,6 +537,7 @@ jobs:
               manifest=$(sed -n 's/^MANIFEST //p' "$RUNNER_TEMP/checker.out" | jq -ce '{rests_on,defs}')
             fi
             printf 'verdict=%s\nmanifest=%s\nlemma=%s\n' "$verdict" "$manifest" "$GAP" >> "$GITHUB_OUTPUT"
+            echo "check_attempt=$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
           fi
           [ "$verdict" = ACCEPTED ] && exit 0
           [ "$verdict" = REJECTED ] && exit 1
@@ -573,7 +575,7 @@ jobs:
 
   report:
     needs: check
-    if: ${{ always() && needs.check.outputs.verdict != '' && vars.GOLDBACH_WEBHOOK_URL != '' }}
+    if: ${{ always() && needs.check.outputs.verdict != '' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 2
     permissions: {}
@@ -583,18 +585,19 @@ jobs:
       GAP: ${{ needs.check.outputs.lemma }}
       VERDICT: ${{ needs.check.outputs.verdict }}
       MANIFEST: ${{ needs.check.outputs.manifest }}
+      CHECK_ATTEMPT: ${{ needs.check.outputs.check_attempt }}
     steps:
       - name: Send signed verdict
         run: |
           python3 - <<'PY'
-          import hashlib, hmac, json, os, urllib.request
+          import hashlib, hmac, json, os, time, urllib.error, urllib.request
           env = os.environ
           payload = json.dumps({
               "lemma_id": env["GAP"],
               "verdict": env["VERDICT"],
               "manifest": json.loads(env["MANIFEST"]),
               "run_id": int(env["GITHUB_RUN_ID"]),
-              "run_attempt": int(env["GITHUB_RUN_ATTEMPT"]),
+              "run_attempt": int(env["CHECK_ATTEMPT"]),
           }).encode()
           url = env["URL"]
           if not url.startswith("https://") or not env["SECRET"]:
@@ -607,6 +610,18 @@ jobs:
               "Content-Type": "application/json",
               "X-Goldbach-Signature": "sha256=" + signature,
           })
-          with urllib.request.build_opener(NoRedirect()).open(request, timeout=15) as response:
-              print("Verdict endpoint returned", response.status)
+          opener = urllib.request.build_opener(NoRedirect())
+          for attempt in range(3):
+              try:
+                  with opener.open(request, timeout=15) as response:
+                      if response.status != 200 or json.loads(response.read(1024)) != {"status": "stored"}:
+                          raise SystemExit("Verdict endpoint did not acknowledge storage")
+                  break
+              except urllib.error.HTTPError as error:
+                  if error.code not in (408, 429, 500, 502, 503, 504) or attempt == 2:
+                      raise
+              except (urllib.error.URLError, TimeoutError, ConnectionError):
+                  if attempt == 2:
+                      raise
+              time.sleep(2 ** (attempt + 1))
           PY
