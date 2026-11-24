@@ -30,6 +30,17 @@ class CatalogueTests(unittest.TestCase):
                     for lang in ("en", "zh"):
                         self.assertTrue(gap["plain_statement"][lang].strip())
 
+    def test_roadmap_links_resolve_within_their_own_problem(self):
+        for slug, problem in PROBLEMS.items():
+            ids = {gap["id"] for gap in problem["gaps"]}
+            for stage in problem["roadmap"]:
+                with self.subTest(problem=slug, stage=stage["en"][0]):
+                    self.assertTrue(stage["tasks"])
+                    for task in stage["tasks"]:
+                        self.assertIn(task["id"], ids)
+                        for lang in ("zh", "en"):
+                            self.assertTrue(task[lang].strip())
+
     def test_lease_ids_and_pr_paths(self):
         for key in ("id", "file", "module"):
             values = [gap[key] for gap in GAPS]

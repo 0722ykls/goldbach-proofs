@@ -224,6 +224,17 @@ function openGap(id) {
   detailContent.scrollTop = 0;
 }
 
+if (topic) {
+  document.getElementById('roadmap')?.addEventListener('click', event => {
+    const link = event.target.closest('a[data-roadmap-task]');
+    if (!link || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    if (publishedGaps.some(gap => gap.id === link.dataset.roadmapTask)) {
+      event.preventDefault();
+      openGap(link.dataset.roadmapTask);
+    }
+  });
+}
+
 function renderGapDetail() {
   const gap = publishedGaps.find(entry => entry.id === selectedGap);
   if (!gap) return;
@@ -726,6 +737,10 @@ async function loadStatus() {
       renderProgramCounts();
       renderLemmas();
       if (lemmaDialog.open) renderGapDetail();
+      if (topic && lastGaps === null) {
+        const requested = new URLSearchParams(window.location.search).get('lemma');
+        if (requested && gaps.some(gap => gap.id === requested)) openGap(requested);
+      }
       lastGaps = gapsSnapshot;
     }
     lemmaSearch.disabled = false;

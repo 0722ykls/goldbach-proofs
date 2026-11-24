@@ -957,6 +957,8 @@ body:not([data-problem]) .hero .open-status { vertical-align: middle; }
 .topic-formula { color: var(--desk-gold); font: italic clamp(2.6rem, 7vw, 5.3rem) var(--serif); text-align: center; }
 [data-problem] .map-programs { grid-template-columns: repeat(2,minmax(0,1fr)); }
 .topic-roadmap { grid-template-columns: repeat(auto-fit,minmax(min(100%, 15rem),1fr)); }
+.roadmap-tasks { display: grid; justify-items: start; gap: .35rem; margin-top: .8rem; }
+.roadmap-tasks a { color: var(--blue); font-size: .84rem; text-decoration: underline; text-underline-offset: .17em; }
 
 .discussion-dock {
   position: fixed;

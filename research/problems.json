@@ -10,8 +10,8 @@
     },
     "formula": "M(n) ≤ 2n",
     "summary": {
-      "zh": "从行计数和整数行列式出发，建立可重复核验的构型证据。",
-      "en": "Build verifiable evidence for grid constructions using row counts and integer determinants."
+      "zh": "在整数点阵上复现经典的 3/2 渐近下界，再寻找能以固定比例超越它的无穷构型族。",
+      "en": "Recover the classical asymptotic density 3/2 on integer grids, then seek an infinite family with a fixed improvement."
     },
     "gaps": [
       {
@@ -86,37 +86,178 @@
         },
         "program": "correlation",
         "imports": []
+      },
+      {
+        "id": "L-no-three-in-line-residue-parabola-grid",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_residue_parabola_grid.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_residue_parabola_grid",
+        "statement": "let valid := fun (n : ℕ) (S : Finset (ℕ × ℕ)) => (∀ z ∈ S, z.1 < n ∧ z.2 < n) ∧ (∀ a ∈ S, ∀ b ∈ S, ∀ c ∈ S, a ≠ b → a ≠ c → b ≠ c → ((b.1 : ℤ) - (a.1 : ℤ)) * ((c.2 : ℤ) - (a.2 : ℤ)) ≠ ((b.2 : ℤ) - (a.2 : ℤ)) * ((c.1 : ℤ) - (a.1 : ℤ))); ∀ p : ℕ, Nat.Prime p → let S := (Finset.range p).image (fun x => (x, x^2 % p)); valid p S ∧ S.card = p",
+        "plain_statement": {
+          "zh": "对每个素数 p，点 (x, x² mod p) 在 p 阶点阵中给出 p 个无三点共线的点。",
+          "en": "For each prime p, the points (x, x² mod p) give p valid grid points."
+        },
+        "brief": {
+          "zh": "用第一坐标证明单射。若整数行列式为零，模 p 后会和已核验的有限域抛物线引理矛盾。",
+          "en": "Count by the first coordinate and reduce a hypothetical zero determinant modulo p."
+        },
+        "program": "foundation",
+        "imports": [],
+        "source": "https://doi.org/10.1016/0097-3165(75)90043-6"
+      },
+      {
+        "id": "L-no-three-in-line-hyperbola-secants",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_hyperbola_secants.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_hyperbola_secants",
+        "statement": "∀ (p : ℕ) [Fact (Nat.Prime p)] (k x y z : ZMod p), k ≠ 0 → x ≠ 0 → y ≠ 0 → z ≠ 0 → x ≠ y → x ≠ z → y ≠ z → (y-x)*(k/z-k/x) ≠ (z-x)*(k/y-k/x)",
+        "plain_statement": {
+          "zh": "在素域上，xy=k 且 k≠0 的双曲线上，横坐标两两不同的三点不共线。",
+          "en": "Three distinct points on xy=k over a prime field are noncollinear when k is nonzero."
+        },
+        "brief": {
+          "zh": "清除三个非零分母并分解为坐标差的乘积。这会排除提升构造中余类相异的三点。",
+          "en": "Clear the three denominators and factor into coordinate differences to rule out triples in distinct residue classes."
+        },
+        "program": "foundation",
+        "imports": [],
+        "source": "https://doi.org/10.1016/0097-3165(75)90043-6"
+      },
+      {
+        "id": "L-no-three-in-line-two-period-lift",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_two_period_lift.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_two_period_lift",
+        "statement": "let valid := fun (n : ℕ) (S : Finset (ℕ × ℕ)) => (∀ z ∈ S, z.1 < n ∧ z.2 < n) ∧ (∀ a ∈ S, ∀ b ∈ S, ∀ c ∈ S, a ≠ b → a ≠ c → b ≠ c → ((b.1 : ℤ) - (a.1 : ℤ)) * ((c.2 : ℤ) - (a.2 : ℤ)) ≠ ((b.2 : ℤ) - (a.2 : ℤ)) * ((c.1 : ℤ) - (a.1 : ℤ))); ∀ p : ℕ, Nat.Prime p → 2 < p → ∃ S : Finset (ℕ × ℕ), valid (2*p) S ∧ 3*(p-1) ≤ S.card",
+        "plain_statement": {
+          "zh": "对每个奇素数 p，在 2p 阶点阵中构造至少 3(p−1) 个无三点共线的点。",
+          "en": "Construct at least 3(p−1) valid points on the grid of side 2p for every odd prime p."
+        },
+        "brief": {
+          "zh": "从模双曲线的四个平移副本中选点。须另证同余类重复时也不会出现整数共线。",
+          "en": "Select points from four translated copies of the modular hyperbola and handle repeated residues over the integers."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://doi.org/10.1016/0097-3165(75)90043-6"
+      },
+      {
+        "id": "L-no-three-in-line-density-transfer",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_density_transfer.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_density_transfer",
+        "statement": "let valid := fun (n : ℕ) (S : Finset (ℕ × ℕ)) => (∀ z ∈ S, z.1 < n ∧ z.2 < n) ∧ (∀ a ∈ S, ∀ b ∈ S, ∀ c ∈ S, a ≠ b → a ≠ c → b ≠ c → ((b.1 : ℤ) - (a.1 : ℤ)) * ((c.2 : ℤ) - (a.2 : ℤ)) ≠ ((b.2 : ℤ) - (a.2 : ℤ)) * ((c.1 : ℤ) - (a.1 : ℤ))); (∀ p : ℕ, Nat.Prime p → 2 < p → ∃ S : Finset (ℕ × ℕ), valid (2*p) S ∧ 3*(p-1) ≤ S.card) → ∀ e : ℝ, 0 < e → ∃ N : ℕ, ∀ n : ℕ, N ≤ n → ∃ S : Finset (ℕ × ℕ), valid n S ∧ (3/2-e)*(n:ℝ) ≤ (S.card:ℝ)",
+        "plain_statement": {
+          "zh": "若每个奇素数尺度都有上述构造，则对每个 ε>0，所有充分大的 n 都能放下至少 (3/2−ε)n 个点。",
+          "en": "Deduce the eventual (3/2−ε)n lower bound from the odd-prime-scale construction for every ε>0."
+        },
+        "brief": {
+          "zh": "用素数分布在 n/2 以下选一个足够近的 p，再把整个小点阵嵌入大点阵。",
+          "en": "Choose a prime just below n/2 using prime distribution and embed its entire grid."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://doi.org/10.1016/0097-3165(75)90043-6"
+      },
+      {
+        "id": "L-no-three-in-line-saturated-fibres",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_saturated_fibres.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_saturated_fibres",
+        "statement": "let valid := fun (n : ℕ) (S : Finset (ℕ × ℕ)) => (∀ z ∈ S, z.1 < n ∧ z.2 < n) ∧ (∀ a ∈ S, ∀ b ∈ S, ∀ c ∈ S, a ≠ b → a ≠ c → b ≠ c → ((b.1 : ℤ) - (a.1 : ℤ)) * ((c.2 : ℤ) - (a.2 : ℤ)) ≠ ((b.2 : ℤ) - (a.2 : ℤ)) * ((c.1 : ℤ) - (a.1 : ℤ))); ∀ (n : ℕ) (S : Finset (ℕ × ℕ)), valid n S → S.card = 2*n → ∀ i < n, (S.filter (fun z => z.1 = i)).card = 2 ∧ (S.filter (fun z => z.2 = i)).card = 2",
+        "plain_statement": {
+          "zh": "若恰好放下 2n 个点，则每行恰有两点，每列也恰有两点。",
+          "en": "In a valid placement of 2n points each row and each column contains exactly two."
+        },
+        "brief": {
+          "zh": "分别对行、列求和；任一行或列少一点都会与总数冲突。",
+          "en": "Sum the row and column bounds separately and use equality in each sum."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true
+      },
+      {
+        "id": "L-no-three-in-line-density-gain",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_density_gain.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_density_gain",
+        "statement": "let valid := fun (n : ℕ) (S : Finset (ℕ × ℕ)) => (∀ z ∈ S, z.1 < n ∧ z.2 < n) ∧ (∀ a ∈ S, ∀ b ∈ S, ∀ c ∈ S, a ≠ b → a ≠ c → b ≠ c → ((b.1 : ℤ) - (a.1 : ℤ)) * ((c.2 : ℤ) - (a.2 : ℤ)) ≠ ((b.2 : ℤ) - (a.2 : ℤ)) * ((c.1 : ℤ) - (a.1 : ℤ))); ∃ d : ℝ, 0 < d ∧ ∀ B : ℕ, ∃ n : ℕ, B < n ∧ ∃ S : Finset (ℕ × ℕ), valid n S ∧ (3/2+d)*(n:ℝ) ≤ (S.card:ℝ)",
+        "plain_statement": {
+          "zh": "找到固定 δ>0，在无界的一族边长上构造至少 (3/2+δ)n 个无三点共线的点。",
+          "en": "Beat density 3/2 by one fixed positive margin along an unbounded family of grids."
+        },
+        "brief": {
+          "zh": "开放目标。先算出候选族的点数，再按三点来自哪些子集逐类排除零行列式。",
+          "en": "Open target. Count an explicit family, then rule out every type of zero determinant across its constituent subsets."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://epoch.ai/frontiermath/open-problems/no-three-in-line"
       }
     ],
     "roadmap": [
       {
         "zh": [
-          "核验行计数界",
-          "从每行最多两个选点得到总数上界。"
+          "复现两条有限域构造",
+          "抛物线给出大小为 p 的完整样例。双曲线割线引理是较高密度构造的起点，两题可同时做。"
         ],
         "en": [
-          "Verify the row-count bound",
-          "Derive a total upper bound from at most two selected points per row."
+          "Formalize two modular constructions",
+          "Lift the parabola for a complete size-p example. Independently prove the secant lemma needed for the denser hyperbola construction."
+        ],
+        "tasks": [
+          {
+            "id": "L-no-three-in-line-residue-parabola-grid",
+            "zh": "把模抛物线放回点阵",
+            "en": "Lift the modular parabola"
+          },
+          {
+            "id": "L-no-three-in-line-hyperbola-secants",
+            "zh": "双曲线的割线",
+            "en": "Secants of the hyperbola"
+          }
         ]
       },
       {
         "zh": [
-          "建立构型证书",
-          "用整数行列式检查格点的三点共线条件。"
+          "接上经典 3/2 下界",
+          "一组处理四份点集之间的共线情形，另一组把素数尺度的构型推广到一般边长。两者合起来复现经典下界。"
         ],
         "en": [
-          "Build construction certificates",
-          "Use the integer determinant to check collinearity among selected points."
+          "Recover the classical 3/2 bound",
+          "Handle collinearity across four copies and transfer the prime-scale family to all sufficiently large grids. Together the tasks recover the classical lower bound."
+        ],
+        "tasks": [
+          {
+            "id": "L-no-three-in-line-two-period-lift",
+            "zh": "两周期点阵构造",
+            "en": "The two-period construction"
+          },
+          {
+            "id": "L-no-three-in-line-density-transfer",
+            "zh": "从素数边长推到一般边长",
+            "en": "Pass from prime scales to all grids"
+          }
         ]
       },
       {
         "zh": [
-          "比较上下界",
-          "按网格大小对照已核验构型的点数和已证明上界。"
+          "寻找固定的密度增益",
+          "目标是在无穷多个边长上持续超过 1.5n。另一路可从上界的等号条件反推高密度构型的结构。"
         ],
         "en": [
-          "Compare bounds",
-          "For each grid size, compare certified constructions with proved upper bounds."
+          "Find a fixed density gain",
+          "Seek a family that beats 1.5n by a fixed fraction. Work backward from the equality conditions at the upper bound for structural clues."
+        ],
+        "tasks": [
+          {
+            "id": "L-no-three-in-line-saturated-fibres",
+            "zh": "满额构型的行列约束",
+            "en": "Rows and columns at saturation"
+          },
+          {
+            "id": "L-no-three-in-line-density-gain",
+            "zh": "突破 3/2 密度",
+            "en": "Beat density 3/2"
+          }
         ]
       }
     ]
@@ -132,8 +273,8 @@
     },
     "formula": "s(n) ≥ √n",
     "summary": {
-      "zh": "先核验面积下界的代数推导和旋转恒等式，为几何构型和界的证明打基础。",
-      "en": "Formalize the algebra behind area bounds and rotations before certifying geometric constructions."
+      "zh": "分别证明一个边长放得下、任何更小边长放不下。先在五块上复现最优值，再研究十一块的上下界。",
+      "en": "Certify feasible side lengths and prove impossibility below them. Recover the five-square optimum before narrowing the eleven-square bounds."
     },
     "gaps": [
       {
@@ -208,37 +349,225 @@
         "program": "correlation",
         "imports": [],
         "parallel": true
+      },
+      {
+        "id": "L-square-packing-projection-radius",
+        "file": "lean/PEqualNP/Outside/L_square_packing_projection_radius.lean",
+        "module": "PEqualNP.Outside.L_square_packing_projection_radius",
+        "statement": "let inside := fun (x y a b X Y : ℝ) => |a*(X-x)+b*(Y-y)| < 1/2 ∧ |(-b)*(X-x)+a*(Y-y)| < 1/2; let radius := fun (a b u v : ℝ) => (|u*a+v*b| + |v*a-u*b|)/2; ∀ x y a b u v X Y : ℝ, a^2+b^2=1 → (u ≠ 0 ∨ v ≠ 0) → inside x y a b X Y → |u*(X-x)+v*(Y-y)| < radius a b u v",
+        "plain_statement": {
+          "zh": "任意非零方向上，单位正方形内部点到中心的投影距离严格小于该方向的投影半宽。",
+          "en": "In any nonzero direction the projection of an interior point lies strictly within the square’s projection radius."
+        },
+        "brief": {
+          "zh": "把方向向量写在正方形自身的两条坐标轴上。严格不等号允许不同正方形的边缘接触。",
+          "en": "Resolve the direction along the two rotated axes. Strict inequalities allow contact at a boundary."
+        },
+        "program": "foundation",
+        "imports": [],
+        "source": "https://www.combinatorics.org/files/Surveys/ds7/ds7v5-2009/ds7-2009.html"
+      },
+      {
+        "id": "L-square-packing-separation-certificate",
+        "file": "lean/PEqualNP/Outside/L_square_packing_separation_certificate.lean",
+        "module": "PEqualNP.Outside.L_square_packing_separation_certificate",
+        "statement": "let inside := fun (x y a b X Y : ℝ) => |a*(X-x)+b*(Y-y)| < 1/2 ∧ |(-b)*(X-x)+a*(Y-y)| < 1/2; let radius := fun (a b u v : ℝ) => (|u*a+v*b| + |v*a-u*b|)/2; ∀ x y a b z w c d u v : ℝ, a^2+b^2=1 → c^2+d^2=1 → (u ≠ 0 ∨ v ≠ 0) → radius a b u v + radius c d u v ≤ |u*(z-x)+v*(w-y)| → ∀ X Y : ℝ, inside x y a b X Y → ¬ inside z w c d X Y",
+        "plain_statement": {
+          "zh": "若某个非零方向上的中心投影距离至少等于两个半宽之和，则两块单位正方形的内部不相交。",
+          "en": "A nonzero direction that separates the projected centers by at least the sum of the radii certifies disjoint interiors."
+        },
+        "brief": {
+          "zh": "为每一对方块提供一个分离方向。共用投影引理即可核验不同装填构造。",
+          "en": "Supply a separating direction for each pair and reuse the projection calculation across layouts."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.combinatorics.org/files/Surveys/ds7/ds7v5-2009/ds7-2009.html"
+      },
+      {
+        "id": "L-square-packing-piercing-count",
+        "file": "lean/PEqualNP/Outside/L_square_packing_piercing_count.lean",
+        "module": "PEqualNP.Outside.L_square_packing_piercing_count",
+        "statement": "∀ (n k : ℕ) (A : Fin n → Set (ℝ × ℝ)) (z : Fin k → ℝ × ℝ), (∀ i j, i ≠ j → Disjoint (A i) (A j)) → (∀ i, ∃ j, z j ∈ A i) → n ≤ k",
+        "plain_statement": {
+          "zh": "若 n 个两两不交的内部区域都含有给定 k 个点中的一个，则 n≤k。",
+          "en": "If each of n pairwise disjoint interiors contains one of k given points, then n≤k."
+        },
+        "brief": {
+          "zh": "为每块选一个命中点，证明所选编号互异。应用时还须证明穿刺点覆盖所有位置和角度。",
+          "en": "Choose a point for each interior and prove the index map injective. A geometric application also needs an all-orientations covering proof."
+        },
+        "program": "foundation",
+        "imports": [],
+        "source": "https://doi.org/10.37236/1701"
+      },
+      {
+        "id": "L-square-packing-area-from-packing",
+        "file": "lean/PEqualNP/Outside/L_square_packing_area_from_packing.lean",
+        "module": "PEqualNP.Outside.L_square_packing_area_from_packing",
+        "statement": "let inside := fun (x y a b X Y : ℝ) => |a*(X-x)+b*(Y-y)| < 1/2 ∧ |(-b)*(X-x)+a*(Y-y)| < 1/2; let fits := fun (n : ℕ) (s : ℝ) => 0 ≤ s ∧ ∃ x y a b : Fin n → ℝ, (∀ i, a i ^ 2 + b i ^ 2 = 1 ∧ |a i| + |b i| ≤ 2*x i ∧ |a i| + |b i| ≤ 2*(s-x i) ∧ |a i| + |b i| ≤ 2*y i ∧ |a i| + |b i| ≤ 2*(s-y i)) ∧ (∀ i j, i ≠ j → ∀ X Y : ℝ, inside (x i) (y i) (a i) (b i) X Y → ¬ inside (x j) (y j) (a j) (b j) X Y); ∀ (n : ℕ) (s : ℝ), fits n s → (n : ℝ) ≤ s^2",
+        "plain_statement": {
+          "zh": "在真实的自由旋转、内部不交装填中，n 个单位正方形必须满足 n≤s²。",
+          "en": "Any packing of n freely rotated unit squares with disjoint interiors satisfies n≤s²."
+        },
+        "brief": {
+          "zh": "证明旋转保持单位方块的面积，对内部求和，再用容器面积控制总和。",
+          "en": "Prove rotation preserves area, sum over disjoint interiors and bound the union by the container."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.combinatorics.org/files/Surveys/ds7/ds7v5-2009/ds7-2009.html"
+      },
+      {
+        "id": "L-square-packing-five-construction",
+        "file": "lean/PEqualNP/Outside/L_square_packing_five_construction.lean",
+        "module": "PEqualNP.Outside.L_square_packing_five_construction",
+        "statement": "let inside := fun (x y a b X Y : ℝ) => |a*(X-x)+b*(Y-y)| < 1/2 ∧ |(-b)*(X-x)+a*(Y-y)| < 1/2; let fits := fun (n : ℕ) (s : ℝ) => 0 ≤ s ∧ ∃ x y a b : Fin n → ℝ, (∀ i, a i ^ 2 + b i ^ 2 = 1 ∧ |a i| + |b i| ≤ 2*x i ∧ |a i| + |b i| ≤ 2*(s-x i) ∧ |a i| + |b i| ≤ 2*y i ∧ |a i| + |b i| ≤ 2*(s-y i)) ∧ (∀ i j, i ≠ j → ∀ X Y : ℝ, inside (x i) (y i) (a i) (b i) X Y → ¬ inside (x j) (y j) (a j) (b j) X Y); fits 5 (2 + Real.sqrt 2 / 2)",
+        "plain_statement": {
+          "zh": "给出五个单位正方形装入边长 2+√2/2 的容器的精确坐标和旋转。",
+          "en": "Give exact coordinates and rotations for five squares in a container of side 2+√2/2."
+        },
+        "brief": {
+          "zh": "四个角各放一块，中间一块转 45°。逐对给出分离方向，并核对外边界。",
+          "en": "Place four squares in the corners and a 45° square at the center. Certify separation and containment."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.combinatorics.org/files/Surveys/ds7/ds7v5-2009/ds7-2009.html"
+      },
+      {
+        "id": "L-square-packing-five-optimality",
+        "file": "lean/PEqualNP/Outside/L_square_packing_five_optimality.lean",
+        "module": "PEqualNP.Outside.L_square_packing_five_optimality",
+        "statement": "let inside := fun (x y a b X Y : ℝ) => |a*(X-x)+b*(Y-y)| < 1/2 ∧ |(-b)*(X-x)+a*(Y-y)| < 1/2; let fits := fun (n : ℕ) (s : ℝ) => 0 ≤ s ∧ ∃ x y a b : Fin n → ℝ, (∀ i, a i ^ 2 + b i ^ 2 = 1 ∧ |a i| + |b i| ≤ 2*x i ∧ |a i| + |b i| ≤ 2*(s-x i) ∧ |a i| + |b i| ≤ 2*y i ∧ |a i| + |b i| ≤ 2*(s-y i)) ∧ (∀ i j, i ≠ j → ∀ X Y : ℝ, inside (x i) (y i) (a i) (b i) X Y → ¬ inside (x j) (y j) (a j) (b j) X Y); ∀ s : ℝ, fits 5 s → 2 + Real.sqrt 2 / 2 ≤ s",
+        "plain_statement": {
+          "zh": "证明任意角度装填五个单位正方形时，容器边长至少为 2+√2/2。",
+          "en": "Prove that every unrestricted packing of five unit squares needs side at least 2+√2/2."
+        },
+        "brief": {
+          "zh": "复现 Friedman 给出的几何下界，覆盖全部中心位置和方向，与五块构造合起来得到精确值。",
+          "en": "Formalize the all-orientations lower bound in Friedman and pair it with the five-square witness."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.combinatorics.org/files/Surveys/ds7/ds7v5-2009/ds7-2009.html"
+      },
+      {
+        "id": "L-square-packing-eleven-lower-bound",
+        "file": "lean/PEqualNP/Outside/L_square_packing_eleven_lower_bound.lean",
+        "module": "PEqualNP.Outside.L_square_packing_eleven_lower_bound",
+        "statement": "let inside := fun (x y a b X Y : ℝ) => |a*(X-x)+b*(Y-y)| < 1/2 ∧ |(-b)*(X-x)+a*(Y-y)| < 1/2; let fits := fun (n : ℕ) (s : ℝ) => 0 ≤ s ∧ ∃ x y a b : Fin n → ℝ, (∀ i, a i ^ 2 + b i ^ 2 = 1 ∧ |a i| + |b i| ≤ 2*x i ∧ |a i| + |b i| ≤ 2*(s-x i) ∧ |a i| + |b i| ≤ 2*y i ∧ |a i| + |b i| ≤ 2*(s-y i)) ∧ (∀ i j, i ≠ j → ∀ X Y : ℝ, inside (x i) (y i) (a i) (b i) X Y → ¬ inside (x j) (y j) (a j) (b j) X Y); ∀ s : ℝ, fits 11 s → 2 + 2*Real.sqrt (4/5) ≤ s",
+        "plain_statement": {
+          "zh": "复现 Stromquist 的十一块下界，允许每块自由旋转。",
+          "en": "Recover Stromquist’s lower bound 2+2√(4/5) for eleven squares with unrestricted rotations."
+        },
+        "brief": {
+          "zh": "先核验论文的穿刺点覆盖条件，再将各几何情形接到同一个计数引理。",
+          "en": "Formalize the geometric covering cases in the paper and feed them into the same piercing count."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://doi.org/10.37236/1701"
+      },
+      {
+        "id": "L-square-packing-eleven-construction",
+        "file": "lean/PEqualNP/Outside/L_square_packing_eleven_construction.lean",
+        "module": "PEqualNP.Outside.L_square_packing_eleven_construction",
+        "statement": "let inside := fun (x y a b X Y : ℝ) => |a*(X-x)+b*(Y-y)| < 1/2 ∧ |(-b)*(X-x)+a*(Y-y)| < 1/2; let fits := fun (n : ℕ) (s : ℝ) => 0 ≤ s ∧ ∃ x y a b : Fin n → ℝ, (∀ i, a i ^ 2 + b i ^ 2 = 1 ∧ |a i| + |b i| ≤ 2*x i ∧ |a i| + |b i| ≤ 2*(s-x i) ∧ |a i| + |b i| ≤ 2*y i ∧ |a i| + |b i| ≤ 2*(s-y i)) ∧ (∀ i j, i ≠ j → ∀ X Y : ℝ, inside (x i) (y i) (a i) (b i) X Y → ¬ inside (x j) (y j) (a j) (b j) X Y); fits 11 (97/25)",
+        "plain_statement": {
+          "zh": "给出边长 97/25 的十一块精确装填证书，允许各块取不同方向。",
+          "en": "Certify an eleven-square packing at side 97/25 with independent orientations."
+        },
+        "brief": {
+          "zh": "从已发表构型取坐标和方向，保留边长余量，用精确算术证明逐对分离。97/25 是复现门槛。",
+          "en": "Start from a published layout, retain slack and certify each pair exactly. The rational side is a reproducible benchmark."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://doi.org/10.37236/1701"
       }
     ],
     "roadmap": [
       {
         "zh": [
-          "核验距离与面积",
-          "证明旋转不改变长度，并从面积不等式推出边长下界。"
+          "定义可复核的装填",
+          "任何构型都要说明每块放在哪、转了多少、怎样保证内部不重叠。投影提供上界证书，面积和穿刺点提供下界工具。"
         ],
         "en": [
-          "Verify lengths and areas",
-          "Prove the rotation identity and derive a side-length bound from the area inequality."
+          "Certify a packing",
+          "Give centers and rotations. Projection certifies feasible layouts, while area and piercing points support lower bounds."
+        ],
+        "tasks": [
+          {
+            "id": "L-square-packing-projection-radius",
+            "zh": "旋转正方形的投影半宽",
+            "en": "Projection radius"
+          },
+          {
+            "id": "L-square-packing-separation-certificate",
+            "zh": "用投影核验两个方块分离",
+            "en": "Certify separation"
+          },
+          {
+            "id": "L-square-packing-area-from-packing",
+            "zh": "从几何装填推出面积界",
+            "en": "Derive the area bound"
+          },
+          {
+            "id": "L-square-packing-piercing-count",
+            "zh": "用穿刺点给出下界",
+            "en": "Count piercing points"
+          }
         ]
       },
       {
         "zh": [
-          "核验可行构型",
-          "给定顶点与方向，检查单位边长、容器边界和内部不相交。"
+          "在五块上合拢上下界",
+          "两组可独立工作，一组给精确坐标，另一组排除更小边长。两份核验指向同一个已知最优值。"
         ],
         "en": [
-          "Certify feasible packings",
-          "Check unit sides, containment and interior disjointness from exact geometry."
+          "Close the five-square case",
+          "Two independent tasks meet at the known optimum. Supply exact coordinates and exclude every smaller container."
+        ],
+        "tasks": [
+          {
+            "id": "L-square-packing-five-construction",
+            "zh": "五块的精确构造",
+            "en": "Construct the five-square layout"
+          },
+          {
+            "id": "L-square-packing-five-optimality",
+            "zh": "五块的最优性下界",
+            "en": "Prove five-square optimality"
+          }
         ]
       },
       {
         "zh": [
-          "比较最优界",
-          "分别记录可行边长上界和已证明的边长下界。"
+          "缩小十一块的区间",
+          "先核验论文给出的通用下界与一个边长 3.88 的可行上界。上界靠构型，下界必须覆盖所有自由旋转的摆法。"
         ],
         "en": [
-          "Compare optimality bounds",
-          "Track feasible upper bounds and proved lower bounds independently."
+          "Narrow the eleven-square interval",
+          "Recover the published unrestricted lower bound and certify a feasible upper bound of 3.88. A sharper lower bound must cover every orientation."
+        ],
+        "tasks": [
+          {
+            "id": "L-square-packing-eleven-lower-bound",
+            "zh": "十一块的通用下界",
+            "en": "The eleven-square lower bound"
+          },
+          {
+            "id": "L-square-packing-eleven-construction",
+            "zh": "十一块的上界证书",
+            "en": "An eleven-square upper certificate"
+          }
         ]
       }
     ]
@@ -254,8 +583,8 @@
     },
     "formula": "n² + 1",
     "summary": {
-      "zh": "研究目标是尽可能提高指数 α，证明对无穷多个 n，n² + 1 的最大素因子大于 nᵅ。以论文报告的 1.323 为起点，每个严格提高的无条件界都值得提交。",
-      "en": "Push the exponent α as high as possible: prove that the greatest prime factor of n² + 1 exceeds nᵅ for infinitely many n. Starting from the manuscript’s 1.323 baseline, every strict unconditional improvement is worth submitting."
+      "zh": "寻找 n²+1 的大素因子。从外部 1.323 基线出发，先攻 1.32301 所需的素数幂计数、中段筛估计与指数转移。",
+      "en": "Seek large prime factors of n²+1. From the external 1.323 baseline, target 1.32301 through root counts, middle-prime estimates and a transfer theorem."
     },
     "gaps": [
       {
@@ -495,47 +824,227 @@
         "imports": [],
         "parallel": true,
         "lpf_exponent": "2"
+      },
+      {
+        "id": "L-quadratic-primes-prime-power-roots",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_prime_power_roots.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_prime_power_roots",
+        "statement": "let roots := fun (q : ℕ) => ((Finset.range q).filter (fun r => q ∣ r^2+1)).card; ∀ p k : ℕ, Nat.Prime p → p ≠ 2 → 0 < k → roots (p^k) ≤ 2",
+        "plain_statement": {
+          "zh": "对每个奇素数 p 及 k≥1，模 pᵏ 的方程 r²+1≡0 至多有两个根。",
+          "en": "For every odd prime p and positive k there are at most two roots of r²+1 modulo pᵏ."
+        },
+        "brief": {
+          "zh": "先模 p 分类。用 2r 可逆证明每个根到下一层至多有一个提升。",
+          "en": "Classify the roots mod p, then use the invertibility of 2r to prove uniqueness of lifting."
+        },
+        "program": "foundation",
+        "imports": [],
+        "source": "https://arxiv.org/abs/1908.08816"
+      },
+      {
+        "id": "L-quadratic-primes-interval-residue-count",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_interval_residue_count.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_interval_residue_count",
+        "statement": "let roots := fun (q : ℕ) => ((Finset.range q).filter (fun r => q ∣ r^2+1)).card; ∀ x q : ℕ, 0 < q → ((Finset.Ioc x (2*x)).filter (fun n => q ∣ n^2+1)).card ≤ (x/q+1)*roots q",
+        "plain_statement": {
+          "zh": "对 q>0，在 x<n≤2x 中，满足 q 整除 n²+1 的个数至多为 (⌊x/q⌋+1) 乘以模 q 的根数。",
+          "en": "Bound the number of n in (x,2x] with q dividing n²+1 by (⌊x/q⌋+1) times the number of roots mod q."
+        },
+        "brief": {
+          "zh": "按余数分组，每个完整周期贡献一次，剩下的不满周期贡献至多一次。",
+          "en": "Partition by remainder, count full periods and bound the incomplete period."
+        },
+        "program": "foundation",
+        "imports": [],
+        "source": "https://arxiv.org/abs/1908.08816"
+      },
+      {
+        "id": "L-quadratic-primes-log-factorization",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_log_factorization.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_log_factorization",
+        "statement": "let w := fun (n p : ℕ) => (((n^2+1).factorization p : ℕ) : ℝ) * Real.log (p:ℝ); ∀ x : ℕ, Finset.sum (Finset.Ioc x (2*x)) (fun n => Finset.sum (n^2+1).primeFactors (w n)) = Finset.sum (Finset.Ioc x (2*x)) (fun n => Real.log ((n:ℝ)^2+1))",
+        "plain_statement": {
+          "zh": "在 (x,2x] 上按素因子及其重数求和，恰好还原所有 log(n²+1) 之和。",
+          "en": "The sum of prime logarithms weighted by their multiplicities equals the sum of log(n²+1) on (x,2x]."
+        },
+        "brief": {
+          "zh": "先对单个正整数使用唯一分解和对数乘法，再在区间上求和。",
+          "en": "Apply unique factorization and the logarithm of a product term by term, then sum."
+        },
+        "program": "foundation",
+        "imports": [],
+        "source": "https://arxiv.org/abs/1908.08816"
+      },
+      {
+        "id": "L-quadratic-primes-total-mass-lower",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_total_mass_lower.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_total_mass_lower",
+        "statement": "∀ x : ℕ, 2 ≤ x → 2*(x:ℝ)*Real.log (x:ℝ) < Finset.sum (Finset.Ioc x (2*x)) (fun n => Real.log ((n:ℝ)^2+1))",
+        "plain_statement": {
+          "zh": "对 x≥2，区间 (x,2x] 内的 log(n²+1) 之和严格大于 2x log x。",
+          "en": "For x≥2 the sum of log(n²+1) over (x,2x] exceeds 2x log x."
+        },
+        "brief": {
+          "zh": "区间恰有 x 项，逐项用 n>x 和对数单调性比较。",
+          "en": "Count the x terms and apply strict monotonicity of the logarithm to each."
+        },
+        "program": "foundation",
+        "imports": [],
+        "source": "https://arxiv.org/abs/1908.08816"
+      },
+      {
+        "id": "L-quadratic-primes-small-prime-mass",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_small_prime_mass.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_small_prime_mass",
+        "statement": "let w := fun (n p : ℕ) => (((n^2+1).factorization p : ℕ) : ℝ) * Real.log (p:ℝ); let small := fun (x : ℕ) => Finset.sum (Finset.Ioc x (2*x)) (fun n => Finset.sum ((n^2+1).primeFactors.filter (fun p => p ≤ x)) (w n)); ∀ e : ℝ, 0 < e → ∃ X : ℕ, ∀ x : ℕ, X ≤ x → small x ≤ (1+e)*(x:ℝ)*Real.log (x:ℝ)",
+        "plain_statement": {
+          "zh": "对每个 ε>0，充分大 x 的区间里，p≤x 的素因子按重数计入的对数总量至多为 (1+ε)x log x。",
+          "en": "For every ε>0 the weighted contribution of primes up to x is eventually at most (1+ε)x log x."
+        },
+        "brief": {
+          "zh": "结合模素数幂的根数和素数在模四剩余类中的分布；须控制高次幂与区间端点的误差。",
+          "en": "Combine root counts at prime powers with the distribution of primes modulo four. Control high powers and endpoint errors."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://arxiv.org/abs/1908.08816"
+      },
+      {
+        "id": "L-quadratic-primes-middle-prime-saving",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_middle_prime_saving.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_middle_prime_saving",
+        "statement": "let w := fun (n p : ℕ) => (((n^2+1).factorization p : ℕ) : ℝ) * Real.log (p:ℝ); let middle := fun (x : ℕ) => Finset.sum (Finset.Ioc x (2*x)) (fun n => Finset.sum ((n^2+1).primeFactors.filter (fun p => x < p ∧ p^100000 ≤ n^132301)) (w n)); ∃ d : ℝ, 0 < d ∧ ∀ B : ℕ, ∃ x : ℕ, B < x ∧ middle x ≤ (1-d)*(x:ℝ)*Real.log (x:ℝ)",
+        "plain_statement": {
+          "zh": "寻求固定 δ>0，使无界多个区间中，x<p 且 p¹⁰⁰⁰⁰⁰≤n¹³²³⁰¹ 的素因子贡献至多 (1−δ)x log x。",
+          "en": "Find a fixed δ>0 and unbounded dyadic scales where middle primes with x<p and p¹⁰⁰⁰⁰⁰≤n¹³²³⁰¹ contribute at most (1−δ)x log x."
+        },
+        "brief": {
+          "zh": "这是 1.32301 路线的解析瓶颈。逐段写出筛估计与误差，最终余量必须对无界多个尺度有效。",
+          "en": "This is the analytic bottleneck for 1.32301. Track each sieve range and its error and retain a uniform margin on unbounded scales."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://arxiv.org/abs/1908.08816"
+      },
+      {
+        "id": "L-quadratic-primes-mass-to-increment",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_mass_to_increment.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_mass_to_increment",
+        "statement": "let w := fun (n p : ℕ) => (((n^2+1).factorization p : ℕ) : ℝ) * Real.log (p:ℝ); let small := fun (x : ℕ) => Finset.sum (Finset.Ioc x (2*x)) (fun n => Finset.sum ((n^2+1).primeFactors.filter (fun p => p ≤ x)) (w n)); let middle := fun (x : ℕ) => Finset.sum (Finset.Ioc x (2*x)) (fun n => Finset.sum ((n^2+1).primeFactors.filter (fun p => x < p ∧ p^100000 ≤ n^132301)) (w n)); (∀ e : ℝ, 0 < e → ∃ X : ℕ, ∀ x : ℕ, X ≤ x → small x ≤ (1+e)*(x:ℝ)*Real.log (x:ℝ)) → (∃ d : ℝ, 0 < d ∧ ∀ B : ℕ, ∃ x : ℕ, B < x ∧ middle x ≤ (1-d)*(x:ℝ)*Real.log (x:ℝ)) → ∀ B : ℕ, ∃ n p : ℕ, B < n ∧ Nat.Prime p ∧ p ∣ n^2+1 ∧ n^132301 < p^100000",
+        "plain_statement": {
+          "zh": "若小素因子估计与中段固定余量都成立，则无穷多个 n 存在素因子 p 整除 n²+1 且 p¹⁰⁰⁰⁰⁰>n¹³²³⁰¹。",
+          "en": "Assuming both prime-range estimates, infinitely often n²+1 has a prime factor p with p¹⁰⁰⁰⁰⁰>n¹³²³⁰¹."
+        },
+        "brief": {
+          "zh": "令 ε 小于 δ，比较两段之和与完整对数总量，再抽出剩余素因子。此条件引理独立领取。",
+          "en": "Choose ε below δ, compare the two contributions with the total, and extract a remaining prime divisor. This transfer is conditional."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://arxiv.org/abs/1908.08816"
       }
     ],
     "roadmap": [
       {
         "zh": [
-          "复核 1.323 基线",
-          "从局部整除约束入手，复核 Buchstab 递归证书和区间指数 1.3231 的严格余量。上游 Lean 覆盖有限证书及尺度换算，论文另行论证解析步骤。"
+          "从外部基线到局部计数",
+          "外部 1.323 项目的 Lean 证书覆盖有限计算。按同余类和素数幂数根，为本站的解析估计提供可复用输入。"
         ],
         "en": [
-          "Audit the 1.323 baseline",
-          "Check local divisibility, the recursive Buchstab certificate and the strict margin at block exponent 1.3231. The upstream Lean project covers finite arithmetic and scale conversion. The manuscript supplies the analytic argument."
+          "From the external baseline to local counts",
+          "The external 1.323 project includes a finite Lean certificate. Count roots by prime power and interval to supply reusable local inputs."
+        ],
+        "tasks": [
+          {
+            "id": "L-quadratic-primes-prime-power-roots",
+            "zh": "把根数控制提升到素数幂",
+            "en": "Lift the local root bound"
+          },
+          {
+            "id": "L-quadratic-primes-interval-residue-count",
+            "zh": "在倍增区间数整除解",
+            "en": "Count roots on a dyadic interval"
+          }
         ]
       },
       {
         "zh": [
-          "证明区间内存在大素因子",
-          "分别复核 Type I/II 估计、Perron 局部化和有理网格对积分误差的控制。在无界多个区间中得到素因子后，将区间尺度 x 换成 n。"
+          "建立对数收支",
+          "把 n²+1 的对数拆给各素因子，同时证明全部贡献的严格下界。两题都能独立领取。"
         ],
         "en": [
-          "Prove a large factor exists in a block",
-          "Audit the Type I/II estimates, Perron localization and bounds for the grid-to-integral error. Derive witnesses in arbitrarily large blocks, then convert the scale x into n."
+          "Account for each prime divisor",
+          "Distribute the logarithm of n²+1 over its prime factors and independently prove a strict lower bound on the total."
+        ],
+        "tasks": [
+          {
+            "id": "L-quadratic-primes-log-factorization",
+            "zh": "逐素因子核对对数总量",
+            "en": "Factor the logarithmic mass"
+          },
+          {
+            "id": "L-quadratic-primes-total-mass-lower",
+            "zh": "给全部素因子的对数总量定下界",
+            "en": "Lower-bound the total log mass"
+          }
         ]
       },
       {
         "zh": [
-          "持续提高指数",
-          "并行挑战 1.32301 和 1.324。沿用当前筛法者可优化 Buchstab 切换区域、压低积分误差或改进 Type II 估计。任何更高的候选值都可通过任务目录 PR 登记，完整无条件命题通过 Lean 后更新纪录。"
+          "分头攻克两个解析估计",
+          "小素因子组控制主项和误差，中段组寻找固定节省。另可先证明两项估计同时成立时确实足以推出目标。"
         ],
         "en": [
-          "Keep raising the exponent",
-          "Pursue 1.32301 and 1.324 in parallel. Refine Buchstab switching regions, tighten integration errors or improve Type II estimates. Propose any higher threshold through a task catalogue PR. A Lean proof of its full unconditional statement updates the record."
+          "Prove the two analytic estimates",
+          "Bound the small primes and seek a uniform saving on the middle primes. In parallel, prove that those estimates suffice for the target."
+        ],
+        "tasks": [
+          {
+            "id": "L-quadratic-primes-small-prime-mass",
+            "zh": "估计小素因子的总贡献",
+            "en": "Control the small-prime contribution"
+          },
+          {
+            "id": "L-quadratic-primes-middle-prime-saving",
+            "zh": "攻克中段素因子的固定余量",
+            "en": "Save a fixed margin on middle primes"
+          },
+          {
+            "id": "L-quadratic-primes-mass-to-increment",
+            "zh": "把两段估计接到 1.32301",
+            "en": "Transfer two bounds to 1.32301"
+          }
         ]
       },
       {
         "zh": [
-          "处理指数 2 的端点",
-          "对无穷多个 n，若素因子 p 满足 n² < p ≤ n² + 1，就有 p = n² + 1。趋近 2 的指数序列仍须补齐端点证明。"
+          "提交无条件指数证明",
+          "把估计和转移引理合成一个无条件定理。本站指数榜只接受与精确指数命题匹配的权威核验；2 仍是远期目标。"
         ],
         "en": [
-          "Prove the endpoint at 2",
-          "For unbounded n, a prime divisor with n² < p ≤ n² + 1 must equal n² + 1. A sequence of exponents approaching two still needs a proof at the endpoint."
+          "Submit an unconditional exponent",
+          "Combine the estimates and transfer into an unconditional theorem. Only a verified matching exponent statement advances the record; 2 remains the long-term target."
+        ],
+        "tasks": [
+          {
+            "id": "L-quadratic-primes-lpf-first-increment",
+            "zh": "挑战 1.32301",
+            "en": "Prove 1.32301"
+          },
+          {
+            "id": "L-quadratic-primes-lpf-next",
+            "zh": "挑战 1.324",
+            "en": "Prove 1.324"
+          },
+          {
+            "id": "L-quadratic-primes-lpf-endpoint",
+            "zh": "指数 2 的终点",
+            "en": "Reach exponent 2"
+          }
         ]
       }
     ]
@@ -551,8 +1060,8 @@
     },
     "formula": "h(x,y) = (ax + by + c) mod m",
     "summary": {
-      "zh": "研究自定义二维模运算模型中的碰撞构造。每个方案证明适用条件、输入确实不同、摘要相同，并给出所用运算。",
-      "en": "Study collision constructions for custom two-coordinate modular models. Each result proves its assumptions, distinct inputs, equal digests, and the operations used."
+      "zh": "对素域上的教学映射，研究相同输入和输出规模下碰撞对最少能有多少，以及哪些函数达到下界。",
+      "en": "For finite teaching maps, find the fewest possible collision pairs at fixed input and output sizes and characterize the maps that attain the bound."
     },
     "gaps": [
       {
@@ -636,37 +1145,194 @@
         "program": "correlation",
         "parallel": true,
         "imports": []
+      },
+      {
+        "id": "L-hash-collision-lab-bucket-partition",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_bucket_partition.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_bucket_partition",
+        "statement": "∀ (n m : ℕ) (h : Fin n → Fin m), let size := fun y : Fin m => (Finset.univ.filter (fun x : Fin n => h x = y)).card; Finset.sum Finset.univ size = n",
+        "plain_statement": {
+          "zh": "任意有限映射的所有输出桶的大小之和等于输入数 n，空桶也计入。",
+          "en": "For any finite map the sizes of all output buckets, including empty ones, sum to n."
+        },
+        "brief": {
+          "zh": "将输入与由输出编号和原像元素组成的不交并建立双射。",
+          "en": "Identify the input set with the disjoint union of its fibers indexed by output."
+        },
+        "program": "foundation",
+        "imports": []
+      },
+      {
+        "id": "L-hash-collision-lab-ordered-pair-identity",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_ordered_pair_identity.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_ordered_pair_identity",
+        "statement": "∀ (n m : ℕ) (h : Fin n → Fin m), let size := fun y : Fin m => (Finset.univ.filter (fun x : Fin n => h x = y)).card; let pairs := ((Finset.univ : Finset (Fin n × Fin n)).filter (fun z => z.1 ≠ z.2 ∧ h z.1 = h z.2)).card; pairs = Finset.sum Finset.univ (fun y => size y * (size y - 1))",
+        "plain_statement": {
+          "zh": "不同输入、相同输出的有序对数等于各桶 k(k−1) 之和。",
+          "en": "The number of ordered pairs of distinct inputs sharing an output equals the sum of k(k−1) over buckets."
+        },
+        "brief": {
+          "zh": "先固定共同输出，再选第一个和第二个输入。明确方向，排除对角线。",
+          "en": "Fix the common output before selecting the two inputs. Keep both orders and exclude the diagonal."
+        },
+        "program": "foundation",
+        "imports": []
+      },
+      {
+        "id": "L-hash-collision-lab-balanced-minimum",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_balanced_minimum.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_balanced_minimum",
+        "statement": "∀ (q : ℕ) (h : Fin (q^2) → Fin q), 2 ≤ q → let size := fun y : Fin q => (Finset.univ.filter (fun x : Fin (q^2) => h x = y)).card; let pairs := ((Finset.univ : Finset (Fin (q^2) × Fin (q^2))).filter (fun z => z.1 ≠ z.2 ∧ h z.1 = h z.2)).card; q^2*(q-1) ≤ pairs",
+        "plain_statement": {
+          "zh": "从 q² 个输入到 q 个输出的任意映射，至少有 q²(q−1) 个有序碰撞对。",
+          "en": "Every map from q² inputs to q outputs has at least q²(q−1) ordered collision pairs for q≥2."
+        },
+        "brief": {
+          "zh": "固定总输入数，用平方和不等式或移项，将下界化为各桶与平均大小之差的平方和。",
+          "en": "With the total fixed, use a sum-of-squares argument around the mean bucket size."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true
+      },
+      {
+        "id": "L-hash-collision-lab-balanced-equality",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_balanced_equality.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_balanced_equality",
+        "statement": "∀ (q : ℕ) (h : Fin (q^2) → Fin q), 2 ≤ q → let size := fun y : Fin q => (Finset.univ.filter (fun x : Fin (q^2) => h x = y)).card; let pairs := ((Finset.univ : Finset (Fin (q^2) × Fin (q^2))).filter (fun z => z.1 ≠ z.2 ∧ h z.1 = h z.2)).card; (pairs = q^2*(q-1) ↔ ∀ y, size y = q)",
+        "plain_statement": {
+          "zh": "有序碰撞对达到下界，当且仅当 q 个输出桶的大小全为 q。",
+          "en": "The lower bound is attained exactly when every output has q preimages."
+        },
+        "brief": {
+          "zh": "研究平方和取等条件，把每个偏差必须为零写成双向定理。",
+          "en": "Identify when the sum of squared deviations vanishes and prove both implications."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true
+      },
+      {
+        "id": "L-hash-collision-lab-affine-fibre-size",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_affine_fibre_size.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_affine_fibre_size",
+        "statement": "∀ (p : ℕ) [Fact (Nat.Prime p)] (a b c : ZMod p), (a ≠ 0 ∨ b ≠ 0) → ∀ v : ZMod p, (Finset.univ.filter (fun z : ZMod p × ZMod p => a*z.1+b*z.2+c = v)).card = p",
+        "plain_statement": {
+          "zh": "在素域上的非恒定仿射教学模型中，每个输出恰有 p 个原像。",
+          "en": "Every output of a nonconstant affine teaching map over the prime field has exactly p preimages."
+        },
+        "brief": {
+          "zh": "在一个非零系数上解线性方程，建立与另一个自由坐标之间的双射。",
+          "en": "Solve using a nonzero coefficient and identify the fiber with the remaining free coordinate."
+        },
+        "program": "foundation",
+        "imports": []
+      },
+      {
+        "id": "L-hash-collision-lab-quadratic-bucket-spectrum",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_quadratic_bucket_spectrum.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_quadratic_bucket_spectrum",
+        "statement": "∀ (p : ℕ) [Fact (Nat.Prime p)] (a b c : ZMod p), 2 < p → a ≠ 0 → let h := fun z : ZMod p × ZMod p => a*(z.1+z.2)^2+b*(z.1+z.2)+c; let size := fun v : ZMod p => (Finset.univ.filter (fun z : ZMod p × ZMod p => h z = v)).card; (∃! v, size v = p) ∧ (∀ v, size v = 0 ∨ size v = p ∨ size v = 2*p)",
+        "plain_statement": {
+          "zh": "对奇素数 p 和非零二次项，教学函数 a(x+y)²+b(x+y)+c 恰有一个大小为 p 的桶，其余桶大小为 0 或 2p。",
+          "en": "For odd p and nonzero leading coefficient the quadratic sum model has a unique bucket of size p. Other buckets have size zero or 2p."
+        },
+        "brief": {
+          "zh": "先按 x+y 分组，再配方。把每个一元原像对应的 p 对输入一起计数。",
+          "en": "Group by x+y and complete the square. Each univariate preimage contributes exactly p pairs."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true
+      },
+      {
+        "id": "L-hash-collision-lab-quadratic-pair-total",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_quadratic_pair_total.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_quadratic_pair_total",
+        "statement": "∀ (p : ℕ) [Fact (Nat.Prime p)] (a b c : ZMod p), 2 < p → a ≠ 0 → let h := fun z : ZMod p × ZMod p => a*(z.1+z.2)^2+b*(z.1+z.2)+c; ((Finset.univ : Finset ((ZMod p × ZMod p) × (ZMod p × ZMod p))).filter (fun z => z.1 ≠ z.2 ∧ h z.1 = h z.2)).card = 2*p^2*(p-1)",
+        "plain_statement": {
+          "zh": "奇素域上的上述二次教学模型恰有 2p²(p−1) 个有序碰撞对，是同规模理论最小值的两倍。",
+          "en": "The quadratic teaching model over an odd prime field has exactly 2p²(p−1) ordered collision pairs, twice the theoretical minimum."
+        },
+        "brief": {
+          "zh": "由输入总数推出双根桶的个数，再代入有序对恒等式。可独立用二次多项式的纤维对称性验证。",
+          "en": "Derive the number of two-root buckets from the input total, then apply the ordered-pair identity or count via fiber symmetry."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true
       }
     ],
     "roadmap": [
       {
         "zh": [
-          "证明构造正确",
-          "固定仿射和二次教学函数，证明候选输入互异、摘要相同，并写清楚适用的系数和模数。"
+          "统一输入对和输出桶的定义",
+          "同一个模型可以因是否计顺序而差一倍。先把不同输入、有序对、空桶都写进形式命题。"
         ],
         "en": [
-          "Prove the constructions",
-          "Fix the affine and quadratic teaching functions. Prove that each construction gives distinct inputs with equal digests under stated conditions."
+          "Fix the counting convention",
+          "Settle the conventions for distinct inputs, ordered pairs and empty buckets before comparing models."
+        ],
+        "tasks": [
+          {
+            "id": "L-hash-collision-lab-bucket-partition",
+            "zh": "按输出分桶计数",
+            "en": "Partition the input set"
+          },
+          {
+            "id": "L-hash-collision-lab-ordered-pair-identity",
+            "zh": "统一碰撞对的计数口径",
+            "en": "Count ordered collision pairs"
+          }
         ]
       },
       {
         "zh": [
-          "比较构造成本与覆盖",
-          "在相同模型下记录生成伙伴使用的重排与模运算、以及覆盖哪些输入。验证结果时复算摘要的成本单独计算。"
+          "求理论最小值与取等条件",
+          "在 q² 个输入、q 个输出的尺度上，独立证明碰撞对的下界及达到下界的充要条件。"
         ],
         "en": [
-          "Compare costs and coverage",
-          "Within each model, record the reordering and modular operations used to construct a partner and the inputs covered. Count digest verification separately."
+          "Find the sharp universal minimum",
+          "For q² inputs and q outputs, prove the lower bound and characterize all maps that attain it."
+        ],
+        "tasks": [
+          {
+            "id": "L-hash-collision-lab-balanced-minimum",
+            "zh": "所有同规模映射的共同下界",
+            "en": "Minimum at fixed domain and range"
+          },
+          {
+            "id": "L-hash-collision-lab-balanced-equality",
+            "zh": "何时恰好达到下界",
+            "en": "Characterize equality"
+          }
         ]
       },
       {
         "zh": [
-          "证明下界",
-          "先证明在给定条件下最少要改动几个坐标，再比较直接构造是否达到该下界。"
+          "比较两个教学模型",
+          "计算仿射模型为什么达到下界，以及二次模型的碰撞对为什么恰好多一倍。贡献以精确计数的 Lean 证明核验。"
         ],
         "en": [
-          "Prove a lower bound",
-          "Prove the minimum number of coordinate changes under stated assumptions and compare the bound with the direct construction."
+          "Compare two teaching models",
+          "Compute why the affine model attains the minimum and why the quadratic model has twice as many pairs. Certify both counts in Lean."
+        ],
+        "tasks": [
+          {
+            "id": "L-hash-collision-lab-affine-fibre-size",
+            "zh": "仿射模型的精确桶大小",
+            "en": "Exact affine fiber sizes"
+          },
+          {
+            "id": "L-hash-collision-lab-quadratic-bucket-spectrum",
+            "zh": "二次模型有哪些桶大小",
+            "en": "Quadratic bucket spectrum"
+          },
+          {
+            "id": "L-hash-collision-lab-quadratic-pair-total",
+            "zh": "二次模型的碰撞对总数",
+            "en": "Exact total for the quadratic model"
+          }
         ]
       }
     ]

@@ -202,10 +202,17 @@ def problem_page(page, slug, lang):
         return re.sub(r'<span class="program-description">.*?</span>', '', text)
     page = re.sub(r'<button type="button" class="map-program-button" (data-program="([^"]+)").*?</button>',
                   program_card, page, flags=re.S)
-    stages = "".join(
-        f"<li><h3>{escape(heading)}</h3><p>{escape(body)}</p></li>"
-        for heading, body in (step[lang] for step in data.get("roadmap", []))
-    )
+    def roadmap_stage(step):
+        heading, body = step[lang]
+        links = "".join(
+            f'<a href="?lang={lang}&amp;lemma={escape(task["id"])}#roadmap" '
+            f'data-roadmap-task="{escape(task["id"])}">{escape(task[lang])}</a>'
+            for task in step.get("tasks", [])
+        )
+        return (f'<li><h3>{escape(heading)}</h3><p>{escape(body)}</p>'
+                f'<div class="roadmap-tasks">{links}</div></li>')
+
+    stages = "".join(roadmap_stage(step) for step in data.get("roadmap", []))
     page = re.sub(r'<section class="section road-section" id="roadmap".*?</section>',
                   lambda _: f'<section class="section road-section" id="roadmap"><div class="section-heading"><div>'
                   f'<h2>{translations["road"]}</h2></div></div><ol class="roadmap topic-roadmap">{stages}</ol></section>',
