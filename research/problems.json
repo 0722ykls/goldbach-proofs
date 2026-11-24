@@ -30,7 +30,7 @@
         "id": "L-no-three-in-line-determinant-translation",
         "file": "lean/PEqualNP/Outside/L_no_three_in_line_determinant_translation.lean",
         "module": "PEqualNP.Outside.L_no_three_in_line_determinant_translation",
-        "statement": "∀ (ax ay bx by cx cy tx ty : ℤ), ((bx + tx) - (ax + tx)) * ((cy + ty) - (ay + ty)) - ((by + ty) - (ay + ty)) * ((cx + tx) - (ax + tx)) = (bx - ax) * (cy - ay) - (by - ay) * (cx - ax)",
+        "statement": "∀ (ax ay bx byCoord cx cy tx ty : ℤ), ((bx + tx) - (ax + tx)) * ((cy + ty) - (ay + ty)) - ((byCoord + ty) - (ay + ty)) * ((cx + tx) - (ax + tx)) = (bx - ax) * (cy - ay) - (byCoord - ay) * (cx - ax)",
         "plain_statement": {
           "zh": "同时平移三个点，判定共线的整数行列式保持不变。",
           "en": "Translating all three points leaves their collinearity determinant unchanged."
