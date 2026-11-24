@@ -1055,15 +1055,138 @@
       "en": "Hash Collision Lab"
     },
     "question": {
-      "zh": "对自定义教学哈希，能否利用代数结构更快地构造两份不同、摘要相同的输入？",
-      "en": "Can algebraic structure yield faster collision constructions for our purpose-built teaching hashes?"
+      "zh": "固定总样本数和两两碰撞数，三个整数桶的容量上限怎样决定三重碰撞的最大值？",
+      "en": "For three integer buckets, how does capacity affect the maximum triple collisions at fixed sample size and pair count?"
     },
-    "formula": "h(x,y) = (ax + by + c) mod m",
+    "formula": "T = ∑ k(k−1)(k−2)",
     "summary": {
-      "zh": "对素域上的教学映射，研究相同输入和输出规模下碰撞对最少能有多少，以及哪些函数达到下界。",
-      "en": "For finite teaching maps, find the fewest possible collision pairs at fixed input and output sizes and characterize the maps that attain the bound."
+      "zh": "第二期研究有限样本的整数极值：逐步放宽单桶容量，找出三重碰撞数最大值的临界位置。第一期的 12 条证明保留。",
+      "en": "Phase II studies integer extrema and their capacity thresholds. The twelve Phase I lemmas remain in the desk."
     },
+    "background": {
+      "zh": "连续概率向量的矩已有锐界，六角格点也有角分布理论。本期引入样本整数性和双边容量约束；基础引理与候选原创目标分别列在研究计划中。",
+      "en": "Sharp continuous moment bounds and angular results on hexagonal lattices are baselines. This phase adds integer occupancies and two boundaries. The protocol distinguishes prerequisites from candidate original results."
+    },
+    "materials": [
+      {
+        "zh": "第二期研究计划",
+        "en": "Research protocol",
+        "url": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/hash-phase-2.md"
+      },
+      {
+        "zh": "连续矩锐界",
+        "en": "Continuous moment bounds",
+        "url": "https://arxiv.org/abs/1605.00019"
+      },
+      {
+        "zh": "六角格点的角分布",
+        "en": "Lattice angles",
+        "url": "https://arxiv.org/abs/math/0508201"
+      }
+    ],
     "gaps": [
+      {
+        "id": "L-hash-collision-lab-pair-shell",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_pair_shell.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_pair_shell",
+        "statement": "∀ m x y z : ℤ, x+y+z=0 → let f := fun a : ℤ => a*(a-1); f (m+x)+f (m+y)+f (m+z) = 3*m*(m-1)+2*(x^2+x*y+y^2)",
+        "plain_statement": {
+          "zh": "三个桶以 m 为中心时，偏差和为零，二阶下降阶乘之和等于 3m(m−1)+2S，其中 S=x²+xy+y²。",
+          "en": "For zero-sum deviations the pair polynomial is 3m(m−1)+2S."
+        },
+        "brief": {
+          "zh": "消去第三个偏差并展开。",
+          "en": "Eliminate the third deviation and expand."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true
+      },
+      {
+        "id": "L-hash-collision-lab-triple-shell",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_triple_shell.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_triple_shell",
+        "statement": "∀ m x y z : ℤ, x+y+z=0 → let f := fun a : ℤ => a*(a-1)*(a-2); f (m+x)+f (m+y)+f (m+z) = 3*f m+6*(m-1)*(x^2+x*y+y^2)+3*x*y*z",
+        "plain_statement": {
+          "zh": "三阶下降阶乘之和等于 3m(m−1)(m−2)+6(m−1)S+3xyz。",
+          "en": "The triple polynomial is 3m(m−1)(m−2)+6(m−1)S+3xyz."
+        },
+        "brief": {
+          "zh": "利用零和条件，分离范数和乘积。",
+          "en": "Use the zero sum to separate norm and product."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true
+      },
+      {
+        "id": "L-hash-collision-lab-ordered-product",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_ordered_product.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_ordered_product",
+        "statement": "∀ a b c x y z : ℤ, a≤b → b≤c → x≤y → y≤z → a+b+c=0 → x+y+z=0 → a^2+a*b+b^2=x^2+x*y+y^2 → c<z → a*b*c<x*y*z",
+        "plain_statement": {
+          "zh": "固定范数，两个从小到大排序的零和偏差三元组中，最大坐标较大的一组有严格较大的乘积。",
+          "en": "At fixed norm a larger maximum among sorted zero-sum triples gives a strictly larger product."
+        },
+        "brief": {
+          "zh": "把乘积写成 z³−Sz，并由排序证明 3c²≥S。",
+          "en": "Factor the cubic difference and derive 3c² ≥ S."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true
+      },
+      {
+        "id": "L-hash-collision-lab-cap-certificate",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_cap_certificate.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_cap_certificate",
+        "statement": "∀ m B S z : ℤ, (∃ x y : ℤ, x≤y ∧ y≤z ∧ x+y+z=0 ∧ x^2+x*y+y^2=S ∧ 0≤m+x ∧ m+z≤B) ↔ (m+z≤B ∧ ∃ d : ℤ, 0≤d ∧ d≤3*z ∧ z+d≤2*m ∧ 2 ∣ z+d ∧ d^2+3*z^2=4*S)",
+        "plain_statement": {
+          "zh": "最大偏差 z 可行，当且仅当容量上界成立且存在满足平方方程、奇偶性及线性不等式的整数 d。",
+          "en": "A maximum deviation z is feasible exactly when the cap and the stated square, parity and linear conditions hold."
+        },
+        "brief": {
+          "zh": "取 d=y−x；反向利用奇偶性恢复两个整数坐标。",
+          "en": "Set d=y−x and reconstruct both coordinates by parity."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true
+      },
+      {
+        "id": "L-hash-collision-lab-seven-thresholds",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_seven_thresholds.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_seven_thresholds",
+        "statement": "∀ (k : ℕ) (z : ℤ), (∃ x y : ℤ, x≤y ∧ y≤z ∧ x+y+z=0 ∧ x^2+x*y+y^2=7*(4:ℤ)^k) ↔ z=2*(2:ℤ)^k ∨ z=3*(2:ℤ)^k",
+        "plain_statement": {
+          "zh": "在范数 7·4ᵏ 上，已排序零和三元组的最大坐标恰取两个值。",
+          "en": "On norm 7·4ᵏ the attainable maxima are exactly 2·2ᵏ and 3·2ᵏ."
+        },
+        "brief": {
+          "zh": "证明偶范数使两个坐标均为偶数，再下降到范数 7。",
+          "en": "Descend by parity to the representations of seven."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true
+      },
+      {
+        "id": "L-hash-collision-lab-split-records",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_split_records.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_split_records",
+        "statement": "∀ S : ℕ, 1<S → Squarefree S → (∀ p ∈ S.primeFactors, p%3=1) → ((Finset.Icc (0:ℤ) (2*(S:ℤ))).filter (fun z => ∃ x ∈ Finset.Icc (-(2*(S:ℤ))) (2*(S:ℤ)), x≤ -x-z ∧ -x-z≤z ∧ x^2+x*(-x-z)+(-x-z)^2=(S:ℤ))).card = 2^S.primeFactors.card",
+        "plain_statement": {
+          "zh": "S>1 无平方因子且所有素因子模 3 余 1 时，偏差限制在 [−2S,2S] 的有序三元组恰有 2^ω(S) 种最大坐标。",
+          "en": "For squarefree S>1 with all prime factors 1 mod 3 there are 2^ω(S) distinct sorted maxima in the stated range."
+        },
+        "brief": {
+          "zh": "统计六角格的范数表示，处理排列轨道与重复根。",
+          "en": "Count norm representations and quotient by permutations, accounting for repeated coordinates."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true
+      },
       {
         "id": "L-hash-collision-lab-affine-coordinate-shift",
         "file": "lean/PEqualNP/Outside/L_hash_collision_lab_affine_coordinate_shift.lean",
@@ -1264,6 +1387,60 @@
       }
     ],
     "roadmap": [
+      {
+        "zh": [
+          "第二期 · 从桶计数到整数证书",
+          "先把两两碰撞与三重碰撞写成整系数多项式，再确定哪些容量能使纪录严格上升。"
+        ],
+        "en": [
+          "Phase II · Counts and certificates",
+          "Reduce the counts to integer polynomials and characterize attainable thresholds."
+        ],
+        "tasks": [
+          {
+            "id": "L-hash-collision-lab-pair-shell",
+            "zh": "二阶计数确定范数",
+            "en": "Pair polynomial"
+          },
+          {
+            "id": "L-hash-collision-lab-triple-shell",
+            "zh": "三阶计数确定目标函数",
+            "en": "Triple polynomial"
+          },
+          {
+            "id": "L-hash-collision-lab-ordered-product",
+            "zh": "最大桶严格排列三重计数",
+            "en": "Ordering by largest bucket"
+          },
+          {
+            "id": "L-hash-collision-lab-cap-certificate",
+            "zh": "上下容量约束的整数证书",
+            "en": "Certificate for both boundaries"
+          }
+        ]
+      },
+      {
+        "zh": [
+          "第二期 · 无限族与容量临界值",
+          "先验证一个倍增族，再处理含任意多个不同分裂素因子的范数。受限情形的论文目标见研究计划。"
+        ],
+        "en": [
+          "Phase II · Infinite families",
+          "Calibrate with dilations and then count thresholds on squarefree split shells. See the protocol for the bounded regime."
+        ],
+        "tasks": [
+          {
+            "id": "L-hash-collision-lab-seven-thresholds",
+            "zh": "标定族的全部临界值",
+            "en": "Thresholds on dilated shells"
+          },
+          {
+            "id": "L-hash-collision-lab-split-records",
+            "zh": "无平方因子范数的临界值数",
+            "en": "Counting thresholds on split shells"
+          }
+        ]
+      },
       {
         "zh": [
           "统一输入对和输出桶的定义",
