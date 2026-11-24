@@ -1,4 +1,4 @@
-<img src="deploy/platform-logo.svg" width="80" height="80" alt="数学猜想协作平台标识">
+<img src="deploy/goldbach-icon.svg" width="80" height="80" alt="数学猜想协作平台标识">
 
 # 数学猜想协作平台 · Open Conjecture Platform
 
