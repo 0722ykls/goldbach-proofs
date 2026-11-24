@@ -907,3 +907,4 @@ button, a, input, select { -webkit-tap-highlight-color: transparent; }
 .problem-card p { color: var(--body); }
 .topic-formula { color: var(--desk-gold); font: italic clamp(2.6rem, 7vw, 5.3rem) var(--serif); text-align: center; }
 [data-problem] .map-programs { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.topic-roadmap { grid-template-columns: repeat(auto-fit,minmax(min(100%, 15rem),1fr)); }

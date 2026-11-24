@@ -104,6 +104,7 @@ def problem_page(page, slug, lang):
     zh = lang == "zh"
     translations = {
         "map": "研究地图" if zh else "Research map",
+        "target": "研究起点" if zh else "Starting point",
         "road": "研究路线" if zh else "Research roadmap",
         "foundation": "基础引理" if zh else "Foundations",
         "correlation": "证明工具" if zh else "Proof techniques",
@@ -118,6 +119,8 @@ def problem_page(page, slug, lang):
     page = re.sub(r'(<p class="hero-question">).*?(</p>)', lambda m: m[1] + question + m[2], page)
     page = re.sub(r'(<p class="hero-description">).*?(</p>)', lambda m: m[1] + description + m[2], page)
     page = page.replace("强猜想 · 尚未解决", "开放研究问题").replace("Strong conjecture · Open", "Open research problem")
+    page = re.sub(r'(<h2 id="target-title">).*?(</h2>)',
+                  lambda m: m[1] + translations["target"] + m[2], page)
     formula = escape(data["formula"])
     page = re.sub(r'<div class="target-figure".*?<div class="target-progress">',
                   f'<div class="target-figure topic-formula">{formula}</div><div class="target-progress">', page, count=1, flags=re.S)
@@ -133,9 +136,14 @@ def problem_page(page, slug, lang):
         return re.sub(r'<span class="program-description">.*?</span>', '', text)
     page = re.sub(r'<button type="button" class="map-program-button" (data-program="([^"]+)").*?</button>',
                   program_card, page, flags=re.S)
+    stages = "".join(
+        f"<li><h3>{escape(heading)}</h3><p>{escape(body)}</p></li>"
+        for heading, body in (step[lang] for step in data.get("roadmap", []))
+    )
     page = re.sub(r'<section class="section road-section" id="roadmap".*?</section>',
-                  f'<section class="section road-section" id="roadmap"><div class="section-heading"><div>'
-                  f'<h2>{translations["road"]}</h2><p>{description}</p></div></div></section>', page, count=1, flags=re.S)
+                  lambda _: f'<section class="section road-section" id="roadmap"><div class="section-heading"><div>'
+                  f'<h2>{translations["road"]}</h2></div></div><ol class="roadmap topic-roadmap">{stages}</ol></section>',
+                  page, count=1, flags=re.S)
     url = "https://www.movan.tech/goldbach/problems/" + slug + "/join" + ("-zh" if zh else "") + ".txt"
     prompt = (f"阅读 {url}，按说明领取一条任务，提交 Lean 证明并跟踪核验。" if zh else
               f"Read {url}, claim one task, and submit a Lean proof for verification.")

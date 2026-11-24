@@ -38,6 +38,38 @@
         "program": "correlation",
         "imports": []
       }
+    ],
+    "roadmap": [
+      {
+        "zh": [
+          "核验行计数界",
+          "从每行最多两个选点得到总数上界。"
+        ],
+        "en": [
+          "Verify the row-count bound",
+          "Derive a total upper bound from at most two selected points per row."
+        ]
+      },
+      {
+        "zh": [
+          "建立构型证书",
+          "用整数行列式检查格点的三点共线条件。"
+        ],
+        "en": [
+          "Build construction certificates",
+          "Use the integer determinant to check collinearity among selected points."
+        ]
+      },
+      {
+        "zh": [
+          "比较上下界",
+          "按网格大小对照已核验构型的点数和已证明上界。"
+        ],
+        "en": [
+          "Compare bounds",
+          "For each grid size, compare certified constructions with proved upper bounds."
+        ]
+      }
     ]
   },
   "square-packing": {
@@ -79,6 +111,38 @@
         "program": "correlation",
         "imports": []
       }
+    ],
+    "roadmap": [
+      {
+        "zh": [
+          "核验距离与面积",
+          "证明旋转不改变长度，并从面积不等式推出边长下界。"
+        ],
+        "en": [
+          "Verify lengths and areas",
+          "Prove the rotation identity and derive a side-length bound from the area inequality."
+        ]
+      },
+      {
+        "zh": [
+          "核验可行构型",
+          "给定顶点与方向，检查单位边长、容器边界和内部不相交。"
+        ],
+        "en": [
+          "Certify feasible packings",
+          "Check unit sides, containment and interior disjointness from exact geometry."
+        ]
+      },
+      {
+        "zh": [
+          "比较最优界",
+          "分别记录可行边长上界和已证明的边长下界。"
+        ],
+        "en": [
+          "Compare optimality bounds",
+          "Track feasible upper bounds and proved lower bounds independently."
+        ]
+      }
     ]
   },
   "quadratic-primes": {
@@ -119,6 +183,38 @@
         },
         "program": "correlation",
         "imports": []
+      }
+    ],
+    "roadmap": [
+      {
+        "zh": [
+          "核验局部整除约束",
+          "证明奇偶性和公因子约束。"
+        ],
+        "en": [
+          "Verify divisibility constraints",
+          "Prove parity and common-divisor constraints."
+        ]
+      },
+      {
+        "zh": [
+          "建立筛法输入",
+          "研究各模数下可能整除 n² + 1 的剩余类。"
+        ],
+        "en": [
+          "Build sieve inputs",
+          "Study the residue classes for which a chosen modulus divides n² + 1."
+        ]
+      },
+      {
+        "zh": [
+          "聚焦无穷性",
+          "明确条件结果和无条件结果，逐步补齐筛法估计。"
+        ],
+        "en": [
+          "Address infinitude",
+          "Track hypotheses and the missing estimates needed for an infinitude result."
+        ]
       }
     ]
   }
