@@ -690,6 +690,22 @@ document.addEventListener('keydown', event => {
 });
 
 const exponentPanel = document.getElementById('lpf-record');
+const researchNews = document.getElementById('lpf-news');
+if (researchNews && typeof researchNews.showModal === 'function') {
+  const opener = document.getElementById('lpf-news-open');
+  const seenKey = 'quadratic-primes.news.coe-2026-s41cw';
+  opener.addEventListener('click', event => {
+    event.preventDefault();
+    researchNews.showModal();
+  });
+  researchNews.addEventListener('close', () => {
+    try { localStorage.setItem(seenKey, '1'); } catch {}
+    opener.focus({preventScroll: true});
+  });
+  let seen = false;
+  try { seen = localStorage.getItem(seenKey) === '1'; } catch {}
+  if (!seen) researchNews.showModal();
+}
 
 function renderExponent(record) {
   if (!exponentPanel) return;

@@ -721,6 +721,10 @@ button, a, input, select { -webkit-tap-highlight-color: transparent; }
   color: var(--ink);
 }
 .rankings-dialog::backdrop { background: #211d19ab; }
+.lpf-news { padding: .6rem clamp(1.1rem, 4vw, 2rem) 1.7rem; text-align: start; }
+.lpf-news h2 { font: 500 clamp(1.5rem, 4vw, 2.25rem)/1.25 var(--serif); margin: .6rem 0; }
+.lpf-news p { color: var(--ink); line-height: 1.65; margin: .75rem 0; }
+.lpf-news a { color: var(--ink); text-decoration: underline; }
 .rankings-dialog-heading { position: sticky; top: 0; z-index: 1; padding-block: .82rem .55rem; background: var(--paper); }
 .rankings-dialog-heading h2 { font: 520 clamp(1.2rem, 4vw, 1.8rem)/1.15 var(--serif); }
 .community-grid > :only-child { grid-column: 1 / -1; }
