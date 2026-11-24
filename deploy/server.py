@@ -19,6 +19,7 @@ from desk import Desk, QUEUE_BATCH
 from landau import BASELINE, exponent_record
 from presence import SitePresence
 from zhihu_oauth import BASE as ZHIHU_PATH, ZhihuOAuth
+import sponsors
 
 ROOT = Path(__file__).resolve().parent
 CREDS = Path(os.environ["CREDENTIALS_DIRECTORY"])
@@ -388,6 +389,12 @@ class Handler(BaseHTTPRequestHandler):
         try:
             if self.command == "POST":
                 size = int(self.headers.get("Content-Length", "0"))
+                if path == sponsors.DESK + "/upload" and self.headers.get_content_type() == "multipart/form-data":
+                    if not 0 < size <= sponsors.LIMIT:
+                        return self.reply(413, b'{"error":"upload too large"}')
+                    self.connection.settimeout(8)
+                    fields = sponsors.upload_fields(self.headers["Content-Type"], self.rfile.read(size))
+                    return self.oauth_response(path, ZHIHU.handle(self.command, path, fields, self.headers))
                 if not 0 < size <= 8192 or self.headers.get_content_type() != "application/x-www-form-urlencoded":
                     return self.reply(400, b'{}')
                 self.connection.settimeout(8)
@@ -400,6 +407,10 @@ class Handler(BaseHTTPRequestHandler):
             status, headers, body = ZHIHU.handle(self.command, path, {k: v[0] for k, v in fields.items()}, self.headers)
         except (ValueError, OSError, sqlite3.Error):
             return self.reply(400, b'{}')
+        return self.oauth_response(path, (status, headers, body))
+
+    def oauth_response(self, path, result):
+        status, headers, body = result
         self.send_response(status)
         for name, value in headers.items():
             self.send_header(name, value)
@@ -407,7 +418,7 @@ class Handler(BaseHTTPRequestHandler):
         # Form pages must preserve Origin on same-site POSTs for CSRF validation.
         policy = "same-origin" if path != ZHIHU_PATH + "/callback" else "no-referrer"
         self.send_header("Referrer-Policy", policy)
-        self.send_header("Content-Security-Policy", "default-src 'none'; style-src 'unsafe-inline'; form-action 'self' https://openapi.zhihu.com https://www.zhihu.com; frame-ancestors 'none'; base-uri 'none'")
+        self.send_header("Content-Security-Policy", "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; form-action 'self' https://openapi.zhihu.com https://www.zhihu.com; frame-ancestors 'none'; base-uri 'none'")
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
@@ -477,6 +488,10 @@ class Handler(BaseHTTPRequestHandler):
         url = urlsplit(self.path)
         if url.path == "/api/presence":
             return self.reply_presence()
+        logo = re.fullmatch(r"/sponsors/logo/([1-9][0-9]{0,15})\.png", url.path)
+        if logo:
+            image = sponsors.public_logo(ZHIHU.db, logo[1])
+            return self.reply(200, image, "image/png") if image else self.reply(404, b'{}')
         if url.path == ZHIHU_PATH or url.path.startswith(ZHIHU_PATH + "/"):
             return self.zhihu_request(url.path, url.query)
         if url.path == "/problems" or url.path.removeprefix("/problems/") in PROBLEMS:
@@ -488,7 +503,9 @@ class Handler(BaseHTTPRequestHandler):
             return
         if url.path == "/problems/":
             lang = self.language(url)
-            return self.reply(200, directory_page(lang).encode(), "text/html", lang)
+            directory = directory_page(lang).replace("</main>", "</main>" + sponsors.wall(ZHIHU.db,lang,"../"), 1)
+            directory = directory.replace('</a></div></header>', '</a>'+ZHIHU.account_link(self.headers,lang)+'</div></header>',1)
+            return self.reply(200, directory.encode(), "text/html", lang)
         desk, path, slug = self.scope(url.path)
         if desk is None:
             return self.reply(404, b'{}')
@@ -550,7 +567,10 @@ class Handler(BaseHTTPRequestHandler):
             page = problem_page(page, slug, lang)
         else:
             page = page.replace('<ol class="roadmap">', goldbach_task_routes(lang) + '<ol class="roadmap">', 1)
-        page = page.replace("</body>", site_dock(lang, "" if slug == "goldbach" else "../../") + "</body>", 1)
+        prefix = "" if slug == "goldbach" else "../../"
+        page = page.replace("<!-- account -->", ZHIHU.account_link(self.headers, lang), 1)
+        page = page.replace('<footer class="footer shell">', sponsors.wall(ZHIHU.db,lang,prefix) + '<footer class="footer shell">', 1)
+        page = page.replace("</body>", site_dock(lang, prefix) + "</body>", 1)
         self.reply(200, page.encode(), "text/html", lang)
 
     do_HEAD = do_GET

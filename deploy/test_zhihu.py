@@ -129,6 +129,38 @@ class ZhihuLinkTests(unittest.TestCase):
         self.assertEqual(self.exchange.call_count, 1)
         return self.page(rotated)
 
+    def test_sponsor_moderation_and_authenticated_header(self):
+        from PIL import Image
+        import sponsors
+        desk = sponsors.DESK
+        owner_url = "https://www.zhihu.com/people/cg-22-2"
+        self.enterContext(patch.dict("os.environ", {"GOLDBACH_INITIAL_ADMIN_PROFILE": owner_url, "GOLDBACH_INITIAL_ADMIN_UID": ""}))
+        self.exchange.return_value.update(name="lifesize", avatar_url="https://picx.zhimg.com/a.jpg")
+        user, csrf = self.login()
+        head = self.app.account_link({"Host":"www.goldbach.tech","Cookie":user},"zh")
+        self.assertIn("设置",head)
+        self.assertIn("https://picx.zhimg.com/a.jpg",head)
+        self.assertNotIn("设置",self.app.account_link({"Host":"www.goldbach.tech"},"zh"))
+        png = io.BytesIO()
+        Image.new("RGB",(4,2)).save(png,"PNG")
+        upload = {"csrf":csrf,"name":"Example <Org>","logo":png.getvalue()}
+        self.assertEqual(self.request("POST",desk+"/upload",upload,user,origin="https://invalid.example")[0],403)
+        self.assertEqual(self.request("POST",desk+"/upload",upload,user)[0],303)
+        self.assertIsNone(sponsors.public_logo(self.app.db,1))
+        decision = {"csrf":csrf,"id":"1","decision":"approved"}
+        self.assertEqual(self.request("POST",desk+"/review",decision,user)[0],403)
+        self.exchange.reset_mock()
+        self.exchange.return_value.update(subject="456",profile_url=owner_url)
+        admin, token = self.login()
+        self.assertEqual(self.request("POST",desk+"/review",{**decision,"csrf":token},admin)[0],303)
+        self.assertIn("Example &lt;Org&gt;",sponsors.wall(self.app.db,"zh",""))
+        self.assertTrue(sponsors.public_logo(self.app.db,1).startswith(b"\x89PNG"))
+        self.assertEqual(self.request("POST",desk+"/review",{**decision,"csrf":token},admin)[0],409)
+        self.assertEqual(self.request("POST",desk+"/review",{**decision,"csrf":token,"decision":"withdrawn"},admin)[0],303)
+        self.assertIsNone(sponsors.public_logo(self.app.db,1))
+        self.assertEqual(self.request("POST",desk+"/logout",{"csrf":token},admin)[0],303)
+        self.assertNotIn("设置",self.app.account_link({"Host":"www.goldbach.tech","Cookie":admin},"zh"))
+
     def test_unrelated_session_missing_or_wrong_state_do_not_exchange(self):
         cookie, state = self.start()
         other, _ = self.page()
