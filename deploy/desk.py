@@ -244,14 +244,14 @@ class Desk:
         expected = "sha256=" + hmac.new(self.secret, raw_body, hashlib.sha256).hexdigest()
         return hmac.compare_digest(expected.encode("ascii"), supplied.encode("utf-8"))
 
-    def pending(self, now):
+    def pending(self, now, limit=QUEUE_BATCH):
         with self.transaction(write=True) as conn:
             rows = conn.execute("""
                 SELECT token_hash, pr, head, handle, gap FROM goldbach_leases
                 WHERE pr IS NOT NULL AND run_id IS NULL AND released_at IS NULL AND expires_at > ?
                   AND (last_polled_at IS NULL OR last_polled_at <= ?)
                 ORDER BY last_polled_at IS NOT NULL, last_polled_at, submitted_at, rowid LIMIT ?
-            """, (now, now - QUEUE_RETRY_SECONDS, QUEUE_BATCH)).fetchall()
+            """, (now, now - QUEUE_RETRY_SECONDS, limit)).fetchall()
             conn.executemany("UPDATE goldbach_leases SET last_polled_at = ? WHERE token_hash = ?",
                              [(now, row["token_hash"]) for row in rows])
             return 200, {"pending": [{key: row[key] for key in ("pr", "head", "handle", "gap")} for row in rows]}

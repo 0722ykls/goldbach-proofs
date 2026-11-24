@@ -14,8 +14,8 @@ import urllib.request
 from pathlib import Path
 
 REPO = "CGandGameEngineLearner/goldbach-proofs"
-DESK = "https://www.movan.tech/goldbach/api/desk"
-GAP_ID = re.compile(r"L-goldbach-[a-z0-9-]+")
+SITE = "https://www.movan.tech/goldbach"
+GAP_ID = re.compile(r"L-[a-z0-9]+(?:-[a-z0-9]+)*")
 
 
 class NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -33,14 +33,15 @@ def command(*args):
     return subprocess.check_output(args, encoding="utf-8").strip()
 
 
-def desk(action, data, token=None):
+def desk(action, data, token=None, *, problem="goldbach"):
+    prefix = "" if problem == "goldbach" else "/problems/" + problem
     headers = {"Content-Type": "application/json", "Accept": "application/json"}
     if token:
         headers["Authorization"] = "Bearer " + token
     if action == "claim" and os.environ.get("GOLDBACH_FLEET_FILE"):
         headers["X-Goldbach-Fleet"] = Path(os.environ["GOLDBACH_FLEET_FILE"]).read_text(encoding="ascii").strip()
     request = urllib.request.Request(
-        f"{DESK}/{action}", data=json.dumps(data).encode(), headers=headers
+        f"{SITE}{prefix}/api/desk/{action}", data=json.dumps(data).encode(), headers=headers
     )
     try:
         with urllib.request.build_opener(NoRedirect()).open(request, timeout=20) as response:
@@ -76,18 +77,27 @@ def authenticated_login():
     return command("gh", "api", "user", "--jq", ".login")
 
 
-def claim(path, requested):
+def claim(path, requested, problem):
     if path.exists():
         raise SystemExit("This checkout already has a task. Finish it or use a fresh checkout.")
     if command("git", "status", "--porcelain", "--untracked-files=all"):
         raise SystemExit("Use a clean, dedicated clone of the upstream Goldbach repository.")
     base = command("git", "rev-parse", "HEAD")
-    registry = json.loads(command("git", "show", f"{base}:research/gaps.json"))
+    if problem not in (None, "goldbach") or (requested and not requested.startswith("L-goldbach-")):
+        problems = json.loads(command("git", "show", f"{base}:research/problems.json"))
+        if problem is None:
+            problem = next((slug for slug, config in problems.items()
+                            if any(task["id"] == requested for task in config["gaps"])), "goldbach")
+        if problem != "goldbach" and problem not in problems:
+            raise SystemExit("Unknown research problem.")
+    problem = problem or "goldbach"
+    registry = (json.loads(command("git", "show", f"{base}:research/gaps.json"))
+                if problem == "goldbach" else problems[problem])
     handle = authenticated_login()
     request = {"handle": handle}
     if requested:
         request["gap"] = requested
-    response = desk("claim", request)
+    response = desk("claim", request, problem=problem)
     gap = response["gap"]
     lease = response["lease"]
     expected = next((item for item in registry["gaps"] if item["id"] == gap["id"]), None)
@@ -95,19 +105,19 @@ def claim(path, requested):
     if not expected or not GAP_ID.fullmatch(gap["id"]) or any(
         gap.get(field) != expected.get(field) for field in fields
     ):
-        desk("release", {"reason": "superseded"}, lease["token"])
+        desk("release", {"reason": "superseded"}, lease["token"], problem=problem)
         raise SystemExit("The desk and this checkout disagree. Clone the current default branch and retry.")
 
     branch = f"goldbach/{gap['id']}/{secrets.token_hex(4)}"
     state = {
         "base": base, "branch": branch, "handle": handle, "gap": expected,
-        "token": lease["token"],
+        "token": lease["token"], "problem": problem,
     }
     try:
         save(path, state)
         subprocess.run(["git", "switch", "-c", branch], check=True)
     except (OSError, subprocess.CalledProcessError):
-        desk("release", {"reason": "other"}, lease["token"])
+        desk("release", {"reason": "other"}, lease["token"], problem=problem)
         path.unlink(missing_ok=True)
         raise
     print(json.dumps({
@@ -116,6 +126,7 @@ def claim(path, requested):
 
 
 def submit(path, state, number):
+    problem = state.get("problem", "goldbach")
     if current_branch() != state["branch"]:
         raise SystemExit(f"Switch to the task branch {state['branch']} before submitting.")
     if authenticated_login().casefold() != state["handle"].casefold():
@@ -145,19 +156,19 @@ def submit(path, state, number):
         return
     submission = {"pr": number, "head": head}
     try:
-        desk("submit", submission, state["token"])
+        desk("submit", submission, state["token"], problem=problem)
     except DeskRefusal as refusal:
         if refusal.reason != "lease_completed" or state.get("requested", {}).get("pr") != number:
             raise
         # A corrected proof uses a new lease for the same gap and a new head on the same PR.
-        current = desk("claim", {"handle": state["handle"], "gap": state["gap"]["id"]})
+        current = desk("claim", {"handle": state["handle"], "gap": state["gap"]["id"]}, problem=problem)
         token = current["lease"]["token"]
         if any(current["gap"].get(k) != state["gap"].get(k) for k in ("id", "module", "file", "statement", "imports")):
-            desk("release", {"reason": "superseded"}, token)
+            desk("release", {"reason": "superseded"}, token, problem=problem)
             raise SystemExit("The published lemma changed. Start again from the current default branch.")
         state["token"] = token
         save(path, state)
-        desk("submit", submission, token)
+        desk("submit", submission, token, problem=problem)
     instruction = f"/goldbach-check {state['gap']['id']}"
     subprocess.run(
         ["gh", "pr", "comment", str(number), "--repo", REPO, "--body", instruction],
@@ -173,6 +184,7 @@ def main():
     modes = parser.add_subparsers(dest="action", required=True)
     request = modes.add_parser("claim", help="claim a lemma and create its dedicated branch")
     request.add_argument("gap", nargs="?")
+    request.add_argument("--problem", help="problem slug, e.g. no-three-in-line")
     modes.add_parser("beat", help="renew the current lease")
     release = modes.add_parser("release", help="return an unfinished lemma")
     release.add_argument("reason", nargs="?", default="abandoned")
@@ -184,17 +196,17 @@ def main():
     if args.action == "claim":
         if args.gap and not GAP_ID.fullmatch(args.gap):
             parser.error("invalid Goldbach lemma ID")
-        claim(path, args.gap)
+        claim(path, args.gap, args.problem)
         return
     if not path.is_file():
         parser.error("no lease in this checkout; run claim first")
     state = json.loads(path.read_text(encoding="utf-8"))
     if args.action == "beat":
-        response = desk("beat", {}, state["token"])
+        response = desk("beat", {}, state["token"], problem=state.get("problem", "goldbach"))
         lease = response.get("lease", response)
         print("Lease renewed.", lease.get("expires_at", ""))
     elif args.action == "release":
-        desk("release", {"reason": args.reason}, state["token"])
+        desk("release", {"reason": args.reason}, state["token"], problem=state.get("problem", "goldbach"))
         path.unlink()
         print("Unfinished assignment returned to the desk.")
     else:

@@ -78,7 +78,7 @@ jobs:
           exec > >(tee -a "$RUNNER_TEMP/steps.log") 2>&1
           if [ "$GITHUB_EVENT_NAME" = issue_comment ]; then
             command=$(jq -er '.comment.body' "$GITHUB_EVENT_PATH")
-            pattern='^/goldbach-check (L-goldbach-[a-z0-9]+(-[a-z0-9]+)*)$'
+            pattern='^/goldbach-check (L-[a-z0-9]+(-[a-z0-9]+)*)$'
             [[ "$command" =~ $pattern ]] || { echo "REFUSED: use /goldbach-check followed by one gap id"; exit 1; }
             GAP=${BASH_REMATCH[1]}
             printf 'GAP=%s\n' "$GAP" >> "$GITHUB_ENV"
@@ -145,7 +145,8 @@ jobs:
           set -eu
           exec > >(tee -a "$RUNNER_TEMP/steps.log") 2>&1   # kept for the verdict step
           # The statement comes from the desk's public list, never from the pull request.
-          cp "$W/base/research/gaps.json" "$W/in/gaps.json"
+          jq -s '{gaps: (.[0].gaps + (.[1] | map(.gaps) | add // []))}' \
+            "$W/base/research/gaps.json" "$W/base/research/problems.json" > "$W/in/gaps.json"
           node "$W/base/.github/scripts/outside-guard.mjs" gap "$W/in/gaps.json" "$GAP" "$(cat "$W/in/pr.file")" "$W/in"
           # Before anything is built: the file may import Mathlib and the modules the gap lists.
           node "$W/base/.github/scripts/outside-guard.mjs" imports "$W/in/proof.lean" "$W/in/imports.json"

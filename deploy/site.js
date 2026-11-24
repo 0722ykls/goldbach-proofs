@@ -1,6 +1,9 @@
 'use strict';
 
 const lang = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
+const topic = document.body.dataset.problem;
+const guideUrl = 'https://www.movan.tech/goldbach/' + (topic ? 'problems/' + topic + '/' : '') +
+  (lang === 'zh' ? 'join-zh.txt' : 'join.txt');
 const repository = 'https://github.com/CGandGameEngineLearner/goldbach-proofs';
 const menu = document.querySelector('.menu-toggle');
 const navigation = document.getElementById('site-nav');
@@ -45,7 +48,7 @@ const strings = {
     copyLemma: '复制这条引理的参与提示词',
     occupied: '这条引理当前正在处理。',
     alreadyVerified: '这条引理已通过权威验证。',
-    lemmaPrompt: id => '读取 https://www.movan.tech/goldbach/join-zh.txt，按指南用 python tools/goldbach.py claim ' + id + ' 领取并验证这一条引理。如果无法领取这条引理，请说明原因，不要改领其他题。'
+    lemmaPrompt: id => '读取 ' + guideUrl + '，按指南用 python tools/goldbach.py claim ' + id + ' 领取并验证这一条引理。如果无法领取这条引理，请说明原因，不要改领其他题。'
   },
   en: {
     open: 'Open', proved: 'Verified', accepted: 'Accepted', rejected: 'Rejected',
@@ -81,7 +84,7 @@ const strings = {
     copyLemma: 'Copy this lemma’s join prompt',
     occupied: 'This lemma is currently in progress.',
     alreadyVerified: 'The authoritative verifier has accepted this lemma.',
-    lemmaPrompt: id => 'Read https://www.movan.tech/goldbach/join.txt and follow it to claim and verify exactly ' + id + ' with python tools/goldbach.py claim ' + id + '. If that lemma is unavailable, report why and do not choose another.'
+    lemmaPrompt: id => 'Read ' + guideUrl + ' and follow it to claim and verify exactly ' + id + ' with python tools/goldbach.py claim ' + id + '. If that lemma is unavailable, report why and do not choose another.'
   }
 }[lang];
 
@@ -294,7 +297,7 @@ function mapNode(gap) {
   button.type = 'button';
   button.setAttribute('aria-label', gap.id + ' · ' + status.label);
   button.title = gap.plain_statement[lang];
-  button.append(dot, element('code', gap.id.replace(/^L-goldbach-/, '')));
+  button.append(dot, element('code', gap.id.replace('L-' + (topic || 'goldbach') + '-', '')));
   button.addEventListener('click', () => openGap(gap.id));
   return button;
 }
@@ -341,7 +344,7 @@ function drawNetwork() {
     const gaps = graphGaps.filter(gap => programOf(gap) === key);
     if (!gaps.length) return;
     const hub = selectedProgram ? center : {
-      x: w * (index % 2 ? 0.75 : 0.25), y: h * (index < 2 ? 0.25 : 0.75)
+      x: w * (index % 2 ? 0.75 : 0.25), y: h * (keys.length <= 2 ? 0.5 : index < 2 ? 0.25 : 0.75)
     };
     const tint = programPalette[key];
     if (!selectedProgram) edge(center, hub, tint + '66');
@@ -362,7 +365,7 @@ function drawNetwork() {
     graphTargets.push({ ...hub, program: key, radius: 15 });
   });
   if (!selectedProgram || !graphGaps.length) {
-    caption(center, graphGaps.length ? (lang === 'zh' ? '强哥德巴赫' : 'Binary Goldbach') : strings.empty, '#f1ddb1');
+    caption(center, graphGaps.length ? (topic ? (lang === 'zh' ? '研究路线' : 'Research') : lang === 'zh' ? '强哥德巴赫' : 'Binary Goldbach') : strings.empty, '#f1ddb1');
   }
 }
 function graphTarget(event) {
@@ -682,7 +685,7 @@ async function loadStatus() {
     renderDesk(desk);
   } catch {
     if (lastGaps === null) {
-      lemmaRows.replaceChildren(messageRow(strings.failure, anchor(strings.published, repository + '/blob/main/research/gaps.json')));
+      lemmaRows.replaceChildren(messageRow(strings.failure, anchor(strings.published, repository + '/blob/main/research/' + (topic ? 'problems.json' : 'gaps.json'))));
       lemmaSearch.disabled = true;
       lemmaState.disabled = true;
     }

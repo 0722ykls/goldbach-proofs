@@ -58,7 +58,10 @@ jobs:
         run: |
           set -eu
           mkdir -p "$RUNNER_TEMP/in"
-          git show HEAD^1:research/gaps.json > "$RUNNER_TEMP/in/gaps.json"
+          git show HEAD^1:research/gaps.json > "$RUNNER_TEMP/in/goldbach.json"
+          git show HEAD^1:research/problems.json > "$RUNNER_TEMP/in/problems.json"
+          jq -s '{gaps: (.[0].gaps + (.[1] | map(.gaps) | add // []))}' \
+            "$RUNNER_TEMP/in/goldbach.json" "$RUNNER_TEMP/in/problems.json" > "$RUNNER_TEMP/in/gaps.json"
           node .github/scripts/outside-guard.mjs gap-of-file "$RUNNER_TEMP/in/gaps.json" "$FILE" "$RUNNER_TEMP/in"
           node .github/scripts/outside-guard.mjs imports "$FILE" "$RUNNER_TEMP/in/imports.json"
           echo "gap: $(cat "$RUNNER_TEMP/in/gap.id")"

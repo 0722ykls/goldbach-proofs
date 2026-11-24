@@ -1,0 +1,125 @@
+{
+  "no-three-in-line": {
+    "title": {
+      "zh": "三点不共线问题",
+      "en": "No Three in a Line"
+    },
+    "question": {
+      "zh": "在 n × n 点阵里，能放多少个点而没有任意三点共线？",
+      "en": "How many points can an n × n grid hold with no three collinear?"
+    },
+    "formula": "M(n) ≤ 2n",
+    "summary": {
+      "zh": "从行计数和整数行列式出发，建立可重复核验的构型证据。",
+      "en": "Build verifiable evidence for grid constructions using row counts and integer determinants."
+    },
+    "gaps": [
+      {
+        "id": "L-no-three-in-line-row-count-upper",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_row_count_upper.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_row_count_upper",
+        "statement": "∀ (n : ℕ) (counts : ℕ → ℕ), (∀ i < n, counts i ≤ 2) → Finset.sum (Finset.range n) counts ≤ 2 * n",
+        "plain_statement": {
+          "zh": "若 n 行每行至多有两个选点，则选点总数至多为 2n。",
+          "en": "If each of n rows contains at most two selected points, their total is at most 2n."
+        },
+        "program": "foundation",
+        "imports": []
+      },
+      {
+        "id": "L-no-three-in-line-determinant-translation",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_determinant_translation.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_determinant_translation",
+        "statement": "∀ (ax ay bx by cx cy tx ty : ℤ), ((bx + tx) - (ax + tx)) * ((cy + ty) - (ay + ty)) - ((by + ty) - (ay + ty)) * ((cx + tx) - (ax + tx)) = (bx - ax) * (cy - ay) - (by - ay) * (cx - ax)",
+        "plain_statement": {
+          "zh": "同时平移三个点，判定共线的整数行列式保持不变。",
+          "en": "Translating all three points leaves their collinearity determinant unchanged."
+        },
+        "program": "correlation",
+        "imports": []
+      }
+    ]
+  },
+  "square-packing": {
+    "title": {
+      "zh": "正方形装填问题",
+      "en": "Square Packing"
+    },
+    "question": {
+      "zh": "容纳 n 个可旋转的单位正方形，最小外框边长是多少？",
+      "en": "What is the smallest square that can contain n freely rotated unit squares?"
+    },
+    "formula": "s(n) ≥ √n",
+    "summary": {
+      "zh": "先核验面积下界的代数推导和旋转恒等式，为几何构型和界的证明打基础。",
+      "en": "Formalize the algebra behind area bounds and rotations before certifying geometric constructions."
+    },
+    "gaps": [
+      {
+        "id": "L-square-packing-area-bound",
+        "file": "lean/PEqualNP/Outside/L_square_packing_area_bound.lean",
+        "module": "PEqualNP.Outside.L_square_packing_area_bound",
+        "statement": "∀ (n : ℕ) (s : ℝ), 0 ≤ s → (n : ℝ) ≤ s ^ 2 → Real.sqrt (n : ℝ) ≤ s",
+        "plain_statement": {
+          "zh": "给定非负边长 s，由 n ≤ s² 推出面积给出的边长下界 √n ≤ s。",
+          "en": "For a nonnegative side s, the area inequality n ≤ s² gives the side lower bound √n ≤ s."
+        },
+        "program": "foundation",
+        "imports": []
+      },
+      {
+        "id": "L-square-packing-rotation-norm",
+        "file": "lean/PEqualNP/Outside/L_square_packing_rotation_norm.lean",
+        "module": "PEqualNP.Outside.L_square_packing_rotation_norm",
+        "statement": "∀ (a b x y : ℝ), a ^ 2 + b ^ 2 = 1 → (a * x - b * y) ^ 2 + (b * x + a * y) ^ 2 = x ^ 2 + y ^ 2",
+        "plain_statement": {
+          "zh": "由 a² + b² = 1 定义的二维旋转保持向量长度。",
+          "en": "A planar rotation with a² + b² = 1 preserves squared vector length."
+        },
+        "program": "correlation",
+        "imports": []
+      }
+    ]
+  },
+  "quadratic-primes": {
+    "title": {
+      "zh": "n² + 1 型素数",
+      "en": "Primes of the form n² + 1"
+    },
+    "question": {
+      "zh": "有无穷多个自然数 n 使 n² + 1 为素数吗？",
+      "en": "Are there infinitely many natural numbers n for which n² + 1 is prime?"
+    },
+    "formula": "n² + 1",
+    "summary": {
+      "zh": "从奇偶性和素因子约束开始，逐步建立筛法所需的引理。",
+      "en": "Start with parity and prime-divisor constraints to build lemmas for sieve arguments."
+    },
+    "gaps": [
+      {
+        "id": "L-quadratic-primes-odd-divisible-by-two",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_odd_divisible_by_two.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_odd_divisible_by_two",
+        "statement": "∀ n : ℕ, Odd n → 2 ∣ n ^ 2 + 1",
+        "plain_statement": {
+          "zh": "如果 n 是奇数，则 n² + 1 能被 2 整除。",
+          "en": "If n is odd, then n² + 1 is divisible by two."
+        },
+        "program": "foundation",
+        "imports": []
+      },
+      {
+        "id": "L-quadratic-primes-divisor-coprime",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_divisor_coprime.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_divisor_coprime",
+        "statement": "∀ (n p : ℕ), p ∣ n ^ 2 + 1 → p ∣ n → p = 1",
+        "plain_statement": {
+          "zh": "若 p 同时整除 n 和 n² + 1，则 p = 1。",
+          "en": "A common divisor of n and n² + 1 must equal one."
+        },
+        "program": "correlation",
+        "imports": []
+      }
+    ]
+  }
+}

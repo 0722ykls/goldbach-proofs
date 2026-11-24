@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - research/gaps.json
+      - research/problems.json
       - research/test_catalogue.py
       - lean/lean-toolchain
       - lean/lake-manifest.json
@@ -38,6 +39,8 @@ jobs:
           import os
           from pathlib import Path
           gaps = json.loads(Path("../research/gaps.json").read_text())["gaps"]
+          problems = json.loads(Path("../research/problems.json").read_text())
+          gaps.extend(gap for problem in problems.values() for gap in problem['gaps'])
           # All current gaps are independent and can be stated using Mathlib alone.
           assert all(not gap["imports"] for gap in gaps)
           lines = ["import Mathlib", "set_option autoImplicit false"]

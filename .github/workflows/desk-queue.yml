@@ -85,7 +85,7 @@ jobs:
                   raise SystemExit("Invalid queued proof")
               pr, gap, head, handle = (row.get(field) for field in ("pr", "gap", "head", "handle"))
               if (type(pr) is not int or not 1 <= pr <= 9999999
-                      or not isinstance(gap, str) or not re.fullmatch(r"L-goldbach-[a-z0-9]+(?:-[a-z0-9]+)*", gap)
+                      or not isinstance(gap, str) or not re.fullmatch(r"L-[a-z0-9]+(?:-[a-z0-9]+)*", gap)
                       or len(gap) > 64 or not isinstance(head, str) or not re.fullmatch(r"[a-f0-9]{40}", head)
                       or not isinstance(handle, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9-]{0,38}", handle)):
                   raise SystemExit("Invalid queued proof")

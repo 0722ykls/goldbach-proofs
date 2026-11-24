@@ -31,7 +31,7 @@ class DeskScaleTest(unittest.TestCase):
         self.secret = secrets.token_hex(32).encode()
         (folder / "webhook").write_bytes(self.secret)
         (folder / "china-apnic.txt").write_bytes(b"")
-        for source in ("deploy/server.py", "deploy/desk.py", "research/gaps.json"):
+        for source in ("deploy/server.py", "deploy/desk.py", "research/gaps.json", "research/problems.json"):
             shutil.copy(ROOT / source, folder)
         openssl = os.environ.get("OPENSSL") or shutil.which("openssl")
         if not openssl and shutil.which("git"):
@@ -147,6 +147,42 @@ class DeskScaleTest(unittest.TestCase):
                         api + "release", {"reason": "abandoned"}, token=tokens[i],
                     ))
                     self.assertEqual(self.request("/api/status")["desk"]["active"], 0)
+
+    def test_parallel_problems_keep_independent_leases_and_verdicts(self):
+        paths = ["", "/problems/no-three-in-line", "/problems/square-packing"]
+        with ThreadPoolExecutor(max_workers=len(paths)) as pool:
+            claims = list(pool.map(lambda path: self.request(
+                path + "/api/desk/claim", {"handle": "alice"}, ip="192.0.2.17", expected=201
+            ), paths))
+        self.assertEqual(len({claim["gap"]["id"] for claim in claims}), len(paths))
+        for i, (path, claim) in enumerate(zip(paths, claims)):
+            token = claim["lease"]["token"]
+            next_path = paths[(i + 1) % len(paths)]
+            self.request(next_path + "/api/desk/beat", {}, token=token, expected=401)
+            self.request(path + "/api/desk/submit", {"pr": i + 1, "head": str(i + 1) * 40}, token=token)
+        pending = self.request("/api/desk/pending", {}, signed=True)["pending"]
+        self.assertEqual({row["gap"] for row in pending}, {claim["gap"]["id"] for claim in claims})
+
+        def finish(i):
+            task = claims[i]["gap"]
+            run_id = 100 + i
+            record = {"lemma_id": task["id"], "run_id": run_id, "run_attempt": 1, "verdict": "ACCEPTED",
+                      "manifest": {"rests_on": [{"module": task["module"], "sha256": "a" * 64}], "defs": []}}
+            if i:
+                self.request("/api/verdict", record, signed=True, expected=409)
+            self.request("/api/desk/authorize", {"gap": task["id"], "pr": i + 1, "head": str(i + 1) * 40,
+                         "handle": "alice", "run_id": run_id,
+                         "statement_sha256": hashlib.sha256(task["statement"].encode()).hexdigest()}, signed=True)
+            self.request("/api/verdict", record, signed=True)
+            self.request("/api/verdict", record, signed=True)
+        with ThreadPoolExecutor(max_workers=len(paths)) as pool:
+            list(pool.map(finish, range(len(paths))))
+        for path, claim in zip(paths, claims):
+            result = self.request(path + "/api/status")
+            self.assertEqual(result["counts"]["accepted"], 1)
+            self.assertEqual(result["counts"]["attempts"], 1)
+            self.assertEqual(result["desk"]["rankings"]["proofs"], 1)
+            self.assertEqual(result["results"][0]["lemma_id"], claim["gap"]["id"])
 
 
 if __name__ == "__main__":

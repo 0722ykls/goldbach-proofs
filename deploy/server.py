@@ -6,13 +6,15 @@ import os
 import re
 import sqlite3
 import ssl
+import time
 from contextlib import closing
+from html import escape
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import BoundedSemaphore
 from urllib.parse import parse_qs, urlsplit
 
-from desk import Desk
+from desk import Desk, QUEUE_BATCH
 
 ROOT = Path(__file__).resolve().parent
 CREDS = Path(os.environ["CREDENTIALS_DIRECTORY"])
@@ -20,6 +22,24 @@ SECRET = (CREDS / "webhook").read_bytes().strip()
 DB = Path(os.environ["STATE_DIRECTORY"]) / "verdicts.sqlite3"
 GAPS = json.loads((ROOT / "gaps.json").read_text(encoding="utf-8"))["gaps"]
 DESK = Desk(DB, GAPS, SECRET)
+PROBLEM_FILE = ROOT / "problems.json"
+PROBLEMS = json.loads(PROBLEM_FILE.read_text(encoding="utf-8")) if PROBLEM_FILE.exists() else {}
+problem_ids = set(gap["id"] for gap in GAPS)
+for slug, problem in PROBLEMS.items():
+    if slug == "goldbach" or not re.fullmatch(r"[a-z]+(?:-[a-z]+)*", slug):
+        raise ValueError(f"Invalid problem slug: {slug}")
+    for gap in problem["gaps"]:
+        if gap["id"] in problem_ids or not gap["id"].startswith(f"L-{slug}-"):
+            raise ValueError(f"Invalid or duplicate task: {gap['id']}")
+        problem_ids.add(gap["id"])
+DESKS = {"goldbach": DESK, **{
+    slug: Desk(DB.with_name(slug + ".sqlite3"), problem["gaps"], SECRET)
+    for slug, problem in PROBLEMS.items()
+}}
+GAP_DESKS = {
+    gap_id: slug for slug, desk in DESKS.items() for gap_id in desk.gaps
+}
+
 ASSETS = {
     "/site.css": "text/css",
     "/site.js": "text/javascript",
@@ -28,12 +48,13 @@ ASSETS = {
 }
 
 
-def research_status():
+def research_status(desk=DESK):
+    db = desk.db_path
     results = []
     latest = {}
     attempts = 0
-    if DB.exists():
-        with closing(sqlite3.connect(DB.as_uri() + "?mode=ro", uri=True)) as conn:
+    if db.exists():
+        with closing(sqlite3.connect(db.as_uri() + "?mode=ro", uri=True)) as conn:
             conn.execute("BEGIN")
             if conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='verdicts'").fetchone():
                 results = [json.loads(body) for (body,) in conn.execute(
@@ -61,14 +82,14 @@ def research_status():
                     attempts += count
 
     gaps = []
-    for gap in GAPS:
+    for gap in desk.gaps.values():
         result, proved = latest.get(gap["id"], (None, False))
         gaps.append({**gap, "latest": result, "proved": proved})
     accepted = sum(gap["proved"] for gap in gaps)
     return {
         "gaps": gaps,
         "results": results,
-        "desk": DESK.public_status(),
+        "desk": desk.public_status(),
         "counts": {
             "published": len(gaps),
             "accepted": accepted,
@@ -76,6 +97,88 @@ def research_status():
             "attempts": attempts,
         },
     }
+
+def problem_page(page, slug, lang):
+    data = PROBLEMS[slug]
+    title, question, description = (escape(data[key][lang]) for key in ("title", "question", "summary"))
+    zh = lang == "zh"
+    translations = {
+        "map": "研究地图" if zh else "Research map",
+        "road": "研究路线" if zh else "Research roadmap",
+        "foundation": "基础引理" if zh else "Foundations",
+        "correlation": "证明工具" if zh else "Proof techniques",
+    }
+    page = page.replace('<body id="top">', f'<body id="top" data-problem="{slug}">')
+    page = re.sub(r'<title>[^<]*</title>', f'<title>{title}</title>', page, count=1)
+    page = re.sub(r'<meta (?:name|property)="(?:description|og:[^"]+|twitter:[^"]+)"[^>]*>\n?', '', page)
+    page = re.sub(r'(<a href="#top" class="brand">.*?</span>)[^<]+', lambda m: m[1] + title, page, count=1)
+    page = page.replace('href="problems/?', 'href="../?').replace('href="site.css"', 'href="../../site.css"').replace(
+        'src="site.js"', 'src="../../site.js"')
+    page = re.sub(r'(<h1 id="page-title">).*?(</h1>)', lambda m: m[1] + title + m[2], page)
+    page = re.sub(r'(<p class="hero-question">).*?(</p>)', lambda m: m[1] + question + m[2], page)
+    page = re.sub(r'(<p class="hero-description">).*?(</p>)', lambda m: m[1] + description + m[2], page)
+    page = page.replace("强猜想 · 尚未解决", "开放研究问题").replace("Strong conjecture · Open", "Open research problem")
+    formula = escape(data["formula"])
+    page = re.sub(r'<div class="target-figure".*?<div class="target-progress">',
+                  f'<div class="target-figure topic-formula">{formula}</div><div class="target-progress">', page, count=1, flags=re.S)
+    page = re.sub(r'(<h2 id="lemma-title">).*?(</h2>)', lambda m: m[1] + title + ' · ' + translations["map"] + m[2], page)
+    page = re.sub(r'<aside class="method-note">.*?</aside>',
+                  f'<aside class="method-note"><h2>{translations["road"]}</h2><p>{description}</p></aside>', page, count=1, flags=re.S)
+    def program_card(match):
+        key = match[2]
+        if key not in translations:
+            return ""
+        text = re.sub(r'(<strong class="program-name">).*?(</strong>)',
+                      lambda m: m[1] + translations[key] + m[2], match[0])
+        return re.sub(r'<span class="program-description">.*?</span>', '', text)
+    page = re.sub(r'<button type="button" class="map-program-button" (data-program="([^"]+)").*?</button>',
+                  program_card, page, flags=re.S)
+    page = re.sub(r'<section class="section road-section" id="roadmap".*?</section>',
+                  f'<section class="section road-section" id="roadmap"><div class="section-heading"><div>'
+                  f'<h2>{translations["road"]}</h2><p>{description}</p></div></div></section>', page, count=1, flags=re.S)
+    url = "https://www.movan.tech/goldbach/problems/" + slug + "/join" + ("-zh" if zh else "") + ".txt"
+    prompt = (f"阅读 {url}，按说明领取一条任务，提交 Lean 证明并跟踪核验。" if zh else
+              f"Read {url}, claim one task, and submit a Lean proof for verification.")
+    page = re.sub(r'(<p id="agent-prompt"[^>]*>).*?(</p>)', lambda m: m[1] + escape(prompt) + m[2], page)
+    return page
+
+
+def directory_page(lang):
+    zh = lang == "zh"
+    heading = "更多研究问题" if zh else "Research problems"
+    back = "返回强哥德巴赫猜想" if zh else "Back to Strong Goldbach"
+    intro = ("选择一道题，查看其研究地图、开放引理和核验证据。" if zh else
+             "Select a problem to explore its research map, open lemmas and verification record.")
+    cards = "\n".join(
+        f'<a class="problem-card" href="{slug}/?lang={lang}"><span class="problem-formula">{escape(data["formula"])}</span>'
+        f'<h2>{escape(data["title"][lang])}</h2><p>{escape(data["question"][lang])}</p></a>'
+        for slug, data in PROBLEMS.items()
+    )
+    return f"""<!doctype html>
+<html lang="{lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{heading} · Goldbach Research</title><link rel="stylesheet" href="../site.css"></head>
+<body><header class="masthead"><div class="shell masthead-inner"><a class="brand" href="../?lang={lang}">{back}</a>
+<a class="locale" href="?lang={'en' if zh else 'zh'}">{'English' if zh else '简体中文'}</a></div></header>
+<main class="shell problem-directory"><h1>{heading}</h1><p>{intro}</p><div class="problem-list">{cards}</div></main></body></html>"""
+
+
+def queue_pending(raw_body, headers):
+    if not DESK.signed(headers.get("X-Goldbach-Signature", ""), raw_body):
+        return 401, {"error": "invalid_signature"}
+    now = int(time.time())
+    desks = tuple(DESKS.values())
+    quota = max(1, QUEUE_BATCH // len(desks))
+    rows = []
+    for desk in desks:
+        if len(rows) >= QUEUE_BATCH:
+            break
+        rows.extend(desk.pending(now, min(quota, QUEUE_BATCH - len(rows)))[1]["pending"])
+    for desk in desks:
+        if len(rows) >= QUEUE_BATCH:
+            break
+        rows.extend(desk.pending(now, QUEUE_BATCH - len(rows))[1]["pending"])
+    return 200, {"pending": rows}
+
 
 def china_networks():
     for line in (ROOT / "china-apnic.txt").read_text(encoding="utf-8").splitlines():
@@ -116,33 +219,67 @@ class Handler(BaseHTTPRequestHandler):
                     pass
         return peer
 
+    def language(self, url):
+        lang = parse_qs(url.query).get("lang", [""])[0]
+        if lang in {"zh", "en"}:
+            return lang
+        return "zh" if any(self.client_ip() in net for net in NETWORKS) else "en"
+
+    @staticmethod
+    def scope(path):
+        match = re.fullmatch(r"/problems/([a-z-]+)(/.*)", path)
+        if match:
+            return DESKS.get(match[1]) if match[1] in PROBLEMS else None, match[2], match[1]
+        return DESK, path, "goldbach"
+
     def do_GET(self):
         url = urlsplit(self.path)
-        if url.path == "/health":
+        if url.path == "/problems" or url.path.removeprefix("/problems/") in PROBLEMS:
+            self.send_response(308)
+            suffix = "?" + url.query if url.query else ""
+            self.send_header("Location", url.path.rsplit("/", 1)[-1] + "/" + suffix)
+            self.send_header("Content-Length", "0")
+            self.end_headers()
+            return
+        if url.path == "/problems/":
+            lang = self.language(url)
+            return self.reply(200, directory_page(lang).encode(), "text/html", lang)
+        desk, path, slug = self.scope(url.path)
+        if desk is None:
+            return self.reply(404, b'{}')
+        if path == "/health":
             return self.reply(200, b'{"status":"ok"}')
-        if url.path == "/api/status":
+        if path == "/api/status":
             try:
-                body = json.dumps(research_status(), ensure_ascii=False, separators=(",", ":")).encode()
+                body = json.dumps(research_status(desk), ensure_ascii=False, separators=(",", ":")).encode()
             except sqlite3.Error as error:
                 self.log_error("Unable to read verdicts: %s", error)
                 return self.reply(503, b'{"error":"verdicts unavailable"}')
             return self.reply(200, body)
-        if url.path in ASSETS:
-            asset = ROOT / url.path[1:]
+        if path in ASSETS:
+            asset = ROOT / path[1:]
             if not asset.is_file():
                 return self.reply(404, b'{}')
-            return self.reply(200, asset.read_bytes(), ASSETS[url.path])
-        if url.path != "/":
+            content = asset.read_bytes()
+            if slug != "goldbach" and path in {"/join.txt", "/join-zh.txt"}:
+                # The original participation workflow applies, with a scoped claim command.
+                lang = "zh" if path.endswith("-zh.txt") else "en"
+                guide = content.decode().replace(
+                    "python tools/goldbach.py claim\n", f"python tools/goldbach.py claim --problem {slug}\n"
+                )
+                content = (PROBLEMS[slug]["title"][lang] + "\n\n" + guide).encode()
+            return self.reply(200, content, ASSETS[path])
+        if path != "/":
             return self.reply(404, b'{}')
-        lang = parse_qs(url.query).get("lang", [""])[0]
-        if lang not in {"zh", "en"}:
-            peer = self.client_ip()
-            lang = "zh" if any(peer in net for net in NETWORKS) else "en"
-        self.reply(200, (ROOT / f"{lang}.html").read_bytes(), "text/html", lang)
+        lang = self.language(url)
+        page = (ROOT / f"{lang}.html").read_text(encoding="utf-8")
+        if slug != "goldbach":
+            page = problem_page(page, slug, lang)
+        self.reply(200, page.encode(), "text/html", lang)
 
     do_HEAD = do_GET
 
-    def desk_post(self):
+    def desk_post(self, desk, path, slug):
         try:
             size = int(self.headers.get("Content-Length", "0"))
             if not 1 <= size <= 8192:
@@ -152,7 +289,14 @@ class Handler(BaseHTTPRequestHandler):
             body = json.loads(raw)
             if not isinstance(body, dict):
                 raise ValueError()
-            status, result = DESK.dispatch(self.path, body, self.headers, str(self.client_ip()), raw)
+            if path == "/api/desk/pending" and slug == "goldbach":
+                status, result = queue_pending(raw, self.headers)
+            else:
+                if path == "/api/desk/authorize" and slug == "goldbach":
+                    gap = body.get("gap")
+                    if isinstance(gap, str):
+                        desk = DESKS[GAP_DESKS.get(gap, "goldbach")]
+                status, result = desk.dispatch(path, body, self.headers, str(self.client_ip()), raw)
         except (ValueError, OSError):
             return self.reply(400, b'{"error":"invalid request body"}')
         except sqlite3.Error as error:
@@ -161,9 +305,10 @@ class Handler(BaseHTTPRequestHandler):
         return self.reply(status, json.dumps(result, ensure_ascii=False).encode())
 
     def do_POST(self):
-        if self.path.startswith("/api/desk/"):
-            return self.desk_post()
-        if self.path != "/api/verdict":
+        desk, path, slug = self.scope(self.path)
+        if desk is not None and path.startswith("/api/desk/"):
+            return self.desk_post(desk, path, slug)
+        if slug != "goldbach" or path != "/api/verdict":
             return self.reply(404, b'{}')
         try:
             self.connection.settimeout(10)
@@ -183,7 +328,11 @@ class Handler(BaseHTTPRequestHandler):
             manifest = record["manifest"]
             if type(run_id) is not int or run_id < 1 or type(attempt) is not int or attempt < 1:
                 raise ValueError()
-            if not re.fullmatch(r"L-goldbach-[a-z0-9-]+", lemma) or verdict not in {"ACCEPTED", "REJECTED"}:
+            if isinstance(lemma, str) and lemma in GAP_DESKS:
+                desk = DESKS[GAP_DESKS[lemma]]
+            elif not isinstance(lemma, str) or not re.fullmatch(r"L-goldbach-[a-z0-9-]+", lemma):
+                raise ValueError()
+            if verdict not in {"ACCEPTED", "REJECTED"}:
                 raise ValueError()
             if verdict == "ACCEPTED":
                 if not manifest["rests_on"]:
@@ -198,11 +347,15 @@ class Handler(BaseHTTPRequestHandler):
                 raise ValueError()
         except (ValueError, KeyError, TypeError, OSError):
             return self.reply(400, b'{}')
-        with closing(sqlite3.connect(DB)) as conn, conn:
+        with closing(sqlite3.connect(desk.db_path)) as conn, conn:
+            if desk is not DESK and conn.execute(
+                "SELECT 1 FROM goldbach_leases WHERE run_id = ? AND gap = ?", (run_id, lemma)
+            ).fetchone() is None:
+                return self.reply(409, b'{"error":"no matching authorized run"}')
             conn.execute("CREATE TABLE IF NOT EXISTS verdicts (run_id INTEGER, attempt INTEGER, body BLOB, PRIMARY KEY (run_id, attempt))")
             inserted = conn.execute("INSERT OR IGNORE INTO verdicts VALUES (?, ?, ?)", (run_id, attempt, body))
             if inserted.rowcount == 1:
-                DESK.record_verdict(record, conn)
+                desk.record_verdict(record, conn)
         self.reply(200, b'{"status":"stored"}')
 
 class Server(ThreadingHTTPServer):
