@@ -33,7 +33,7 @@ class DeskScaleTest(unittest.TestCase):
         self.secret = secrets.token_hex(32).encode()
         (folder / "webhook").write_bytes(self.secret)
         (folder / "china-apnic.txt").write_bytes(b"")
-        for source in ("deploy/server.py", "deploy/desk.py", "deploy/join.txt", "deploy/join-zh.txt",
+        for source in ("deploy/server.py", "deploy/desk.py", "deploy/landau.py", "deploy/join.txt", "deploy/join-zh.txt",
                        "research/gaps.json", "research/problems.json"):
             shutil.copy(ROOT / source, folder)
         openssl = os.environ.get("OPENSSL") or shutil.which("openssl")
@@ -156,9 +156,16 @@ class DeskScaleTest(unittest.TestCase):
 
     def test_parallel_problems_keep_independent_leases_and_verdicts(self):
         paths = ["", *(f"/problems/{slug}" for slug in PROBLEMS)]
+        landau = "/problems/quadratic-primes"
+        milestone = next(g["id"] for g in PROBLEMS["quadratic-primes"]["gaps"]
+                         if g.get("lpf_exponent") == "1.324")
+        baseline = self.request(landau + "/api/status")["lpf_record"]
+        self.assertEqual(baseline["current"]["exponent"], "1.323")
+        self.assertIsNone(baseline["verified"])
         with ThreadPoolExecutor(max_workers=len(paths)) as pool:
             claims = list(pool.map(lambda path: self.request(
-                path + "/api/desk/claim", {"handle": "alice"}, ip="192.0.2.17", expected=201
+                path + "/api/desk/claim", {"handle": "alice", "gap": milestone if path == landau else None},
+                ip="192.0.2.17", expected=201
             ), paths))
         self.assertEqual(len({claim["gap"]["id"] for claim in claims}), len(paths))
         for i, (path, claim) in enumerate(zip(paths, claims)):
@@ -189,6 +196,11 @@ class DeskScaleTest(unittest.TestCase):
             self.assertEqual(result["counts"]["attempts"], 1)
             self.assertEqual(result["desk"]["rankings"]["proofs"], 1)
             self.assertEqual(result["results"][0]["lemma_id"], claim["gap"]["id"])
+            if path == landau:
+                self.assertEqual(result["lpf_record"]["current"]["exponent"], "1.324")
+                self.assertEqual(result["lpf_record"]["current"]["kind"], "lean_accepted")
+            else:
+                self.assertNotIn("lpf_record", result)
 
     def test_simultaneous_fleet_claims_and_submissions_across_problems(self):
         paths = ["", *(f"/problems/{slug}" for slug in PROBLEMS)]

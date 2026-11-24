@@ -15,6 +15,7 @@ from threading import BoundedSemaphore
 from urllib.parse import parse_qs, urlsplit
 
 from desk import Desk, QUEUE_BATCH
+from landau import BASELINE, exponent_record
 
 ROOT = Path(__file__).resolve().parent
 CREDS = Path(os.environ["CREDENTIALS_DIRECTORY"])
@@ -55,9 +56,12 @@ def research_status(desk=DESK):
     results = []
     latest = {}
     attempts = 0
+    extra = {}
     if db.exists():
         with closing(sqlite3.connect(db.as_uri() + "?mode=ro", uri=True)) as conn:
             conn.execute("BEGIN")
+            if desk is DESKS.get("quadratic-primes"):
+                extra["lpf_record"] = exponent_record(desk, conn)
             if conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='verdicts'").fetchone():
                 results = [json.loads(body) for (body,) in conn.execute(
                     "SELECT body FROM verdicts ORDER BY run_id DESC, attempt DESC LIMIT 12"
@@ -89,6 +93,7 @@ def research_status(desk=DESK):
         gaps.append({**gap, "latest": result, "proved": proved})
     accepted = sum(gap["proved"] for gap in gaps)
     return {
+        **extra,
         "gaps": gaps,
         "results": results,
         "desk": desk.public_status(),
@@ -111,6 +116,8 @@ def problem_page(page, slug, lang):
         "foundation": "基础引理" if zh else "Foundations",
         "correlation": "证明工具" if zh else "Proof techniques",
     }
+    if slug == "quadratic-primes":
+        translations["target"] = "大素因子指数" if zh else "Large prime factor exponent"
     page = page.replace('<body id="top">', f'<body id="top" data-problem="{slug}">')
     page = re.sub(r'<title>[^<]*</title>', f'<title>{title}</title>', page, count=1)
     page = re.sub(r'<meta (?:name|property)="(?:description|og:[^"]+|twitter:[^"]+)"[^>]*>\n?', '', page)
@@ -126,8 +133,26 @@ def problem_page(page, slug, lang):
     page = re.sub(r'(<h2 id="target-title">).*?(</h2>)',
                   lambda m: m[1] + translations["target"] + m[2], page)
     formula = escape(data["formula"])
+    figure = f'<div class="target-figure topic-formula">{formula}</div>'
+    if slug == "quadratic-primes":
+        current = "当前研究指数" if zh else "Current research exponent"
+        target = "目标指数" if zh else "Target exponent"
+        condition = ("对无穷多个 n，存在整除 n² + 1 的素数 p，且 p > nᵅ。若能证明 α = 2，则 p 只能等于 n² + 1。" if zh else
+                     "For infinitely many n, a prime p divides n² + 1 with p > nᵅ. At α = 2 this forces p = n² + 1.")
+        source = ("外部基线证书" if zh else "External baseline certificate") + f' · {BASELINE["exponent"]}'
+        status_link = "查看实时数据" if zh else "View live data"
+        figure = (
+            '<div class="lpf-record" id="lpf-record">'
+            f'<dl class="lpf-values"><div><dt>{current} α</dt><dd id="lpf-current">—</dd></div>'
+            f'<div><dt>{target}</dt><dd id="lpf-target">2</dd></div></dl>'
+            '<p class="lpf-evidence" id="lpf-kind"></p><p id="lpf-verified"></p>'
+            f'<p class="lpf-condition">{condition}</p>'
+            f'<a href="{escape(BASELINE["source_url"])}">{source}</a>'
+            f'<noscript> · <a href="api/status">{status_link}</a></noscript>'
+            '<p id="lpf-notice" role="status"></p></div>'
+        )
     page = re.sub(r'<div class="target-figure".*?<div class="target-progress">',
-                  f'<div class="target-figure topic-formula">{formula}</div><div class="target-progress">', page, count=1, flags=re.S)
+                  lambda _: figure + '<div class="target-progress">', page, count=1, flags=re.S)
     page = re.sub(r'(<h2 id="lemma-title">).*?(</h2>)', lambda m: m[1] + title + ' · ' + translations["map"] + m[2], page)
     page = re.sub(r'<aside class="method-note">.*?</aside>',
                   f'<aside class="method-note"><h2>{translations["road"]}</h2><p>{description}</p></aside>', page, count=1, flags=re.S)
@@ -292,6 +317,15 @@ class Handler(BaseHTTPRequestHandler):
                                 "只有通过权威 Lean 核验的引理才会记入研究台。" if lang == "zh" else
                                 f"Use your GitHub account to claim and submit one Lean 4 lemma for {title}. "
                                 "The desk credits lemmas that pass authoritative Lean verification.")
+                if slug == "quadratic-primes":
+                    introduction += (
+                        "\n研究目标是尽可能提高指数 α。先查看问题页的当前纪录，再领取解析转移、筛法估计或指数挑战。"
+                        "1.32301 与 1.324 可并行尝试；其他改进值可在 research/problems.json 提交新任务 PR。"
+                        "纪录要求对无穷多个 n 证明存在素因子 p ∣ n²+1 且 p > nᵅ。" if lang == "zh" else
+                        "\nAim for the largest provable exponent. Check the current record, then claim an analytic transfer, "
+                        "sieve estimate or exponent challenge. Try 1.32301 or 1.324 in parallel, or propose another threshold "
+                        "by PR to research/problems.json. A record requires a prime divisor p of n²+1 exceeding nᵅ for infinitely many n."
+                    )
                 _, _, instructions = asset.read_text(encoding="utf-8").split("\n\n", 2)
                 instructions = instructions.replace(
                     "\npython tools/goldbach.py claim\n", f"\npython tools/goldbach.py claim --problem {slug}\n"

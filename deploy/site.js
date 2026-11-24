@@ -644,6 +644,32 @@ document.addEventListener('keydown', event => {
   lemmaSearch.focus();
 });
 
+const exponentPanel = document.getElementById('lpf-record');
+
+function renderExponent(record) {
+  if (!exponentPanel) return;
+  const current = document.getElementById('lpf-current');
+  const notice = document.getElementById('lpf-notice');
+  if (!record?.current) {
+    notice.textContent = current.textContent === '—' ? strings.failure : strings.stale;
+    return;
+  }
+  const zh = lang === 'zh';
+  current.textContent = record.current.exponent;
+  document.getElementById('lpf-target').textContent = record.target;
+  document.getElementById('lpf-kind').textContent = record.current.kind === 'external_certificate'
+    ? (zh ? '外部有限证书参数 · 无条件解析转移待核验' : 'External finite certificate · unconditional analytic transfer pending')
+    : (zh ? '本站已核验的无条件大素因子界' : 'Unconditional large-prime-factor bound verified here');
+  const verified = document.getElementById('lpf-verified');
+  if (record.verified) {
+    const label = (zh ? '本站 Lean 已通过 · α = ' : 'Site Lean proof · α = ') + record.verified.exponent;
+    verified.replaceChildren(anchor(label + ' ↗', record.verified.source_url));
+  } else {
+    verified.textContent = zh ? '本站暂未通过无条件指数证明。' : 'No unconditional exponent proof has passed here yet.';
+  }
+  notice.textContent = '';
+}
+
 async function loadStatus() {
   if (loading || document.hidden) return;
   loading = true;
@@ -655,7 +681,8 @@ async function loadStatus() {
       signal: request.signal,
     });
     if (!response.ok) throw new Error('Status request failed');
-    const { gaps, counts, results, desk } = await response.json();
+    const { gaps, counts, results, desk, lpf_record } = await response.json();
+    renderExponent(lpf_record);
     assignments = desk?.assignments ?? assignments;
     document.getElementById('hero-available').textContent = gaps.filter(canClaim).length;
     const latest = results[0];
@@ -685,6 +712,7 @@ async function loadStatus() {
     renderResults(results);
     renderDesk(desk);
   } catch {
+    renderExponent(null);
     if (lastGaps === null) {
       lemmaRows.replaceChildren(messageRow(strings.failure, anchor(strings.published, repository + '/blob/main/research/' + (topic ? 'problems.json' : 'gaps.json'))));
       lemmaSearch.disabled = true;
@@ -774,5 +802,5 @@ if (participation) {
 }
 
 loadStatus();
-window.setInterval(loadStatus, 45000);
+window.setInterval(loadStatus, exponentPanel ? 15000 : 45000);
 document.addEventListener('visibilitychange', loadStatus);

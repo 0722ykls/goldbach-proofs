@@ -254,8 +254,8 @@
     },
     "formula": "n² + 1",
     "summary": {
-      "zh": "从奇偶性和素因子约束开始，逐步建立筛法所需的引理。",
-      "en": "Start with parity and prime-divisor constraints to build lemmas for sieve arguments."
+      "zh": "研究目标是尽可能提高指数 α，证明对无穷多个 n，n² + 1 的最大素因子大于 nᵅ。以论文报告的 1.323 为起点，每个严格提高的无条件界都值得提交。",
+      "en": "Push the exponent α as high as possible: prove that the greatest prime factor of n² + 1 exceeds nᵅ for infinitely many n. Starting from the manuscript’s 1.323 baseline, every strict unconditional improvement is worth submitting."
     },
     "gaps": [
       {
@@ -330,37 +330,212 @@
         },
         "program": "foundation",
         "imports": []
+      },
+      {
+        "id": "L-quadratic-primes-dyadic-scale-gap",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_dyadic_scale_gap.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_dyadic_scale_gap",
+        "statement": "∀ (x n : ℝ), (2 : ℝ) ^ (13230 : ℕ) < x → 0 ≤ n → n ≤ 2 * x → n ^ ((1323 : ℝ) / 1000) < x ^ ((13231 : ℝ) / 10000)",
+        "plain_statement": {
+          "zh": "当 x > 2^13230 且 0 ≤ n ≤ 2x 时，证明 n^1.323 < x^1.3231。",
+          "en": "Show that x > 2^13230 and 0 ≤ n ≤ 2x imply n^1.323 < x^1.3231."
+        },
+        "brief": {
+          "zh": "把上游的实数幂比较写成本站可核验的独立引理；区间内存在大素因子仍须另证。",
+          "en": "Port the real-power comparison to the project checker. Existence of a large prime factor in the interval is a separate task."
+        },
+        "source": "https://github.com/CGandGameEngineLearner/landau-fourth-problem-1.323/blob/42cd8945093d9c82379dc9193b2e5fb6c8758c78/lean/Landau/LargestPrimeFactorExponent.lean",
+        "program": "foundation",
+        "imports": [],
+        "parallel": true
+      },
+      {
+        "id": "L-quadratic-primes-next-endpoint-budget",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_next_endpoint_budget.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_next_endpoint_budget",
+        "statement": "∀ s : ℚ, (5611320508261 / 9000000000000 : ℚ) - s + 2 * (((13241 / 10000 : ℚ) ^ 2) - ((5 / 4 : ℚ) ^ 2)) < 1 ↔ (44655088261 / 9000000000000 : ℚ) < s",
+        "plain_statement": {
+          "zh": "固定原证书的核心上界，把区间指数提到 1.3241 时，算出预算低于 1 所需的额外节省量。",
+          "en": "With the certified core envelope fixed, find the extra saving needed to keep the budget below one at block exponent 1.3241."
+        },
+        "brief": {
+          "zh": "用有理数证明阈值恰为 44655088261 / 9000000000000。能否从新的 Buchstab 分解获得足够节省，另需分析证明。",
+          "en": "Prove the exact threshold 44655088261 / 9000000000000 by rational arithmetic. Obtaining that saving from a new Buchstab decomposition requires a separate analytic argument."
+        },
+        "source": "https://github.com/CGandGameEngineLearner/landau-fourth-problem-1.323/blob/42cd8945093d9c82379dc9193b2e5fb6c8758c78/lean/Landau/HarmanRecursiveCertificateCanonical.lean",
+        "program": "foundation",
+        "imports": [],
+        "parallel": true
+      },
+      {
+        "id": "L-quadratic-primes-dyadic-witness-transfer",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_dyadic_witness_transfer.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_dyadic_witness_transfer",
+        "statement": "(∀ X : ℕ, ∃ x n p : ℕ, X < x ∧ x ≤ n ∧ n ≤ 2 * x ∧ Nat.Prime p ∧ p ∣ n ^ 2 + 1 ∧ x ^ 13231 < p ^ 10000) → ∀ B : ℕ, ∃ n p : ℕ, B < n ∧ Nat.Prime p ∧ p ∣ n ^ 2 + 1 ∧ n ^ 1323 < p ^ 1000",
+        "plain_statement": {
+          "zh": "假设存在无界多个区间 [x, 2x]，其中有 n 使 n² + 1 有素因子 p > x^1.3231。推出对任意界 B，均有 n > B 满足 p > n^1.323。",
+          "en": "Assuming arbitrarily large blocks [x, 2x] contain n with a prime divisor p of n² + 1 above x^1.3231, deduce the pointwise 1.323 result."
+        },
+        "brief": {
+          "zh": "先取 x 大于给定的 B 和尺度转换阈值，再用 n ≤ 2x。证明对象是蕴含式，区间估计须独立建立。",
+          "en": "Choose x above both B and the scale-conversion threshold, then use n ≤ 2x. The block estimate is a hypothesis of this implication."
+        },
+        "source": "https://github.com/CGandGameEngineLearner/landau-fourth-problem-1.323/blob/42cd8945093d9c82379dc9193b2e5fb6c8758c78/lean/Landau/LargestPrimeFactorExponent.lean",
+        "program": "correlation",
+        "imports": [],
+        "parallel": true
+      },
+      {
+        "id": "L-quadratic-primes-dyadic-prime-divisor",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_dyadic_prime_divisor.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_dyadic_prime_divisor",
+        "statement": "∀ X : ℕ, ∃ x n p : ℕ, X < x ∧ x ≤ n ∧ n ≤ 2 * x ∧ Nat.Prime p ∧ p ∣ n ^ 2 + 1 ∧ x ^ 13231 < p ^ 10000",
+        "plain_statement": {
+          "zh": "在任意给定界 X 以上找出区间 [x, 2x] 及其中的 n，使 n² + 1 有素因子 p > x^1.3231。",
+          "en": "Above every bound X, find a block [x, 2x] and an n in it such that n² + 1 has a prime divisor p > x^1.3231."
+        },
+        "brief": {
+          "zh": "审查 Type I/II 估计的适用范围、Buchstab 切换及连续积分误差，从严格余量推出素因子的存在。这里比较的是区间左端点 x。",
+          "en": "Check the Type I/II ranges, the Buchstab switching terms and the integral error. Use a strict saving to obtain a prime-divisor witness at block scale x."
+        },
+        "source": "https://github.com/CGandGameEngineLearner/landau-fourth-problem-1.323/blob/42cd8945093d9c82379dc9193b2e5fb6c8758c78/notes/HARMAN_RECURSIVE_1_323_ANALYTIC_TRANSFER_AUDIT_2026-08-25.md",
+        "program": "correlation",
+        "imports": [],
+        "parallel": true
+      },
+      {
+        "id": "L-quadratic-primes-prime-endpoint-equivalence",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_prime_endpoint_equivalence.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_prime_endpoint_equivalence",
+        "statement": "(∀ B : ℕ, ∃ n p : ℕ, B < n ∧ Nat.Prime p ∧ p ∣ n ^ 2 + 1 ∧ n ^ 2 < p ^ 1) ↔ (∀ B : ℕ, ∃ n : ℕ, B < n ∧ Nat.Prime (n ^ 2 + 1))",
+        "plain_statement": {
+          "zh": "证明指数 2 的严格大素因子命题等价于存在无穷多个 n 使 n² + 1 为素数。",
+          "en": "Prove that the strict exponent-two prime-factor statement is equivalent to infinitely many prime values of n² + 1."
+        },
+        "brief": {
+          "zh": "利用整除给出的 p ≤ n² + 1；一旦 n² < p，就有 p = n² + 1。反向直接用 n² + 1 作见证。",
+          "en": "Divisibility gives p ≤ n² + 1. The strict bound n² < p forces equality. Conversely choose p = n² + 1."
+        },
+        "source": "https://github.com/CGandGameEngineLearner/landau-fourth-problem-1.323/blob/42cd8945093d9c82379dc9193b2e5fb6c8758c78/README.md",
+        "program": "foundation",
+        "imports": [],
+        "parallel": true
+      },
+      {
+        "id": "L-quadratic-primes-lpf-baseline",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_lpf_baseline.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_lpf_baseline",
+        "statement": "∀ B : ℕ, ∃ n p : ℕ, B < n ∧ Nat.Prime p ∧ p ∣ n ^ 2 + 1 ∧ n ^ 1323 < p ^ 1000",
+        "plain_statement": {
+          "zh": "对任意界 B，存在 n > B，使 n² + 1 有素因子 p > n^1.323。",
+          "en": "For every bound B there is an n > B such that n² + 1 has a prime divisor p > n^1.323."
+        },
+        "brief": {
+          "zh": "整合区间筛法、证书与尺度转换，补齐无限性推导，提交无附加假设的定理。",
+          "en": "Combine the analytic block estimate, certificate and scale conversion into a theorem without hypotheses."
+        },
+        "source": "https://github.com/CGandGameEngineLearner/landau-fourth-problem-1.323/blob/42cd8945093d9c82379dc9193b2e5fb6c8758c78/README.md",
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "lpf_exponent": "1.323"
+      },
+      {
+        "id": "L-quadratic-primes-lpf-first-increment",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_lpf_first_increment.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_lpf_first_increment",
+        "statement": "∀ B : ℕ, ∃ n p : ℕ, B < n ∧ Nat.Prime p ∧ p ∣ n ^ 2 + 1 ∧ n ^ 132301 < p ^ 100000",
+        "lpf_exponent": "1.32301",
+        "plain_statement": {
+          "zh": "对无穷多个 n，找到整除 n² + 1 且大于 n^1.32301 的素数。",
+          "en": "For infinitely many n, find a prime divisor of n² + 1 exceeding n^1.32301."
+        },
+        "brief": {
+          "zh": "尝试比论文基线提高 0.00001。先追踪区间尺度换算的余量，再核验产生无穷多见证的解析步骤。",
+          "en": "Seek a gain of 0.00001 over the manuscript baseline. Track the slack in the block-to-integer conversion and justify the analytic step producing unbounded witnesses."
+        },
+        "program": "correlation",
+        "parallel": true,
+        "imports": []
+      },
+      {
+        "id": "L-quadratic-primes-lpf-next",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_lpf_next.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_lpf_next",
+        "statement": "∀ B : ℕ, ∃ n p : ℕ, B < n ∧ Nat.Prime p ∧ p ∣ n ^ 2 + 1 ∧ n ^ 331 < p ^ 250",
+        "plain_statement": {
+          "zh": "对任意界 B，存在 n > B，使 n² + 1 有素因子 p > n^1.324。",
+          "en": "For every bound B there is an n > B such that n² + 1 has a prime divisor p > n^1.324."
+        },
+        "brief": {
+          "zh": "改进筛法节省或解析上界，再证明无穷多个见证。1.324 是新目标。",
+          "en": "Improve the sieve saving or analytic envelope, then prove unbounded witnesses at the proposed target 1.324."
+        },
+        "source": "https://github.com/CGandGameEngineLearner/landau-fourth-problem-1.323/blob/42cd8945093d9c82379dc9193b2e5fb6c8758c78/README.md",
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "lpf_exponent": "1.324"
+      },
+      {
+        "id": "L-quadratic-primes-lpf-endpoint",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_lpf_endpoint.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_lpf_endpoint",
+        "statement": "∀ B : ℕ, ∃ n p : ℕ, B < n ∧ Nat.Prime p ∧ p ∣ n ^ 2 + 1 ∧ n ^ 2 < p ^ 1",
+        "plain_statement": {
+          "zh": "对任意界 B，存在 n > B，使 n² + 1 有素因子 p > n^2。",
+          "en": "For every bound B there is an n > B such that n² + 1 has a prime divisor p > n^2."
+        },
+        "brief": {
+          "zh": "需在同一固定指数 2 下证明严格不等式；仅证明任意小于 2 的指数不能代替这个端点。",
+          "en": "Establish the strict inequality at the fixed exponent 2. Results at smaller exponents alone leave this endpoint open."
+        },
+        "source": "https://github.com/CGandGameEngineLearner/landau-fourth-problem-1.323/blob/42cd8945093d9c82379dc9193b2e5fb6c8758c78/README.md",
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "lpf_exponent": "2"
       }
     ],
     "roadmap": [
       {
         "zh": [
-          "核验局部整除约束",
-          "证明奇偶性和公因子约束。"
+          "复核 1.323 基线",
+          "从局部整除约束入手，复核 Buchstab 递归证书和区间指数 1.3231 的严格余量。上游 Lean 覆盖有限证书及尺度换算，论文另行论证解析步骤。"
         ],
         "en": [
-          "Verify divisibility constraints",
-          "Prove parity and common-divisor constraints."
+          "Audit the 1.323 baseline",
+          "Check local divisibility, the recursive Buchstab certificate and the strict margin at block exponent 1.3231. The upstream Lean project covers finite arithmetic and scale conversion. The manuscript supplies the analytic argument."
         ]
       },
       {
         "zh": [
-          "建立筛法输入",
-          "研究各模数下可能整除 n² + 1 的剩余类。"
+          "证明区间内存在大素因子",
+          "分别复核 Type I/II 估计、Perron 局部化和有理网格对积分误差的控制。在无界多个区间中得到素因子后，将区间尺度 x 换成 n。"
         ],
         "en": [
-          "Build sieve inputs",
-          "Study the residue classes for which a chosen modulus divides n² + 1."
+          "Prove a large factor exists in a block",
+          "Audit the Type I/II estimates, Perron localization and bounds for the grid-to-integral error. Derive witnesses in arbitrarily large blocks, then convert the scale x into n."
         ]
       },
       {
         "zh": [
-          "聚焦无穷性",
-          "明确条件结果和无条件结果，逐步补齐筛法估计。"
+          "持续提高指数",
+          "并行挑战 1.32301 和 1.324。沿用当前筛法者可优化 Buchstab 切换区域、压低积分误差或改进 Type II 估计。任何更高的候选值都可通过任务目录 PR 登记，完整无条件命题通过 Lean 后更新纪录。"
         ],
         "en": [
-          "Address infinitude",
-          "Track hypotheses and the missing estimates needed for an infinitude result."
+          "Keep raising the exponent",
+          "Pursue 1.32301 and 1.324 in parallel. Refine Buchstab switching regions, tighten integration errors or improve Type II estimates. Propose any higher threshold through a task catalogue PR. A Lean proof of its full unconditional statement updates the record."
+        ]
+      },
+      {
+        "zh": [
+          "处理指数 2 的端点",
+          "对无穷多个 n，若素因子 p 满足 n² < p ≤ n² + 1，就有 p = n² + 1。趋近 2 的指数序列仍须补齐端点证明。"
+        ],
+        "en": [
+          "Prove the endpoint at 2",
+          "For unbounded n, a prime divisor with n² < p ≤ n² + 1 must equal n² + 1. A sequence of exponents approaching two still needs a proof at the endpoint."
         ]
       }
     ]
