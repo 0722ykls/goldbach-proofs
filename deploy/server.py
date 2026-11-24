@@ -48,6 +48,7 @@ GAP_DESKS = {
 }
 
 ASSETS = {
+    "/wechat.svg": "image/svg+xml",
     "/discussion-qr.png": "image/png",
     "/discussion.js": "text/javascript",
     "/goldbach-icon.svg": "image/svg+xml",
@@ -64,14 +65,14 @@ def discussion_widget(lang, prefix):
     if time.time() >= DISCUSSION_EXPIRES.timestamp():
         return ""
     zh = lang == "zh"
-    label = "进群讨论" if zh else "Discussion group"
+    label = "微信扫码进群" if zh else "Join WeChat group"
     name = "知乎 AI4S 讨论组" if zh else "Zhihu AI4S discussion group"
     instructions = "微信扫码，讨论研究进度" if zh else "Scan in WeChat to discuss research progress"
     cutoff = DISCUSSION_EXPIRES.date()
     validity = f"{cutoff.month} 月 {cutoff.day} 日前有效" if zh else f"Valid before {cutoff:%Y-%m-%d} (UTC+8)"
     alt = "知乎 AI4S 讨论组微信群二维码" if zh else "WeChat QR code for the Zhihu AI4S discussion group"
     return f"""<aside class="discussion-dock" aria-label="{name}">
-<details class="discussion-widget"><summary>{label}<span aria-hidden="true"></span></summary>
+<details class="discussion-widget"><summary><img class="wechat-mark" src="{prefix}wechat.svg" width="34" height="34" alt="">{label}<span aria-hidden="true"></span></summary>
 <div class="discussion-body"><strong>{name}</strong><p>{instructions}</p>
 <img src="{prefix}discussion-qr.png" alt="{alt}" width="180" height="180">
 <small>{validity}</small></div></details></aside>

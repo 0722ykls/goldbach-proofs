@@ -950,29 +950,34 @@ body:not([data-problem]) .hero .open-status { vertical-align: middle; }
   max-width: calc(100vw - 2rem);
   overflow: auto;
   max-height: calc(100dvh - 2rem);
-  border: 1px solid #c8cbbd;
-  border-radius: .65rem;
+  border: 2px solid #087548;
+  border-radius: .85rem;
   background: var(--sheet);
-  box-shadow: 0 4px 20px #182c2426;
+  box-shadow: 0 0 0 2px white, 0 5px 24px #07563847;
 }
 .discussion-widget summary {
-  min-height: 44px;
+  min-height: 54px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: .55rem .9rem;
-  color: #fff;
-  background: var(--desk-dark);
-  font: 600 .9rem/1.25 var(--sans);
+  gap: .55rem;
+  padding: .55rem .75rem;
+  color: #05371e;
+  background: #21d879;
+  font: 700 1rem/1.25 var(--sans);
   cursor: pointer;
   list-style: none;
 }
 .discussion-widget summary::-webkit-details-marker { display: none; }
-.discussion-widget summary:focus-visible { outline: 2px solid var(--desk-gold); outline-offset: -4px; }
-.discussion-widget summary span::after { content: "+"; color: var(--desk-gold); font-size: 1.15rem; }
+.discussion-widget summary:hover { background: #36e38c; }
+.discussion-widget summary:focus-visible { outline: 3px solid #143f29; outline-offset: -4px; }
+.discussion-widget .wechat-mark {
+  width: 34px; height: 34px; flex: none;
+  padding: 4px; border-radius: .55rem; background: white;
+}
+.discussion-widget summary span { margin-inline-start: auto; }
+.discussion-widget summary span::after { content: "+"; font-size: 1.25rem; }
 .discussion-widget[open] summary span::after { content: "−"; }
-.discussion-body { width: 206px; padding: .8rem; text-align: center; color: var(--ink); }
+.discussion-body { width: 224px; padding: .8rem; text-align: center; color: var(--ink); }
 .discussion-body strong { font-size: .95rem; }
 .discussion-body p, .discussion-body small { display: block; font: 400 .78rem/1.4 var(--sans); color: var(--body); }
 .discussion-body img { display: block; width: 180px; max-width: 100%; height: auto; margin: .5rem auto; image-rendering: pixelated; }
