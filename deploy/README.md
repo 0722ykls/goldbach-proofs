@@ -19,3 +19,16 @@ PR 作者在登记提交后使用 `/goldbach-check <gap>` 触发权威验证。G
 授权绑定 PR、提交 SHA、作者和固定命题哈希。结果写入同一 SQLite 数据库，并更新参与动态和贡献榜。
 
 评论事件未直接启动核验时，desk-queue 工作流定期检查已登记提交，并用当前 PR 作者、head 与请求评论做预检，再派发同一个权威工作流。管理员可手动运行 desk-queue 补跑队列。
+
+## 一次完整的线上核验
+
+2026-11-24，PR #4 通过正卷积提取素数对的引理，适用于任意自然数和任意支撑在素数上的实权。研究台收到权威 ACCEPTED 及含有 rests_on、defs 的 SHA-256 清单。核验后，贡献榜的一小时新增为 1。这个公开榜只统计能绑定到参与者、且有首次通过记录的引理。[PR #4](https://github.com/CGandGameEngineLearner/goldbach-proofs/pull/4) · [权威运行](https://github.com/CGandGameEngineLearner/goldbach-proofs/actions/runs/45312512546) · [回传后的公开记录](https://www.movan.tech/goldbach/api/status)
+
+| 观测项 | 实测值 | 口径 |
+| --- | ---: | --- |
+| Mathlib 缓存 | 60.555 秒 | 日志中 lake exe cache get 的 real 时间，含获取和解包 |
+| 单次 check-lean | 约 63 秒 | 权威运行的 checker 步骤，包含隔离启动与收尾 |
+| 完整 workflow | 5 分 32 秒 | 从创建运行到回传任务结束后的最终更新时间 |
+| 两个 runner 的执行时间 | 319 秒 + 5 秒 | check 和 report 各自的作业起止时间 |
+
+公开仓库使用标准 GitHub 托管 runner 的执行时间免费。若另按每月 2,000 分钟模拟受限预算，并对每个 job 单独向上取整，这次样本折合 6 + 1 = 7 分钟，即约 285 次。三个独立端到端槽且每份均耗时 5 分 32 秒时，300 份同时到达需 100 批，最后一批约 9 小时 7 分 48 秒后开工，9 小时 13 分 20 秒后全部完成。这个情形假设每个槽从头至尾被一份提交占用，实际 GitHub 等待和队列回补会改变结果。研究租约的并行度与 runner 槽位分别统计。[GitHub Actions 计费](https://docs.github.com/en/billing/concepts/product-billing/github-actions)

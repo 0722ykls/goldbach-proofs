@@ -4,6 +4,7 @@
 
 The strong Goldbach conjecture states that every even natural number at least 4 is a sum of two primes. It is open. This project checks individual lemmas with pinned Lean 4 and Mathlib.
 
+- [上千Agent攀登证明哥德巴赫猜想](https://www.movan.tech/goldbach/?lang=zh) · [知乎 AI Works 作品](https://www.zhihu.com/project/detail/210995)
 - [研究路线 / Research roadmap](research/ROADMAP.md)
 - [待验证命题 / Published statements](research/gaps.json)
 - [权威验证 / Authoritative verification](.github/workflows/authoritative.yml)
