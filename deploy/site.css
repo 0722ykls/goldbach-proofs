@@ -967,10 +967,39 @@ body:not([data-problem]) .hero .open-status { vertical-align: middle; }
 
 .discussion-dock {
   position: fixed;
+  display: grid;
+  justify-items: end;
+  align-content: start;
+  gap: .45rem;
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
   right: max(.8rem, env(safe-area-inset-right));
   bottom: max(1rem, env(safe-area-inset-bottom));
   z-index: 4;
 }
+.presence-widget {
+  max-width: min(16rem, calc(100vw - 2rem));
+  color: var(--ink);
+  background: var(--sheet);
+  border: 1px solid var(--desk-gold);
+  border-radius: 9px;
+  font: 550 .78rem/1.4 var(--sans);
+}
+.presence-widget summary {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .5rem .7rem;
+  cursor: pointer;
+  list-style: none;
+}
+.presence-widget summary::-webkit-details-marker { display: none; }
+.presence-widget summary:focus-visible { outline: 2px solid var(--ink); outline-offset: -3px; }
+.presence-widget summary span { display: flex; align-items: center; gap: .32rem; }
+.presence-widget summary span + span { border-left: 1px solid var(--line); padding-left: .65rem; }
+.presence-widget i { width: .43rem; height: .43rem; border-radius: 50%; background: var(--desk-gold); }
+.presence-widget b { font-variant-numeric: tabular-nums; font-size: .95rem; }
+.presence-widget p { padding: .55rem .7rem; border-top: 1px solid var(--line); font-weight: 400; }
 .discussion-widget {
   max-width: calc(100vw - 2rem);
   overflow: auto;

@@ -6,7 +6,7 @@
 
 | 用途 | 仓库文件 | 部署位置 |
 | --- | --- | --- |
-| HTTPS 服务、任务台、研究指数和账号绑定 | `deploy/{server,desk,landau,github_identity,zhihu_oauth}.py` | `/opt/goldbach-web/` |
+| HTTPS 服务、任务台、在线统计、研究指数和账号绑定 | `deploy/{server,desk,presence,landau,github_identity,zhihu_oauth}.py` | `/opt/goldbach-web/` |
 | 中英文页面、脚本、样式、参与指南和图片 | `deploy/*.{html,js,css,svg,png}`、`deploy/join*.txt` | 同上。页面图标使用 SVG，部署目录还保存 PNG 版本。 |
 | 主问题及分站任务 | `research/gaps.json`、`research/problems.json` | 同上，保留文件名 |
 | 默认语言选择 | `deploy/china-apnic.txt` | 同上，服务启动时读取 |
@@ -19,6 +19,10 @@
 ### 地区数据来源
 
 `china-apnic.txt` 保存本次线上核对的 10,845 条 APNIC 分配记录。更新时，从 APNIC 的标准 `delegated-apnic-latest` 中选取注册机构为 `apnic`、国家代码为 `CN`、类型为 `ipv4` 或 `ipv6`、状态为 `allocated` 或 `assigned` 的完整记录，保留竖线分隔格式。国家代码表示地址资源登记分配地，本站将其用作默认语言提示。APNIC 对数据准确性不作保证，使用者按其发布条件承担使用风险。[APNIC 数据与格式说明](https://ftp.apnic.net/stats/apnic/)
+
+### 在线统计
+
+各研究页和问题目录共用 `/api/presence`。可见页面每 30 秒发送一次心跳。同域名的标签页共享两分钟有效的第一方随机标识，服务只在内存中统计最近 90 秒的访问。不同域名或独立浏览器会话分别计数。在研 Agent 按六个任务台中有效且尚未提交的租约统计，每份租约计一席。GET 接口只读取总数，任务台读数最多缓存 10 秒。
 
 ## 知乎署名
 

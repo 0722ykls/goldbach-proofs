@@ -17,6 +17,7 @@ from urllib.parse import parse_qs, urlsplit
 
 from desk import Desk, QUEUE_BATCH
 from landau import BASELINE, exponent_record
+from presence import SitePresence
 from zhihu_oauth import BASE as ZHIHU_PATH, ZhihuOAuth
 
 ROOT = Path(__file__).resolve().parent
@@ -47,11 +48,13 @@ DESKS = {"goldbach": DESK, **{
 GAP_DESKS = {
     gap_id: slug for slug, desk in DESKS.items() for gap_id in desk.gaps
 }
+PRESENCE = SitePresence(DESKS.values())
 
 ASSETS = {
     "/wechat.svg": "image/svg+xml",
     "/discussion-qr.png": "image/png",
     "/discussion.js": "text/javascript",
+    "/presence.js": "text/javascript",
     "/goldbach-icon.svg": "image/svg+xml",
     "/site.css": "text/css",
     "/site.js": "text/javascript",
@@ -72,12 +75,27 @@ def discussion_widget(lang, prefix):
     cutoff = DISCUSSION_EXPIRES.date()
     validity = f"{cutoff.month} 月 {cutoff.day} 日前有效" if zh else f"Valid before {cutoff:%Y-%m-%d} (UTC+8)"
     alt = "知乎 AI4S 讨论组微信群二维码" if zh else "WeChat QR code for the Zhihu AI4S discussion group"
-    return f"""<aside class="discussion-dock" aria-label="{name}">
-<details class="discussion-widget"><summary><img class="wechat-mark" src="{prefix}wechat.svg" width="34" height="34" alt="">{label}<span aria-hidden="true"></span></summary>
+    return f"""<details class="discussion-widget" aria-label="{name}"><summary><img class="wechat-mark" src="{prefix}wechat.svg" width="34" height="34" alt="">{label}<span aria-hidden="true"></span></summary>
 <div class="discussion-body"><strong>{name}</strong><p>{instructions}</p>
 <img src="{prefix}discussion-qr.png" alt="{alt}" width="180" height="180">
-<small>{validity}</small></div></details></aside>
+<small>{validity}</small></div></details>
 <script src="{prefix}discussion.js" defer></script>"""
+
+
+def site_dock(lang, prefix):
+    zh = lang == "zh"
+    visitors = "在线访客" if zh else "Visitors online"
+    agents = "在研 Agent" if zh else "Working agents"
+    detail = ("全站近 90 秒内浏览可见页面的浏览器，同一域名多标签合计一次。"
+              "在研 Agent 按尚未提交且有效的任务租约计，每份一席。每 30 秒刷新。" if zh else
+              "Browsers with a visible page in the last 90 seconds. Tabs on the same domain count once. "
+              "Each active, unsubmitted research lease counts as one agent seat. Updates every 30 seconds.")
+    return f"""<aside class="discussion-dock" aria-label="{'研究台动态' if zh else 'Research desk activity'}">
+<details class="presence-widget" data-endpoint="{prefix}api/presence" hidden>
+<summary><span><i aria-hidden="true"></i>{visitors} <b data-count="visitors">—</b></span>
+<span>{agents} <b data-count="agents">—</b></span></summary>
+<p>{detail}</p></details>
+{discussion_widget(lang, prefix)}</aside><script src="{prefix}presence.js" defer></script>"""
 
 
 def research_status(desk=DESK):
@@ -285,7 +303,7 @@ def directory_page(lang):
 <title>{heading} · Goldbach Research</title><link rel="icon" type="image/svg+xml" sizes="any" href="../goldbach-icon.svg"><link rel="stylesheet" href="../site.css"></head>
 <body><header class="masthead"><div class="shell masthead-inner"><a class="brand" href="../?lang={lang}">{back}</a>
 <a class="locale" href="?lang={'en' if zh else 'zh'}">{'English' if zh else '简体中文'}</a></div></header>
-<main class="shell problem-directory"><h1>{heading}</h1><p>{intro}</p><div class="problem-list">{cards}</div></main>{discussion_widget(lang, "../")}</body></html>"""
+<main class="shell problem-directory"><h1>{heading}</h1><p>{intro}</p><div class="problem-list">{cards}</div></main>{site_dock(lang, "../")}</body></html>"""
 
 
 def queue_pending(raw_body, headers):
@@ -397,6 +415,8 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         url = urlsplit(self.path)
+        if url.path == "/api/presence":
+            return self.reply(200, json.dumps(PRESENCE.snapshot()).encode())
         if url.path == ZHIHU_PATH or url.path.startswith(ZHIHU_PATH + "/"):
             return self.zhihu_request(url.path, url.query)
         if url.path == "/problems" or url.path.removeprefix("/problems/") in PROBLEMS:
@@ -468,7 +488,7 @@ class Handler(BaseHTTPRequestHandler):
             page = problem_page(page, slug, lang)
         else:
             page = page.replace('<ol class="roadmap">', goldbach_task_routes(lang) + '<ol class="roadmap">', 1)
-        page = page.replace("</body>", discussion_widget(lang, "" if slug == "goldbach" else "../../") + "</body>", 1)
+        page = page.replace("</body>", site_dock(lang, "" if slug == "goldbach" else "../../") + "</body>", 1)
         self.reply(200, page.encode(), "text/html", lang)
 
     do_HEAD = do_GET
@@ -499,6 +519,11 @@ class Handler(BaseHTTPRequestHandler):
         return self.reply(status, json.dumps(result, ensure_ascii=False).encode())
 
     def do_POST(self):
+        if self.path == "/api/presence":
+            visitor = self.headers.get("X-Goldbach-Visit", "")
+            if not re.fullmatch(r"[0-9a-f]{32}", visitor):
+                return self.reply(400, b'{"error":"invalid presence identifier"}')
+            return self.reply(200, json.dumps(PRESENCE.snapshot(visitor)).encode())
         if self.path.startswith(ZHIHU_PATH + "/"):
             return self.zhihu_request(urlsplit(self.path).path)
         desk, path, slug = self.scope(self.path)
