@@ -170,6 +170,22 @@ class DeskTests(unittest.TestCase):
             allocated.append(assignment["gap"]["program"])
         self.assertEqual(allocated, ["foundation", "coverage", "exceptions"])
 
+    def test_parallel_leases_preserve_checking_and_release_unstarted_after_acceptance(self):
+        self.desk = Desk(self.db, [GAPS[0] | {"parallel": True}], SECRET)
+        tokens = [self.claim(handle) for handle in ("Alice", "Bob", "Carol")]
+        for i, token in enumerate(tokens):
+            self.assertEqual(self.submit(token, pr=8+i)[0], 200)
+        for i, handle in enumerate(("Alice", "Bob")):
+            body = self.authorization(pr=8+i, handle=handle, run_id=102+i)
+            self.assertEqual(self.request("authorize", body, sign=True)[0], 200)
+        self.assertEqual(self.status()["assignments"], {GAPS[0]["id"]: "checking"})
+        with patch("deploy.desk.time.time", return_value=START+1):
+            self.record(102, GAPS[0]["id"], "ACCEPTED")
+        self.assertEqual(self.request("beat", {}, token=tokens[2])[0], 410)
+        self.assertEqual(self.status(START+1)["active"], 1)
+        self.assertEqual(self.request("pending", {}, sign=True)[1]["pending"], [])
+        self.assertEqual(self.request("claim", {"handle": "Dave", "gap": GAPS[0]["id"]})[0], 409)
+
     def test_statement_changed_after_claim_cannot_authorize(self):
         self.assertEqual(self.submit(self.claim())[0], 200)
         updated = [GAPS[0] | {"statement": "different statement"}, *GAPS[1:]]

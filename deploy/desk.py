@@ -162,14 +162,16 @@ class Desk:
             """, (ip_key, now - 3600)).fetchone()[0] >= (4 * FLEET_ACTIVE_LIMIT if fleet else NETWORK_HOURLY_LIMIT):
                 return error(429, "network_claim_limit")
 
-            occupied = {lease["gap"] for lease in active}
-            unavailable = occupied | self.proved_gaps(conn)
+            load = Counter(lease["gap"] for lease in active)
+            proved = self.proved_gaps(conn)
             candidates = self.gaps if requested_gap is None else (requested_gap,)
-            # Give each research program a worker before filling its remaining shards.
-            # The manifest order breaks ties, including legacy entries without a program.
-            program_load = Counter(self.gaps[g].get("program", "foundation") for g in occupied if g in self.gaps)
-            selected = min((g for g in candidates if g not in unavailable),
-                           key=lambda g: program_load[self.gaps[g].get("program", "foundation")], default=None)
+            program_load = Counter(self.gaps[row["gap"]].get("program", "foundation")
+                                   for row in active if row["gap"] in self.gaps)
+            available = (g for g in candidates if g not in proved and
+                         (not load[g] or self.gaps[g].get("parallel") is True))
+            # Cover unclaimed statements first. Then balance independent attempts on open problems.
+            selected = min(available, key=lambda g: (load[g], program_load[
+                self.gaps[g].get("program", "foundation")]), default=None)
             if selected is None:
                 return error(409, "no_available_gap")
 
@@ -314,11 +316,19 @@ class Desk:
     def record_verdict(record, conn):
         # An accepted rerun supersedes a rejection, while a failed rerun cannot erase credit.
         verdict = record["verdict"]
+        now = int(time.time())
         conn.execute("""
             UPDATE goldbach_leases SET finished_at = ?, verdict = ?
             WHERE run_id = ? AND gap = ?
               AND (verdict IS NULL OR (verdict = 'REJECTED' AND ? = 'ACCEPTED'))
-        """, (int(time.time()), verdict, record["run_id"], record["lemma_id"], verdict))
+        """, (now, verdict, record["run_id"], record["lemma_id"], verdict))
+
+        if verdict == "ACCEPTED":
+            conn.execute("""
+                UPDATE goldbach_leases SET released_at = ?, release_reason = 'superseded'
+                WHERE gap = ? AND released_at IS NULL AND finished_at IS NULL
+                    AND run_id IS NULL AND expires_at > ?
+            """, (now, record["lemma_id"], now))
 
     def public_status(self):
         now = int(time.time())
@@ -328,11 +338,11 @@ class Desk:
                 FROM goldbach_leases
             """, (now,)).fetchone()
             assignments = dict(conn.execute("""
-                SELECT gap, CASE WHEN run_id IS NOT NULL THEN 'checking'
-                                 WHEN submitted_at IS NOT NULL THEN 'submitted'
+                SELECT gap, CASE WHEN MAX(run_id IS NOT NULL) THEN 'checking'
+                                 WHEN MAX(submitted_at IS NOT NULL) THEN 'submitted'
                                  ELSE 'working' END
                 FROM goldbach_leases
-                WHERE expires_at > ? AND released_at IS NULL AND finished_at IS NULL
+                WHERE expires_at > ? AND released_at IS NULL AND finished_at IS NULL GROUP BY gap
             """, (now,)))
             activities = [
                 {key: value for key, value in dict(row).items() if value is not None}
@@ -370,7 +380,40 @@ class Desk:
                     WHERE verdict = 'ACCEPTED' GROUP BY handle ORDER BY accepted DESC, handle LIMIT 20
                 """)
             ]
+            first_acceptances = [
+                dict(row) for row in conn.execute("""
+                    WITH accepted AS (
+                        SELECT gap, handle, finished_at,
+                               ROW_NUMBER() OVER (PARTITION BY gap ORDER BY finished_at, run_id) AS position
+                        FROM goldbach_leases
+                        WHERE verdict = 'ACCEPTED' AND run_id IS NOT NULL AND finished_at <= ?
+                    )
+                    SELECT handle, COUNT(*) AS accepted, MAX(finished_at) AS latest_accepted_at,
+                           SUM(finished_at >= ?) AS hour_accepted,
+                           MAX(CASE WHEN finished_at >= ? THEN finished_at END) AS hour_latest
+                    FROM accepted WHERE position = 1 GROUP BY handle
+                    ORDER BY accepted DESC, latest_accepted_at DESC, handle
+                """, (now, now - 3600, now - 3600))
+            ]
+        all_time = [
+            {key: row[key] for key in ("handle", "accepted", "latest_accepted_at")}
+            for row in first_acceptances
+        ]
+        hour = sorted(
+            (
+                {"handle": row["handle"], "accepted": row["hour_accepted"], "latest_accepted_at": row["hour_latest"]}
+                for row in first_acceptances if row["hour_accepted"]
+            ),
+            key=lambda row: (-row["accepted"], -row["latest_accepted_at"], row["handle"]),
+        )
         return {
             "active": active, "sessions": sessions, "assignments": assignments,
             "activities": activities, "leaderboard": leaderboard,
+            "rankings": {
+                "all_time": all_time,
+                "hour": hour,
+                "contributors": len(all_time),
+                "proofs": sum(row["accepted"] for row in all_time),
+                "latest_accepted_at": max((row["latest_accepted_at"] for row in all_time), default=None),
+            },
         }

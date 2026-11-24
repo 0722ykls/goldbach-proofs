@@ -24,6 +24,12 @@ const strings = {
     deskUnavailable: '暂时无法获取社区数据。',
     noActivity: '暂无参与记录。',
     noContributors: '暂无有署名的通过记录。',
+    noHourContributors: '最近一小时暂无首次通过的引理。',
+    rankingsUnavailable: '暂时无法获取贡献榜。',
+    rankingsCount: n => '共 ' + n + ' 位贡献者。',
+    rankingsSummary: (people, proofs) => people + ' 位贡献者的 ' + proofs + ' 条引理已通过权威 Lean 验证。',
+    rankingPeriods: { hour: '最近一小时', all_time: '累计' },
+    justNow: '刚刚',
     participant: '参与者',
     activities: {
       claimed: '领取引理', submitted: '登记提交', checking: '开始验证',
@@ -35,7 +41,6 @@ const strings = {
     allPrograms: '全部路线',
     programCount: (verified, published) => verified + ' / ' + published + ' 已通过',
     pageRange: (first, last, total) => '第 ' + first + '–' + last + ' 条，共 ' + total + ' 条',
-    shard: (lo, hi, index) => '分片 #' + index + '，闭区间 [' + lo + ', ' + hi + ']',
     file: '证明文件',
     copyLemma: '复制这条引理的参与提示词',
     occupied: '这条引理当前正在处理。',
@@ -54,6 +59,13 @@ const strings = {
     deskUnavailable: 'Community data is temporarily unavailable.',
     noActivity: 'No community activity yet.',
     noContributors: 'No attributed proofs have passed verification yet.',
+    noHourContributors: 'No lemmas passed for the first time in the past hour.',
+    rankingsUnavailable: 'The leaderboard is temporarily unavailable.',
+    rankingsCount: n => n + (n === 1 ? ' contributor.' : ' contributors.'),
+    rankingsSummary: (people, proofs) => people + (people === '1' ? ' contributor has ' : ' contributors have ') +
+      proofs + (proofs === '1' ? ' proof accepted by Lean.' : ' proofs accepted by Lean.'),
+    rankingPeriods: { hour: 'This hour', all_time: 'All time' },
+    justNow: 'Just now',
     participant: 'Participant',
     activities: {
       claimed: 'Claimed a lemma', submitted: 'Registered a submission', checking: 'Started verification',
@@ -65,7 +77,6 @@ const strings = {
     allPrograms: 'All programs',
     programCount: (verified, published) => verified + ' / ' + published + ' verified',
     pageRange: (first, last, total) => first + '–' + last + ' of ' + total + ' lemmas',
-    shard: (lo, hi, index) => 'Shard #' + index + ', inclusive range [' + lo + ', ' + hi + ']',
     file: 'Proof file',
     copyLemma: 'Copy this lemma’s join prompt',
     occupied: 'This lemma is currently in progress.',
@@ -95,49 +106,24 @@ function verdictTag(label, status) {
   return element('span', label, status ? 'verdict verdict-' + status : 'verdict');
 }
 
-function isPrime(value) {
-  if (value < 2) return false;
-  for (let divisor = 2; divisor * divisor <= value; divisor += 1) {
-    if (value % divisor === 0) return false;
-  }
-  return true;
-}
-
-const exampleButtons = Array.from(document.querySelectorAll('[data-example]'));
-
-function renderExample(value) {
-  const candidates = [];
-  for (let number = 2; number < value; number += 1) {
-    if (isPrime(number)) candidates.push(number);
-  }
-  const first = candidates.find(number => number <= value / 2 && candidates.includes(value - number));
-  if (first === undefined) return;
-  const other = value - first;
-  document.getElementById('equation').replaceChildren(
-    element('span', first), element('b', '+'), element('span', other),
-    element('b', '='), element('span', value, 'target-value')
-  );
-  document.getElementById('number-axis').replaceChildren(
-    ...candidates.map(number => element('span', number, number === first || number === other ? 'prime-used' : ''))
-  );
-  for (const button of exampleButtons) {
-    button.setAttribute('aria-pressed', String(Number(button.dataset.example) === value));
-  }
-}
-
-for (const button of exampleButtons) {
-  button.addEventListener('click', () => renderExample(Number(button.dataset.example)));
-}
-
 const lemmaRows = document.getElementById('lemma-rows');
 const lemmaSearch = document.getElementById('lemma-search');
 const lemmaState = document.getElementById('lemma-state');
 const verificationLog = document.getElementById('verification-log');
 const deskNotice = document.getElementById('desk-notice');
 const deskActivity = document.getElementById('desk-activity');
-const deskLeaderboard = document.getElementById('desk-leaderboard');
+const rankingsList = document.getElementById('rankings-list');
+const rankingsModes = Array.from(document.querySelectorAll('[data-ranking-mode]'));
+const rankingsAll = document.getElementById('rankings-all');
+const rankingsDialog = document.getElementById('rankings-dialog');
+const rankingsFullList = document.getElementById('rankings-full-list');
+const rankingsAnnouncement = document.getElementById('rankings-announcement');
+let rankingsData = null;
+let rankingsSnapshot = null;
+let rankingMode = null;
 const locale = document.documentElement.lang;
 const eventTime = new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' });
+const relativeTime = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
 
 const mapNodes = document.getElementById('map-nodes');
 const mapContext = document.getElementById('map-context');
@@ -191,10 +177,8 @@ function gapStatus(gap) {
   return { label: strings.open, kind: 'available', style: '' };
 }
 
-function shardText(gap) {
-  const shard = gap.shard;
-  if (!shard || ![shard.lo, shard.hi, shard.index].every(Number.isSafeInteger)) return '';
-  return strings.shard(shard.lo, shard.hi, shard.index);
+function canClaim(gap) {
+  return !gap.proved && (!assigned(gap) || gap.parallel === true);
 }
 
 function renderProgramCounts() {
@@ -208,38 +192,7 @@ function renderProgramCounts() {
   for (const [key, count] of counts) {
     programs.get(key).querySelector('.program-count').textContent = strings.programCount(count.verified, count.published);
   }
-  const shards = publishedGaps.filter(gap => gap.program === 'coverage' && gap.shard)
-    .sort((a, b) => a.shard.index - b.shard.index);
-  const grid = document.getElementById('coverage-grid');
-  grid.replaceChildren(...shards.map((gap, index) => {
-    const status = gapStatus(gap);
-    const tile = element('button', undefined, 'shard-tile ' + status.kind);
-    tile.type = 'button';
-    tile.tabIndex = index === 0 ? 0 : -1;
-    tile.title = gap.shard.lo + '–' + gap.shard.hi + ' · ' + status.label;
-    tile.setAttribute('aria-label', tile.title);
-    tile.addEventListener('click', () => openGap(gap.id));
-    return tile;
-  }));
-  const accepted = shards.filter(gap => gap.proved).length;
-  const working = shards.filter(assigned).length;
-  document.getElementById('coverage-summary').textContent = lang === 'zh'
-    ? accepted + ' / ' + shards.length + ' 分片通过 · ' + working + ' 处理中'
-    : accepted + ' / ' + shards.length + ' verified · ' + working + ' working';
 }
-
-document.getElementById('coverage-grid').addEventListener('keydown', event => {
-  const steps = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -25, ArrowDown: 25 };
-  if (!Object.hasOwn(steps, event.key)) return;
-  event.preventDefault();
-  const tiles = [...event.currentTarget.children];
-  const index = Math.max(0, Math.min(tiles.length - 1, tiles.indexOf(event.target) + steps[event.key]));
-  if (tiles[index]) {
-    for (const tile of tiles) tile.tabIndex = -1;
-    tiles[index].tabIndex = 0;
-    tiles[index].focus();
-  }
-});
 
 function chooseProgram(program) {
   selectedProgram = program;
@@ -273,7 +226,7 @@ function renderGapDetail() {
   const status = gapStatus(gap);
   const identity = element('div', undefined, 'detail-identity');
   identity.append(element('code', gap.id), verdictTag(status.label, status.style));
-  const context = [programName(programOf(gap)), shardText(gap)].filter(Boolean).join(' · ');
+  const context = programName(programOf(gap));
   detailContent.replaceChildren(
     identity,
     element('h3', gap.plain_statement[lang]),
@@ -281,6 +234,10 @@ function renderGapDetail() {
     element('pre', gap.statement, 'detail-statement')
   );
 
+  if (gap.brief?.[lang]) detailContent.append(element('p', gap.brief[lang], 'detail-context'));
+  if (gap.source) detailContent.append(anchor(lang === 'zh' ? '阅读来源 ↗' : 'Read the source ↗', gap.source, 'evidence-link'));
+  if (!gap.proved && gap.parallel) detailContent.append(element('p',
+    lang === 'zh' ? '此问题开放给多个参与者独立试证。' : 'This problem accepts independent proof attempts in parallel.', 'detail-context'));
   if (gap.file) {
     const file = element('p', undefined, 'detail-file');
     file.append(element('strong', strings.file), element('code', gap.file));
@@ -289,7 +246,7 @@ function renderGapDetail() {
   if (gap.latest) {
     detailContent.append(runLink(gap.latest, strings.latestRun));
   }
-  if (gap.proved || assigned(gap)) {
+  if (!canClaim(gap)) {
     detailContent.append(element('p', gap.proved ? strings.alreadyVerified : strings.occupied, 'detail-context'));
     return;
   }
@@ -313,7 +270,7 @@ function lemmaRow(gap) {
   button.type = 'button';
   button.addEventListener('click', () => openGap(gap.id));
   claim.append(element('code', gap.id, 'statement-id'), button);
-  const context = [programName(programOf(gap)), shardText(gap)].filter(Boolean).join(' · ');
+  const context = programName(programOf(gap));
   if (context) claim.append(element('span', context, 'row-context'));
 
   const statusCell = element('td');
@@ -428,12 +385,12 @@ function renderLemmas() {
     if (selection === 'proved' && !gap.proved) return false;
     if (selection === 'open' && gap.proved) return false;
     if (selection === 'progress' && !assigned(gap)) return false;
-    if (selection === 'available' && (gap.proved || assigned(gap))) return false;
+    if (selection === 'available' && !canClaim(gap)) return false;
     if (!query) return true;
     const program = programOf(gap);
     const content = [
       gap.id, gap.statement, gap.plain_statement.zh, gap.plain_statement.en,
-      program, programName(program), shardText(gap)
+      program, programName(program), gap.brief?.[lang] || ''
     ];
     return content.some(text => text.toLocaleLowerCase().includes(query));
   });
@@ -511,17 +468,103 @@ function renderActivity(event) {
   return item;
 }
 
-function renderContributor(contributor, position) {
-  const item = element('li', undefined, 'contributor-item');
-  const name = '@' + contributor.handle;
-  const profile = anchor(name, 'https://github.com/' + encodeURIComponent(contributor.handle), 'contributor-name');
-  item.append(
-    element('span', position + 1, 'contributor-position'),
-    profile,
-    element('span', strings.verifiedCount(contributor.accepted), 'contributor-score')
-  );
+function rankingTimeText(acceptedAt) {
+  const age = Math.max(0, Math.floor(Date.now() / 1000 - acceptedAt));
+  if (age < 60) return strings.justNow;
+  if (age < 3600) return relativeTime.format(-Math.floor(age / 60), 'minute');
+  if (age < 86400) return relativeTime.format(-Math.floor(age / 3600), 'hour');
+  return relativeTime.format(-Math.floor(age / 86400), 'day');
+}
+
+function renderRankingRow(contributor, index, mode) {
+  const item = element('li', undefined, 'ranking-row');
+  const rank = element('span', index + 1, 'ranking-position');
+  const avatar = element('span', contributor.handle[0].toUpperCase(), 'ranking-avatar');
+  avatar.setAttribute('aria-hidden', 'true');
+  const photograph = document.createElement('img');
+  photograph.src = 'https://github.com/' + encodeURIComponent(contributor.handle) + '.png?size=64';
+  photograph.alt = '';
+  photograph.width = 38;
+  photograph.height = 38;
+  photograph.loading = 'lazy';
+  photograph.referrerPolicy = 'no-referrer';
+  photograph.addEventListener('error', () => photograph.remove(), { once: true });
+  avatar.append(photograph);
+
+  const identity = element('div', undefined, 'ranking-identity');
+  identity.append(anchor('@' + contributor.handle, 'https://github.com/' + encodeURIComponent(contributor.handle), 'ranking-name'));
+  if (Number.isSafeInteger(contributor.latest_accepted_at)) {
+    const acceptedAt = contributor.latest_accepted_at;
+    const date = new Date(acceptedAt * 1000);
+    const time = element('time', rankingTimeText(acceptedAt), 'ranking-time');
+    time.dataset.rankTime = String(acceptedAt);
+    time.dateTime = date.toISOString();
+    time.title = eventTime.format(date);
+    identity.append(time);
+  }
+  const score = element('div', undefined, 'ranking-result');
+  const figure = element('span', '+' + contributor.accepted.toLocaleString(locale), 'ranking-score');
+  figure.setAttribute('aria-hidden', 'true');
+  score.append(figure, element('span', strings.verifiedCount(contributor.accepted), 'sr-only'),
+    element('span', strings.rankingPeriods[mode], 'ranking-period'));
+  item.append(rank, avatar, identity, score);
   return item;
 }
+
+function updateRankingTimes() {
+  for (const date of document.querySelectorAll('[data-rank-time]')) {
+    date.textContent = rankingTimeText(Number(date.dataset.rankTime));
+  }
+}
+
+function fillRankings(list, data, mode) {
+  const empty = mode === 'hour' ? strings.noHourContributors : strings.noContributors;
+  list.replaceChildren(...(data.length
+    ? data.map((entry, index) => renderRankingRow(entry, index, mode))
+    : [element('li', empty, 'ranking-empty')]));
+}
+
+function renderRankingMode() {
+  if (!rankingsData) return;
+  const rows = rankingsData[rankingMode];
+  fillRankings(rankingsList, rows.slice(0, 6), rankingMode);
+  document.getElementById('ranking-next-place').textContent = String(rows.length + 1);
+  rankingsAnnouncement.textContent = strings.rankingsCount(rows.length);
+}
+
+function selectRankingMode(mode) {
+  rankingMode = mode;
+  for (const button of rankingsModes) button.setAttribute('aria-pressed', String(button.dataset.rankingMode === mode));
+  renderRankingMode();
+}
+
+function renderRankings(rankings) {
+  if (!rankings) {
+    if (!rankingsData) rankingsList.replaceChildren(element('li', strings.rankingsUnavailable, 'ranking-empty'));
+    return;
+  }
+  const snapshot = JSON.stringify(rankings);
+  if (rankingsSnapshot === snapshot) {
+    updateRankingTimes();
+    return;
+  }
+  rankingsData = rankings;
+  rankingsSnapshot = snapshot;
+  rankingsAll.disabled = false;
+  document.getElementById('rankings-summary').textContent = strings.rankingsSummary(
+    rankings.contributors.toLocaleString(locale), rankings.proofs.toLocaleString(locale)
+  );
+  selectRankingMode(rankingMode ?? (rankings.hour.length ? 'hour' : 'all_time'));
+  if (rankingsDialog.open) fillRankings(rankingsFullList, rankings.all_time, 'all_time');
+}
+
+for (const button of rankingsModes) {
+  button.addEventListener('click', () => selectRankingMode(button.dataset.rankingMode));
+}
+rankingsAll.addEventListener('click', () => {
+  fillRankings(rankingsFullList, rankingsData.all_time, 'all_time');
+  rankingsDialog.showModal();
+});
 
 function showDeskNotice(message) {
   if (deskNotice.textContent !== message) deskNotice.textContent = message;
@@ -529,11 +572,11 @@ function showDeskNotice(message) {
 }
 
 function renderDesk(desk) {
+  renderRankings(desk?.rankings);
   if (!desk) {
     showDeskNotice(lastDesk === null ? strings.deskUnavailable : strings.stale);
     if (lastDesk === null) {
       deskActivity.replaceChildren();
-      deskLeaderboard.replaceChildren();
     }
     return;
   }
@@ -556,8 +599,6 @@ function renderDesk(desk) {
   document.getElementById('desk-sessions').textContent = desk.sessions.toLocaleString(locale);
   deskActivity.replaceChildren(...(desk.activities.length
     ? desk.activities.map(renderActivity) : [element('li', strings.noActivity, 'empty-state')]));
-  deskLeaderboard.replaceChildren(...(desk.leaderboard.length
-    ? desk.leaderboard.map(renderContributor) : [element('li', strings.noContributors, 'empty-state')]));
 }
 
 function renderResults(results) {
@@ -601,7 +642,7 @@ async function loadStatus() {
     if (!response.ok) throw new Error('Status request failed');
     const { gaps, counts, results, desk } = await response.json();
     assignments = desk?.assignments ?? assignments;
-    document.getElementById('hero-available').textContent = gaps.filter(gap => !gap.proved && !assigned(gap)).length;
+    document.getElementById('hero-available').textContent = gaps.filter(canClaim).length;
     const latest = results[0];
     document.getElementById('news-verdict').textContent = latest
       ? latest.lemma_id + ' · ' + (latest.verdict === 'ACCEPTED' ? strings.accepted : strings.rejected)
@@ -669,6 +710,14 @@ bindPromptCopy(
   document.getElementById('copy-prompt'),
   document.getElementById('agent-prompt'),
   document.getElementById('copy-announcement')
+);
+
+const rankingsPrompt = document.getElementById('rankings-prompt');
+rankingsPrompt.textContent = document.getElementById('agent-prompt').textContent;
+bindPromptCopy(
+  document.getElementById('copy-rankings'),
+  rankingsPrompt,
+  document.getElementById('rankings-copy-announcement')
 );
 
 loadStatus();

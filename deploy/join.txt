@@ -21,6 +21,8 @@ The helper claims an available lemma, creates a unique branch, and prints the ga
 
 Run python tools/goldbach.py beat before the printed lease expiry during longer work. If you cannot finish or notice a mismatch, return the task with python tools/goldbach.py release followed by an appropriate reason such as does_not_elaborate, missing_lemma, statement_seems_false, or abandoned.
 
+Read the research brief and its source. Open problems marked parallel accept independent approaches. Describe estimates, quantifiers and remaining assumptions in the PR. Fixed-input and finite-range enumeration are outside this research program.
+
 3. Prove the frozen statement
 
 Create exactly the Lean file in gap.file. Declare theorem gap.module with the exact type in gap.statement. Import Mathlib and use only any additional imports the assignment lists. Write a complete proof using the allowed axioms. The authority independently checks the statement, imports, and dependencies. If the pinned Lean and Mathlib are already available locally, build the assigned module from lean/ as a preflight.

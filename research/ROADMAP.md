@@ -1,77 +1,40 @@
 # 强哥德巴赫研究路线 / Binary Goldbach roadmap
 
-2026-11-23 · [English](#english) · [已上线的引理 / Live tasks](gaps.json)
+2026-11-24 · [English](#english) · [实时研究台](https://www.movan.tech/goldbach/#lemmas) · [冻结命题](gaps.json)
 
-令 $R_2(n)$ 为满足 $p\le n$、$p$ 与 $n-p$ 均为素数的自然数 $p$ 的个数。顺序计数，例如 $R_2(10)=3$，对应 $3+7,5+5,7+3$。项目的目标是对**每个** $n\ge4$ 的偶数证明 $R_2(n)>0$。令 $E(X)$ 计数 $[4,X]$ 中 $R_2(n)=0$ 的偶数。证明 $E(X)=0$ 对所有自然数 $X$ 成立，也是同一目标。[仓库中的最终命题](strong-goldbach.lean)
+对每个偶数 $n\ge4$，要证明存在素数 $p,q$ 使 $p+q=n$。取素数权 $w(p)=\log p$，非素数处令 $w=0$。定义 $R(n)=\sum_{p=0}^n w(p)w(n-p)$。每项非负，每个真正的素数对贡献严格正值，故目标精确地等价于 $R(n)>0$。这给出了所有分析任务共用的终点。[强哥德巴赫命题](strong-goldbach.lean)
 
-## 为什么调整路线
+## 从莱文特的 Lean 工程学什么
 
-11 月 20 日，Levent Alpöge 公布了与 Claude 合作的 Lean 形式化，其中既有 ζ 函数的黎曼猜想（RH），也有所有正整数模数、所有狄利克雷特征的 L 函数版本（Dirichlet GRH）。截至 11 月 23 日，MIT 的 Andrew Sutherland 和滑铁卢的 Michael Rubinstein 都报告了独立的内核复核。后一类零点与**同余类中的素数计数**有关，在圆法中可用来估计靠近小分母有理数的主弧贡献。给定偶数 $n$ 时，还得证明素数与其反射集合 $n-\mathbb P$ 相交；两个集合各自的计数没有给出这个交集的逐点下界。[作者公告](https://alpo.ge/remark.pdf) · [MIT 核验记录和五条命题](https://math.mit.edu/~drew/grh/) · [滑铁卢核验](https://mrubinst.github.io/grh-lean-verification/) · [二元圆法与主弧公式](https://arxiv.org/abs/2607.27282)
+上游固定在提交 `dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9`。下面的依赖说明来自读取源码。Andrew Sutherland 公布的独立编译、标准公理审查和内核回放对应上游 Lean/Mathlib 4.33.1。本项目使用 Lean 4.36.0，目录中的解析任务显式写出所用 RH 或 Dirichlet GRH 前提。发布无条件版本须按本项目工具链验证相应依赖。[独立核验记录](https://math.mit.edu/~drew/grh/) · [作者公告](https://alpo.ge/remark.pdf)
 
-## 任务顺序与验收
+| 源码入口 | 实际作用 | 我们怎样借用 |
+| --- | --- | --- |
+| [Statements.lean](https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Statements.lean) 与 [Main.lean](https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean#L40-L53) | 上游对所有正模数和特征证明右半临界带非消失，主特征在 1 的极点有单独条件。顶层将这个结论交给 zeta 和 strip。 | 先冻结每个接口的量词、特殊点与误差，再让不同团队独立证明输入。 |
+| [ClaimStrip.lean](https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/ClaimStrip.lean) | prim_zero 经变模与欧拉因子化到原始特征；gamma_ne_zero 与 prim_reflect 用函数方程，把左半条带的零点反射至逆特征的右侧。 | 项目先取最小输出。有限零点和任务只用零点实部；算术级数任务还需要显式公式、截断尾项、非原始特征修正和统一常数。 |
+| [MainConclusion.lean](https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean#L973-L995) | everyCharacter_of_row 显式接收局部到整体相容性，再同 vwin_of_row 一起送入汇总定理；everyCharacter 最后填入已证输入。 | 把“若主弧超过次弧则存在素数对”与“本问题的主次弧确实满足此界”分别冻结。前一条通过后，后一条仍然开放。 |
+| [EveryCharacterOfLiteratureOfVWin.lean](https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/ThetaCorrespondence/ThetaPairLifts/ThirdPlaceSeries/EveryCharacterOfLiteratureOfVWin.lean#L1739-L1745) 与 [VwinOfRow.lean](https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/AutomorphicVarieties/ModularityArgument/ThresholdArguments/DenseThresholdCases/VwinOfRow.lean#L1669-L1671) | 深层合并了 theta 积分、局部匹配、自守输入和窗口估计。 | 可迁移的是定位与验证关键输入的方法。要把任何特定估计用于哥德巴赫，需要写出两边函数、参数范围和常数间的数学桥梁。 |
 
-下面是研究排期。领取入口只发布经过独立语义复核的冻结命题。学术来源、草案和本项目已获 Lean 判定的命题分别追踪。[已发布命题](gaps.json) · [本项目核验记录](https://www.movan.tech/goldbach/#records)
+## 研究顺序
 
-## 首批可领取任务
+1. **先连通目标。** 领 `L-goldbach-prime-weight-extraction` 或 `L-goldbach-log-correlation-iff`。前者对任意支撑在素数上的实权成立，后者固定对数权并给出双向等价。随后证明 `L-goldbach-circle-coefficient`。令 $S_n(t)=\sum_{k\le n}w(k)e^{2\pi i kt}$，应提取 $S_n(t)^2$ 的第 $n$ 个系数。展开后留下 $k+j=n$；绝对值平方的展开给出 $k-j=n$，对应另一个计数。
+2. **把零点信息送至主弧。** 先做有限 ζ 零点和，再审查 Dirichlet GRH 下模 $q$ 的 Chebyshev 误差。提交时写明对哪些 $q,a,X$ 同时有效。和主弧公式对接时固定分母上限、弧宽、权函数及误差相加后的量级。若用冯·芒戈尔特权，要证明并扣掉真素数幂项。短区间论文可作条件估计的复现练习，其结论只保证区间内存在一个满足条件的整数。[算术级数中的显式估计](https://arxiv.org/abs/2003.01925v4) · [主弧公式](https://arxiv.org/abs/2607.27282v2) · [Chirre–Hagen 第 5 节](https://arxiv.org/html/2512.23534v1#S5)
+3. **集中攻逐点的加法相关。** 固定同一个偶数 $n$，用平滑截断 $u$ 和 $1-u$ 将上述系数分成主弧 $A_n$ 与次弧 $B_n$。接口任务先证 $\Re A_n>\lVert B_n\rVert$ 足以提取素数对。研究时也可直接给有符号的 $\Re B_n$ 下界。第一次交叉审查应列出主项下界和每项误差如何依赖 $n$。例如，对整个频率区间先取绝对值只剩 $\int |S_n|^2=\sum w(k)^2$，在对数素数权下为 $n\log n$ 量级，会丢掉抵消。另一条独立路线用反射平方差表示同一个卷积，随后需要对实际素数权给出严格余量。逐点正性和二倍区间内的线性下界均是开放攻关目标。
+4. **量化例外，审查剩余缺口。** 可并行复现条件例外数结果；$E(X)\ll_\varepsilon X^{1/2+\varepsilon}$ 允许无穷多个稀疏例外。二阶矩路线要再证明真实误差在每个待判定点邻域中的振荡和能量预算。若结果只对充分大 $n$ 成立，必须列出阈值，并为余下范围提供统一数学论证。本轮任务台只发一般性定理。[例外集预印本](https://arxiv.org/html/2610.15559v1)
 
-- **基础定义。** 证明表示计数的正性判据、只搜较小素数的等价条件、单个见证可靠性，以及半开区间和闭偶数区间的拼接引理。每项只使用 Mathlib，便于独立提交。
-- **连续覆盖。** 已把 `[4,1000]` 的 499 个偶数拆成 125 个独立任务。从 `L-goldbach-coverage-0004-0010` 开始，每块有四个相邻偶数，最后一块 `L-goldbach-coverage-0996-1000` 有三个。两个相邻块之间只跳过一个奇数。每条冻结命题要求证明整块中的每个偶数都有两个素数见证。分块注册仅表示可领取，整体覆盖以已通过的连续块和区间拼接证明为准。
-- **短区间。** 分开核验对数窗口单调性、`log 2 ≥ 2/3`、从 32 与 1002 构造的有限样例和通用递增见证链。有限样例明确保留 `log 2` 下界这一可单独消去的前提。
-- **例外集。** 证明有限区间例外数为零的判据、从均方误差控制例外数，以及误差严格低于单个例外预算时的无例外判据。任务涉及有限和，暂不假定任何解析误差估计。
+## 如何并行与验收
 
-首批目录共 142 个命题，基础 10 个、连续覆盖 125 个、短区间 4 个、例外集 3 个。各覆盖分片只导入 Mathlib，拥有独立命题、文件和 PR，可由 125 个会话分别领取。实际余量以任务台的实时领取状态为准。运行 `python -B -m unittest research.test_catalogue` 可复查分片编号、区间、双语说明和全部 499 个偶数的数值见证。每块的形式化证明仍需权威验证。
-
-### 解析任务排期
-
-| 优先级与负责人 | 工作与依赖 | 验收条件 |
-|---|---|---|
-| P0 · 定义组 | 统一表示谓词、有限计数 $R_2$ 和 $E$。先证明对任意自然数 $n$，$0<R_2(n)$ 当且仅当存在素数 $p,q$ 使 $p+q=n$。 | 固定到受信定义和标准的 `Nat.Prime`。逐项核对量词、自然数减法边界、$2+2$ 与对角线 $5+5$，经 Lean 判定。后续两组共用这一定义。 |
-| P0 · 证书组 | 与定义组并行设计分块见证。每个偶数给一个素数 $p$，检查 $p\le n$ 及 $p,n-p$ 的素性。证明证书可靠性与相邻偶数区间拼接。 | 首个目标是闭区间 $[4,1000]$ 的全部 499 个偶数。只公布从 4 起连续通过内核核验的最大终点。用漏掉一个偶数和填入合数的证书检查拒绝路径。 |
-| P1 · 解析组 | 复现 Chirre–Hagen 的短区间定理。先冻结第 5 节的归约：区间内若无两奇素数之和，就得到塞尔伯格积分的下界；与解析上界结合得到矛盾。再分别处理该上界所需的 ζ 零点估计与显式常数。 | 先交大参数结果，保留普通 RH 前提。论文从 $x\ge1.1\times10^{18}$ 起使用解析论证，较小范围引用既有计算。要把结论扩展到每个实数 $x\ge2$，需独立核验有限覆盖或给出替代论证。最终目标是在 $(x,x+123(\log x)^2]$ 内找到一个两奇素数之和。[论文第 5 节](https://arxiv.org/html/2512.23534v1#S5) |
-| P1 · 依赖审计组 | 与解析组并行。固定上游档案哈希、Lean 4.33.1 / Mathlib 版本和实际所需的定理。对照项目锁定的 Lean 4.36.0，先比对 RH 以及全模数狄利克雷零点命题。 | 记录类型、版本、允许公理与独立复核日志。评估本项目能否重放所需依赖。接入前保留具名定理前提；大型上游证明无需随每份 PR 重新编译。[档案哈希、声明和实测资源](https://math.mit.edu/~drew/grh/) |
-| P2 · 解析组 | 在 P0 定义上研究例外集。按 Pintz–Althöfer 预印本逐条审查其狄利克雷零点假设、指数和估计、隐常数依赖及适用范围。 | 中间目标是对每个 $\varepsilon>0$，在论文假设下得到 $E(X)\ll_\varepsilon X^{1/2+\varepsilon}$。该指数来自论文公式取 $\theta=1/2$。即使只有稀疏的无限多个例外，这类界也可能成立。[预印本及其假设](https://arxiv.org/abs/2610.15559v1) |
-| 开放难题 · 二元圆法组 | 为每个充分大的偶数给出统一的正下界。固定圆法的和、权重、弧与归一化，以狄利克雷 GRH 下的等差数列估计处理主弧，单列次弧的逐点误差。采用 von Mangoldt 权重时还要扣除至少一个加数为真素数幂的贡献。 | 给出有效阈值 $N_0$，对每个偶数 $n\ge N_0$ 证明主项严格大于主弧误差、次弧误差和素数幂修正上界之和。再用经核验的证书覆盖 $4\le n<N_0$。目前缺少该逐点估计，也没有可供拼接的 $N_0$。[等差数列估计](https://arxiv.org/abs/2003.01925) · [二元圆法](https://arxiv.org/abs/2607.27282) |
-
-**首轮交接。** 定义组可领取 `L-goldbach-count-positive`。证书组可领取 `L-goldbach-closed-even-join` 和各个覆盖分片。当前验证器最多允许 16 个外部证明模块（含间接导入）。总区间任务宜汇集各块的素数见证，在一个紧凑的 Lean 证书中重新逐项核验素性、等式与连续覆盖，再提交一次权威判定。解析组可先领取 `L-goldbach-moving-log-window`，并整理短区间定理的显式估计和有限计算依赖，供独立审查。[验证器依赖规则](../.github/scripts/outside-guard.mjs)
-
-**例外集组可以先做的一条引理。** 取有限偶数集 $I$，令 $F$ 为其中无表示的数。若对每个 $n\in F$ 都能证明实误差满足 $|e(n)|\ge B>0$，则 $|F|B^2\le\sum_{n\in I}|e(n)|^2$。这把解析组的均方误差预算换成例外个数上界。只有整段误差预算严格小于 $B^2$ 时，这个判据才清空该段全部例外。
-
-**有限组怎样支持短区间任务。** 对一个有限终点 $X\ge2$，以 2 为起点 $g_0$，选取一串递增的两奇素数之和 $g_1,\ldots,g_k$，直到 $g_k>X$。若每步满足 $g_{i+1}-g_i\le123(\log g_i)^2$，任取 $2\le x\le X$，取唯一满足 $g_i\le x<g_{i+1}$ 的下标。由对数的单调性，下一个见证就落在所需半开区间。这个方案可先在 $X=1000$ 试验并测量证书大小，再判断放大是否可行。它只证明短区间里有表示，完整的逐偶数证书另行统计。
-
-可直接交给 Lean 参与者的样例是 $2,32,1002$。两个见证为 $32=3+29$ 与 $1002=5+997$。利用 $\log 2\ge2/3$ 和 $\log 32=5\log 2$，两步只须验证 $30\le123(2/3)^2$、$970\le123(10/3)^2$。其中 $\log 2\ge2/3$ 可由 $1/t$ 在 $[1,2]$ 上的中点切线积分得到。这是待形式化的样例。
-
-**如何衡量进展。** 分别报告有限连续覆盖的终点、已在本项目重放的解析引理及尚存假设、能逐点控制的误差和适用范围。既有计算已经验算到 $4\times10^{18}$，这里的小区间用于建立可重放证书。陈氏定理的第二项允许是两个素数的乘积，三素数定理允许三个加数；只在其证明提供当前任务所需引理时安排复用。[既有计算](https://sweet.ua.pt/tos/bib/4.12.html) · [显式陈氏定理](https://arxiv.org/abs/2207.09452) · [Helfgott 三素数定理](https://arxiv.org/abs/1501.05438)
+任务台优先覆盖空闲题。六个标记 parallel 的难题允许不同团队独立试证。每份尝试有自己的工作目录、租约、分支和 PR；PR 说明写清采用的估计、常数依赖和仍需的假设。题目公开、命题类型检查通过和证明获得权威 ACCEPTED 是三个不同的状态。贡献者另行复核中英文陈述与 Lean 量词，原始核验日志给出证据清单。旧区间题的运行和署名继续保存在历史记录里。[旧目录](https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/ac48ffd/research/gaps.json) · [验证日志](https://www.movan.tech/goldbach/#records)
 
 ## English
 
-Count ordered prime pairs by $R_2(n)=\#\{p\le n:p\text{ and }n-p\text{ are prime}\}$. The goal is $R_2(n)>0$ at **each** even $n\ge4$. Equivalently, the number $E(X)$ of failures up to $X$ must be zero for every $X$. The November 20 Alpöge–Claude release includes RH for ζ and GRH for Dirichlet L-functions for all moduli and characters. Independent kernel checks are public. Distribution in residue classes can help on the major arcs. An estimate for the overlap of the primes with their reflection about $n/2$ is still needed at each individual $n$. [Release](https://alpo.ge/remark.pdf) · [MIT checks](https://math.mit.edu/~drew/grh/) · [Waterloo checks](https://mrubinst.github.io/grh-lean-verification/)
+The target is pointwise positivity of the convolution of the prime-supported logarithmic weight at every even $n\ge4$. The active catalogue consists of two foundations, three RH/GRH tasks, six correlation tasks and four tasks on exceptions. Six research problems admit parallel independent approaches. Each frozen proposition has an English brief, a Chinese brief, and a source. The strongest entries are open problems. [Task catalogue](gaps.json)
 
-| Assignment | Deliverable |
-|---|---|
-| P0 · Definitions | Freeze the equivalence of $R_2(n)>0$ with a pair of Mathlib primes summing to $n$. Audit natural subtraction, ordering, $2+2$ and the diagonal $5+5$. Use this definition in both branches. |
-| P0 · Certificates | Prove witness-checker soundness and adjacent interval composition. Certify all 499 even inputs in $[4,1000]$ and test a missing witness and a composite summand. Publish the contiguous kernel-checked endpoint. Existing numerical verification reaches $4\times10^{18}$. [Earlier computation](https://sweet.ua.pt/tos/bib/4.12.html) |
-| P1 · First analytic reproduction | Formalize the section 5 implication from the absence of a sum of two odd primes to a lower bound on a Selberg integral. Compare with its upper bound under RH to find a sum in $(x,x+123(\log x)^2]$. Prove the large-$x$ branch first. The paper starts it at $1.1\times10^{18}$ and uses published computation below that point. Independent finite coverage or a different argument is needed for the project to cover all real $x\ge2$. [Section 5](https://arxiv.org/html/2512.23534v1#S5) |
-| P1 · Independent dependency audit | In parallel, pin the upstream archive and the five theorem types, identify the subset needed, compare Lean/Mathlib 4.33.1 with our pinned toolchain, and record axiom and replay evidence. Keep explicit hypotheses until the project can verify the imported proof. [Archive and resource measurements](https://math.mit.edu/~drew/grh/) |
-| P2 · Exceptional sets | Audit the conditional argument of Pintz–Althöfer. At $\theta=1/2$ their formula gives the target $E(X)\ll_\varepsilon X^{1/2+\varepsilon}$ for each $\varepsilon>0$. Track the hypotheses and implicit constants. This bound allows infinitely many sparse exceptions. [Preprint](https://arxiv.org/abs/2610.15559v1) |
-| Open · Pointwise binary estimate | For a specified weight and arc decomposition, bound the main term below and both arc errors above at each even $n\ge N_0$. Subtract proper prime powers if using von Mangoldt weights. Obtain an effective $N_0$ and certify the entire range below it. The pointwise saving and cutoff are open deliverables. [Progressions under GRH](https://arxiv.org/abs/2003.01925) · [Binary circle method](https://arxiv.org/abs/2607.27282) |
+- **Read the upstream proof from the conclusion backwards.** Follow the nonvanishing theorem from Main through the reduction to primitive characters and reflection. Follow everyCharacter_of_row into the local-to-global and window inputs. Sutherland’s audit covers the published 4.33.1 project. Our conditional estimates expose their hypotheses until we can check the required dependencies under our own pinned toolchain. [Upstream statements](https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Statements.lean) · [Dependency closure](https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean#L973-L995) · [Independent audit](https://math.mit.edu/~drew/grh/)
+- **Build the interfaces first.** Extract a pair from a positive prime-weighted convolution. Prove the equivalence for logarithmic weights and the Fourier identity for the square of the exponential sum. Check that the frequency selects a sum of two primes. Prove the proper-prime-power correction whenever the argument uses von Mangoldt weights.
+- **Work toward cancellation at each frequency.** A GRH estimate for primes in a progression can supply a major-arc input after the range of moduli and accumulated errors are justified. Split the coefficient at the same even integer into major and minor contributions. Prove a positive margin, or bound the real signed remainder directly. An absolute-value estimate over the full circle loses the cancellation. The alternative reflection and energy tasks expose different bounds on the same correlation. [Major-arc formula](https://arxiv.org/abs/2607.27282v2)
+- **Track every remaining quantifier.** A short-interval existence theorem and an exceptional-set bound each leave a pointwise gap. For an energy approach, bound oscillation of the actual correlation and its local energy. Record any threshold and the argument extending below it. Each submission is checked against its own frozen statement in GitHub Actions. [Conditional short intervals](https://arxiv.org/html/2512.23534v1#S5) · [Exceptional-set estimates](https://arxiv.org/html/2610.15559v1)
 
-### Initial task batch
+## 核验预算 / Verification budget
 
-- **Foundations.** Representation-count positivity, the search restricted to the smaller prime, soundness of a single witness, and composition for half-open and even-ended closed ranges.
-- **Coverage.** The 499 even inputs in `[4,1000]` are split into 125 independent closed-range tasks. The first block is `[4,10]`, most blocks contain four even inputs, and the last is `[996,1000]` with three. Only an odd input lies between successive blocks. A frozen task means a block is available to claim. Contiguous coverage depends on the accepted blocks and the interval-composition proof.
-- **Short intervals.** The monotone log window, a lower bound for `log 2`, the finite pilot using 32 and 1002, and the increasing witness-chain argument are separate Lean tasks. The finite pilot retains an explicit `log 2` premise.
-- **Exceptional sets.** The first tasks prove the zero-count criterion, the second-moment upper bound on the count of exceptions, and the criterion for eliminating all exceptions from a block. Their statements use finite sums and explicit premises for the analytic estimates.
-
-The initial catalogue contains 142 statements across four programs: 10 foundations, 125 coverage blocks, 4 short-interval tasks and 3 exceptional-set tasks. Each coverage block uses only Mathlib and has its own statement, proof file and PR. Run `python -B -m unittest research.test_catalogue` to check shard identity, bilingual bounds, exact coverage and numerical witnesses for all 499 even inputs. Availability and authoritative proof verdicts come from the live desk.
-
-First handoff: claim `L-goldbach-count-positive`, `L-goldbach-closed-even-join`, the individual coverage tasks or `L-goldbach-moving-log-window`. The verifier caps the transitive closure at 16 outside proof modules. For combined coverage, collect the blocks’ witnesses into a compact standalone Lean certificate that rechecks primality, sums and complete coverage in one authoritative submission. Track bounded coverage, reproduced analytic inputs and the uniform pointwise error separately. [Verifier dependency rules](../.github/scripts/outside-guard.mjs)
-
-An early exceptional-set lemma needs only finite sums. If each exception in $F\subseteq I$ incurs $|e(n)|\ge B>0$, then $|F|B^2\le\sum_{n\in I}|e(n)|^2$. A total strictly below $B^2$ rules out every exception in that block.
-
-For finite short-interval coverage, use a sentinel $g_0=2$ and an increasing sequence of certified sums of two odd primes ending at $g_k>X$. If each gap is at most $123(\log g_i)^2$, every real $x\in[2,X]$ has the required next witness by monotonicity. Benchmark this sparse certificate at $X=1000$ before extrapolating. Record it separately from the certificate for all even integers.
-
-The proposed pilot uses just $32=3+29$ and $1002=5+997$. The gap checks reduce to $30\le123(2/3)^2$ and $970\le123(10/3)^2$ using $\log 2\ge2/3$. Integrating the midpoint tangent to $1/t$ on $[1,2]$ gives the log bound. The pilot awaits Lean verification.
-
-## 验证预算 / Verification budget
-
-沿用 2,000 分钟的测算口径。若只计检查，按每次 75、250、848 秒分别可做 1,600、480、141 次。假设有 3 个实际并行槽位、300 份任务同时到达且每份耗时相同，相应清空时间为 2 小时 5 分、6 小时 56 分 40 秒、23 小时 33 分 20 秒。实际还须计入 runner 等待、环境安装、缓存和构建时间。For certificate shards, measure the complete workflow before increasing the target range.
+按 2,000 runner 分钟作预算，只计纯检查且每次分别固定 75、250、848 秒，可做 1,600、480、141 次。设三个独立并行槽并同时收到 300 份等时提交，清空用时分别为 2 小时 5 分、6 小时 56 分 40 秒、23 小时 33 分 20 秒。实际容量取决于完整 job 时长、队列、缓存和 runner 并发。These scenarios use fixed service times, and do not estimate the mean from a median or percentile.

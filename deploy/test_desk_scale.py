@@ -116,7 +116,13 @@ class DeskScaleTest(unittest.TestCase):
                     claims = self.wave(pool, mode, "claims", claim)
                     tokens = [item["lease"]["token"] for item in claims]
                     gaps = {item["gap"]["id"] for item in claims}
-                    self.assertEqual(len(gaps), SESSIONS)
+                    catalogue = json.loads((ROOT / "research/gaps.json").read_text(encoding="utf-8"))["gaps"]
+                    self.assertEqual(gaps, {entry["id"] for entry in catalogue})
+                    for entry in catalogue:
+                        count = sum(item["gap"]["id"] == entry["id"] for item in claims)
+                        if not entry.get("parallel"):
+                            self.assertEqual(count, 1)
+                    self.assertGreater(SESSIONS, len(gaps))
                     self.assertEqual(len(set(tokens)), SESSIONS)
                     status = self.request("/api/status")["desk"]
                     self.assertEqual(set(status["assignments"]), gaps)
