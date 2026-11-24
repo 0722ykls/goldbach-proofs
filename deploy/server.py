@@ -396,12 +396,14 @@ class Handler(BaseHTTPRequestHandler):
                 size = int(self.headers.get("Content-Length", "0"))
                 if path == sponsors.DESK + "/upload" and self.headers.get_content_type() == "multipart/form-data":
                     lang = self.language(urlsplit(self.path))
+                    self.connection.settimeout(8)
                     if not 0 < size <= sponsors.LIMIT:
+                        self.discard_upload(size)
                         return self.oauth_response(path, sponsors.upload_error(lang))
                     if not SPONSOR_UPLOAD_SLOT.acquire(blocking=False):
+                        self.discard_upload(size)
                         return self.oauth_response(path, sponsors.upload_error(lang, busy=True))
                     try:
-                        self.connection.settimeout(8)
                         fields = sponsors.upload_fields(self.headers["Content-Type"], self.rfile.read(size))
                         return self.oauth_response(path, ZHIHU.handle(self.command, path, fields, self.headers))
                     finally:
@@ -419,6 +421,15 @@ class Handler(BaseHTTPRequestHandler):
         except (ValueError, OSError, sqlite3.Error):
             return self.reply(400, b'{}')
         return self.oauth_response(path, (status, headers, body))
+
+    def discard_upload(self, size):
+        # Drain a buffered proxy request so closing the TLS connection keeps the error response.
+        remaining = min(size, 5 * 1024 * 1024)
+        while remaining > 0:
+            chunk = self.rfile.read(min(remaining, 64 * 1024))
+            if not chunk:
+                break
+            remaining -= len(chunk)
 
     def oauth_response(self, path, result):
         status, headers, body = result
