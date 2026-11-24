@@ -332,6 +332,7 @@ button, a, input, select { -webkit-tap-highlight-color: transparent; }
 .goldbach-story { margin-top: clamp(2rem, 5vw, 4rem); border-top: 1px solid var(--line); padding-top: 2rem; }
 .story-chapters { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr)); gap: 1.5rem 3rem; }
 .goldbach-story h3 { font: 600 1.35rem/1.35 var(--serif); }
+.story-chapters h4 { margin: 1.3rem 0 0; font-size: 1.05rem; }
 .story-chapters p, .story-news p { margin: .6rem 0 0; max-width: 70ch; color: var(--body); }
 .goldbach-story .story-sources { display: flex; flex-wrap: wrap; gap: .35rem 1rem; margin-top: .75rem; font-size: .88rem; }
 .story-news-title { margin: 2rem 0 .5rem; }
@@ -803,6 +804,8 @@ body:not([data-problem]) .hero .open-status { vertical-align: middle; }
 .hero .open-status span { display: inline-block; width: .4rem; height: .4rem; background: #8c6b2d; border-radius: 50%; }
 .hero-question { margin-top: 1rem; color: var(--ink); }
 .hero-description { max-width: 34rem; font-size: .98rem; }
+.hero-description > span { display: block; }
+.hero-description > span + span { margin-top: .65rem; }
 .hero-counters { margin-top: 1.15rem; font-size: .88rem; }
 .hero-links .button { min-height: 2.75rem; }
 .target-card {
