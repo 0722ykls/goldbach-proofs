@@ -3861,6 +3861,26 @@
       "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
       "track": "rh-central-support",
       "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-grh-windows-major-phase",
+      "file": "lean/PEqualNP/Outside/L_goldbach_grh_windows_major_phase.lean",
+      "module": "PEqualNP.Outside.L_goldbach_grh_windows_major_phase",
+      "statement": "(∀ (Q : ℕ) [NeZero Q] (χ : DirichletCharacter ℂ Q) (s : ℂ), 0<s.re → s.re<1 → DirichletCharacter.LFunction χ s=0 → s.re=1/2) → let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); ∃ C : ℝ, 0<C ∧ ∀ (X q a : ℕ) (t : ℝ), 2≤X → 0<q → Nat.Coprime a q → let c := ∑ b ∈ (Finset.range q).filter (fun b => Nat.Coprime b q), E ((a:ℝ)*b/q); let I := Finset.Icc 1 X; ‖(∑ k ∈ I, ((ArithmeticFunction.vonMangoldt k:ℝ):ℂ)*E ((k:ℝ)*((a:ℝ)/q+t)))-(c/(Nat.totient q:ℂ))*(∑ k ∈ I,E ((k:ℝ)*t))‖ ≤ C*(q:ℝ)*Real.sqrt X*(Real.log (2*(q:ℝ)*X))^2*(1+(X:ℝ)*|t|)",
+      "plain_statement": {
+        "zh": "从 Dirichlet GRH 推出有理频率附近 Λ 指数和的主项与误差，对模数、窗口和频率偏移一致。",
+        "en": "Under Dirichlet GRH, approximate the Mangoldt exponential sum near a rational frequency uniformly in the modulus, cutoff and offset."
+      },
+      "brief": {
+        "zh": "从上游 LFunction_eq_zero_re 核对零点前提。先在 t=0 汇总单位类误差并扣除坏素数幂，再对所有前缀分部求和，保留 1+X|t|。这给主弧系数提供单变量输入，次弧仍需独立估计。",
+        "en": "Match LFunction_eq_zero_re to the zero premise. At t=0 sum the reduced-class errors and account for bad prime powers. Apply partial summation to prefixes retaining 1+X|t|; the minor-arc contribution needs a separate estimate."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
+      "track": "rh-grh-windows",
+      "role": "conditional"
     }
   ],
   "tracks": [
