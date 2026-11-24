@@ -8,7 +8,7 @@
       "zh": "在 n × n 点阵里，能放多少个点而没有任意三点共线？",
       "en": "How many points can an n × n grid hold with no three collinear?"
     },
-    "formula": "M(n) ≤ 2n",
+    "formula": "∃ δ > 0, ∀ B, ∃ n > B, M(n) ≥ (3/2 + δ)n",
     "summary": {
       "zh": "在整数点阵上复现经典的 3/2 渐近下界，再寻找能以固定比例超越它的无穷构型族。",
       "en": "Recover the classical asymptotic density 3/2 on integer grids, then seek an infinite family with a fixed improvement."
@@ -191,9 +191,82 @@
         "imports": [],
         "parallel": true,
         "source": "https://epoch.ai/frontiermath/open-problems/no-three-in-line"
+      },
+      {
+        "id": "L-no-three-in-line-repeated-residue-direction",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_repeated_residue_direction.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_repeated_residue_direction",
+        "statement": "∀ (p x y u v s t : ℤ), 0 < p → ((x+p*u)-x)*(t-y) = ((y+p*v)-y)*(s-x) ↔ u*(t-y) = v*(s-x)",
+        "plain_statement": {
+          "zh": "两个提升点相差 p(u,v) 时，第三点与它们共线当且仅当 u(t−y)=v(s−x)。",
+          "en": "For a pair separated by p(u,v), a third point (s,t) lies on its line exactly when u(t−y)=v(s−x)."
+        },
+        "brief": {
+          "zh": "在两周期窗口中，互异同余点的方向只有水平、垂直、斜率 ±1 四类。对选取掩码逐类核查整条直线上的点数。",
+          "en": "Cancel p. Distinct representatives of one residue in a two-period square yield only horizontal, vertical and the two diagonal directions. Check entire lines against the selection rule."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true
+      },
+      {
+        "id": "L-no-three-in-line-mixed-secants",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_mixed_secants.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_mixed_secants",
+        "statement": "let det := fun (a b c : ℤ × ℤ) => (b.1-a.1)*(c.2-a.2)-(b.2-a.2)*(c.1-a.1); let safe := fun (S : Finset (ℤ × ℤ)) => ∀ a ∈ S, ∀ b ∈ S, ∀ c ∈ S, a ≠ b → a ≠ c → b ≠ c → det a b c ≠ 0; let mixed := fun (A B : Finset (ℤ × ℤ)) => ∀ a ∈ A, ∀ b ∈ A, a ≠ b → ∀ c ∈ B, det a b c ≠ 0; ∀ (A U : Finset (ℤ × ℤ)), Disjoint A U → safe A → safe U → (safe (A ∪ U) ↔ mixed A U ∧ mixed U A)",
+        "plain_statement": {
+          "zh": "两组点各自合法且互不相交。其并集合法，当且仅当任一组内两点的连线都避开另一组。",
+          "en": "Two disjoint valid sets have a valid union exactly when each set avoids all secants of the other."
+        },
+        "brief": {
+          "zh": "对三点按来自两组的个数分类，交换行列式参数只会改变符号。此处 A 取删点后的旧集，U 取拟加入的新集。",
+          "en": "Classify triples by membership and use alternation of the determinant. Take A to be the retained old points and U the proposed new set."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true
+      },
+      {
+        "id": "L-no-three-in-line-exchange-budget",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_exchange_budget.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_exchange_budget",
+        "statement": "∀ (p b u r m : ℕ) (η : ℝ), 0 < η → 1 ≤ p → b = 3*(p-1) → m+r = b+u → η*(p:ℝ) ≤ (u:ℝ)-(r:ℝ) → 6 ≤ η*(p:ℝ) → (3/2+η/4)*(2*(p:ℝ)) ≤ (m:ℝ)",
+        "plain_statement": {
+          "zh": "在边长 2p 的经典构型中新增 u 点、删除 r 点。若净增至少 ηp 且 ηp≥6，最终密度至少为 3/2+η/4。",
+          "en": "A net gain of at least ηp over 3(p−1) points gives density at least 3/2+η/4 once ηp≥6."
+        },
+        "brief": {
+          "zh": "先用集合基数证明 m+r=b+u，再使用本算术引理。减掉经典构造的常数缺口 3 后，仍留出固定余量。",
+          "en": "Prove the cardinality identity for the actual exchange first. Absorb the baseline loss of three and retain a fixed margin."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true
       }
     ],
     "roadmap": [
+      {
+        "zh": [
+          "确定问题与计数上界",
+          "用整数行列式定义合法性。每行、每列至多两点，求和得 M(n)≤2n。取等时每行每列恰有两点，可用来校验满额样例。"
+        ],
+        "en": [
+          "Define the problem and count by rows",
+          "Use the integer determinant. Count by rows and columns to obtain M(n)≤2n. Saturation in both coordinates checks extremal examples."
+        ],
+        "tasks": [
+          {
+            "id": "L-no-three-in-line-grid-upper-bound",
+            "zh": "从几何条件推出上界",
+            "en": "Derive the grid upper bound"
+          },
+          {
+            "id": "L-no-three-in-line-saturated-fibres",
+            "zh": "满额构型的行列约束",
+            "en": "Rows and columns at saturation"
+          }
+        ]
+      },
       {
         "zh": [
           "复现两条有限域构造",
@@ -218,19 +291,36 @@
       },
       {
         "zh": [
-          "接上经典 3/2 下界",
-          "一组处理四份点集之间的共线情形，另一组把素数尺度的构型推广到一般边长。两者合起来复现经典下界。"
+          "核对两周期提升中的全部三点",
+          "取奇素数 p。先写出四份代表元的选取规则并数出 3(p−1) 点。三个余类互异用双曲线割线引理；只要两个余类相同，就检查该点对所在的四类方向。"
         ],
         "en": [
-          "Recover the classical 3/2 bound",
-          "Handle collinearity across four copies and transfer the prime-scale family to all sufficiently large grids. Together the tasks recover the classical lower bound."
+          "Check every triple in the two-period lift",
+          "For odd prime p specify a selection among four lifts and count 3(p−1) points. Use the conic for three distinct residues and the four direction checks whenever a residue repeats."
         ],
         "tasks": [
+          {
+            "id": "L-no-three-in-line-repeated-residue-direction",
+            "zh": "把重复余类化为方向约束",
+            "en": "Reduce repeated residues to directions"
+          },
           {
             "id": "L-no-three-in-line-two-period-lift",
             "zh": "两周期点阵构造",
             "en": "The two-period construction"
-          },
+          }
+        ]
+      },
+      {
+        "zh": [
+          "复现所有充分大边长的基线",
+          "取不超过 n/2 的最大素数 p，用素数定理给出 2p/n→1。嵌入后得到 M(n)≥(3/2−o(1))n。这一步可与提升证明独立准备。"
+        ],
+        "en": [
+          "Transfer the baseline to general sides",
+          "Choose the largest prime p≤n/2. The prime number theorem gives 2p/n→1. Embed the smaller square to recover the eventual baseline."
+        ],
+        "tasks": [
           {
             "id": "L-no-three-in-line-density-transfer",
             "zh": "从素数边长推到一般边长",
@@ -240,18 +330,35 @@
       },
       {
         "zh": [
-          "寻找固定的密度增益",
-          "目标是在无穷多个边长上持续超过 1.5n。另一路可从上界的等号条件反推高密度构型的结构。"
+          "试验新点并计算必须删除的旧点",
+          "固定经典点集 B，试取另一模双曲线上的合法子集 U，与 B 不交。先删除落在 U 的割线上的旧点；在剩余旧点上，两点连线穿过 U 就连边。任一顶点覆盖给出可行的额外删除集。保存参数、点表及删除证书。"
         ],
         "en": [
-          "Find a fixed density gain",
-          "Seek a family that beats 1.5n by a fixed fraction. Work backward from the equality conditions at the upper bound for structural clues."
+          "Test additions and price the deletions",
+          "Fix a classical set B and test a disjoint valid subset U from a different modular hyperbola. Delete old points on secants of U, then join surviving old pairs whose line hits U. A vertex cover specifies the remaining deletions. Record parameters, coordinates and a deletion certificate."
         ],
         "tasks": [
           {
-            "id": "L-no-three-in-line-saturated-fibres",
-            "zh": "满额构型的行列约束",
-            "en": "Rows and columns at saturation"
+            "id": "L-no-three-in-line-mixed-secants",
+            "zh": "证明两类混合三点判据",
+            "en": "Prove the mixed-secant criterion"
+          }
+        ]
+      },
+      {
+        "zh": [
+          "证明无穷族有固定净增益",
+          "开放步骤。给出同一条选点、删点规则，在无穷多个素数上证明 |U|−|D|≥ηp，η>0 固定。配合预算引理得 δ=η/4。若一个模板中匹配下界已耗尽新增点数，记录障碍后更换模板。其他构造可直接提交总目标。"
+        ],
+        "en": [
+          "Prove a uniform net gain",
+          "Open step. Give a uniform rule with |U|−|D|≥ηp for infinitely many primes and one η>0. The budget gives δ=η/4. If a matching lower bound exhausts the additions for a template, record the obstruction and change the template. Other families can address the endpoint directly."
+        ],
+        "tasks": [
+          {
+            "id": "L-no-three-in-line-exchange-budget",
+            "zh": "把净增点数换成固定比例",
+            "en": "Convert a net gain into a fixed margin"
           },
           {
             "id": "L-no-three-in-line-density-gain",
@@ -1089,7 +1196,7 @@
         "id": "L-hash-collision-lab-pair-shell",
         "file": "lean/PEqualNP/Outside/L_hash_collision_lab_pair_shell.lean",
         "module": "PEqualNP.Outside.L_hash_collision_lab_pair_shell",
-        "statement": "∀ m x y z : ℤ, x+y+z=0 → let f := fun a : ℤ => a*(a-1); f (m+x)+f (m+y)+f (m+z) = 3*m*(m-1)+2*(x^2+x*y+y^2)",
+        "statement": "∀ (m x y z : ℤ), x + y + z = 0 → (m + x) * (m + x - 1) + (m + y) * (m + y - 1) + (m + z) * (m + z - 1) = 3 * (m) * (m - 1) + 2 * (x ^ 2 + x * y + y ^ 2)",
         "plain_statement": {
           "zh": "三个桶以 m 为中心时，偏差和为零，二阶下降阶乘之和等于 3m(m−1)+2S，其中 S=x²+xy+y²。",
           "en": "For zero-sum deviations the pair polynomial is 3m(m−1)+2S."
@@ -1106,7 +1213,7 @@
         "id": "L-hash-collision-lab-triple-shell",
         "file": "lean/PEqualNP/Outside/L_hash_collision_lab_triple_shell.lean",
         "module": "PEqualNP.Outside.L_hash_collision_lab_triple_shell",
-        "statement": "∀ m x y z : ℤ, x+y+z=0 → let f := fun a : ℤ => a*(a-1)*(a-2); f (m+x)+f (m+y)+f (m+z) = 3*f m+6*(m-1)*(x^2+x*y+y^2)+3*x*y*z",
+        "statement": "∀ (m x y z : ℤ), x + y + z = 0 → (m + x) * (m + x - 1) * (m + x - 2) + (m + y) * (m + y - 1) * (m + y - 2) + (m + z) * (m + z - 1) * (m + z - 2) = 3 * (m) * (m - 1) * (m - 2) + 6 * (m - 1) * (x ^ 2 + x * y + y ^ 2) + 3 * x * y * z",
         "plain_statement": {
           "zh": "三阶下降阶乘之和等于 3m(m−1)(m−2)+6(m−1)S+3xyz。",
           "en": "The triple polynomial is 3m(m−1)(m−2)+6(m−1)S+3xyz."
