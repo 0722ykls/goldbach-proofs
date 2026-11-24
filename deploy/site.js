@@ -300,7 +300,8 @@ function mapNode(gap) {
 }
 
 const graph = document.getElementById('network-map');
-const palette = { available: '#a6ae9e', occupied: '#f2be63', verified: '#86ca92' };
+const palette = { available: '#aebcaf', occupied: '#f2be63', verified: '#9cdaa2' };
+const programPalette = { foundation: '#a0c6a1', grh: '#ebc883', correlation: '#9ab9d7', exceptions: '#c4acd7' };
 let graphGaps = [];
 let graphTargets = [];
 function drawNetwork() {
@@ -321,12 +322,19 @@ function drawNetwork() {
   function dot(p, radius, color) {
     ctx.fillStyle = color; ctx.beginPath(); ctx.arc(p.x, p.y, radius, 0, 2 * Math.PI); ctx.fill();
   }
-  function caption(p, text) {
-    ctx.font = '500 13px system-ui, sans-serif';
+  function caption(p, text, color) {
+    ctx.font = w < 460 ? '550 11px system-ui, sans-serif' : '550 13px system-ui, sans-serif';
     ctx.textAlign = 'center';
     const width = ctx.measureText(text).width;
-    ctx.fillStyle = '#222421'; ctx.fillRect(p.x - width / 2 - 4, p.y - 9, width + 8, 18);
-    ctx.fillStyle = '#f3eee0'; ctx.fillText(text, p.x, p.y + 4);
+    ctx.beginPath();
+    if (ctx.roundRect) ctx.roundRect(p.x - width / 2 - 8, p.y - 12, width + 16, 24, 4);
+    else ctx.rect(p.x - width / 2 - 8, p.y - 12, width + 16, 24);
+    ctx.fillStyle = '#192b23';
+    ctx.fill();
+    ctx.strokeStyle = color + '90';
+    ctx.stroke();
+    ctx.fillStyle = color;
+    ctx.fillText(text, p.x, p.y + 4);
   }
   const keys = selectedProgram ? [selectedProgram] : [...programs.keys()];
   keys.forEach((key, index) => {
@@ -335,7 +343,8 @@ function drawNetwork() {
     const hub = selectedProgram ? center : {
       x: w * (index % 2 ? 0.75 : 0.25), y: h * (index < 2 ? 0.25 : 0.75)
     };
-    if (!selectedProgram) edge(center, hub, '#7b806c');
+    const tint = programPalette[key];
+    if (!selectedProgram) edge(center, hub, tint + '66');
     const radiusX = w * (selectedProgram ? .44 : .19);
     const radiusY = h * (selectedProgram ? .43 : .20);
     gaps.forEach((gap, i) => {
@@ -343,15 +352,17 @@ function drawNetwork() {
       const radius = Math.sqrt((i + 1) / gaps.length);
       const p = { x: hub.x + radius * radiusX * Math.cos(angle),
         y: hub.y + radius * radiusY * Math.sin(angle) };
-      edge(hub, p, '#43493e');
-      dot(p, selectedProgram ? 4 : 3, palette[gapStatus(gap).kind]);
-      graphTargets.push({ ...p, gap, radius: 7 });
+      edge(hub, p, tint + '70');
+      const { kind } = gapStatus(gap);
+      dot(p, selectedProgram ? 7 : 6, palette[kind] + '26');
+      dot(p, selectedProgram ? 4.25 : 3.5, palette[kind]);
+      graphTargets.push({ ...p, gap, radius: 10 });
     });
-    caption(hub, programName(key));
+    caption(hub, programName(key), tint);
     graphTargets.push({ ...hub, program: key, radius: 15 });
   });
   if (!selectedProgram || !graphGaps.length) {
-    caption(center, graphGaps.length ? (lang === 'zh' ? '强哥德巴赫' : 'Binary Goldbach') : strings.empty);
+    caption(center, graphGaps.length ? (lang === 'zh' ? '强哥德巴赫' : 'Binary Goldbach') : strings.empty, '#f1ddb1');
   }
 }
 function graphTarget(event) {
@@ -659,6 +670,13 @@ async function loadStatus() {
     lemmaState.disabled = false;
     for (const name of ['accepted', 'open', 'published', 'attempts']) {
       document.getElementById('count-' + name).textContent = counts[name].toLocaleString(locale);
+    }
+    const proofProgress = document.getElementById('proof-progress');
+    if (proofProgress) {
+      proofProgress.max = Math.max(1, counts.published);
+      proofProgress.value = counts.accepted;
+      document.getElementById('proof-progress-caption').textContent =
+        counts.accepted.toLocaleString(locale) + ' / ' + counts.published.toLocaleString(locale);
     }
     renderResults(results);
     renderDesk(desk);
