@@ -224,16 +224,14 @@ function openGap(id) {
   detailContent.scrollTop = 0;
 }
 
-if (topic) {
-  document.getElementById('roadmap')?.addEventListener('click', event => {
+document.getElementById('roadmap')?.addEventListener('click', event => {
     const link = event.target.closest('a[data-roadmap-task]');
     if (!link || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
     if (publishedGaps.some(gap => gap.id === link.dataset.roadmapTask)) {
       event.preventDefault();
       openGap(link.dataset.roadmapTask);
     }
-  });
-}
+});
 
 function renderGapDetail() {
   const gap = publishedGaps.find(entry => entry.id === selectedGap);
@@ -241,7 +239,12 @@ function renderGapDetail() {
   const status = gapStatus(gap);
   const identity = element('div', undefined, 'detail-identity');
   identity.append(element('code', gap.id), verdictTag(status.label, status.style));
-  const context = programName(programOf(gap));
+  const role = {
+    endpoint: lang === 'zh' ? '与强哥德巴赫猜想等价的总目标' : 'Final target equivalent to strong Goldbach',
+    target: lang === 'zh' ? '待突破的解析估计' : 'Open analytic target',
+    conditional: lang === 'zh' ? '需使用命题中所列假设' : 'Conditional on the stated hypotheses'
+  }[gap.role];
+  const context = [programName(programOf(gap)), role].filter(Boolean).join(' · ');
   detailContent.replaceChildren(
     identity,
     element('h3', gap.plain_statement[lang]),
@@ -737,7 +740,7 @@ async function loadStatus() {
       renderProgramCounts();
       renderLemmas();
       if (lemmaDialog.open) renderGapDetail();
-      if (topic && lastGaps === null) {
+      if (lastGaps === null) {
         const requested = new URLSearchParams(window.location.search).get('lemma');
         if (requested && gaps.some(gap => gap.id === requested)) openGap(requested);
       }

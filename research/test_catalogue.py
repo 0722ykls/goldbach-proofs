@@ -55,6 +55,19 @@ class CatalogueTests(unittest.TestCase):
                 for lang in ("en", "zh"):
                     self.assertTrue(gap["plain_statement"][lang].strip())
 
+    def test_goldbach_tracks_separate_sublemmas_from_the_endpoint(self):
+        tracks = json.loads(Path(__file__).with_name("gaps.json").read_bytes())["tracks"]
+        keys = {t["id"] for t in tracks}
+        tasks = [g for g in GAPS if "track" in g]
+        self.assertGreaterEqual(len(tasks), 100)
+        self.assertEqual(len({g["statement"] for g in tasks}), len(tasks))
+        self.assertEqual({g["track"] for g in tasks}, keys)
+        for track in tracks:
+            self.assertTrue(set(track["feeds"]) <= keys)
+        self.assertTrue(all(g["role"] in {"lemma", "conditional", "target"} for g in tasks))
+        self.assertEqual([g["id"] for g in GAPS if g.get("role") == "endpoint"],
+                         ["L-goldbach-binary-pointwise-positivity"])
+
     def test_analytic_programs_and_context(self):
         self.assertEqual({g["program"] for g in GAPS},
                          {"foundation", "grh", "correlation", "exceptions"})

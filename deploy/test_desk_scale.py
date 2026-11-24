@@ -225,7 +225,9 @@ class DeskScaleTest(unittest.TestCase):
                 self.assertEqual(len(expected), expected_claims[path])
                 self.assertEqual(status["desk"]["active"], len(expected))
                 self.assertEqual(set(status["desk"]["assignments"]), set(expected))
-                self.assertEqual(set(expected), {gap["id"] for gap in status["gaps"]})
+                catalogue = {gap["id"] for gap in status["gaps"]}
+                self.assertTrue(set(expected) <= catalogue)
+                self.assertEqual(len(set(expected)), min(len(expected), len(catalogue)))
             self.wave(pool, f"{len(paths)} problems", "submissions", lambda i: self.request(
                 claims[i][0] + "/api/desk/submit", {"pr": i + 1, "head": f"{i + 1:040x}"}, token=claims[i][1]
             ))

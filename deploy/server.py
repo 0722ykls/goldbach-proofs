@@ -26,7 +26,8 @@ DB = Path(os.environ["STATE_DIRECTORY"]) / "verdicts.sqlite3"
 oauth_credential = CREDS / "zhihu-oauth"
 ZHIHU = ZhihuOAuth(DB.with_name("contributor-links.sqlite3"), json.loads(oauth_credential.read_bytes())
                    if oauth_credential.is_file() else None)
-GAPS = json.loads((ROOT / "gaps.json").read_text(encoding="utf-8"))["gaps"]
+GOLDBACH_CATALOGUE = json.loads((ROOT / "gaps.json").read_text(encoding="utf-8"))
+GAPS = GOLDBACH_CATALOGUE["gaps"]
 DESK = Desk(DB, GAPS, SECRET)
 PROBLEM_FILE = ROOT / "problems.json"
 PROBLEMS = json.loads(PROBLEM_FILE.read_text(encoding="utf-8")) if PROBLEM_FILE.exists() else {}
@@ -140,6 +141,35 @@ def research_status(desk=DESK):
             "attempts": attempts,
         },
     }
+
+def goldbach_task_routes(lang):
+    zh = lang == "zh"
+    heading = "按子命题领取" if zh else "Choose a proof task"
+    note = ("对每个偶数证明素数卷积为正，就是最终猜想。下列工作线可分别领取。"
+            "主弧下界与次弧逐点抵消仍待证明；即使两者成立，阈值以下也要单独覆盖。" if zh else
+            "Prime convolution positivity at every even target is the final conjecture. "
+            "The major-arc floor and pointwise minor-arc cancellation are research targets. "
+            "Even with both, values below the resulting threshold need separate coverage.")
+    tracks = GOLDBACH_CATALOGUE.get("tracks", [])
+    names = {track["id"]: track["title"][lang] for track in tracks}
+    sections = []
+    for track in tracks:
+        links = []
+        for gap in GAPS:
+            if gap.get("track") != track["id"]:
+                continue
+            key = escape(gap["id"])
+            prefix = {"target": "待突破 · " if zh else "Research target · ",
+                      "conditional": "条件归约 · " if zh else "Conditional · "}.get(gap.get("role"), "")
+            links.append(f'<a href="?lang={lang}&amp;lemma={key}#roadmap" data-roadmap-task="{key}">'
+                         f'{prefix}{escape(gap["plain_statement"][lang])}</a>')
+        uses = " · ".join(f'<a href="#track-{key}">{escape(names[key])}</a>' for key in track["feeds"])
+        next_steps = f'<p>{"用于" if zh else "Feeds into"}　{uses}</p>' if uses else ""
+        sections.append(f'<details id="track-{track["id"]}"><summary>{escape(names[track["id"]])} ({len(links)})</summary>'
+                        f'<p>{escape(track["description"][lang])}</p>{next_steps}<div class="roadmap-tasks">'
+                        f'{"".join(links)}</div></details>')
+    return f'<div class="goldbach-tracks"><h3>{heading}</h3><p>{note}</p>{"".join(sections)}</div>'
+
 
 def problem_page(page, slug, lang):
     data = PROBLEMS[slug]
@@ -436,6 +466,8 @@ class Handler(BaseHTTPRequestHandler):
         page = (ROOT / f"{lang}.html").read_text(encoding="utf-8")
         if slug != "goldbach":
             page = problem_page(page, slug, lang)
+        else:
+            page = page.replace('<ol class="roadmap">', goldbach_task_routes(lang) + '<ol class="roadmap">', 1)
         page = page.replace("</body>", discussion_widget(lang, "" if slug == "goldbach" else "../../") + "</body>", 1)
         self.reply(200, page.encode(), "text/html", lang)
 

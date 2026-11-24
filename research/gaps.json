@@ -155,7 +155,8 @@
         "en": "Open endpoint equivalent to strong Goldbach. A major/minor-arc argument, a sieve, or a new correlation estimate would have to deliver strict positivity at each input."
       },
       "source": "https://arxiv.org/abs/2607.27282v2",
-      "parallel": true
+      "parallel": true,
+      "role": "endpoint"
     },
     {
       "id": "L-goldbach-dyadic-correlation-floor",
@@ -260,6 +261,2148 @@
         "en": "Project-proposed localization: a large error at n must cost energy throughout W. Applying it to binary prime correlation still requires oscillation and second-moment bounds."
       },
       "source": "https://arxiv.org/abs/2607.27282v2"
+    },
+    {
+      "id": "L-goldbach-rep-reflect",
+      "file": "lean/PEqualNP/Outside/L_goldbach_rep_reflect.lean",
+      "module": "PEqualNP.Outside.L_goldbach_rep_reflect",
+      "statement": "∀ n p : ℕ, let reps := fun n : ℕ => (Finset.range (n+1)).filter (fun p => Nat.Prime p ∧ Nat.Prime (n-p)); p ∈ reps n → n-p ∈ reps n",
+      "plain_statement": {
+        "zh": "交换两个加数给出表示集的自映射。",
+        "en": "Reflection preserves the representation set."
+      },
+      "brief": {
+        "zh": "先由成员资格推出 p≤n。",
+        "en": "Recover p≤n before simplifying subtraction."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "representations",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-rep-half-count",
+      "file": "lean/PEqualNP/Outside/L_goldbach_rep_half_count.lean",
+      "module": "PEqualNP.Outside.L_goldbach_rep_half_count",
+      "statement": "∀ n : ℕ, let reps := fun n : ℕ => (Finset.range (n+1)).filter (fun p => Nat.Prime p ∧ Nat.Prime (n-p)); (reps n).card = 2*((reps n).filter (fun p => 2*p<n)).card + (if Even n ∧ Nat.Prime (n/2) then 1 else 0)",
+      "plain_statement": {
+        "zh": "由严格下半部和对角项还原有序表示数。",
+        "en": "Recover ordered counts from the lower half and diagonal."
+      },
+      "brief": {
+        "zh": "用反射配对非对角项。",
+        "en": "Pair off-diagonal terms by reflection."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "representations",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-rep-odd-support",
+      "file": "lean/PEqualNP/Outside/L_goldbach_rep_odd_support.lean",
+      "module": "PEqualNP.Outside.L_goldbach_rep_odd_support",
+      "statement": "∀ n : ℕ, Even n → 4<n → let reps := fun n : ℕ => (Finset.range (n+1)).filter (fun p => Nat.Prime p ∧ Nat.Prime (n-p)); ∀ p ∈ reps n, Odd p ∧ Odd (n-p)",
+      "plain_statement": {
+        "zh": "大于四的偶数的每个素数表示都由两个奇素数组成。",
+        "en": "Every representation of an even number above four uses two odd primes."
+      },
+      "brief": {
+        "zh": "单列素数 2 的可能性。",
+        "en": "Isolate the prime two."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "representations",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-rep-coprime-target",
+      "file": "lean/PEqualNP/Outside/L_goldbach_rep_coprime_target.lean",
+      "module": "PEqualNP.Outside.L_goldbach_rep_coprime_target",
+      "statement": "∀ n : ℕ, let reps := fun n : ℕ => (Finset.range (n+1)).filter (fun p => Nat.Prime p ∧ Nat.Prime (n-p)); ∀ p ∈ reps n, ¬ Nat.Coprime p n → n=2*p",
+      "plain_statement": {
+        "zh": "与目标数有公因子的表示只能是对角表示。",
+        "en": "A noncoprime prime summand forces a diagonal representation."
+      },
+      "brief": {
+        "zh": "公因子必须等于 p，也整除另一个素数。",
+        "en": "The common prime divides both summands."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "representations",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-rep-count-cap",
+      "file": "lean/PEqualNP/Outside/L_goldbach_rep_count_cap.lean",
+      "module": "PEqualNP.Outside.L_goldbach_rep_count_cap",
+      "statement": "∀ n : ℕ, let reps := fun n : ℕ => (Finset.range (n+1)).filter (fun p => Nat.Prime p ∧ Nat.Prime (n-p)); (reps n).card ≤ ((Finset.range (n+1)).filter Nat.Prime).card",
+      "plain_statement": {
+        "zh": "有序表示数至多为不超过 n 的素数个数。",
+        "en": "The prime count bounds the ordered representation count."
+      },
+      "brief": {
+        "zh": "比较两组过滤条件。",
+        "en": "Include the representation set in the primes up to n."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "representations",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-weight-count-sandwich",
+      "file": "lean/PEqualNP/Outside/L_goldbach_weight_count_sandwich.lean",
+      "module": "PEqualNP.Outside.L_goldbach_weight_count_sandwich",
+      "statement": "∀ n : ℕ, 2≤n → let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let reps := fun n : ℕ => (Finset.range (n+1)).filter (fun p => Nat.Prime p ∧ Nat.Prime (n-p)); let conv := fun (u v : ℕ → ℝ) (n : ℕ) => Finset.sum (Finset.range (n+1)) (fun k => u k*v (n-k)); (reps n).card*(Real.log 2)^2 ≤ conv w w n ∧ conv w w n ≤ (reps n).card*(Real.log (n:ℝ))^2",
+      "plain_statement": {
+        "zh": "用有序表示数从两侧控制对数加权卷积。",
+        "en": "Sandwich the log-weighted correlation using the ordered count."
+      },
+      "brief": {
+        "zh": "在表示集上逐项夹逼。",
+        "en": "Bound each surviving prime weight above and below."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "representations",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-conv-swap",
+      "file": "lean/PEqualNP/Outside/L_goldbach_conv_swap.lean",
+      "module": "PEqualNP.Outside.L_goldbach_conv_swap",
+      "statement": "let conv := fun (u v : ℕ → ℝ) (n : ℕ) => Finset.sum (Finset.range (n+1)) (fun k => u k*v (n-k)); ∀ (u v : ℕ → ℝ) (n : ℕ), conv u v n = conv v u n",
+      "plain_statement": {
+        "zh": "有限加法卷积交换两个权函数后不变。",
+        "en": "Finite additive convolution is commutative."
+      },
+      "brief": {
+        "zh": "反向重排长度 n+1 的和。",
+        "en": "Reverse the summation order."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "representations",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-conv-mass-prefix",
+      "file": "lean/PEqualNP/Outside/L_goldbach_conv_mass_prefix.lean",
+      "module": "PEqualNP.Outside.L_goldbach_conv_mass_prefix",
+      "statement": "let conv := fun (u v : ℕ → ℝ) (n : ℕ) => Finset.sum (Finset.range (n+1)) (fun k => u k*v (n-k)); ∀ (u v : ℕ → ℝ) (N : ℕ), Finset.sum (Finset.range (N+1)) (conv u v) = Finset.sum (Finset.range (N+1)) (fun p => u p * Finset.sum (Finset.range (N-p+1)) v)",
+      "plain_statement": {
+        "zh": "前缀卷积总量等于三角形区域上的双和。",
+        "en": "Total prefix correlation equals a triangular double sum."
+      },
+      "brief": {
+        "zh": "按第一个加数重新分组。",
+        "en": "Group the lattice triangle by the first summand."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "representations",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-conv-window-loss",
+      "file": "lean/PEqualNP/Outside/L_goldbach_conv_window_loss.lean",
+      "module": "PEqualNP.Outside.L_goldbach_conv_window_loss",
+      "statement": "let conv := fun (u v : ℕ → ℝ) (n : ℕ) => Finset.sum (Finset.range (n+1)) (fun k => u k*v (n-k)); ∀ (u v : ℕ → ℝ) (n : ℕ) (A : Finset ℕ), (∀ k, 0≤u k ∧ 0≤v k) → let T := Finset.range (n+1); conv u v n - Finset.sum (T ∩ A) (fun k => u k*v (n-k)) = Finset.sum (T \\ A) (fun k => u k*v (n-k))",
+      "plain_statement": {
+        "zh": "截取加数窗口时，损失恰等于窗口外的卷积质量。",
+        "en": "The loss from a summand window equals the mass outside it."
+      },
+      "brief": {
+        "zh": "把完整区间分成两个不交部分。",
+        "en": "Partition the summation range into disjoint pieces."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "representations",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-conv-ltwo",
+      "file": "lean/PEqualNP/Outside/L_goldbach_conv_ltwo.lean",
+      "module": "PEqualNP.Outside.L_goldbach_conv_ltwo",
+      "statement": "let conv := fun (u v : ℕ → ℝ) (n : ℕ) => Finset.sum (Finset.range (n+1)) (fun k => u k*v (n-k)); ∀ (u v : ℕ → ℝ) (n : ℕ), (conv u v n)^2 ≤ Finset.sum (Finset.range (n+1)) (fun p => (u p)^2) * Finset.sum (Finset.range (n+1)) (fun p => (v p)^2)",
+      "plain_statement": {
+        "zh": "用两个权的平方和控制卷积系数的平方。",
+        "en": "Bound a squared correlation by the product of two energies."
+      },
+      "brief": {
+        "zh": "对反射后的第二组权用柯西不等式。",
+        "en": "Apply Cauchy–Schwarz with the reflected second weight."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "representations",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-mangoldt-residual-pos",
+      "file": "lean/PEqualNP/Outside/L_goldbach_mangoldt_residual_pos.lean",
+      "module": "PEqualNP.Outside.L_goldbach_mangoldt_residual_pos",
+      "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let h := fun k : ℕ => ArithmeticFunction.vonMangoldt k-w k; ∀ k, 0 ≤ h k",
+      "plain_statement": {
+        "zh": "Λ 减去素数对数权逐点非负。",
+        "en": "The residual Mangoldt weight is nonnegative."
+      },
+      "brief": {
+        "zh": "将素数与合数分开讨论。",
+        "en": "Separate primes from composite indices."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2610.15559",
+      "track": "powers",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-mangoldt-power-support",
+      "file": "lean/PEqualNP/Outside/L_goldbach_mangoldt_power_support.lean",
+      "module": "PEqualNP.Outside.L_goldbach_mangoldt_power_support",
+      "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let h := fun k : ℕ => ArithmeticFunction.vonMangoldt k-w k; ∀ k, h k ≠ 0 → ∃ p j : ℕ, Nat.Prime p ∧ 2≤j ∧ k=p^j",
+      "plain_statement": {
+        "zh": "残差非零只可能出现在指数至少为二的素数幂处。",
+        "en": "A nonzero residual is supported on a proper prime power."
+      },
+      "brief": {
+        "zh": "使用 Λ 的支集刻画并排除指数一。",
+        "en": "Use the support of Λ and remove exponent one."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2610.15559",
+      "track": "powers",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-power-base-bound",
+      "file": "lean/PEqualNP/Outside/L_goldbach_power_base_bound.lean",
+      "module": "PEqualNP.Outside.L_goldbach_power_base_bound",
+      "statement": "∀ p j X : ℕ, 2≤p → 2≤j → p^j≤X → p≤Nat.sqrt X",
+      "plain_statement": {
+        "zh": "真幂的底数不超过尺度的整数平方根。",
+        "en": "Bases of proper powers up to X are at most its integer square root."
+      },
+      "brief": {
+        "zh": "比较 p² 与 pʲ。",
+        "en": "Compare p² with pʲ."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2610.15559",
+      "track": "powers",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-power-height-bound",
+      "file": "lean/PEqualNP/Outside/L_goldbach_power_height_bound.lean",
+      "module": "PEqualNP.Outside.L_goldbach_power_height_bound",
+      "statement": "∀ p j X : ℕ, 2≤p → p^j≤X → j≤Nat.log 2 X",
+      "plain_statement": {
+        "zh": "对数控制给定尺度内素数幂的指数。",
+        "en": "The integer base-two logarithm bounds the exponent."
+      },
+      "brief": {
+        "zh": "先用 2ʲ≤pʲ。",
+        "en": "Compare with powers of two."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2610.15559",
+      "track": "powers",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-power-index-count",
+      "file": "lean/PEqualNP/Outside/L_goldbach_power_index_count.lean",
+      "module": "PEqualNP.Outside.L_goldbach_power_index_count",
+      "statement": "∀ X : ℕ, let T := (Finset.range (X+1)).filter (fun k => ArithmeticFunction.vonMangoldt k ≠ 0 ∧ ¬ Nat.Prime k); T.card ≤ (Nat.sqrt X+1)*(Nat.log 2 X+1)",
+      "plain_statement": {
+        "zh": "真素数幂的个数由底数、指数的取值数之积控制。",
+        "en": "Bound the number of proper prime powers by a base–exponent box."
+      },
+      "brief": {
+        "zh": "将候选数放进幂映射的有限像。",
+        "en": "Cover the support by the image of a finite box."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2610.15559",
+      "track": "powers",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-residual-log-cap",
+      "file": "lean/PEqualNP/Outside/L_goldbach_residual_log_cap.lean",
+      "module": "PEqualNP.Outside.L_goldbach_residual_log_cap",
+      "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let h := fun k : ℕ => ArithmeticFunction.vonMangoldt k-w k; ∀ X k : ℕ, 2≤X → k≤X → h k ≤ Real.log (X:ℝ)",
+      "plain_statement": {
+        "zh": "截断残差的每一项至多为 log X。",
+        "en": "Every residual term up to X is at most log X."
+      },
+      "brief": {
+        "zh": "先控制 Λ(k)，再用 w 非负。",
+        "en": "Bound Λ(k) first and use nonnegativity of w."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2610.15559",
+      "track": "powers",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-residual-lone",
+      "file": "lean/PEqualNP/Outside/L_goldbach_residual_lone.lean",
+      "module": "PEqualNP.Outside.L_goldbach_residual_lone",
+      "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let h := fun k : ℕ => ArithmeticFunction.vonMangoldt k-w k; ∀ X : ℕ, 2≤X → Finset.sum (Finset.range (X+1)) h ≤ ((Nat.sqrt X+1:ℕ):ℝ)*((Nat.log 2 X+1:ℕ):ℝ)*Real.log (X:ℝ)",
+      "plain_statement": {
+        "zh": "由支集大小和单项上界控制真幂残差的一阶总量。",
+        "en": "Bound total residual mass by support size times log X."
+      },
+      "brief": {
+        "zh": "先限制到非零项，再对每项取上界。",
+        "en": "Restrict to the support before applying the pointwise cap."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2610.15559",
+      "track": "powers",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-conv-weight-replacement",
+      "file": "lean/PEqualNP/Outside/L_goldbach_conv_weight_replacement.lean",
+      "module": "PEqualNP.Outside.L_goldbach_conv_weight_replacement",
+      "statement": "let conv := fun (u v : ℕ → ℝ) (n : ℕ) => Finset.sum (Finset.range (n+1)) (fun k => u k*v (n-k)); ∀ (u v : ℕ → ℝ) (n : ℕ), conv u u n - conv v v n = conv (fun k => u k-v k) u n + conv v (fun k => u k-v k) n",
+      "plain_statement": {
+        "zh": "双边换权误差分成左右各换一次的两项。",
+        "en": "Split a two-sided change of weight into two single replacements."
+      },
+      "brief": {
+        "zh": "逐项展开乘积之差。",
+        "en": "Telescope the product difference."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2610.15559",
+      "track": "powers",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-replacement-lone-linf",
+      "file": "lean/PEqualNP/Outside/L_goldbach_replacement_lone_linf.lean",
+      "module": "PEqualNP.Outside.L_goldbach_replacement_lone_linf",
+      "statement": "let conv := fun (u v : ℕ → ℝ) (n : ℕ) => Finset.sum (Finset.range (n+1)) (fun k => u k*v (n-k)); ∀ (u v : ℕ → ℝ) (n : ℕ) (M : ℝ), (∀ k≤n, |u k|≤M ∧ |v k|≤M) → |conv u u n-conv v v n| ≤ 2*M*Finset.sum (Finset.range (n+1)) (fun k => |u k-v k|)",
+      "plain_statement": {
+        "zh": "以单个权的最大值和残差的一阶总量控制双边换权误差。",
+        "en": "Control two-sided replacement by an L¹ error and a uniform cap."
+      },
+      "brief": {
+        "zh": "两项分别估计，反射其中一项。",
+        "en": "Bound the two replacements and reflect one sum."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2610.15559",
+      "track": "powers",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-power-error-sublinear",
+      "file": "lean/PEqualNP/Outside/L_goldbach_power_error_sublinear.lean",
+      "module": "PEqualNP.Outside.L_goldbach_power_error_sublinear",
+      "statement": "∀ C e : ℝ, 0<e → ∃ N : ℕ, ∀ n : ℕ, N≤n → C*Real.sqrt (n:ℝ)*(Real.log (n:ℝ))^3 ≤ e*(n:ℝ)",
+      "plain_statement": {
+        "zh": "平方根乘三次对数的误差最终小于任意正比例的线性主项。",
+        "en": "A square-root times log-cubed error is eventually below every positive linear margin."
+      },
+      "brief": {
+        "zh": "用对数相对于正幂的渐近估计。",
+        "en": "Use logarithmic growth versus a fixed positive power."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2610.15559",
+      "track": "powers",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-unit-period",
+      "file": "lean/PEqualNP/Outside/L_goldbach_unit_period.lean",
+      "module": "PEqualNP.Outside.L_goldbach_unit_period",
+      "statement": "let U := fun q n : ℕ => (Finset.range q).filter (fun a => Nat.Coprime a q ∧ Nat.Coprime (n+q-a) q); ∀ q n, U q (n+q)=U q n",
+      "plain_statement": {
+        "zh": "目标模 q 平移不改变允许的首加数余类。",
+        "en": "Admissible first residues are periodic in the target."
+      },
+      "brief": {
+        "zh": "用 gcd 对加模数不变。",
+        "en": "Use invariance of gcd under adding q."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "residues",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-unit-reflection",
+      "file": "lean/PEqualNP/Outside/L_goldbach_unit_reflection.lean",
+      "module": "PEqualNP.Outside.L_goldbach_unit_reflection",
+      "statement": "let U := fun q n : ℕ => (Finset.range q).filter (fun a => Nat.Coprime a q ∧ Nat.Coprime (n+q-a) q); ∀ q n a, a ∈ U q n → (n+q-a)%q ∈ U q n",
+      "plain_statement": {
+        "zh": "交换两个加数保留允许的余类。",
+        "en": "Swapping summands preserves admissible residues."
+      },
+      "brief": {
+        "zh": "利用 a<q 后再化简自然数减法。",
+        "en": "Use a<q before simplifying the natural subtraction."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "residues",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-unit-parity",
+      "file": "lean/PEqualNP/Outside/L_goldbach_unit_parity.lean",
+      "module": "PEqualNP.Outside.L_goldbach_unit_parity",
+      "statement": "let U := fun q n : ℕ => (Finset.range q).filter (fun a => Nat.Coprime a q ∧ Nat.Coprime (n+q-a) q); ∀ n, (U 2 n).card = if Even n then 1 else 0",
+      "plain_statement": {
+        "zh": "精确计算模二时可用的单位余类数。",
+        "en": "Determine the mod-two admissible residue count."
+      },
+      "brief": {
+        "zh": "唯一可逆类是 1，检查反射后的剩余类。",
+        "en": "The only unit is one. Inspect its reflection."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "residues",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-unit-prime-forbidden",
+      "file": "lean/PEqualNP/Outside/L_goldbach_unit_prime_forbidden.lean",
+      "module": "PEqualNP.Outside.L_goldbach_unit_prime_forbidden",
+      "statement": "let U := fun q n : ℕ => (Finset.range q).filter (fun a => Nat.Coprime a q ∧ Nat.Coprime (n+q-a) q); ∀ p n a, Nat.Prime p → a<p → (a ∈ U p n ↔ a≠0 ∧ a≠n%p)",
+      "plain_statement": {
+        "zh": "素模数下只需排除 0 和目标数的余类。",
+        "en": "At a prime modulus only zero and the target residue are forbidden."
+      },
+      "brief": {
+        "zh": "将与素数互素改写成非整除。",
+        "en": "Replace coprimality to a prime by nondivisibility."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "residues",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-unit-prime-divides",
+      "file": "lean/PEqualNP/Outside/L_goldbach_unit_prime_divides.lean",
+      "module": "PEqualNP.Outside.L_goldbach_unit_prime_divides",
+      "statement": "let U := fun q n : ℕ => (Finset.range q).filter (fun a => Nat.Coprime a q ∧ Nat.Coprime (n+q-a) q); ∀ p n, Nat.Prime p → p ∣ n → (U p n).card=p-1",
+      "plain_statement": {
+        "zh": "局部素数整除目标时恰有 p−1 个允许类。",
+        "en": "A prime dividing the target leaves p−1 admissible residues."
+      },
+      "brief": {
+        "zh": "两个禁类重合。",
+        "en": "Identify the two forbidden classes."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "residues",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-unit-prime-away",
+      "file": "lean/PEqualNP/Outside/L_goldbach_unit_prime_away.lean",
+      "module": "PEqualNP.Outside.L_goldbach_unit_prime_away",
+      "statement": "let U := fun q n : ℕ => (Finset.range q).filter (fun a => Nat.Coprime a q ∧ Nat.Coprime (n+q-a) q); ∀ p n, Nat.Prime p → ¬ p ∣ n → (U p n).card=p-2",
+      "plain_statement": {
+        "zh": "局部素数不整除目标时恰有 p−2 个允许类。",
+        "en": "A prime away from the target leaves p−2 admissible residues."
+      },
+      "brief": {
+        "zh": "证明两个禁类互异。",
+        "en": "Show the two removed classes are distinct."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "residues",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-unit-power-lift",
+      "file": "lean/PEqualNP/Outside/L_goldbach_unit_power_lift.lean",
+      "module": "PEqualNP.Outside.L_goldbach_unit_power_lift",
+      "statement": "let U := fun q n : ℕ => (Finset.range q).filter (fun a => Nat.Coprime a q ∧ Nat.Coprime (n+q-a) q); ∀ p k n, Nat.Prime p → (U (p^(k+1)) n).card=p^k*(U p n).card",
+      "plain_statement": {
+        "zh": "模素数的允许类提升到素数幂时各有相同的提升数。",
+        "en": "Each admissible residue lifts pᵏ times modulo pᵏ⁺¹."
+      },
+      "brief": {
+        "zh": "按模 p 投影分纤维。",
+        "en": "Group residues by their image modulo p."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "residues",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-unit-crt-product",
+      "file": "lean/PEqualNP/Outside/L_goldbach_unit_crt_product.lean",
+      "module": "PEqualNP.Outside.L_goldbach_unit_crt_product",
+      "statement": "let U := fun q n : ℕ => (Finset.range q).filter (fun a => Nat.Coprime a q ∧ Nat.Coprime (n+q-a) q); ∀ q r n, 0<q → 0<r → Nat.Coprime q r → (U (q*r) n).card=(U q n).card*(U r n).card",
+      "plain_statement": {
+        "zh": "互素模数上的允许类数由中国剩余定理相乘。",
+        "en": "Admissible counts multiply over coprime moduli."
+      },
+      "brief": {
+        "zh": "同时追踪首加数和被反射的另一项的可逆性。",
+        "en": "Track both unit conditions through the CRT bijection."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "residues",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-unit-nonempty-even",
+      "file": "lean/PEqualNP/Outside/L_goldbach_unit_nonempty_even.lean",
+      "module": "PEqualNP.Outside.L_goldbach_unit_nonempty_even",
+      "statement": "let U := fun q n : ℕ => (Finset.range q).filter (fun a => Nat.Coprime a q ∧ Nat.Coprime (n+q-a) q); ∀ q n, 0<q → Even n → (U q n).Nonempty",
+      "plain_statement": {
+        "zh": "偶数目标在每个正模数下都有一对可逆余类。",
+        "en": "Every even target passes the unit-pair test at every positive modulus."
+      },
+      "brief": {
+        "zh": "先处理素数幂再组合。",
+        "en": "Assemble prime powers by CRT."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "residues",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-unit-sieve-density",
+      "file": "lean/PEqualNP/Outside/L_goldbach_unit_sieve_density.lean",
+      "module": "PEqualNP.Outside.L_goldbach_unit_sieve_density",
+      "statement": "let U := fun q n : ℕ => (Finset.range q).filter (fun a => Nat.Coprime a q ∧ Nat.Coprime (n+q-a) q); ∀ q n T, 0<q → ((Finset.range (q*T)).filter (fun a => a%q ∈ U q n)).card=T*(U q n).card",
+      "plain_statement": {
+        "zh": "完整周期内局部筛的幸存数精确等于周期数乘以允许类数。",
+        "en": "Count local-sieve survivors over complete periods exactly."
+      },
+      "brief": {
+        "zh": "按商和余数分解候选数。",
+        "en": "Decompose the interval by quotient and remainder."
+      },
+      "program": "foundation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "residues",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-factor-normalize",
+      "file": "lean/PEqualNP/Outside/L_goldbach_factor_normalize.lean",
+      "module": "PEqualNP.Outside.L_goldbach_factor_normalize",
+      "statement": "let fac := fun p n : ℕ => if p ∣ n then (p:ℝ)/((p:ℝ)-1) else 1-1/((p:ℝ)-1)^2; let U := fun q n : ℕ => (Finset.range q).filter (fun a => Nat.Coprime a q ∧ Nat.Coprime (n+q-a) q); ∀ p n, Nat.Prime p → 2<p → fac p n = (p:ℝ)*((U p n).card:ℝ)/((p:ℝ)-1)^2",
+      "plain_statement": {
+        "zh": "把奇素数的局部计数除以独立模型的密度。",
+        "en": "Identify the odd-prime correction as the normalized unit-pair count."
+      },
+      "brief": {
+        "zh": "按 p 是否整除 n 分两种情形。",
+        "en": "Split according to divisibility of n."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "series",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-factor-divisor-boost",
+      "file": "lean/PEqualNP/Outside/L_goldbach_factor_divisor_boost.lean",
+      "module": "PEqualNP.Outside.L_goldbach_factor_divisor_boost",
+      "statement": "let fac := fun p n : ℕ => if p ∣ n then (p:ℝ)/((p:ℝ)-1) else 1-1/((p:ℝ)-1)^2; ∀ p n, 2<p → p ∣ n → fac p n = (1-1/((p:ℝ)-1)^2)*(((p:ℝ)-1)/((p:ℝ)-2))",
+      "plain_statement": {
+        "zh": "分离整除目标时的局部增益。",
+        "en": "Factor the extra local boost at primes dividing the target."
+      },
+      "brief": {
+        "zh": "通分前核对 p−2 非零。",
+        "en": "Clear denominators using p>2."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "series",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-factor-lower",
+      "file": "lean/PEqualNP/Outside/L_goldbach_factor_lower.lean",
+      "module": "PEqualNP.Outside.L_goldbach_factor_lower",
+      "statement": "let fac := fun p n : ℕ => if p ∣ n then (p:ℝ)/((p:ℝ)-1) else 1-1/((p:ℝ)-1)^2; ∀ p n, 2<p → 0 < 1-1/((p:ℝ)-1)^2 ∧ 1-1/((p:ℝ)-1)^2 ≤ fac p n",
+      "plain_statement": {
+        "zh": "每个奇素数因子都不小于一个正的通用基准。",
+        "en": "Each odd-prime factor dominates a positive baseline."
+      },
+      "brief": {
+        "zh": "分别讨论整除和不整除。",
+        "en": "Compare the two divisibility cases."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "series",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-euler-telescope",
+      "file": "lean/PEqualNP/Outside/L_goldbach_euler_telescope.lean",
+      "module": "PEqualNP.Outside.L_goldbach_euler_telescope",
+      "statement": "∀ m : ℕ, Finset.prod (Finset.range m) (fun j => 1-1/((j:ℝ)+2)^2) = ((m:ℝ)+2)/(2*((m:ℝ)+1))",
+      "plain_statement": {
+        "zh": "连续整数上的对照乘积有显式望远镜公式。",
+        "en": "Evaluate the integer comparison product by telescoping."
+      },
+      "brief": {
+        "zh": "分解 1−1/k²。",
+        "en": "Factor each term as (k−1)(k+1)/k²."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "series",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-euler-subproduct",
+      "file": "lean/PEqualNP/Outside/L_goldbach_euler_subproduct.lean",
+      "module": "PEqualNP.Outside.L_goldbach_euler_subproduct",
+      "statement": "∀ (m : ℕ) (A : Finset ℕ), A ⊆ Finset.range m → (1/2:ℝ) ≤ Finset.prod A (fun j => 1-1/((j:ℝ)+2)^2)",
+      "plain_statement": {
+        "zh": "整数对照乘积的任意子乘积都至少为 1/2。",
+        "en": "Every finite subproduct of the integer comparison factors is at least one half."
+      },
+      "brief": {
+        "zh": "补上的每个因子处于零与一之间。",
+        "en": "Bound omitted factors by one."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "series",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-series-uniform-floor",
+      "file": "lean/PEqualNP/Outside/L_goldbach_series_uniform_floor.lean",
+      "module": "PEqualNP.Outside.L_goldbach_series_uniform_floor",
+      "statement": "let fac := fun p n : ℕ => if p ∣ n then (p:ℝ)/((p:ℝ)-1) else 1-1/((p:ℝ)-1)^2; let P := fun Q : ℕ => (Finset.range (Q+1)).filter (fun p => Nat.Prime p ∧ 2<p); ∀ Q n, 1 ≤ 2*Finset.prod (P Q) (fun p => fac p n)",
+      "plain_statement": {
+        "zh": "计入模二对偶数的因子 2 后，截断主项乘积统一至少为一。",
+        "en": "The truncated product with parity factor two has a uniform floor of one."
+      },
+      "brief": {
+        "zh": "把 p−1 送到整数对照乘积的索引。",
+        "en": "Embed p−1 into the comparison product."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "series",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-euler-tail-defect",
+      "file": "lean/PEqualNP/Outside/L_goldbach_euler_tail_defect.lean",
+      "module": "PEqualNP.Outside.L_goldbach_euler_tail_defect",
+      "statement": "∀ (T : Finset ℕ) (u : ℕ → ℝ), (∀ p ∈ T, 0≤u p ∧ u p≤1) → 1-Finset.prod T (fun p => 1-u p) ≤ Finset.sum T u",
+      "plain_statement": {
+        "zh": "乘积相对一的亏损至多是各项亏损之和。",
+        "en": "The loss of a product of unit-interval factors is bounded by the sum of losses."
+      },
+      "brief": {
+        "zh": "逐个加入因子并保留有利的交叉项。",
+        "en": "Induct over the factors and retain the favorable cross term."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "series",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-inverse-square-tail",
+      "file": "lean/PEqualNP/Outside/L_goldbach_inverse_square_tail.lean",
+      "module": "PEqualNP.Outside.L_goldbach_inverse_square_tail",
+      "statement": "∀ a b : ℕ, 2≤a → Finset.sum (Finset.Icc a b) (fun k => 1/(k:ℝ)^2) ≤ 1/((a:ℝ)-1)",
+      "plain_statement": {
+        "zh": "用显式界控制平方倒数尾和。",
+        "en": "Bound a finite inverse-square tail explicitly."
+      },
+      "brief": {
+        "zh": "用相邻倒数之差逐项控制。",
+        "en": "Compare each summand with a telescoping difference."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "series",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-prime-product-tail",
+      "file": "lean/PEqualNP/Outside/L_goldbach_prime_product_tail.lean",
+      "module": "PEqualNP.Outside.L_goldbach_prime_product_tail",
+      "statement": "let P := fun Q : ℕ => (Finset.range (Q+1)).filter (fun p => Nat.Prime p ∧ 2<p); ∀ Q R : ℕ, 3≤Q → Q≤R → let T := P R \\ P Q; 1-Finset.prod T (fun p => 1-1/((p:ℝ)-1)^2) ≤ 1/((Q:ℝ)-1)",
+      "plain_statement": {
+        "zh": "奇素数基准乘积截去大于 Q 的部分时，亏损至多 1/(Q−1)。",
+        "en": "The baseline odd-prime tail loses at most 1/(Q−1)."
+      },
+      "brief": {
+        "zh": "将 p−1 的倒数平方尾部放大到全体整数。",
+        "en": "Dominate the shifted prime tail by all integers."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "series",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-series-divisor-split",
+      "file": "lean/PEqualNP/Outside/L_goldbach_series_divisor_split.lean",
+      "module": "PEqualNP.Outside.L_goldbach_series_divisor_split",
+      "statement": "let fac := fun p n : ℕ => if p ∣ n then (p:ℝ)/((p:ℝ)-1) else 1-1/((p:ℝ)-1)^2; let P := fun Q : ℕ => (Finset.range (Q+1)).filter (fun p => Nat.Prime p ∧ 2<p); ∀ Q n, Finset.prod (P Q) (fun p => fac p n) = Finset.prod (P Q) (fun p => 1-1/((p:ℝ)-1)^2) * Finset.prod ((P Q).filter (fun p => p ∣ n)) (fun p => ((p:ℝ)-1)/((p:ℝ)-2))",
+      "plain_statement": {
+        "zh": "把截断奇异乘积分成与 n 无关的基准和仅遍历 n 的素因子的修正。",
+        "en": "Separate the truncated singular product into a universal baseline and a divisor correction."
+      },
+      "brief": {
+        "zh": "对整除与不整除的因子分别展开。",
+        "en": "Split the finite product by divisibility."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "series",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-phase-unit",
+      "file": "lean/PEqualNP/Outside/L_goldbach_phase_unit.lean",
+      "module": "PEqualNP.Outside.L_goldbach_phase_unit",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); ∀ t, ‖E t‖=1",
+      "plain_statement": {
+        "zh": "实频率相位的复模恒为一。",
+        "en": "Real-frequency phases have unit norm."
+      },
+      "brief": {
+        "zh": "复指数的实部指数为零。",
+        "en": "Use the norm formula for the complex exponential."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "fourier",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-phase-add",
+      "file": "lean/PEqualNP/Outside/L_goldbach_phase_add.lean",
+      "module": "PEqualNP.Outside.L_goldbach_phase_add",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); ∀ s t, E (s+t)=E s*E t",
+      "plain_statement": {
+        "zh": "频率相加对应相位相乘。",
+        "en": "Phases multiply when frequencies add."
+      },
+      "brief": {
+        "zh": "用复指数加法。",
+        "en": "Apply the exponential addition rule."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "fourier",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-phase-period",
+      "file": "lean/PEqualNP/Outside/L_goldbach_phase_period.lean",
+      "module": "PEqualNP.Outside.L_goldbach_phase_period",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); ∀ (t : ℝ) (m : ℤ), E (t+(m:ℝ))=E t",
+      "plain_statement": {
+        "zh": "相位对整数平移不变。",
+        "en": "A phase is invariant under integer translation."
+      },
+      "brief": {
+        "zh": "分离 2πi 的整数倍。",
+        "en": "Separate the integer multiple of 2πi."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "fourier",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-phase-geometric",
+      "file": "lean/PEqualNP/Outside/L_goldbach_phase_geometric.lean",
+      "module": "PEqualNP.Outside.L_goldbach_phase_geometric",
+      "statement": "∀ (z : ℂ) (m : ℕ), (1-z)*Finset.sum (Finset.range m) (fun j => z^j) = 1-z^m",
+      "plain_statement": {
+        "zh": "有限几何和在 z=1 处也满足无除法恒等式。",
+        "en": "The denominator-free finite geometric identity includes resonance."
+      },
+      "brief": {
+        "zh": "逐项消去相邻幂。",
+        "en": "Telescope consecutive powers."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "fourier",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-root-resonance",
+      "file": "lean/PEqualNP/Outside/L_goldbach_root_resonance.lean",
+      "module": "PEqualNP.Outside.L_goldbach_root_resonance",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let c := fun (M j k : ℕ) => E ((j:ℝ)*(k:ℝ)/(M:ℝ)); ∀ M k, 0<M → (c M 1 k=1 ↔ M ∣ k)",
+      "plain_statement": {
+        "zh": "模 M 的基本加法特征恰在 M 的倍数处等于一。",
+        "en": "The basic additive character resonates exactly at multiples of M."
+      },
+      "brief": {
+        "zh": "将复指数等于一化为整数条件。",
+        "en": "Translate exponential resonance to integrality."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "fourier",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-character-orthogonal",
+      "file": "lean/PEqualNP/Outside/L_goldbach_character_orthogonal.lean",
+      "module": "PEqualNP.Outside.L_goldbach_character_orthogonal",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let c := fun (M j k : ℕ) => E ((j:ℝ)*(k:ℝ)/(M:ℝ)); ∀ M k, 0<M → Finset.sum (Finset.range M) (fun j => c M j k) = if M ∣ k then (M:ℂ) else 0",
+      "plain_statement": {
+        "zh": "沿全部频率求和可以检测模 M 整除性。",
+        "en": "Summing the characters detects divisibility by the modulus."
+      },
+      "brief": {
+        "zh": "共振直接求和，其余用几何和。",
+        "en": "Separate resonance from the geometric-series case."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "fourier",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-fourier-inversion",
+      "file": "lean/PEqualNP/Outside/L_goldbach_fourier_inversion.lean",
+      "module": "PEqualNP.Outside.L_goldbach_fourier_inversion",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let c := fun (M j k : ℕ) => E ((j:ℝ)*(k:ℝ)/(M:ℝ)); let F := fun (M : ℕ) (f : ℕ → ℂ) (j : ℕ) => Finset.sum (Finset.range M) (fun k => f k*c M j k); ∀ M f k, k<M → Finset.sum (Finset.range M) (fun j => F M f j * star (c M j k)) = (M:ℂ)*f k",
+      "plain_statement": {
+        "zh": "带共轭的反演从全部频率恢复原函数。",
+        "en": "Conjugate Fourier inversion recovers the original function."
+      },
+      "brief": {
+        "zh": "展开变换并用正交性消掉异频项。",
+        "en": "Expand the transform and cancel off-diagonal characters."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "fourier",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-discrete-parseval",
+      "file": "lean/PEqualNP/Outside/L_goldbach_discrete_parseval.lean",
+      "module": "PEqualNP.Outside.L_goldbach_discrete_parseval",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let c := fun (M j k : ℕ) => E ((j:ℝ)*(k:ℝ)/(M:ℝ)); let F := fun (M : ℕ) (f : ℕ → ℂ) (j : ℕ) => Finset.sum (Finset.range M) (fun k => f k*c M j k); ∀ M f, Finset.sum (Finset.range M) (fun j => ‖F M f j‖^2) = (M:ℝ)*Finset.sum (Finset.range M) (fun k => ‖f k‖^2)",
+      "plain_statement": {
+        "zh": "离散频谱的平方和等于时域平方和的 M 倍。",
+        "en": "Discrete spectral energy equals M times the input energy."
+      },
+      "brief": {
+        "zh": "展开模平方并对频率先求和。",
+        "en": "Expand squared norms and sum over frequency first."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "fourier",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-cyclic-alias-free",
+      "file": "lean/PEqualNP/Outside/L_goldbach_cyclic_alias_free.lean",
+      "module": "PEqualNP.Outside.L_goldbach_cyclic_alias_free",
+      "statement": "∀ n a b : ℕ, a≤n → b≤n → ((a+b)%(2*n+1)=n ↔ a+b=n)",
+      "plain_statement": {
+        "zh": "在模 2n+1 上提取第 n 个系数时不会将别的和折叠进来。",
+        "en": "Modulus 2n+1 isolates the ordinary sum n without wraparound."
+      },
+      "brief": {
+        "zh": "利用 a+b≤2n。",
+        "en": "Bound the entire sum before reducing modulo the period."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "fourier",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-sampled-correlation",
+      "file": "lean/PEqualNP/Outside/L_goldbach_sampled_correlation.lean",
+      "module": "PEqualNP.Outside.L_goldbach_sampled_correlation",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let c := fun (M j k : ℕ) => E ((j:ℝ)*(k:ℝ)/(M:ℝ)); let F := fun (M : ℕ) (f : ℕ → ℂ) (j : ℕ) => Finset.sum (Finset.range M) (fun k => f k*c M j k); let conv := fun (u v : ℕ → ℝ) (n : ℕ) => Finset.sum (Finset.range (n+1)) (fun k => u k*v (n-k)); ∀ (n : ℕ) (w : ℕ → ℝ), let M := 2*n+1; let f := fun k : ℕ => if k≤n then (w k:ℂ) else 0; Finset.sum (Finset.range M) (fun j => (F M f j)^2 * star (c M j n)) = (M:ℂ)*(conv w w n:ℂ)",
+      "plain_statement": {
+        "zh": "用 2n+1 个精确的频率样点还原二元卷积。",
+        "en": "Recover the binary convolution from exactly 2n+1 frequency samples."
+      },
+      "brief": {
+        "zh": "先提取模 M 的和，再用无折叠引理。",
+        "en": "Extract a modular sum, then remove wraparound."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "fourier",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-harmonic-integral",
+      "file": "lean/PEqualNP/Outside/L_goldbach_harmonic_integral.lean",
+      "module": "PEqualNP.Outside.L_goldbach_harmonic_integral",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); ∀ m : ℤ, intervalIntegral (fun t => E ((m:ℝ)*t)) (0:ℝ) 1 MeasureTheory.volume = if m=0 then 1 else 0",
+      "plain_statement": {
+        "zh": "整数频率积分只保留零频。",
+        "en": "Only the constant integer frequency survives integration."
+      },
+      "brief": {
+        "zh": "对非零频率取显式原函数。",
+        "en": "Integrate a nonzero harmonic by its antiderivative."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1205.5252",
+      "track": "integrals",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-trig-continuous",
+      "file": "lean/PEqualNP/Outside/L_goldbach_trig_continuous.lean",
+      "module": "PEqualNP.Outside.L_goldbach_trig_continuous",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); ∀ n w, Continuous (S n w)",
+      "plain_statement": {
+        "zh": "截断指数和在频率变量上连续。",
+        "en": "Truncated exponential sums are continuous in frequency."
+      },
+      "brief": {
+        "zh": "使用有限和连续性。",
+        "en": "Use continuity of each summand."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1205.5252",
+      "track": "integrals",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-trig-sup-bound",
+      "file": "lean/PEqualNP/Outside/L_goldbach_trig_sup_bound.lean",
+      "module": "PEqualNP.Outside.L_goldbach_trig_sup_bound",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); ∀ n w t, ‖S n w t‖ ≤ Finset.sum (Finset.range (n+1)) (fun k => |w k|)",
+      "plain_statement": {
+        "zh": "任意频率处的模由系数绝对值之和控制。",
+        "en": "Bound any frequency by the total absolute coefficient mass."
+      },
+      "brief": {
+        "zh": "使用单位相位和三角不等式。",
+        "en": "Apply the triangle inequality and unit norm."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1205.5252",
+      "track": "integrals",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-trig-reflect",
+      "file": "lean/PEqualNP/Outside/L_goldbach_trig_reflect.lean",
+      "module": "PEqualNP.Outside.L_goldbach_trig_reflect",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); ∀ n w t, S n w (-t) = star (S n w t)",
+      "plain_statement": {
+        "zh": "负频率是正频率的共轭。",
+        "en": "For real weights, negating frequency conjugates the sum."
+      },
+      "brief": {
+        "zh": "将共轭分配进有限和。",
+        "en": "Distribute conjugation across the finite sum."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1205.5252",
+      "track": "integrals",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-trig-lipschitz",
+      "file": "lean/PEqualNP/Outside/L_goldbach_trig_lipschitz.lean",
+      "module": "PEqualNP.Outside.L_goldbach_trig_lipschitz",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); ∀ n w s t, ‖S n w s-S n w t‖ ≤ 2*Real.pi*|s-t|*Finset.sum (Finset.range (n+1)) (fun k => (k:ℝ)*|w k|)",
+      "plain_statement": {
+        "zh": "频率微扰造成的误差由权的一阶矩控制。",
+        "en": "A frequency perturbation is controlled by the first absolute moment."
+      },
+      "brief": {
+        "zh": "先估计单个相位的弦长。",
+        "en": "Bound the chord length of each harmonic."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1205.5252",
+      "track": "integrals",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-continuous-parseval",
+      "file": "lean/PEqualNP/Outside/L_goldbach_continuous_parseval.lean",
+      "module": "PEqualNP.Outside.L_goldbach_continuous_parseval",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); ∀ n w, intervalIntegral (fun t => ‖S n w t‖^2) (0:ℝ) 1 MeasureTheory.volume = Finset.sum (Finset.range (n+1)) (fun k => (w k)^2)",
+      "plain_statement": {
+        "zh": "单位区间上的频谱能量等于系数平方和。",
+        "en": "Integrated spectral energy equals squared coefficient mass."
+      },
+      "brief": {
+        "zh": "展开平方并用整数频率积分。",
+        "en": "Expand the square and integrate integer harmonics."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1205.5252",
+      "track": "integrals",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-fourth-energy",
+      "file": "lean/PEqualNP/Outside/L_goldbach_fourth_energy.lean",
+      "module": "PEqualNP.Outside.L_goldbach_fourth_energy",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); ∀ n w, let T := Finset.range (n+1); intervalIntegral (fun t => ‖S n w t‖^4) (0:ℝ) 1 MeasureTheory.volume = Finset.sum (Finset.range (2*n+1)) (fun s => (Finset.sum (T.filter (fun a => a≤s ∧ s-a≤n)) (fun a => w a*w (s-a)))^2)",
+      "plain_statement": {
+        "zh": "四次矩等于所有加法和系数的平方和。",
+        "en": "The fourth moment equals the sum of squared additive coefficients."
+      },
+      "brief": {
+        "zh": "对指数和的平方使用 Parseval，注意支集到 2n。",
+        "en": "Apply Parseval to the square, whose support extends to 2n."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1205.5252",
+      "track": "integrals",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-mixed-coefficient",
+      "file": "lean/PEqualNP/Outside/L_goldbach_mixed_coefficient.lean",
+      "module": "PEqualNP.Outside.L_goldbach_mixed_coefficient",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); let conv := fun (u v : ℕ → ℝ) (n : ℕ) => Finset.sum (Finset.range (n+1)) (fun k => u k*v (n-k)); ∀ n u v, intervalIntegral (fun t => S n u t*S n v t*E (-(n:ℝ)*t)) (0:ℝ) 1 MeasureTheory.volume = (conv u v n:ℂ)",
+      "plain_statement": {
+        "zh": "提取两个不同权函数的混合卷积系数。",
+        "en": "Extract mixed coefficients of two different weights."
+      },
+      "brief": {
+        "zh": "频率抵消恰在两个下标之和等于 n 时发生。",
+        "en": "Match exactly the pairs whose frequencies sum to n."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1205.5252",
+      "track": "integrals",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-mask-split",
+      "file": "lean/PEqualNP/Outside/L_goldbach_mask_split.lean",
+      "module": "PEqualNP.Outside.L_goldbach_mask_split",
+      "statement": "∀ f : ℝ → ℂ, ∀ u : ℝ → ℝ, Continuous f → Continuous u → intervalIntegral (fun t => (u t:ℂ)*f t) (0:ℝ) 1 MeasureTheory.volume + intervalIntegral (fun t => ((1-u t:ℝ):ℂ)*f t) (0:ℝ) 1 MeasureTheory.volume = intervalIntegral (fun t => f t) (0:ℝ) 1 MeasureTheory.volume",
+      "plain_statement": {
+        "zh": "连续窗口及其补窗口的积分之和还原完整系数。",
+        "en": "A continuous mask and its complement reconstruct the full integral."
+      },
+      "brief": {
+        "zh": "先证可积再用积分线性。",
+        "en": "Establish integrability before using linearity."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1205.5252",
+      "track": "integrals",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-signed-harmonic",
+      "file": "lean/PEqualNP/Outside/L_goldbach_signed_harmonic.lean",
+      "module": "PEqualNP.Outside.L_goldbach_signed_harmonic",
+      "statement": "∀ (z : ℂ) (t : ℝ), (z^2 * Complex.exp ((-(t:ℂ))*Complex.I)).re = (z.re^2-z.im^2)*Real.cos t + 2*z.re*z.im*Real.sin t",
+      "plain_statement": {
+        "zh": "把带负频率的平方指数和的实部展开成两个有符号振荡项。",
+        "en": "Resolve the real part of a demodulated square into signed sine and cosine terms."
+      },
+      "brief": {
+        "zh": "写出复指数的实部与虚部，核对负频率的符号。",
+        "en": "Expand the exponential and track the sign of the negative frequency."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1205.5252",
+      "track": "integrals",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-ap-partition",
+      "file": "lean/PEqualNP/Outside/L_goldbach_ap_partition.lean",
+      "module": "PEqualNP.Outside.L_goldbach_ap_partition",
+      "statement": "let ap := fun (q a N : ℕ) (f : ℕ → ℝ) => Finset.sum ((Finset.range (N+1)).filter (fun k => k%q=a)) f; ∀ q N f, 0<q → Finset.sum (Finset.range q) (fun a => ap q a N f) = Finset.sum (Finset.range (N+1)) f",
+      "plain_statement": {
+        "zh": "所有余类的加权质量之和等于总质量。",
+        "en": "Residue-class masses partition the full weighted count."
+      },
+      "brief": {
+        "zh": "按 k mod q 分组。",
+        "en": "Partition by k modulo q."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "progressions",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-ap-refinement",
+      "file": "lean/PEqualNP/Outside/L_goldbach_ap_refinement.lean",
+      "module": "PEqualNP.Outside.L_goldbach_ap_refinement",
+      "statement": "let ap := fun (q a N : ℕ) (f : ℕ → ℝ) => Finset.sum ((Finset.range (N+1)).filter (fun k => k%q=a)) f; ∀ q d a N f, 0<q → 0<d → a<q → ap q a N f = Finset.sum (Finset.range d) (fun j => ap (q*d) (a+j*q) N f)",
+      "plain_statement": {
+        "zh": "将一个同余类细分到倍数模数。",
+        "en": "Refine a progression into classes at a multiple modulus."
+      },
+      "brief": {
+        "zh": "用唯一的商余表示列举子类。",
+        "en": "Index the subclasses using quotient and remainder."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "progressions",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-ap-nonunit-prime",
+      "file": "lean/PEqualNP/Outside/L_goldbach_ap_nonunit_prime.lean",
+      "module": "PEqualNP.Outside.L_goldbach_ap_nonunit_prime",
+      "statement": "∀ q k : ℕ, Nat.Prime k → ¬ Nat.Coprime (k%q) q → k ∣ q",
+      "plain_statement": {
+        "zh": "落在不可逆余类中的素数必整除模数。",
+        "en": "Prime indices in nonunit residues divide the modulus."
+      },
+      "brief": {
+        "zh": "用 gcd(k mod q,q)=gcd(k,q)。",
+        "en": "Reduce the claim to gcd(k,q)."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "progressions",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-ap-nonunit-power",
+      "file": "lean/PEqualNP/Outside/L_goldbach_ap_nonunit_power.lean",
+      "module": "PEqualNP.Outside.L_goldbach_ap_nonunit_power",
+      "statement": "∀ q k : ℕ, ¬ Nat.Coprime k q → ArithmeticFunction.vonMangoldt k ≠ 0 → ∃ p j : ℕ, Nat.Prime p ∧ p ∣ q ∧ 0<j ∧ k=p^j",
+      "plain_statement": {
+        "zh": "在不可逆余类中，非零 Λ 项只能来自模数的素因子的幂。",
+        "en": "Nonzero Mangoldt weights in nonunit classes are powers of primes dividing the modulus."
+      },
+      "brief": {
+        "zh": "先用素数幂支集，再把公因子传到底数。",
+        "en": "Use prime-power support, then identify its common prime factor."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "progressions",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-ap-rational-phase",
+      "file": "lean/PEqualNP/Outside/L_goldbach_ap_rational_phase.lean",
+      "module": "PEqualNP.Outside.L_goldbach_ap_rational_phase",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let ap := fun (q a N : ℕ) (f : ℕ → ℝ) => Finset.sum ((Finset.range (N+1)).filter (fun k => k%q=a)) f; let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); ∀ N q h f, 0<q → S N f ((h:ℝ)/(q:ℝ)) = Finset.sum (Finset.range q) (fun a => (ap q a N f:ℂ)*E ((h:ℝ)*(a:ℝ)/(q:ℝ)))",
+      "plain_statement": {
+        "zh": "有理频率的和可由模 q 的各余类质量精确恢复。",
+        "en": "Reconstruct a rational-frequency sum from exact progression masses."
+      },
+      "brief": {
+        "zh": "每个余类内的相位相同。",
+        "en": "Show phase constancy within each residue class."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "progressions",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-ap-units-error",
+      "file": "lean/PEqualNP/Outside/L_goldbach_ap_units_error.lean",
+      "module": "PEqualNP.Outside.L_goldbach_ap_units_error",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); ∀ (q h : ℕ) (f : ℕ → ℝ) (M e : ℝ), let U := (Finset.range q).filter (fun a => Nat.Coprime a q); (∀ a ∈ U, |f a-M|≤e) → ‖Finset.sum U (fun a => ((f a-M:ℝ):ℂ)*E ((h:ℝ)*(a:ℝ)/(q:ℝ)))‖ ≤ (U.card:ℝ)*e",
+      "plain_statement": {
+        "zh": "对可逆余类的均值偏差求相位和时，误差至多按余类数放大。",
+        "en": "Transport uniform unit-class error to a rational exponential sum."
+      },
+      "brief": {
+        "zh": "在每个余类上应用误差假设。",
+        "en": "Apply the uniform error before summing absolute values."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "progressions",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-abel-endpoints",
+      "file": "lean/PEqualNP/Outside/L_goldbach_abel_endpoints.lean",
+      "module": "PEqualNP.Outside.L_goldbach_abel_endpoints",
+      "statement": "∀ (N : ℕ) (A g : ℕ → ℂ), Finset.sum (Finset.range N) (fun k => (A (k+1)-A k)*g k) = A N*g N-A 0*g 0-Finset.sum (Finset.range N) (fun k => A (k+1)*(g (k+1)-g k))",
+      "plain_statement": {
+        "zh": "写出保留两个端点的离散分部求和公式。",
+        "en": "Prove summation by parts including both endpoints."
+      },
+      "brief": {
+        "zh": "展开乘积的相邻差再求和。",
+        "en": "Telescope increments of the product."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "progressions",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-abel-total-variation",
+      "file": "lean/PEqualNP/Outside/L_goldbach_abel_total_variation.lean",
+      "module": "PEqualNP.Outside.L_goldbach_abel_total_variation",
+      "statement": "∀ (N : ℕ) (A g : ℕ → ℂ) (e : ℝ), A 0=0 → (∀ k≤N, ‖A k‖≤e) → ‖Finset.sum (Finset.range N) (fun k => (A (k+1)-A k)*g k)‖ ≤ e*(‖g N‖+Finset.sum (Finset.range N) (fun k => ‖g (k+1)-g k‖))",
+      "plain_statement": {
+        "zh": "前缀误差一致有界时，以窗口的总变差估计加权误差。",
+        "en": "Use cutoff variation to control a weighted error from a prefix bound."
+      },
+      "brief": {
+        "zh": "使用含端点的分部求和。",
+        "en": "Use the endpoint-inclusive Abel identity."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "progressions",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-phase-variation",
+      "file": "lean/PEqualNP/Outside/L_goldbach_phase_variation.lean",
+      "module": "PEqualNP.Outside.L_goldbach_phase_variation",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); ∀ (N : ℕ) (b : ℝ), Finset.sum (Finset.range N) (fun k => ‖E (((k:ℝ)+1)*b)-E ((k:ℝ)*b)‖) ≤ 2*Real.pi*(N:ℝ)*|b|",
+      "plain_statement": {
+        "zh": "离有理中心偏移 b 的相位序列，其总变差至多为 2πN|b|。",
+        "en": "Bound the phase variation at an offset b from an arc center."
+      },
+      "brief": {
+        "zh": "逐段弦长至多为对应弧长。",
+        "en": "Control each chord by its arc length."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "progressions",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-grh-small-mod-saving",
+      "file": "lean/PEqualNP/Outside/L_goldbach_grh_small_mod_saving.lean",
+      "module": "PEqualNP.Outside.L_goldbach_grh_small_mod_saving",
+      "statement": "(∀ (Q : ℕ) [NeZero Q] (χ : DirichletCharacter ℂ Q) (s : ℂ), 0 < s.re → s.re < 1 → DirichletCharacter.LFunction χ s = 0 → s.re = 1/2) → let ap := fun (q a N : ℕ) (f : ℕ → ℝ) => Finset.sum ((Finset.range (N+1)).filter (fun k => k%q=a)) f; ∀ e : ℝ, 0<e → ∃ N : ℕ, ∀ X q a : ℕ, N≤X → 0<q → q≤Nat.log 2 (X+2) → a<q → Nat.Coprime a q → |ap q a X ArithmeticFunction.vonMangoldt-(X:ℝ)/(Nat.totient q:ℝ)| ≤ e*(X:ℝ)/(Nat.totient q:ℝ)",
+      "plain_statement": {
+        "zh": "在 GRH 下，对数范围内模数的所有可逆类具有一致的相对误差衰减。",
+        "en": "Under GRH obtain vanishing relative error uniformly for moduli up to log₂(X+2)."
+      },
+      "brief": {
+        "zh": "从现有 GRH 余类误差命题出发，统一吸收对数因子。",
+        "en": "Start with the existing GRH progression estimate and absorb logarithmic losses."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "progressions",
+      "role": "conditional"
+    },
+    {
+      "id": "L-goldbach-ram-zero",
+      "file": "lean/PEqualNP/Outside/L_goldbach_ram_zero.lean",
+      "module": "PEqualNP.Outside.L_goldbach_ram_zero",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let ram := fun (q h : ℕ) => Finset.sum ((Finset.range q).filter (fun a => Nat.Coprime a q)) (fun a => E ((h:ℝ)*(a:ℝ)/(q:ℝ))); ∀ q, 0<q → ram q 0=(Nat.totient q:ℂ)",
+      "plain_statement": {
+        "zh": "零频率的单位根和等于欧拉函数。",
+        "en": "At zero frequency the unit-character sum is Euler’s totient."
+      },
+      "brief": {
+        "zh": "每个单位的贡献为一。",
+        "en": "Count the unit residues with phase one."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "rational-model",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-ram-period",
+      "file": "lean/PEqualNP/Outside/L_goldbach_ram_period.lean",
+      "module": "PEqualNP.Outside.L_goldbach_ram_period",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let ram := fun (q h : ℕ) => Finset.sum ((Finset.range q).filter (fun a => Nat.Coprime a q)) (fun a => E ((h:ℝ)*(a:ℝ)/(q:ℝ))); ∀ q h, 0<q → ram q (h+q)=ram q h",
+      "plain_statement": {
+        "zh": "单位根和对频率模 q 周期。",
+        "en": "Ramanujan sums are periodic in frequency modulo q."
+      },
+      "brief": {
+        "zh": "去掉相位中的整数增量。",
+        "en": "Remove the integer phase increment."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "rational-model",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-ram-prime",
+      "file": "lean/PEqualNP/Outside/L_goldbach_ram_prime.lean",
+      "module": "PEqualNP.Outside.L_goldbach_ram_prime",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let ram := fun (q h : ℕ) => Finset.sum ((Finset.range q).filter (fun a => Nat.Coprime a q)) (fun a => E ((h:ℝ)*(a:ℝ)/(q:ℝ))); ∀ p h, Nat.Prime p → ram p h = if p ∣ h then ((p:ℂ)-1) else -1",
+      "plain_statement": {
+        "zh": "素模数的单位根和在共振及非共振时有两个精确值。",
+        "en": "Evaluate prime-modulus Ramanujan sums at both resonant and nonresonant frequencies."
+      },
+      "brief": {
+        "zh": "从完整特征和中去掉零余类。",
+        "en": "Remove the zero residue from the full character sum."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "rational-model",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-ram-prime-power",
+      "file": "lean/PEqualNP/Outside/L_goldbach_ram_prime_power.lean",
+      "module": "PEqualNP.Outside.L_goldbach_ram_prime_power",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let ram := fun (q h : ℕ) => Finset.sum ((Finset.range q).filter (fun a => Nat.Coprime a q)) (fun a => E ((h:ℝ)*(a:ℝ)/(q:ℝ))); ∀ p j h, Nat.Prime p → ram (p^(j+1)) h = (if p^(j+1) ∣ h then ((p^(j+1):ℕ):ℂ) else 0) - (if p^j ∣ h then ((p^j:ℕ):ℂ) else 0)",
+      "plain_statement": {
+        "zh": "素数幂模数的单位根和是两个完整特征和之差。",
+        "en": "At a prime power the Ramanujan sum is a difference of two full character sums."
+      },
+      "brief": {
+        "zh": "剔除 p 的倍数，再约去相位分母中的 p。",
+        "en": "Remove multiples of p and reduce the denominator."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "rational-model",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-ram-crt",
+      "file": "lean/PEqualNP/Outside/L_goldbach_ram_crt.lean",
+      "module": "PEqualNP.Outside.L_goldbach_ram_crt",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let ram := fun (q h : ℕ) => Finset.sum ((Finset.range q).filter (fun a => Nat.Coprime a q)) (fun a => E ((h:ℝ)*(a:ℝ)/(q:ℝ))); ∀ q r h, 0<q → 0<r → Nat.Coprime q r → ram (q*r) h=ram q h*ram r h",
+      "plain_statement": {
+        "zh": "单位根和对互素模数乘法分解。",
+        "en": "Factor Ramanujan sums over coprime moduli."
+      },
+      "brief": {
+        "zh": "在 CRT 坐标中把可逆缩放吸收到各自的单位求和变量。",
+        "en": "Absorb the CRT unit multipliers by permuting each unit group."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "rational-model",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-ram-local-factor",
+      "file": "lean/PEqualNP/Outside/L_goldbach_ram_local_factor.lean",
+      "module": "PEqualNP.Outside.L_goldbach_ram_local_factor",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let ram := fun (q h : ℕ) => Finset.sum ((Finset.range q).filter (fun a => Nat.Coprime a q)) (fun a => E ((h:ℝ)*(a:ℝ)/(q:ℝ))); let fac := fun p n : ℕ => if p ∣ n then (p:ℝ)/((p:ℝ)-1) else 1-1/((p:ℝ)-1)^2; ∀ p n, Nat.Prime p → 2<p → ((fac p n:ℝ):ℂ) = 1 + ram p n/((p:ℂ)-1)^2",
+      "plain_statement": {
+        "zh": "以素模数的 Ramanujan 和写出单个奇异级数因子。",
+        "en": "Express an odd local singular factor through a prime Ramanujan sum."
+      },
+      "brief": {
+        "zh": "代入素模数的两种值。",
+        "en": "Insert the two prime-modulus evaluations."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "rational-model",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-kernel-resonance",
+      "file": "lean/PEqualNP/Outside/L_goldbach_kernel_resonance.lean",
+      "module": "PEqualNP.Outside.L_goldbach_kernel_resonance",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let K := fun (N : ℕ) (b : ℝ) => Finset.sum (Finset.range (N+1)) (fun k => E ((k:ℝ)*b)); ∀ N : ℕ, ∀ a : ℤ, K N (a:ℝ) = ((N+1:ℕ):ℂ)",
+      "plain_statement": {
+        "zh": "截断几何核在整数频率处达到 N+1。",
+        "en": "The cutoff geometric kernel has height N+1 at integer frequencies."
+      },
+      "brief": {
+        "zh": "整数相位逐项为一。",
+        "en": "Evaluate each integer harmonic."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "rational-model",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-kernel-decay",
+      "file": "lean/PEqualNP/Outside/L_goldbach_kernel_decay.lean",
+      "module": "PEqualNP.Outside.L_goldbach_kernel_decay",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let K := fun (N : ℕ) (b : ℝ) => Finset.sum (Finset.range (N+1)) (fun k => E ((k:ℝ)*b)); ∀ N b, E b ≠ 1 → ‖K N b‖ ≤ 2/‖1-E b‖",
+      "plain_statement": {
+        "zh": "在非共振频率，以相位到 1 的距离控制几何核。",
+        "en": "Away from resonance, bound the kernel by twice the inverse chord distance."
+      },
+      "brief": {
+        "zh": "结合几何和与单位圆直径。",
+        "en": "Combine the geometric sum and unit-circle diameter."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "rational-model",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-kernel-coefficient",
+      "file": "lean/PEqualNP/Outside/L_goldbach_kernel_coefficient.lean",
+      "module": "PEqualNP.Outside.L_goldbach_kernel_coefficient",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let K := fun (N : ℕ) (b : ℝ) => Finset.sum (Finset.range (N+1)) (fun k => E ((k:ℝ)*b)); ∀ N s : ℕ, s≤N → intervalIntegral (fun t => (K N t)^2*E (-(s:ℝ)*t)) (0:ℝ) 1 MeasureTheory.volume = ((s+1:ℕ):ℂ)",
+      "plain_statement": {
+        "zh": "几何核平方在支集前半段的第 s 个系数恰为 s+1。",
+        "en": "In the lower half of its support the squared kernel has coefficient s+1."
+      },
+      "brief": {
+        "zh": "频率对 i+j=s 恰有 s+1 组。",
+        "en": "Count pairs with i+j=s."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "rational-model",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-square-model-loss",
+      "file": "lean/PEqualNP/Outside/L_goldbach_square_model_loss.lean",
+      "module": "PEqualNP.Outside.L_goldbach_square_model_loss",
+      "statement": "∀ z w : ℂ, ‖z^2-w^2‖ ≤ ‖z-w‖*(2*‖w‖+‖z-w‖)",
+      "plain_statement": {
+        "zh": "由指数和的一次近似误差得到其平方的误差。",
+        "en": "Transfer an exponential-sum approximation to its square."
+      },
+      "brief": {
+        "zh": "因式分解 z²−w²，再以模型和误差控制 z+w。",
+        "en": "Factor the square difference and bound z+w through the model."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/1305.2897",
+      "track": "rational-model",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-farey-separation",
+      "file": "lean/PEqualNP/Outside/L_goldbach_farey_separation.lean",
+      "module": "PEqualNP.Outside.L_goldbach_farey_separation",
+      "statement": "∀ a b q r : ℕ, 0<q → 0<r → a*r ≠ b*q → 1/((q:ℝ)*(r:ℝ)) ≤ |(a:ℝ)/(q:ℝ)-(b:ℝ)/(r:ℝ)|",
+      "plain_statement": {
+        "zh": "两个不同有理中心距离至少为分母积的倒数。",
+        "en": "Distinct rational arc centers are separated by the reciprocal denominator product."
+      },
+      "brief": {
+        "zh": "交叉相乘后的分子是非零整数。",
+        "en": "Use the nonzero integer cross-difference."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "arc-budget",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-arc-disjoint",
+      "file": "lean/PEqualNP/Outside/L_goldbach_arc_disjoint.lean",
+      "module": "PEqualNP.Outside.L_goldbach_arc_disjoint",
+      "statement": "∀ (a b q r Q n : ℕ) (t : ℝ), 0<q → 0<r → q≤Q → r≤Q → 2*Q^2<n → a*r ≠ b*q → |t-(a:ℝ)/(q:ℝ)|≤(Q:ℝ)/((q:ℝ)*n) → (Q:ℝ)/((r:ℝ)*n) < |t-(b:ℝ)/(r:ℝ)|",
+      "plain_statement": {
+        "zh": "当 2Q²<n 时，不同中心的两条主弧互不重叠。",
+        "en": "Distinct major arcs are disjoint once 2Q²<n."
+      },
+      "brief": {
+        "zh": "比较两条半径之和与 Farey 间隔。",
+        "en": "Compare the sum of the radii with Farey separation."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "arc-budget",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-arc-cutoff-scale",
+      "file": "lean/PEqualNP/Outside/L_goldbach_arc_cutoff_scale.lean",
+      "module": "PEqualNP.Outside.L_goldbach_arc_cutoff_scale",
+      "statement": "let Q := fun n : ℕ => (Nat.log 2 (n+2))^2; let arcs := fun n : ℕ => {t : ℝ | ∃ q a : ℕ, 1≤q ∧ q≤Q n ∧ a≤q ∧ Nat.Coprime a q ∧ |t-(a:ℝ)/(q:ℝ)| ≤ (Q n:ℝ)/((q:ℝ)*(n:ℝ))}; ∃ N : ℕ, ∀ n : ℕ, N≤n → 2*(Q n)^2<n",
+      "plain_statement": {
+        "zh": "所选对数截断最终满足主弧不重叠的尺度条件。",
+        "en": "The selected logarithmic cutoff eventually ensures disjointness."
+      },
+      "brief": {
+        "zh": "用对数的四次方小于任意正比例的 n。",
+        "en": "Compare log⁴ n with n."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "arc-budget",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-arc-measurable",
+      "file": "lean/PEqualNP/Outside/L_goldbach_arc_measurable.lean",
+      "module": "PEqualNP.Outside.L_goldbach_arc_measurable",
+      "statement": "let Q := fun n : ℕ => (Nat.log 2 (n+2))^2; let arcs := fun n : ℕ => {t : ℝ | ∃ q a : ℕ, 1≤q ∧ q≤Q n ∧ a≤q ∧ Nat.Coprime a q ∧ |t-(a:ℝ)/(q:ℝ)| ≤ (Q n:ℝ)/((q:ℝ)*(n:ℝ))}; ∀ n, MeasurableSet (arcs n)",
+      "plain_statement": {
+        "zh": "证明研究路线中实际选用的有理邻域并集可测。",
+        "en": "Prove measurability of the specified union of rational neighborhoods."
+      },
+      "brief": {
+        "zh": "将存在量词展开为可数个闭区间的并。",
+        "en": "Express the existential definition as a countable union of closed intervals."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "arc-budget",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-arc-coefficient-sum",
+      "file": "lean/PEqualNP/Outside/L_goldbach_arc_coefficient_sum.lean",
+      "module": "PEqualNP.Outside.L_goldbach_arc_coefficient_sum",
+      "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); let Q := fun n : ℕ => (Nat.log 2 (n+2))^2; let arcs := fun n : ℕ => {t : ℝ | ∃ q a : ℕ, 1≤q ∧ q≤Q n ∧ a≤q ∧ Nat.Coprime a q ∧ |t-(a:ℝ)/(q:ℝ)| ≤ (Q n:ℝ)/((q:ℝ)*(n:ℝ))}; let f := fun (n : ℕ) (t : ℝ) => (S n w t)^2*E (-(n:ℝ)*t); let major := fun n : ℕ => intervalIntegral (fun t => (arcs n).indicator (f n) t) (0:ℝ) 1 MeasureTheory.volume; let minor := fun n : ℕ => intervalIntegral (fun t => (arcs n)ᶜ.indicator (f n) t) (0:ℝ) 1 MeasureTheory.volume; let conv := fun (u v : ℕ → ℝ) (n : ℕ) => Finset.sum (Finset.range (n+1)) (fun k => u k*v (n-k)); ∀ n, major n+minor n=(conv w w n:ℂ)",
+      "plain_statement": {
+        "zh": "在同一截断下，两个弧积分之和精确等于目标素数卷积。",
+        "en": "The two arc integrals add to the target prime correlation."
+      },
+      "brief": {
+        "zh": "用可测性分割积分，再提取第 n 个系数。",
+        "en": "Split the measurable integrand and extract the nth coefficient."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "arc-budget",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-arc-major-floor",
+      "file": "lean/PEqualNP/Outside/L_goldbach_arc_major_floor.lean",
+      "module": "PEqualNP.Outside.L_goldbach_arc_major_floor",
+      "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); let Q := fun n : ℕ => (Nat.log 2 (n+2))^2; let arcs := fun n : ℕ => {t : ℝ | ∃ q a : ℕ, 1≤q ∧ q≤Q n ∧ a≤q ∧ Nat.Coprime a q ∧ |t-(a:ℝ)/(q:ℝ)| ≤ (Q n:ℝ)/((q:ℝ)*(n:ℝ))}; let f := fun (n : ℕ) (t : ℝ) => (S n w t)^2*E (-(n:ℝ)*t); let major := fun n : ℕ => intervalIntegral (fun t => (arcs n).indicator (f n) t) (0:ℝ) 1 MeasureTheory.volume; ∃ (c : ℝ) (N : ℕ), 0<c ∧ ∀ n : ℕ, N≤n → Even n → c*(n:ℝ) ≤ (major n).re",
+      "plain_statement": {
+        "zh": "研究目标：证明这组主弧的实贡献对所有充分大偶数有统一的正线性下界。",
+        "en": "Research target: a uniform positive linear floor on these major arcs for all sufficiently large evens."
+      },
+      "brief": {
+        "zh": "从有理中心模型、局部乘积下界和积分误差预算出发；须对 n 一致。",
+        "en": "Combine the rational model, singular factors and integrated errors uniformly in n."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "arc-budget",
+      "role": "target"
+    },
+    {
+      "id": "L-goldbach-arc-minor-saving",
+      "file": "lean/PEqualNP/Outside/L_goldbach_arc_minor_saving.lean",
+      "module": "PEqualNP.Outside.L_goldbach_arc_minor_saving",
+      "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); let Q := fun n : ℕ => (Nat.log 2 (n+2))^2; let arcs := fun n : ℕ => {t : ℝ | ∃ q a : ℕ, 1≤q ∧ q≤Q n ∧ a≤q ∧ Nat.Coprime a q ∧ |t-(a:ℝ)/(q:ℝ)| ≤ (Q n:ℝ)/((q:ℝ)*(n:ℝ))}; let f := fun (n : ℕ) (t : ℝ) => (S n w t)^2*E (-(n:ℝ)*t); let minor := fun n : ℕ => intervalIntegral (fun t => (arcs n)ᶜ.indicator (f n) t) (0:ℝ) 1 MeasureTheory.volume; ∀ e : ℝ, 0<e → ∃ N : ℕ, ∀ n : ℕ, N≤n → Even n → -(e*(n:ℝ)) ≤ (minor n).re",
+      "plain_statement": {
+        "zh": "研究目标：对任意 ε>0，这组次弧的带符号实贡献对所有充分大偶数都至少为 −εn。",
+        "en": "Research target: for every ε>0 the signed minor-arc contribution is eventually at least −εn for every even n."
+      },
+      "brief": {
+        "zh": "保留频率相位的抵消。均方估计只控制平均，逐点下界是主要缺口。",
+        "en": "Retain oscillation. Mean-square control alone does not yield the pointwise lower bound."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "arc-budget",
+      "role": "target"
+    },
+    {
+      "id": "L-goldbach-arc-budget-transfer",
+      "file": "lean/PEqualNP/Outside/L_goldbach_arc_budget_transfer.lean",
+      "module": "PEqualNP.Outside.L_goldbach_arc_budget_transfer",
+      "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); let Q := fun n : ℕ => (Nat.log 2 (n+2))^2; let arcs := fun n : ℕ => {t : ℝ | ∃ q a : ℕ, 1≤q ∧ q≤Q n ∧ a≤q ∧ Nat.Coprime a q ∧ |t-(a:ℝ)/(q:ℝ)| ≤ (Q n:ℝ)/((q:ℝ)*(n:ℝ))}; let f := fun (n : ℕ) (t : ℝ) => (S n w t)^2*E (-(n:ℝ)*t); let major := fun n : ℕ => intervalIntegral (fun t => (arcs n).indicator (f n) t) (0:ℝ) 1 MeasureTheory.volume; let minor := fun n : ℕ => intervalIntegral (fun t => (arcs n)ᶜ.indicator (f n) t) (0:ℝ) 1 MeasureTheory.volume; (∃ (c : ℝ) (N : ℕ), 0<c ∧ ∀ n : ℕ, N≤n → Even n → c*(n:ℝ) ≤ (major n).re) → (∀ e : ℝ, 0<e → ∃ N : ℕ, ∀ n : ℕ, N≤n → Even n → -(e*(n:ℝ)) ≤ (minor n).re) → ∃ N : ℕ, ∀ n : ℕ, N≤n → Even n → ∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p+q=n",
+      "plain_statement": {
+        "zh": "在上述主弧、次弧两个估计下推出充分大偶数的哥德巴赫表示。",
+        "en": "Deduce representations of all sufficiently large evens assuming the two specified arc bounds."
+      },
+      "brief": {
+        "zh": "取 ε=c/2，同时超过两个阈值；用弧分割和正权提取见证。",
+        "en": "Choose ε=c/2 and take a common threshold before extracting a witness."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "arc-budget",
+      "role": "conditional"
+    },
+    {
+      "id": "L-goldbach-arc-error-budget",
+      "file": "lean/PEqualNP/Outside/L_goldbach_arc_error_budget.lean",
+      "module": "PEqualNP.Outside.L_goldbach_arc_error_budget",
+      "statement": "∀ M A B e h : ℝ, |A-M|≤e → -h≤B → e+h<M → 0<A+B",
+      "plain_statement": {
+        "zh": "把主项、主弧近似误差和带符号次弧预算合成严格正性。",
+        "en": "Turn a major approximation and a one-sided minor budget into strict positivity."
+      },
+      "brief": {
+        "zh": "明确哪个误差需双侧控制，哪个只需下界。",
+        "en": "Separate the two-sided approximation from the one-sided error."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "arc-budget",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-threshold-coverage",
+      "file": "lean/PEqualNP/Outside/L_goldbach_threshold_coverage.lean",
+      "module": "PEqualNP.Outside.L_goldbach_threshold_coverage",
+      "statement": "∀ N : ℕ, let G := fun n : ℕ => ∃ p q : ℕ, Nat.Prime p ∧ Nat.Prime q ∧ p+q=n; (∀ n, 4≤n → n<N → Even n → G n) → (∀ n, 4≤n → N≤n → Even n → G n) → ∀ n, 4≤n → Even n → G n",
+      "plain_statement": {
+        "zh": "同一个阈值的下侧与上侧证明合在一起，才覆盖所有偶数。",
+        "en": "Join lower and upper coverage only when the same threshold covers the boundary."
+      },
+      "brief": {
+        "zh": "将已经证明的阈值显式传入，注意 n=N。",
+        "en": "Use a common certified threshold and include n=N on the upper side."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "arc-budget",
+      "role": "conditional"
+    },
+    {
+      "id": "L-goldbach-exception-zero-weight",
+      "file": "lean/PEqualNP/Outside/L_goldbach_exception_zero_weight.lean",
+      "module": "PEqualNP.Outside.L_goldbach_exception_zero_weight",
+      "statement": "let reps := fun n : ℕ => (Finset.range (n+1)).filter (fun p => Nat.Prime p ∧ Nat.Prime (n-p)); let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let conv := fun (u v : ℕ → ℝ) (n : ℕ) => Finset.sum (Finset.range (n+1)) (fun k => u k*v (n-k)); ∀ n, (reps n).card=0 ↔ conv w w n=0",
+      "plain_statement": {
+        "zh": "无表示的指标恰是对数素数卷积的零点。",
+        "en": "Zero representation counts agree exactly with zero prime-weight correlation."
+      },
+      "brief": {
+        "zh": "由非负性和素数权的严格正性得到双向结论。",
+        "en": "Use positivity of every surviving summand."
+      },
+      "program": "exceptions",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "exceptions",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-exception-main-deficit",
+      "file": "lean/PEqualNP/Outside/L_goldbach_exception_main_deficit.lean",
+      "module": "PEqualNP.Outside.L_goldbach_exception_main_deficit",
+      "statement": "let reps := fun n : ℕ => (Finset.range (n+1)).filter (fun p => Nat.Prime p ∧ Nat.Prime (n-p)); let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let conv := fun (u v : ℕ → ℝ) (n : ℕ) => Finset.sum (Finset.range (n+1)) (fun k => u k*v (n-k)); let D := fun X : ℕ => (Finset.Ico X (2*X)).filter (fun n => 4 ≤ n ∧ Even n); let bad := fun X : ℕ => (D X).filter (fun n => (reps n).card=0); ∀ (X : ℕ) (m : ℕ → ℝ) (c : ℝ), (∀ n ∈ D X, c*(X:ℝ)≤m n) → ∀ n ∈ bad X, c*(X:ℝ)≤|conv w w n-m n|",
+      "plain_statement": {
+        "zh": "若模型在区间上有下界，每个例外都造成至少同样大的误差。",
+        "en": "Each exception incurs at least the block’s model floor in error."
+      },
+      "brief": {
+        "zh": "在例外点代入卷积为零。",
+        "en": "Substitute zero correlation at an exceptional index."
+      },
+      "program": "exceptions",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "exceptions",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-exception-first-moment",
+      "file": "lean/PEqualNP/Outside/L_goldbach_exception_first_moment.lean",
+      "module": "PEqualNP.Outside.L_goldbach_exception_first_moment",
+      "statement": "∀ (I F : Finset ℕ) (e : ℕ → ℝ) (b : ℝ), F⊆I → (∀ n ∈ F, b≤|e n|) → (F.card:ℝ)*b ≤ Finset.sum I (fun n => |e n|)",
+      "plain_statement": {
+        "zh": "以误差绝对值的一阶矩控制超过门槛的例外数。",
+        "en": "Charge each exceptional index to the first absolute moment."
+      },
+      "brief": {
+        "zh": "先对 F 求和，再扩到 I。",
+        "en": "Sum the floor over F and extend to I."
+      },
+      "program": "exceptions",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "exceptions",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-exception-fourth-moment",
+      "file": "lean/PEqualNP/Outside/L_goldbach_exception_fourth_moment.lean",
+      "module": "PEqualNP.Outside.L_goldbach_exception_fourth_moment",
+      "statement": "∀ (I F : Finset ℕ) (e : ℕ → ℝ) (b : ℝ), F⊆I → 0≤b → (∀ n ∈ F, b≤|e n|) → (F.card:ℝ)*b^4 ≤ Finset.sum I (fun n => (e n)^4)",
+      "plain_statement": {
+        "zh": "用四阶矩单独控制大偏差尾部。",
+        "en": "Control the large-deviation tail with a fourth moment."
+      },
+      "brief": {
+        "zh": "单项提高到四次幂后应用非负性。",
+        "en": "Take fourth powers on the exceptional set."
+      },
+      "program": "exceptions",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "exceptions",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-exception-ltwo-split",
+      "file": "lean/PEqualNP/Outside/L_goldbach_exception_ltwo_split.lean",
+      "module": "PEqualNP.Outside.L_goldbach_exception_ltwo_split",
+      "statement": "∀ (I : Finset ℕ) (e h : ℕ → ℝ), Finset.sum I (fun n => (e n+h n)^2) ≤ 2*(Finset.sum I (fun n => (e n)^2)+Finset.sum I (fun n => (h n)^2))",
+      "plain_statement": {
+        "zh": "把总误差的均方预算拆给两种误差来源。",
+        "en": "Split a mean-square budget across two error sources."
+      },
+      "brief": {
+        "zh": "利用 (e−h)²≥0 逐项求和。",
+        "en": "Sum the pointwise square inequality."
+      },
+      "program": "exceptions",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "exceptions",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-exception-dyadic-bound",
+      "file": "lean/PEqualNP/Outside/L_goldbach_exception_dyadic_bound.lean",
+      "module": "PEqualNP.Outside.L_goldbach_exception_dyadic_bound",
+      "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let conv := fun (u v : ℕ → ℝ) (n : ℕ) => Finset.sum (Finset.range (n+1)) (fun k => u k*v (n-k)); let reps := fun n : ℕ => (Finset.range (n+1)).filter (fun p => Nat.Prime p ∧ Nat.Prime (n-p)); let D := fun X : ℕ => (Finset.Ico X (2*X)).filter (fun n => 4 ≤ n ∧ Even n); let bad := fun X : ℕ => (D X).filter (fun n => (reps n).card=0); ∀ (X : ℕ) (m : ℕ → ℝ) (c V : ℝ), 0≤c → (∀ n ∈ D X, c*(X:ℝ)≤m n) → Finset.sum (D X) (fun n => (conv w w n-m n)^2) ≤ V → ((bad X).card:ℝ)*(c*(X:ℝ))^2 ≤ V",
+      "plain_statement": {
+        "zh": "从模型下界和总均方误差推出倍增区间上的例外个数界。",
+        "en": "Combine a model floor and a variance bound into a dyadic exceptional count."
+      },
+      "brief": {
+        "zh": "仅在例外集上花费每个指标必需的误差预算。",
+        "en": "Charge the minimum squared error per exception."
+      },
+      "program": "exceptions",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "exceptions",
+      "role": "conditional"
+    },
+    {
+      "id": "L-goldbach-exception-no-outlier",
+      "file": "lean/PEqualNP/Outside/L_goldbach_exception_no_outlier.lean",
+      "module": "PEqualNP.Outside.L_goldbach_exception_no_outlier",
+      "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let conv := fun (u v : ℕ → ℝ) (n : ℕ) => Finset.sum (Finset.range (n+1)) (fun k => u k*v (n-k)); let reps := fun n : ℕ => (Finset.range (n+1)).filter (fun p => Nat.Prime p ∧ Nat.Prime (n-p)); let D := fun X : ℕ => (Finset.Ico X (2*X)).filter (fun n => 4 ≤ n ∧ Even n); let bad := fun X : ℕ => (D X).filter (fun n => (reps n).card=0); ∀ (X : ℕ) (m : ℕ → ℝ) (b : ℝ), 0≤b → (∀ n ∈ D X, b≤m n) → Finset.sum (D X) (fun n => (conv w w n-m n)^2)<b^2 → bad X=∅",
+      "plain_statement": {
+        "zh": "若整个区间的均方总量严格低于单个例外的代价，则例外集为空。",
+        "en": "A strict total squared-error budget below the cost of one exception excludes all exceptions in that block."
+      },
+      "brief": {
+        "zh": "反设存在一个例外，单项即可耗尽预算。",
+        "en": "One hypothetical exception already exhausts the budget."
+      },
+      "program": "exceptions",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "exceptions",
+      "role": "conditional"
+    },
+    {
+      "id": "L-goldbach-exception-support-energy",
+      "file": "lean/PEqualNP/Outside/L_goldbach_exception_support_energy.lean",
+      "module": "PEqualNP.Outside.L_goldbach_exception_support_energy",
+      "statement": "∀ (I : Finset ℕ) (r : ℕ → ℝ), (Finset.sum I r)^2 ≤ (((I.filter (fun n => r n ≠ 0)).card:ℕ):ℝ) * Finset.sum I (fun n => (r n)^2)",
+      "plain_statement": {
+        "zh": "由总表示质量与二阶矩估计有表示的指标数量。",
+        "en": "Relate the number of represented indices to total mass and second moment."
+      },
+      "brief": {
+        "zh": "在非零支集上使用柯西不等式。",
+        "en": "Restrict Cauchy–Schwarz to the support."
+      },
+      "program": "exceptions",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "exceptions",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-exception-shift-union",
+      "file": "lean/PEqualNP/Outside/L_goldbach_exception_shift_union.lean",
+      "module": "PEqualNP.Outside.L_goldbach_exception_shift_union",
+      "statement": "∀ (I H : Finset ℕ) (P : ℕ → Bool), (I.filter (fun n => (H.filter (fun h => P (n+h)=true)).Nonempty)).card ≤ Finset.sum H (fun h => (I.filter (fun n => P (n+h)=true)).card)",
+      "plain_statement": {
+        "zh": "多个平移窗口同时筛查时，以各窗口例外数之和控制并集。",
+        "en": "Bound the count flagged by any of several translated windows by the sum of individual counts."
+      },
+      "brief": {
+        "zh": "将任意窗口命中改写成有限并。",
+        "en": "Write the any-hit event as a finite union."
+      },
+      "program": "exceptions",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "exceptions",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-exception-block-cover",
+      "file": "lean/PEqualNP/Outside/L_goldbach_exception_block_cover.lean",
+      "module": "PEqualNP.Outside.L_goldbach_exception_block_cover",
+      "statement": "let reps := fun n : ℕ => (Finset.range (n+1)).filter (fun p => Nat.Prime p ∧ Nat.Prime (n-p)); let D := fun X : ℕ => (Finset.Ico X (2*X)).filter (fun n => 4 ≤ n ∧ Even n); let bad := fun X : ℕ => (D X).filter (fun n => (reps n).card=0); ∀ (K : ℕ), (∀ j : ℕ, K≤j → bad (2^j)=∅) → ∀ n : ℕ, 2^K≤n → 4≤n → Even n → (reps n).Nonempty",
+      "plain_statement": {
+        "zh": "若从某层起每个二进制区间无例外，则所有超过该层的偶数都有表示。",
+        "en": "Empty exception sets on every dyadic block beyond K cover every sufficiently large even target."
+      },
+      "brief": {
+        "zh": "取 j=⌊log₂ n⌋ 并处理半开区间端点。",
+        "en": "Use the integer base-two logarithm to select the half-open block."
+      },
+      "program": "exceptions",
+      "imports": [],
+      "parallel": true,
+      "source": "https://arxiv.org/abs/2607.27282",
+      "track": "exceptions",
+      "role": "conditional"
+    }
+  ],
+  "tracks": [
+    {
+      "id": "representations",
+      "title": {
+        "zh": "把素数对变成可估计的量",
+        "en": "From prime pairs to a weighted sum"
+      },
+      "description": {
+        "zh": "为傅里叶系数提取和换权误差提供有限卷积恒等式。",
+        "en": "Finite convolution identities for coefficient extraction and changes of weight."
+      },
+      "feeds": [
+        "powers",
+        "integrals",
+        "exceptions"
+      ]
+    },
+    {
+      "id": "powers",
+      "title": {
+        "zh": "剔除真素数幂",
+        "en": "Remove higher prime powers"
+      },
+      "description": {
+        "zh": "将 Λ 卷积换回只含素数的卷积，并定量控制误差。",
+        "en": "Convert the Mangoldt correlation to primes and bound the correction."
+      },
+      "feeds": [
+        "progressions"
+      ]
+    },
+    {
+      "id": "residues",
+      "title": {
+        "zh": "计算每个模数的局部障碍",
+        "en": "Count admissible residue pairs"
+      },
+      "description": {
+        "zh": "给奇异级数提供可证明的局部因子，从素模数推广到合数。",
+        "en": "Supply local factors for the singular series, from primes through composite moduli."
+      },
+      "feeds": [
+        "series",
+        "rational-model"
+      ]
+    },
+    {
+      "id": "series",
+      "title": {
+        "zh": "给局部修正乘积建立下界",
+        "en": "Lower-bound the local product"
+      },
+      "description": {
+        "zh": "把有限局部计数归一化，控制乘积截断，以便估计主弧主项。",
+        "en": "Normalize local counts and control truncated products for the major-arc main term."
+      },
+      "feeds": [
+        "arc-budget"
+      ]
+    },
+    {
+      "id": "fourier",
+      "title": {
+        "zh": "建立有限傅里叶变换",
+        "en": "Build the finite Fourier transform"
+      },
+      "description": {
+        "zh": "在有限循环群上验证正交性、反演与能量公式，为检查圆法系数提供独立模型。",
+        "en": "Use character orthogonality, inversion and energy on a finite cyclic group as an independent coefficient model."
+      },
+      "feeds": [
+        "integrals"
+      ]
+    },
+    {
+      "id": "integrals",
+      "title": {
+        "zh": "提取圆法积分系数",
+        "en": "Extract continuous Fourier coefficients"
+      },
+      "description": {
+        "zh": "逐项验证单位圆、截断权和主次弧分割的积分操作。",
+        "en": "Verify integration on the unit interval, truncated weights, and the partition into arcs."
+      },
+      "feeds": [
+        "arc-budget",
+        "exceptions"
+      ]
+    },
+    {
+      "id": "progressions",
+      "title": {
+        "zh": "从同余类到主弧指数和",
+        "en": "From progressions to rational frequencies"
+      },
+      "description": {
+        "zh": "先组织剩余类上的 Λ 质量，再通过分部求和传递误差。若采用 GRH，各结论保留该假设。",
+        "en": "Organize Mangoldt mass by residue and transport errors by partial summation. Keep GRH explicit where used."
+      },
+      "feeds": [
+        "rational-model"
+      ]
+    },
+    {
+      "id": "rational-model",
+      "title": {
+        "zh": "计算有理频率的主项",
+        "en": "Evaluate rational main terms"
+      },
+      "description": {
+        "zh": "从单位根和与几何核出发，建立主弧近似的可计算模型。",
+        "en": "Combine unit-root sums with the geometric kernel to model the main arcs."
+      },
+      "feeds": [
+        "arc-budget"
+      ]
+    },
+    {
+      "id": "arc-budget",
+      "title": {
+        "zh": "主弧下界与次弧抵消",
+        "en": "Major-arc gain and minor-arc cancellation"
+      },
+      "description": {
+        "zh": "两条攻关任务采用同一套弧宽、权和阈值定义。两项估计若都成立，可得到充分大偶数的结论，阈值以下仍需另证。",
+        "en": "Both research targets use the same arcs and weights. Together they would cover sufficiently large evens. Values below the resulting threshold require a separate proof."
+      },
+      "feeds": []
+    },
+    {
+      "id": "exceptions",
+      "title": {
+        "zh": "估计例外集合并识别平均界的局限",
+        "en": "Control exceptional sets and track what averages imply"
+      },
+      "description": {
+        "zh": "这些任务可给出几乎处处的结果。要排除最后一个例外，还需要逐点输入或把整数计数严格压到一以下。",
+        "en": "These estimates can give almost-all results. Eliminating the last exception needs pointwise information or an exceptional count strictly below one."
+      },
+      "feeds": []
     }
   ]
 }

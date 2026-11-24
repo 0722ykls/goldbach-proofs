@@ -170,7 +170,7 @@ class Desk:
             available = (g for g in candidates if g not in proved and
                          (not load[g] or self.gaps[g].get("parallel") is True))
             # Cover unclaimed statements first. Then balance independent attempts on open problems.
-            selected = min(available, key=lambda g: (load[g], program_load[
+            selected = min(available, key=lambda g: (load[g], self.gaps[g].get("role") == "endpoint", program_load[
                 self.gaps[g].get("program", "foundation")]), default=None)
             if selected is None:
                 return error(409, "no_available_gap")

@@ -959,6 +959,11 @@ body:not([data-problem]) .hero .open-status { vertical-align: middle; }
 .topic-roadmap { grid-template-columns: repeat(auto-fit,minmax(min(100%, 15rem),1fr)); }
 .roadmap-tasks { display: grid; justify-items: start; gap: .35rem; margin-top: .8rem; }
 .roadmap-tasks a { color: var(--blue); font-size: .84rem; text-decoration: underline; text-underline-offset: .17em; }
+.goldbach-tracks { margin-block: 1.2rem 2rem; }
+.goldbach-tracks > p { margin: .5rem 0 1rem; max-width: 76ch; }
+.goldbach-tracks details { padding: .8rem 0; border-top: 1px solid var(--line); }
+.goldbach-tracks summary { cursor: pointer; font-weight: 650; }
+.goldbach-tracks details p { margin-top: .45rem; }
 
 .discussion-dock {
   position: fixed;
