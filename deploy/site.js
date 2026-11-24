@@ -491,23 +491,54 @@ function rankingTimeText(acceptedAt) {
   return relativeTime.format(-Math.floor(age / 86400), 'day');
 }
 
+function zhihuUrl(value, kind) {
+  if (typeof value !== 'string' || !value) return null;
+  let url;
+  try {
+    url = new URL(value);
+  } catch {
+    return null;
+  }
+  if (url.protocol !== 'https:' || url.username || url.password || url.port) return null;
+  if (kind === 'avatar') {
+    return url.hostname.endsWith('.zhimg.com') ? url.href : null;
+  }
+  return url.hostname === 'www.zhihu.com' && /^\/people\/[^/]+\/?$/.test(url.pathname)
+    ? url.href : null;
+}
+
 function renderRankingRow(contributor, index, mode) {
   const item = element('li', undefined, 'ranking-row');
   const rank = element('span', index + 1, 'ranking-position');
+  const zhihu = contributor.zhihu;
+  const name = typeof zhihu?.name === 'string' ? zhihu.name.trim() : '';
+  const avatarUrl = name && zhihuUrl(zhihu.avatar_url, 'avatar');
+  const profileUrl = name && zhihuUrl(zhihu.profile_url, 'profile');
+  const github = 'https://github.com/' + encodeURIComponent(contributor.handle);
+  const githubAvatar = github + '.png?size=64';
   const avatar = element('span', contributor.handle[0].toUpperCase(), 'ranking-avatar');
   avatar.setAttribute('aria-hidden', 'true');
   const photograph = document.createElement('img');
-  photograph.src = 'https://github.com/' + encodeURIComponent(contributor.handle) + '.png?size=64';
   photograph.alt = '';
   photograph.width = 38;
   photograph.height = 38;
   photograph.loading = 'lazy';
   photograph.referrerPolicy = 'no-referrer';
-  photograph.addEventListener('error', () => photograph.remove(), { once: true });
+  photograph.addEventListener('error', () => {
+    if (photograph.src === githubAvatar) photograph.remove();
+    else photograph.src = githubAvatar;
+  });
+  photograph.src = avatarUrl || githubAvatar;
   avatar.append(photograph);
 
   const identity = element('div', undefined, 'ranking-identity');
-  identity.append(anchor('@' + contributor.handle, 'https://github.com/' + encodeURIComponent(contributor.handle), 'ranking-name'));
+  if (name) {
+    const label = (lang === 'zh' ? '知乎 · ' : 'Zhihu · ') + name;
+    identity.append(profileUrl ? anchor(label, profileUrl, 'ranking-name') : element('span', label, 'ranking-name'));
+    identity.append(anchor('GitHub · @' + contributor.handle, github, 'ranking-github'));
+  } else {
+    identity.append(anchor('@' + contributor.handle, github, 'ranking-name'));
+  }
   if (Number.isSafeInteger(contributor.latest_accepted_at)) {
     const acceptedAt = contributor.latest_accepted_at;
     const date = new Date(acceptedAt * 1000);

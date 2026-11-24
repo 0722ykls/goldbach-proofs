@@ -656,6 +656,8 @@ button, a, input, select { -webkit-tap-highlight-color: transparent; }
 .ranking-avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .ranking-identity { display: grid; gap: .08rem; min-width: 0; }
 .ranking-name { width: fit-content; color: var(--ink); font-size: .93rem; font-weight: 670; overflow-wrap: anywhere; }
+.ranking-github { width: fit-content; color: var(--muted); font-size: .77rem; overflow-wrap: anywhere; }
+.ranking-attribution a { color: var(--ink); text-decoration: underline; text-underline-offset: .17em; }
 .ranking-time { color: var(--muted); font-size: .75rem; }
 .ranking-result { display: flex; align-items: baseline; gap: .4rem; justify-self: end; }
 .ranking-score { color: var(--ink); font: 530 1.65rem/1 var(--serif); }

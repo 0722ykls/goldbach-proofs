@@ -1,5 +1,13 @@
 # Deployment / 部署
 
+## 知乎署名
+
+随 `server.py` 部署 `zhihu_oauth.py` 与 `github_identity.py`。将应用凭据 JSON（字段 `app_id`、`app_key`）保存到仅 root 可读的 `/etc/goldbach-web/zhihu-oauth`，安装 `zhihu-oauth.conf` 到 `/etc/systemd/system/goldbach-web.service.d/`，再执行 daemon-reload 并重启 goldbach-web。凭据保留在服务器。已登记回调为 `https://www.goldbach.tech/auth/zhihu/callback`，应从这个域名启动会话，并在该虚拟主机的访问日志中排除授权路径。
+
+来自 movan.tech 的参与者可从贡献榜进入管理页面。知乎回调必须匹配当前浏览器中未过期的一次性 state。服务端用授权码换取短期令牌并读取基础资料，仅使用稳定用户标识及展示字段，随后丢弃令牌。参与者再用指定 GitHub 账号创建含挑战文本的 Gist，勾选公开署名。绑定后可重新登录知乎并解除绑定。站点在单独的 contributor-links.sqlite3 中保存绑定及限时会话。跨项目沿用 GitHub 贡献记录。
+
+运行 `python -B -m unittest deploy.test_zhihu deploy.test_github_identity` 检查绑定流程。实测授权需使用可公开访问的登记域名与参与者自己的知乎账号。若平台回调缺少 state，页面终止绑定，需向平台确认 state 回传或受支持的替代机制。
+
 The public site is https://www.movan.tech/goldbach/. Nginx strips the /goldbach/ prefix and forwards to the HTTPS service on 127.0.0.1:8443. The upstream service reads its certificate through systemd credentials. Restart the service after its certificate renews. Install the APNIC CN IPv4 and IPv6 allocation rows in /opt/goldbach-web/china-apnic.txt and restart the service after refreshing them. Nginx sets the visitor address used for language selection. Visitors can override it with ?lang=zh or ?lang=en.
 
 权威工作流仅在生成 ACCEPTED 或 REJECTED 时回传。配置 GitHub Actions 仓库变量 GOLDBACH_WEBHOOK_URL 与密钥 GOLDBACH_WEBHOOK_SECRET 后，由单独的 runner 向 https://www.movan.tech/goldbach/api/verdict 发送 HTTPS POST。端点校验 X-Goldbach-Signature，格式为 sha256=<对原始请求体的 HMAC-SHA256>。

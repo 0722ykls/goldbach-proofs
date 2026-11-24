@@ -16,11 +16,15 @@ from urllib.parse import parse_qs, urlsplit
 
 from desk import Desk, QUEUE_BATCH
 from landau import BASELINE, exponent_record
+from zhihu_oauth import BASE as ZHIHU_PATH, ZhihuOAuth
 
 ROOT = Path(__file__).resolve().parent
 CREDS = Path(os.environ["CREDENTIALS_DIRECTORY"])
 SECRET = (CREDS / "webhook").read_bytes().strip()
 DB = Path(os.environ["STATE_DIRECTORY"]) / "verdicts.sqlite3"
+oauth_credential = CREDS / "zhihu-oauth"
+ZHIHU = ZhihuOAuth(DB.with_name("contributor-links.sqlite3"), json.loads(oauth_credential.read_bytes())
+                   if oauth_credential.is_file() else None)
 GAPS = json.loads((ROOT / "gaps.json").read_text(encoding="utf-8"))["gaps"]
 DESK = Desk(DB, GAPS, SECRET)
 PROBLEM_FILE = ROOT / "problems.json"
@@ -92,11 +96,19 @@ def research_status(desk=DESK):
         result, proved = latest.get(gap["id"], (None, False))
         gaps.append({**gap, "latest": result, "proved": proved})
     accepted = sum(gap["proved"] for gap in gaps)
+    desk_status = desk.public_status()
+    rankings = desk_status["rankings"]
+    rows = rankings["all_time"] + rankings["hour"]
+    profiles = ZHIHU.public_profiles(sorted({row["handle"].lower() for row in rows}))
+    for row in rows:
+        profile = profiles.get(row["handle"].lower())
+        if profile:
+            row["zhihu"] = profile
     return {
         **extra,
         "gaps": gaps,
         "results": results,
-        "desk": desk.public_status(),
+        "desk": desk_status,
         "counts": {
             "published": len(gaps),
             "accepted": accepted,
@@ -126,6 +138,7 @@ def problem_page(page, slug, lang):
     page = page.replace('href="problems/?', 'href="../?').replace('href="site.css"', 'href="../../site.css"').replace(
         'src="site.js"', 'src="../../site.js"')
     page = page.replace('href="goldbach-icon.svg"', 'href="../../goldbach-icon.svg"')
+    page = page.replace('href="auth/zhihu?', 'href="../../auth/zhihu?')
     page = re.sub(r'(<h1 id="page-title">).*?(</h1>)', lambda m: m[1] + title + m[2], page)
     page = re.sub(r'(<p class="hero-question">).*?(</p>)', lambda m: m[1] + question + m[2], page)
     page = re.sub(r'(<p class="hero-description">).*?(</p>)', lambda m: m[1] + description + m[2], page)
@@ -242,6 +255,41 @@ def china_networks():
 NETWORKS = tuple(china_networks())
 
 class Handler(BaseHTTPRequestHandler):
+    def log_request(self, code="-", size="-"):
+        if getattr(self, "path", "").partition("?")[0].startswith(ZHIHU_PATH):
+            self.log_message("Zhihu authorization request %s", code)
+        else:
+            super().log_request(code, size)
+
+    def zhihu_request(self, path, query=""):
+        if self.command == "HEAD":
+            return self.reply(405, b'{}')
+        try:
+            if self.command == "POST":
+                size = int(self.headers.get("Content-Length", "0"))
+                if not 0 < size <= 8192 or self.headers.get_content_type() != "application/x-www-form-urlencoded":
+                    return self.reply(400, b'{}')
+                self.connection.settimeout(8)
+                query = self.rfile.read(size).decode("utf-8")
+            if len(query) > 12000:
+                return self.reply(400, b'{}')
+            fields = parse_qs(query, keep_blank_values=True, max_num_fields=12)
+            if any(len(vals) != 1 for vals in fields.values()):
+                return self.reply(400, b'{}')
+            status, headers, body = ZHIHU.handle(self.command, path, {k: v[0] for k, v in fields.items()}, self.headers)
+        except (ValueError, OSError, sqlite3.Error):
+            return self.reply(400, b'{}')
+        self.send_response(status)
+        for name, value in headers.items():
+            self.send_header(name, value)
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Referrer-Policy", "no-referrer")
+        self.send_header("Content-Security-Policy", "default-src 'none'; style-src 'unsafe-inline'; form-action 'self' https://openapi.zhihu.com https://www.zhihu.com; frame-ancestors 'none'; base-uri 'none'")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
     def reply(self, status, body, content_type="application/json", language=None):
         self.send_response(status)
         if content_type == "application/json" or content_type.startswith("text/"):
@@ -283,6 +331,8 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         url = urlsplit(self.path)
+        if url.path == ZHIHU_PATH or url.path.startswith(ZHIHU_PATH + "/"):
+            return self.zhihu_request(url.path, url.query)
         if url.path == "/problems" or url.path.removeprefix("/problems/") in PROBLEMS:
             self.send_response(308)
             suffix = "?" + url.query if url.query else ""
@@ -371,6 +421,8 @@ class Handler(BaseHTTPRequestHandler):
         return self.reply(status, json.dumps(result, ensure_ascii=False).encode())
 
     def do_POST(self):
+        if self.path.startswith(ZHIHU_PATH + "/"):
+            return self.zhihu_request(urlsplit(self.path).path)
         desk, path, slug = self.scope(self.path)
         if desk is not None and path.startswith("/api/desk/"):
             return self.desk_post(desk, path, slug)

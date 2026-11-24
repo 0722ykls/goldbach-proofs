@@ -1,0 +1,174 @@
+"""Exercise identity linking with isolated sessions and stubbed provider network calls."""
+
+import re
+import io
+import json
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+from urllib.parse import parse_qs, urlsplit
+from unittest.mock import patch
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import zhihu_oauth as oauth
+
+
+class ZhihuProviderTests(unittest.TestCase):
+    config = {"app_id": "1043", "app_key": "dummy-test-secret"}
+
+    def exchange(self, *replies):
+        responses = [io.BytesIO(json.dumps(r).encode()) for r in replies]
+        with patch.object(oauth, "build_opener") as factory:
+            factory.return_value.open.side_effect = responses
+            profile = oauth.exchange_profile(self.config, "dummy-one-time-code")
+            for call in factory.call_args_list:
+                self.assertIsInstance(call.args[0], oauth.NoRedirect)
+            return profile, [c.args[0] for c in factory.return_value.open.call_args_list]
+
+    def test_server_side_exchange_and_minimal_profile_with_exact_user_id(self):
+        token = {"access_token": "dummy-test-token", "token_type": "Bearer", "expires_in": 3600}
+        uid = 969570047710216293
+        result, (exchange, info) = self.exchange(token, {
+            "uid": uid, "fullname": "测试昵称", "avatar_path": "https://picx.zhimg.com/avatar.jpg",
+            "url_token": "test-author", "phone_no": "private-field", "email": "private@example.invalid",
+            "url": f"https://openapi.zhihu.com/users/{uid}",
+        })
+        self.assertEqual(exchange.get_method(), "POST")
+        self.assertEqual(exchange.full_url, "https://openapi.zhihu.com/access_token")
+        self.assertEqual(exchange.get_header("Content-type"), "application/x-www-form-urlencoded")
+        self.assertEqual(parse_qs(exchange.data.decode()), {
+            "app_id": ["1043"], "app_key": [self.config["app_key"]],
+            "grant_type": ["authorization_code"], "code": ["dummy-one-time-code"],
+            "redirect_uri": ["https://www.goldbach.tech/auth/zhihu/callback"],
+        })
+        self.assertEqual(info.full_url, "https://openapi.zhihu.com/user")
+        self.assertEqual(info.get_method(), "GET")
+        self.assertEqual(info.get_header("Authorization"), "Bearer dummy-test-token")
+        self.assertEqual(result, {
+            "subject": str(uid), "name": "测试昵称", "avatar_url": "https://picx.zhimg.com/avatar.jpg",
+            "profile_url": "https://www.zhihu.com/people/test-author",
+        })
+
+    def test_discard_unverified_urls(self):
+        result, _ = self.exchange({"access_token": "ok"}, {
+            "uid": "1", "fullname": "example", "avatar_path": "https://zhimg.com.example.invalid/fake.png",
+            "url": "https://openapi.zhihu.com/users/1", "url_token": "../settings",
+        })
+        self.assertEqual((result["avatar_url"], result["profile_url"]), ("", ""))
+
+    def test_invalid_provider_replies_fail_closed(self):
+        for token in [{"code": 403}, {"access_token": ""}, {"access_token": "abc\r\nBad: header"}]:
+            with self.subTest(token=token), self.assertRaises(ValueError):
+                self.exchange(token)
+        for profile in [{"code": 20004, "data": "Token type is error"}, {"uid": True, "fullname": "ok"},
+                        {"uid": 1, "fullname": " "}, {"fullname": "only-name"}]:
+            with self.subTest(profile=profile), self.assertRaises(ValueError):
+                self.exchange({"access_token": "ok"}, profile)
+
+
+class ZhihuLinkTests(unittest.TestCase):
+    origin = "https://www.goldbach.tech"
+    home = "/auth/zhihu"
+    callback = "/auth/zhihu/callback"
+    gist = "https://gist.github.com/alice/" + "a" * 32
+
+    def setUp(self):
+        directory = self.enterContext(tempfile.TemporaryDirectory())
+        self.config = {"app_id": "1043", "app_key": "dummy-test-secret"}
+        self.app = oauth.ZhihuOAuth(Path(directory) / "identity.sqlite3", self.config)
+        self.exchange = self.enterContext(patch.object(oauth, "exchange_profile", return_value={
+            "subject": "123", "name": "测试昵称", "avatar_url": "", "profile_url": "",
+        }))
+        self.verify = self.enterContext(patch.object(oauth, "verify_gist", return_value=(77, "alice")))
+
+    def request(self, method, path, params=None, cookie="", origin=None):
+        headers = {"Host": "www.goldbach.tech"}
+        if cookie:
+            headers["Cookie"] = cookie
+        if method == "POST":
+            headers["Origin"] = self.origin if origin is None else origin
+        return self.app.handle(method, path, params or {}, headers)
+
+    def page(self, cookie=""):
+        status, headers, body = self.request("GET", self.home, cookie=cookie)
+        self.assertEqual(status, 200)
+        token = re.search(r'name="csrf" value="([^"]+)"', body.decode())
+        self.assertIsNotNone(token)
+        if "Set-Cookie" in headers:
+            cookie = headers["Set-Cookie"].split(";", 1)[0]
+        self.assertTrue(cookie)
+        return cookie, token[1]
+
+    def start(self):
+        cookie, csrf = self.page()
+        status, headers, _ = self.request("POST", self.home + "/start", {"csrf": csrf}, cookie)
+        self.assertEqual(status, 303)
+        url = urlsplit(headers["Location"])
+        self.assertEqual((url.scheme, url.netloc, url.path), ("https", "openapi.zhihu.com", "/authorize"))
+        query = parse_qs(url.query)
+        self.assertEqual(query["redirect_uri"], [self.origin + self.callback])
+        self.assertEqual(query["app_id"], [self.config["app_id"]])
+        self.assertNotIn(self.config["app_key"], headers["Location"])
+        self.assertGreaterEqual(len(query["state"][0]), 22)
+        return headers.get("Set-Cookie", cookie).split(";", 1)[0], query["state"][0]
+
+    def login(self):
+        cookie, state = self.start()
+        code = "authorization-code-for-this-session"
+        status, headers, body = self.request("GET", self.callback, {"state": state, "authorization_code": code}, cookie)
+        self.assertEqual(status, 303)
+        self.assertEqual(headers["Location"], self.home)
+        self.assertNotIn(code.encode(), body)
+        rotated = headers["Set-Cookie"].split(";", 1)[0]
+        self.assertNotEqual(rotated, cookie)
+        self.exchange.assert_called_once_with(self.config, code)
+        self.assertFalse(self.app.public_profiles())
+        replay, _, _ = self.request("GET", self.callback, {"state": state, "authorization_code": code}, cookie)
+        self.assertGreaterEqual(replay, 400)
+        self.assertEqual(self.exchange.call_count, 1)
+        return self.page(rotated)
+
+    def test_unrelated_session_missing_or_wrong_state_do_not_exchange(self):
+        cookie, state = self.start()
+        other, _ = self.page()
+        for client, received in [(other, state), ("", state), (cookie, ""), (cookie, "unrelated")]:
+            with self.subTest(client=client[:12], has_state=bool(received)):
+                status, headers, body = self.request("GET", self.callback, {
+                    "authorization_code": "sensitive-test-code", "state": received,
+                }, client)
+                self.assertGreaterEqual(status, 400)
+                self.assertNotIn("sensitive-test-code", str(headers))
+                self.assertNotIn(b"sensitive-test-code", body)
+        self.exchange.assert_not_called()
+        self.assertEqual(self.app.public_profiles(), {})
+
+    def test_browser_link_requires_same_origin_csrf(self):
+        cookie, csrf = self.page()
+        for origin, token in [("https://other.example", csrf), (self.origin, "bad")]:
+            status, _, _ = self.request("POST", self.home + "/start", {"csrf": token}, cookie, origin)
+            self.assertGreaterEqual(status, 400)
+        self.exchange.assert_not_called()
+
+    def test_publish_only_verified_owner_with_explicit_consent_then_unlink(self):
+        cookie, csrf = self.login()
+        status, _, _ = self.request("POST", self.home + "/challenge", {"csrf": csrf, "handle": "alice"}, cookie)
+        self.assertEqual(status, 303)
+        cookie, csrf = self.page(cookie)
+        bind = {"csrf": csrf, "gist": self.gist}
+        status, _, _ = self.request("POST", self.home + "/bind", bind, cookie)
+        self.assertGreaterEqual(status, 400)
+        self.assertFalse(self.app.public_profiles())
+        bind["public"] = "yes"
+        with patch.object(oauth, "verify_gist", side_effect=oauth.GithubProofError("github_proof_mismatch", 422)):
+            status, _, _ = self.request("POST", self.home + "/bind", bind, cookie)
+            self.assertGreaterEqual(status, 400)
+        self.assertFalse(self.app.public_profiles())
+        status, _, _ = self.request("POST", self.home + "/bind", bind, cookie)
+        self.assertEqual(status, 303)
+        self.assertIn("alice", self.app.public_profiles())
+        self.verify.assert_called_once()
+        cookie, csrf = self.page(cookie)
+        status, _, _ = self.request("POST", self.home + "/unlink", {"csrf": csrf}, cookie)
+        self.assertEqual(status, 303)
+        self.assertFalse(self.app.public_profiles())

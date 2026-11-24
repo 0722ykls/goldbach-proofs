@@ -34,6 +34,7 @@ class DeskScaleTest(unittest.TestCase):
         (folder / "webhook").write_bytes(self.secret)
         (folder / "china-apnic.txt").write_bytes(b"")
         for source in ("deploy/server.py", "deploy/desk.py", "deploy/landau.py", "deploy/join.txt", "deploy/join-zh.txt",
+                       "deploy/zhihu_oauth.py", "deploy/github_identity.py",
                        "research/gaps.json", "research/problems.json"):
             shutil.copy(ROOT / source, folder)
         openssl = os.environ.get("OPENSSL") or shutil.which("openssl")
