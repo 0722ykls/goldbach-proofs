@@ -1174,7 +1174,7 @@
         "id": "L-hash-collision-lab-split-records",
         "file": "lean/PEqualNP/Outside/L_hash_collision_lab_split_records.lean",
         "module": "PEqualNP.Outside.L_hash_collision_lab_split_records",
-        "statement": "∀ S : ℕ, 1<S → Squarefree S → (∀ p ∈ S.primeFactors, p%3=1) → ((Finset.Icc (0:ℤ) (2*(S:ℤ))).filter (fun z => ∃ x ∈ Finset.Icc (-(2*(S:ℤ))) (2*(S:ℤ)), x≤ -x-z ∧ -x-z≤z ∧ x^2+x*(-x-z)+(-x-z)^2=(S:ℤ))).card = 2^S.primeFactors.card",
+        "statement": "∀ S : ℕ, 1<S → Squarefree S → (∀ p ∈ S.primeFactors, p%3=1) → ((Finset.Icc (0:ℤ) (2*(S:ℤ))).filter (fun z => 0 < ((Finset.Icc (-(2*(S:ℤ))) (2*(S:ℤ))).filter (fun x => x≤ -x-z ∧ -x-z≤z ∧ x^2+x*(-x-z)+(-x-z)^2=(S:ℤ))).card)).card = 2^S.primeFactors.card",
         "plain_statement": {
           "zh": "S>1 无平方因子且所有素因子模 3 余 1 时，偏差限制在 [−2S,2S] 的有序三元组恰有 2^ω(S) 种最大坐标。",
           "en": "For squarefree S>1 with all prime factors 1 mod 3 there are 2^ω(S) distinct sorted maxima in the stated range."
