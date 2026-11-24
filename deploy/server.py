@@ -26,7 +26,7 @@ PROBLEM_FILE = ROOT / "problems.json"
 PROBLEMS = json.loads(PROBLEM_FILE.read_text(encoding="utf-8")) if PROBLEM_FILE.exists() else {}
 problem_ids = set(gap["id"] for gap in GAPS)
 for slug, problem in PROBLEMS.items():
-    if slug == "goldbach" or not re.fullmatch(r"[a-z]+(?:-[a-z]+)*", slug):
+    if slug in {"goldbach", DB.stem} or not re.fullmatch(r"[a-z]+(?:-[a-z]+)*", slug):
         raise ValueError(f"Invalid problem slug: {slug}")
     for gap in problem["gaps"]:
         if gap["id"] in problem_ids or not gap["id"].startswith(f"L-{slug}-"):
