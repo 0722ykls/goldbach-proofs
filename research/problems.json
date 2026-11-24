@@ -1247,7 +1247,7 @@
         "id": "L-hash-collision-lab-cap-certificate",
         "file": "lean/PEqualNP/Outside/L_hash_collision_lab_cap_certificate.lean",
         "module": "PEqualNP.Outside.L_hash_collision_lab_cap_certificate",
-        "statement": "∀ m B S z : ℤ, (∃ x y : ℤ, x≤y ∧ y≤z ∧ x+y+z=0 ∧ x^2+x*y+y^2=S ∧ 0≤m+x ∧ m+z≤B) ↔ (m+z≤B ∧ ∃ d : ℤ, 0≤d ∧ d≤3*z ∧ z+d≤2*m ∧ 2 ∣ z+d ∧ d^2+3*z^2=4*S)",
+        "statement": "∀ (m B S z : ℤ), (∃ x y : ℤ, x ≤ y ∧ y ≤ z ∧ x + y + z = 0 ∧ x ^ 2 + x * y + y ^ 2 = S ∧ 0 ≤ (m + x) ∧ (m + z) ≤ B) ↔ ((m + z) ≤ B ∧ ∃ d : ℤ, 0 ≤ d ∧ d ≤ 3 * z ∧ z + d ≤ 2 * m ∧ (2 : ℤ) ∣ (z + d) ∧ d ^ 2 + 3 * z ^ 2 = 4 * S)",
         "plain_statement": {
           "zh": "最大偏差 z 可行，当且仅当容量上界成立且存在满足平方方程、奇偶性及线性不等式的整数 d。",
           "en": "A maximum deviation z is feasible exactly when the cap and the stated square, parity and linear conditions hold."
