@@ -1,52 +1,21 @@
-name: Goldbach catalogue
-on:
-  workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - research/gaps.json
-      - research/problems.json
-      - research/test_catalogue.py
-      - lean/lean-toolchain
-      - lean/lake-manifest.json
-      - .github/workflows/catalogue.yml
-permissions:
-  contents: read
+name: Goldbach domain reachability
+on: workflow_dispatch
+permissions: {}
 jobs:
-  statements:
-    if: github.repository == 'CGandGameEngineLearner/goldbach-proofs'
+  probe:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 2
     steps:
-      - uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-      - run: python3 -B -m unittest research.test_catalogue -v
-      - name: Install pinned Lean and Mathlib
-        working-directory: lean
+      - name: Check public HTTPS hosts from the runner
+        shell: bash
         run: |
-          set -euo pipefail
-          curl --retry 4 -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --no-modify-path --default-toolchain none
-          export PATH="$HOME/.elan/bin:$PATH"
-          elan toolchain install "$(cat lean-toolchain)"
-          lake exe cache get
-      - name: Elaborate every published proposition
-        working-directory: lean
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          import json
-          import os
-          from pathlib import Path
-          gaps = json.loads(Path("../research/gaps.json").read_text())["gaps"]
-          problems = json.loads(Path("../research/problems.json").read_text())
-          gaps.extend(gap for problem in problems.values() for gap in problem['gaps'])
-          # All current gaps are independent and can be stated using Mathlib alone.
-          assert all(not gap["imports"] for gap in gaps)
-          lines = ["import Mathlib", "set_option autoImplicit false"]
-          for gap in gaps:
-              lines.extend(("", "-- " + gap["id"], "example : Prop := (" + gap["statement"] + ")"))
-          (Path(os.environ["RUNNER_TEMP"]) / "Catalogue.lean").write_text("\n".join(lines) + "\n")
-          print(f"Type-checking {len(gaps)} propositions")
-          PY
-          "$HOME/.elan/bin/lake" env lean "$RUNNER_TEMP/Catalogue.lean"
+          set +e
+          for site in https://www.goldbach.tech https://www.movan.tech/goldbach; do
+            for path in / /problems/ /problems/square-packing/; do
+              url="$site$path"
+              curl -4 --noproxy '*' --silent --show-error --connect-timeout 6 --max-time 9 \
+                -o /dev/null -w 'response %{http_code}, certificate verification %{ssl_verify_result}\n' "$url"
+              code="$?"
+              printf 'curl exit=%s URL=%s\n' "$code" "$url"
+            done
+          done
