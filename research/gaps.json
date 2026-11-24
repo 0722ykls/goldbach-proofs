@@ -2261,6 +2261,1606 @@
       "source": "https://arxiv.org/abs/2607.27282",
       "track": "exceptions",
       "role": "conditional"
+    },
+    {
+      "id": "L-goldbach-strip-geometry-mirror-re",
+      "file": "lean/PEqualNP/Outside/L_goldbach_strip_geometry_mirror_re.lean",
+      "module": "PEqualNP.Outside.L_goldbach_strip_geometry_mirror_re",
+      "statement": "∀ s : ℂ, 1/2 < s.re → s.re < 1 → 0 < (1-s).re ∧ (1-s).re < 1/2",
+      "plain_statement": {
+        "zh": "反射把右半带送到左半带",
+        "en": "Reflection exchanges half strips"
+      },
+      "brief": {
+        "zh": "对照 prim_reflect 和 strip；把所需的零点条件写在前提中。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Trace prim_reflect and strip; keep the zero-location input explicit. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/ClaimStrip.lean",
+      "track": "rh-strip-geometry",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-strip-geometry-mirror-radius",
+      "file": "lean/PEqualNP/Outside/L_goldbach_strip_geometry_mirror_radius.lean",
+      "module": "PEqualNP.Outside.L_goldbach_strip_geometry_mirror_radius",
+      "statement": "∀ s : ℂ, ‖(1-s)-(1/2:ℂ)‖ = ‖s-(1/2:ℂ)‖",
+      "plain_statement": {
+        "zh": "反射保持临界线中心距离",
+        "en": "Reflection preserves centered distance"
+      },
+      "brief": {
+        "zh": "对照 prim_reflect 和 strip；把所需的零点条件写在前提中。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Trace prim_reflect and strip; keep the zero-location input explicit. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/ClaimStrip.lean",
+      "track": "rh-strip-geometry",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-strip-geometry-mirror-denom",
+      "file": "lean/PEqualNP/Outside/L_goldbach_strip_geometry_mirror_denom.lean",
+      "module": "PEqualNP.Outside.L_goldbach_strip_geometry_mirror_denom",
+      "statement": "∀ s : ℂ, s.re=1/2 → ‖1-s‖=‖s‖",
+      "plain_statement": {
+        "zh": "临界线上两个分母等长",
+        "en": "Reflected denominators have equal norms on the line"
+      },
+      "brief": {
+        "zh": "对照 prim_reflect 和 strip；把所需的零点条件写在前提中。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Trace prim_reflect and strip; keep the zero-location input explicit. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/ClaimStrip.lean",
+      "track": "rh-strip-geometry",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-strip-geometry-height-square",
+      "file": "lean/PEqualNP/Outside/L_goldbach_strip_geometry_height_square.lean",
+      "module": "PEqualNP.Outside.L_goldbach_strip_geometry_height_square",
+      "statement": "∀ s : ℂ, s.re=1/2 → Complex.normSq s = 1/4+s.im^2",
+      "plain_statement": {
+        "zh": "用虚部计算零点模平方",
+        "en": "Express squared modulus by height"
+      },
+      "brief": {
+        "zh": "对照 prim_reflect 和 strip；把所需的零点条件写在前提中。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Trace prim_reflect and strip; keep the zero-location input explicit. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/ClaimStrip.lean",
+      "track": "rh-strip-geometry",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-strip-geometry-inverse-floor",
+      "file": "lean/PEqualNP/Outside/L_goldbach_strip_geometry_inverse_floor.lean",
+      "module": "PEqualNP.Outside.L_goldbach_strip_geometry_inverse_floor",
+      "statement": "∀ s : ℂ, s.re=1/2 → ‖s⁻¹‖≤2",
+      "plain_statement": {
+        "zh": "临界线逆分母的一致界",
+        "en": "Uniform inverse denominator bound"
+      },
+      "brief": {
+        "zh": "对照 prim_reflect 和 strip；把所需的零点条件写在前提中。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Trace prim_reflect and strip; keep the zero-location input explicit. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/ClaimStrip.lean",
+      "track": "rh-strip-geometry",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-strip-geometry-inverse-height",
+      "file": "lean/PEqualNP/Outside/L_goldbach_strip_geometry_inverse_height.lean",
+      "module": "PEqualNP.Outside.L_goldbach_strip_geometry_inverse_height",
+      "statement": "∀ (s : ℂ) (T : ℝ), 0<T → T≤|s.im| → ‖s⁻¹‖≤1/T",
+      "plain_statement": {
+        "zh": "高零点逆分母衰减",
+        "en": "Inverse denominator decay at height T"
+      },
+      "brief": {
+        "zh": "对照 prim_reflect 和 strip；把所需的零点条件写在前提中。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Trace prim_reflect and strip; keep the zero-location input explicit. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/ClaimStrip.lean",
+      "track": "rh-strip-geometry",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-strip-geometry-symmetric-strip",
+      "file": "lean/PEqualNP/Outside/L_goldbach_strip_geometry_symmetric_strip.lean",
+      "module": "PEqualNP.Outside.L_goldbach_strip_geometry_symmetric_strip",
+      "statement": "∀ (P : ℂ → Prop) (s : ℂ), P s → P (1-s) → (∀ z, P z → z.re≤1/2) → s.re=1/2",
+      "plain_statement": {
+        "zh": "双向非消失推出临界线定位",
+        "en": "Two nonvanishing tests locate a zero"
+      },
+      "brief": {
+        "zh": "对照 prim_reflect 和 strip；把所需的零点条件写在前提中。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Trace prim_reflect and strip; keep the zero-location input explicit. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/ClaimStrip.lean",
+      "track": "rh-strip-geometry",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-strip-geometry-band-stability",
+      "file": "lean/PEqualNP/Outside/L_goldbach_strip_geometry_band_stability.lean",
+      "module": "PEqualNP.Outside.L_goldbach_strip_geometry_band_stability",
+      "statement": "∀ (s : ℂ) (A B : ℝ), (A≤|(1-s).im| ∧ |(1-s).im|<B) ↔ (A≤|s.im| ∧ |s.im|<B)",
+      "plain_statement": {
+        "zh": "反射保持绝对高度分层",
+        "en": "Reflection preserves height bands"
+      },
+      "brief": {
+        "zh": "对照 prim_reflect 和 strip；把所需的零点条件写在前提中。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Trace prim_reflect and strip; keep the zero-location input explicit. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/ClaimStrip.lean",
+      "track": "rh-strip-geometry",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-strip-geometry-inverse-square-tail",
+      "file": "lean/PEqualNP/Outside/L_goldbach_strip_geometry_inverse_square_tail.lean",
+      "module": "PEqualNP.Outside.L_goldbach_strip_geometry_inverse_square_tail",
+      "statement": "∀ (S : Finset ℂ) (T : ℝ), 0<T → (∀ z ∈ S,T≤|z.im|) → Finset.sum S (fun z => ‖z⁻¹‖^2) ≤ (S.card:ℝ)/T^2",
+      "plain_statement": {
+        "zh": "高零点平方逆分母预算",
+        "en": "Squared inverse denominator tail budget"
+      },
+      "brief": {
+        "zh": "对照 prim_reflect 和 strip；把所需的零点条件写在前提中。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Trace prim_reflect and strip; keep the zero-location input explicit. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/ClaimStrip.lean",
+      "track": "rh-strip-geometry",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-strip-geometry-zeta-floor",
+      "file": "lean/PEqualNP/Outside/L_goldbach_strip_geometry_zeta_floor.lean",
+      "module": "PEqualNP.Outside.L_goldbach_strip_geometry_zeta_floor",
+      "statement": "RiemannHypothesis → ∀ s : ℂ, 0<s.re → s.re<1 → riemannZeta s=0 → 1/2≤‖s‖",
+      "plain_statement": {
+        "zh": "RH 下条带零点的模下界",
+        "en": "Modulus floor for strip zeros under RH"
+      },
+      "brief": {
+        "zh": "对照 prim_reflect 和 strip；把所需的零点条件写在前提中。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Trace prim_reflect and strip; keep the zero-location input explicit. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/ClaimStrip.lean",
+      "track": "rh-strip-geometry",
+      "role": "conditional"
+    },
+    {
+      "id": "L-goldbach-zero-blocks-cpow-norm",
+      "file": "lean/PEqualNP/Outside/L_goldbach_zero_blocks_cpow_norm.lean",
+      "module": "PEqualNP.Outside.L_goldbach_zero_blocks_cpow_norm",
+      "statement": "∀ (n : ℕ) (ρ a : Fin n → ℂ) (x : ℝ), 0<x → (∀ i,(ρ i).re=1/2) → ∀ i, ‖(x:ℂ)^(ρ i)‖=Real.sqrt x",
+      "plain_statement": {
+        "zh": "临界线上单项幂的精确模",
+        "en": "Norm of a single critical-line power"
+      },
+      "brief": {
+        "zh": "以有限指标记录重数；从 LFunction_eq_zero_re 只取实部信息，再处理各块系数。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Index multiplicities separately; extract real parts from LFunction_eq_zero_re and estimate the coefficients. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
+      "track": "rh-zero-blocks",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-zero-blocks-normalized-phase",
+      "file": "lean/PEqualNP/Outside/L_goldbach_zero_blocks_normalized_phase.lean",
+      "module": "PEqualNP.Outside.L_goldbach_zero_blocks_normalized_phase",
+      "statement": "∀ (n : ℕ) (ρ a : Fin n → ℂ) (x : ℝ), 0<x → (∀ i,(ρ i).re=1/2) → ∀ i, ‖(x:ℂ)^(ρ i)/(Real.sqrt x:ℂ)‖=1",
+      "plain_statement": {
+        "zh": "归一化零点相位模为一",
+        "en": "Normalized zero phases have unit norm"
+      },
+      "brief": {
+        "zh": "以有限指标记录重数；从 LFunction_eq_zero_re 只取实部信息，再处理各块系数。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Index multiplicities separately; extract real parts from LFunction_eq_zero_re and estimate the coefficients. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
+      "track": "rh-zero-blocks",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-zero-blocks-weighted-denom",
+      "file": "lean/PEqualNP/Outside/L_goldbach_zero_blocks_weighted_denom.lean",
+      "module": "PEqualNP.Outside.L_goldbach_zero_blocks_weighted_denom",
+      "statement": "∀ (n : ℕ) (ρ a : Fin n → ℂ) (x : ℝ), 0<x → (∀ i,(ρ i).re=1/2) → ‖∑ i, a i*(x:ℂ)^(ρ i)/ρ i‖ ≤ 2*Real.sqrt x*∑ i,‖a i‖",
+      "plain_statement": {
+        "zh": "带逆零点因子的平方根界",
+        "en": "Square-root bound with inverse-zero weights"
+      },
+      "brief": {
+        "zh": "以有限指标记录重数；从 LFunction_eq_zero_re 只取实部信息，再处理各块系数。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Index multiplicities separately; extract real parts from LFunction_eq_zero_re and estimate the coefficients. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
+      "track": "rh-zero-blocks",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-zero-blocks-high-gain",
+      "file": "lean/PEqualNP/Outside/L_goldbach_zero_blocks_high_gain.lean",
+      "module": "PEqualNP.Outside.L_goldbach_zero_blocks_high_gain",
+      "statement": "∀ (n : ℕ) (ρ a : Fin n → ℂ) (x T : ℝ), 0<x → 0<T → (∀ i,(ρ i).re=1/2 ∧ T≤|(ρ i).im|) → ‖∑ i,a i*(x:ℂ)^(ρ i)/ρ i‖≤Real.sqrt x/T*∑ i,‖a i‖",
+      "plain_statement": {
+        "zh": "高位零点块节省一个高度因子",
+        "en": "Gain a height factor on a high block"
+      },
+      "brief": {
+        "zh": "以有限指标记录重数；从 LFunction_eq_zero_re 只取实部信息，再处理各块系数。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Index multiplicities separately; extract real parts from LFunction_eq_zero_re and estimate the coefficients. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
+      "track": "rh-zero-blocks",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-zero-blocks-pair-cancel",
+      "file": "lean/PEqualNP/Outside/L_goldbach_zero_blocks_pair_cancel.lean",
+      "module": "PEqualNP.Outside.L_goldbach_zero_blocks_pair_cancel",
+      "statement": "∀ (n : ℕ) (ρ a : Fin n → ℂ) (e : Fin n ≃ Fin n), (∀ i,a (e i) = -a i) → ∑ i,a i=0",
+      "plain_statement": {
+        "zh": "反号系数的精确配对消去",
+        "en": "Exact cancellation under antisymmetric pairing"
+      },
+      "brief": {
+        "zh": "以有限指标记录重数；从 LFunction_eq_zero_re 只取实部信息，再处理各块系数。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Index multiplicities separately; extract real parts from LFunction_eq_zero_re and estimate the coefficients. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
+      "track": "rh-zero-blocks",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-zero-blocks-pair-defect",
+      "file": "lean/PEqualNP/Outside/L_goldbach_zero_blocks_pair_defect.lean",
+      "module": "PEqualNP.Outside.L_goldbach_zero_blocks_pair_defect",
+      "statement": "∀ (n : ℕ) (ρ a : Fin n → ℂ) (e : Fin n ≃ Fin n), 2*‖∑ i,a i‖≤∑ i,‖a i+a (e i)‖",
+      "plain_statement": {
+        "zh": "近似反号配对的剩余误差",
+        "en": "Residual from approximate antisymmetry"
+      },
+      "brief": {
+        "zh": "以有限指标记录重数；从 LFunction_eq_zero_re 只取实部信息，再处理各块系数。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Index multiplicities separately; extract real parts from LFunction_eq_zero_re and estimate the coefficients. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
+      "track": "rh-zero-blocks",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-zero-blocks-cut-tail",
+      "file": "lean/PEqualNP/Outside/L_goldbach_zero_blocks_cut_tail.lean",
+      "module": "PEqualNP.Outside.L_goldbach_zero_blocks_cut_tail",
+      "statement": "∀ (n : ℕ) (ρ a : Fin n → ℂ) (T : ℝ), ‖(∑ i,a i)-(∑ i, if |(ρ i).im|≤T then a i else 0)‖ ≤ ∑ i, if T<|(ρ i).im| then ‖a i‖ else 0",
+      "plain_statement": {
+        "zh": "高度截断只损失尾部质量",
+        "en": "A height cut costs only its tail mass"
+      },
+      "brief": {
+        "zh": "以有限指标记录重数；从 LFunction_eq_zero_re 只取实部信息，再处理各块系数。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Index multiplicities separately; extract real parts from LFunction_eq_zero_re and estimate the coefficients. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
+      "track": "rh-zero-blocks",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-zero-blocks-block-energy",
+      "file": "lean/PEqualNP/Outside/L_goldbach_zero_blocks_block_energy.lean",
+      "module": "PEqualNP.Outside.L_goldbach_zero_blocks_block_energy",
+      "statement": "∀ (n : ℕ) (ρ a : Fin n → ℂ), ‖∑ i,a i‖^2≤(n:ℝ)*∑ i,‖a i‖^2",
+      "plain_statement": {
+        "zh": "用二阶能量控制有限零点块",
+        "en": "Bound a zero block by its second moment"
+      },
+      "brief": {
+        "zh": "以有限指标记录重数；从 LFunction_eq_zero_re 只取实部信息，再处理各块系数。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Index multiplicities separately; extract real parts from LFunction_eq_zero_re and estimate the coefficients. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
+      "track": "rh-zero-blocks",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-zero-blocks-weight-perturb",
+      "file": "lean/PEqualNP/Outside/L_goldbach_zero_blocks_weight_perturb.lean",
+      "module": "PEqualNP.Outside.L_goldbach_zero_blocks_weight_perturb",
+      "statement": "∀ (n : ℕ) (ρ a : Fin n → ℂ) (b : Fin n → ℂ) (x : ℝ), 0<x → (∀ i,(ρ i).re=1/2) → ‖∑ i,(a i-b i)*(x:ℂ)^(ρ i)‖≤Real.sqrt x*∑ i,‖a i-b i‖",
+      "plain_statement": {
+        "zh": "替换零点系数的误差",
+        "en": "Stability under coefficient replacement"
+      },
+      "brief": {
+        "zh": "以有限指标记录重数；从 LFunction_eq_zero_re 只取实部信息，再处理各块系数。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Index multiplicities separately; extract real parts from LFunction_eq_zero_re and estimate the coefficients. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
+      "track": "rh-zero-blocks",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-zero-blocks-height-count",
+      "file": "lean/PEqualNP/Outside/L_goldbach_zero_blocks_height_count.lean",
+      "module": "PEqualNP.Outside.L_goldbach_zero_blocks_height_count",
+      "statement": "∀ (n : ℕ) (ρ a : Fin n → ℂ) (T : ℝ) (M : ℕ), 0<T → n≤M → (∀ i,T≤|(ρ i).im|) → (∑ i,‖(ρ i)⁻¹‖)≤(M:ℝ)/T",
+      "plain_statement": {
+        "zh": "由分层计数控制逆高度总质量",
+        "en": "Count-to-mass estimate for a height shell"
+      },
+      "brief": {
+        "zh": "以有限指标记录重数；从 LFunction_eq_zero_re 只取实部信息，再处理各块系数。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Index multiplicities separately; extract real parts from LFunction_eq_zero_re and estimate the coefficients. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
+      "track": "rh-zero-blocks",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-euler-loss-factor-norm",
+      "file": "lean/PEqualNP/Outside/L_goldbach_euler_loss_factor_norm.lean",
+      "module": "PEqualNP.Outside.L_goldbach_euler_loss_factor_norm",
+      "statement": "∀ z : ℂ, 1-‖z‖≤‖1-z‖",
+      "plain_statement": {
+        "zh": "局部因子的模长下界",
+        "en": "Lower bound for one Euler factor"
+      },
+      "brief": {
+        "zh": "从 prim_zero 的有限欧拉因子出发，区分单个因子的非消失、有限乘积的误差与总预算。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Follow prim_zero; separate nonvanishing, product stability and the total cost. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/ClaimStrip.lean",
+      "track": "rh-euler-loss",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-euler-loss-unit-disc",
+      "file": "lean/PEqualNP/Outside/L_goldbach_euler_loss_unit_disc.lean",
+      "module": "PEqualNP.Outside.L_goldbach_euler_loss_unit_disc",
+      "statement": "∀ z : ℂ, ‖z‖<1 → 1-z≠0",
+      "plain_statement": {
+        "zh": "收缩因子的非消失",
+        "en": "Nonvanishing inside the unit disk"
+      },
+      "brief": {
+        "zh": "从 prim_zero 的有限欧拉因子出发，区分单个因子的非消失、有限乘积的误差与总预算。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Follow prim_zero; separate nonvanishing, product stability and the total cost. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/ClaimStrip.lean",
+      "track": "rh-euler-loss",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-euler-loss-inv-loss",
+      "file": "lean/PEqualNP/Outside/L_goldbach_euler_loss_inv_loss.lean",
+      "module": "PEqualNP.Outside.L_goldbach_euler_loss_inv_loss",
+      "statement": "∀ (z : ℂ) (r : ℝ), ‖z‖≤r → r<1 → ‖(1-z)⁻¹-1‖≤r/(1-r)",
+      "plain_statement": {
+        "zh": "逆局部因子的偏差",
+        "en": "Deviation of an inverse Euler factor"
+      },
+      "brief": {
+        "zh": "从 prim_zero 的有限欧拉因子出发，区分单个因子的非消失、有限乘积的误差与总预算。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Follow prim_zero; separate nonvanishing, product stability and the total cost. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/ClaimStrip.lean",
+      "track": "rh-euler-loss",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-euler-loss-finite-lower",
+      "file": "lean/PEqualNP/Outside/L_goldbach_euler_loss_finite_lower.lean",
+      "module": "PEqualNP.Outside.L_goldbach_euler_loss_finite_lower",
+      "statement": "∀ (n : ℕ) (z : Fin n → ℂ), (∀ i,‖z i‖≤1) → (∏ i, (1-‖z i‖))≤‖∏ i,(1-z i)‖",
+      "plain_statement": {
+        "zh": "局部下界相乘",
+        "en": "Multiply local lower bounds"
+      },
+      "brief": {
+        "zh": "从 prim_zero 的有限欧拉因子出发，区分单个因子的非消失、有限乘积的误差与总预算。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Follow prim_zero; separate nonvanishing, product stability and the total cost. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/ClaimStrip.lean",
+      "track": "rh-euler-loss",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-euler-loss-prod-deviation",
+      "file": "lean/PEqualNP/Outside/L_goldbach_euler_loss_prod_deviation.lean",
+      "module": "PEqualNP.Outside.L_goldbach_euler_loss_prod_deviation",
+      "statement": "∀ (n : ℕ) (z : Fin n → ℂ), ‖(∏ i,(1+z i))-1‖ ≤ (∏ i,(1+‖z i‖))-1",
+      "plain_statement": {
+        "zh": "有限乘积偏差的乘法上界",
+        "en": "Deviation bound for a finite product"
+      },
+      "brief": {
+        "zh": "从 prim_zero 的有限欧拉因子出发，区分单个因子的非消失、有限乘积的误差与总预算。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Follow prim_zero; separate nonvanishing, product stability and the total cost. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/ClaimStrip.lean",
+      "track": "rh-euler-loss",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-euler-loss-contractive-swap",
+      "file": "lean/PEqualNP/Outside/L_goldbach_euler_loss_contractive_swap.lean",
+      "module": "PEqualNP.Outside.L_goldbach_euler_loss_contractive_swap",
+      "statement": "∀ (n : ℕ) (u v : Fin n → ℂ), (∀ i,‖u i‖≤1 ∧ ‖v i‖≤1) → ‖(∏ i,u i)-(∏ i,v i)‖≤∑ i,‖u i-v i‖",
+      "plain_statement": {
+        "zh": "两套收缩因子的逐项替换误差",
+        "en": "Telescoping two contractive products"
+      },
+      "brief": {
+        "zh": "从 prim_zero 的有限欧拉因子出发，区分单个因子的非消失、有限乘积的误差与总预算。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Follow prim_zero; separate nonvanishing, product stability and the total cost. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/ClaimStrip.lean",
+      "track": "rh-euler-loss",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-euler-loss-remove-prime",
+      "file": "lean/PEqualNP/Outside/L_goldbach_euler_loss_remove_prime.lean",
+      "module": "PEqualNP.Outside.L_goldbach_euler_loss_remove_prime",
+      "statement": "∀ (S : Finset ℕ) (z : ℕ → ℂ) (p : ℕ), p∈S → (∏ i ∈ S,1-z i)-(∏ i ∈ S.erase p,1-z i) = -z p*(∏ i ∈ S.erase p,1-z i)",
+      "plain_statement": {
+        "zh": "删去一个素因子的精确损失",
+        "en": "Exact loss from omitting one factor"
+      },
+      "brief": {
+        "zh": "从 prim_zero 的有限欧拉因子出发，区分单个因子的非消失、有限乘积的误差与总预算。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Follow prim_zero; separate nonvanishing, product stability and the total cost. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/ClaimStrip.lean",
+      "track": "rh-euler-loss",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-euler-loss-pair-correction",
+      "file": "lean/PEqualNP/Outside/L_goldbach_euler_loss_pair_correction.lean",
+      "module": "PEqualNP.Outside.L_goldbach_euler_loss_pair_correction",
+      "statement": "∀ z w : ℂ, (1-z)*(1-w)-(1-z-w)=z*w",
+      "plain_statement": {
+        "zh": "同一素因子的二阶交叉修正",
+        "en": "Quadratic cross correction"
+      },
+      "brief": {
+        "zh": "从 prim_zero 的有限欧拉因子出发，区分单个因子的非消失、有限乘积的误差与总预算。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Follow prim_zero; separate nonvanishing, product stability and the total cost. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/ClaimStrip.lean",
+      "track": "rh-euler-loss",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-euler-loss-log-prime-budget",
+      "file": "lean/PEqualNP/Outside/L_goldbach_euler_loss_log_prime_budget.lean",
+      "module": "PEqualNP.Outside.L_goldbach_euler_loss_log_prime_budget",
+      "statement": "∀ (q : ℕ), 0<q → (∑ p ∈ q.primeFactors, Real.log (p:ℝ))≤Real.log (q:ℝ)",
+      "plain_statement": {
+        "zh": "互异坏素因子的对数预算",
+        "en": "Logarithmic budget for distinct bad primes"
+      },
+      "brief": {
+        "zh": "从 prim_zero 的有限欧拉因子出发，区分单个因子的非消失、有限乘积的误差与总预算。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Follow prim_zero; separate nonvanishing, product stability and the total cost. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/ClaimStrip.lean",
+      "track": "rh-euler-loss",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-euler-loss-power-loss",
+      "file": "lean/PEqualNP/Outside/L_goldbach_euler_loss_power_loss.lean",
+      "module": "PEqualNP.Outside.L_goldbach_euler_loss_power_loss",
+      "statement": "∀ (p X k : ℕ), Nat.Prime p → p^k≤X → (k:ℝ)*Real.log (p:ℝ)≤Real.log (X:ℝ)",
+      "plain_statement": {
+        "zh": "一个坏素数在截断窗内的权重",
+        "en": "Truncated weight from one bad prime"
+      },
+      "brief": {
+        "zh": "从 prim_zero 的有限欧拉因子出发，区分单个因子的非消失、有限乘积的误差与总预算。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Follow prim_zero; separate nonvanishing, product stability and the total cost. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/ClaimStrip.lean",
+      "track": "rh-euler-loss",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-residue-blocks-sum-partition",
+      "file": "lean/PEqualNP/Outside/L_goldbach_residue_blocks_sum_partition.lean",
+      "module": "PEqualNP.Outside.L_goldbach_residue_blocks_sum_partition",
+      "statement": "∀ (q X : ℕ) (w : ℕ → ℂ), 0<q → (∑ a ∈ Finset.range q, ∑ k ∈ (Finset.range X).filter (fun k => k%q=a), w k)=∑ k ∈ Finset.range X,w k",
+      "plain_statement": {
+        "zh": "按剩余类分拆复权和",
+        "en": "Partition a complex sum by residues"
+      },
+      "brief": {
+        "zh": "借鉴 everyCharacter_of_row 逐块归并；保持模数、权函数与频率统一。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Use the block assembly in everyCharacter_of_row; keep the modulus, weight and frequency fixed. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-residue-blocks",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-residue-blocks-factor-phase",
+      "file": "lean/PEqualNP/Outside/L_goldbach_residue_blocks_factor_phase.lean",
+      "module": "PEqualNP.Outside.L_goldbach_residue_blocks_factor_phase",
+      "statement": "∀ (q X : ℕ) (w u : ℕ → ℂ), 0<q → (∑ k ∈ Finset.range X,w k*u (k%q))=∑ a ∈ Finset.range q,u a*(∑ k ∈ (Finset.range X).filter (fun k => k%q=a),w k)",
+      "plain_statement": {
+        "zh": "有理频率相位从类内提出",
+        "en": "Extract a phase constant on each class"
+      },
+      "brief": {
+        "zh": "借鉴 everyCharacter_of_row 逐块归并；保持模数、权函数与频率统一。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Use the block assembly in everyCharacter_of_row; keep the modulus, weight and frequency fixed. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-residue-blocks",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-residue-blocks-unit-split",
+      "file": "lean/PEqualNP/Outside/L_goldbach_residue_blocks_unit_split.lean",
+      "module": "PEqualNP.Outside.L_goldbach_residue_blocks_unit_split",
+      "statement": "∀ (q X : ℕ) (w : ℕ → ℂ), (∑ k ∈ Finset.range X,w k)=(∑ k ∈ (Finset.range X).filter (fun k => Nat.Coprime k q),w k)+(∑ k ∈ (Finset.range X).filter (fun k => ¬ Nat.Coprime k q),w k)",
+      "plain_statement": {
+        "zh": "单位类与非单位类分流",
+        "en": "Separate units and nonunits"
+      },
+      "brief": {
+        "zh": "借鉴 everyCharacter_of_row 逐块归并；保持模数、权函数与频率统一。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Use the block assembly in everyCharacter_of_row; keep the modulus, weight and frequency fixed. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-residue-blocks",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-residue-blocks-opposite-phase",
+      "file": "lean/PEqualNP/Outside/L_goldbach_residue_blocks_opposite_phase.lean",
+      "module": "PEqualNP.Outside.L_goldbach_residue_blocks_opposite_phase",
+      "statement": "∀ (q a n : ℕ), 0<q → a<q → ((n+q-a)%q+a)%q=n%q",
+      "plain_statement": {
+        "zh": "反射剩余类的模等式",
+        "en": "Identify reflected residues modulo q"
+      },
+      "brief": {
+        "zh": "借鉴 everyCharacter_of_row 逐块归并；保持模数、权函数与频率统一。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Use the block assembly in everyCharacter_of_row; keep the modulus, weight and frequency fixed. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-residue-blocks",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-residue-blocks-complete-period",
+      "file": "lean/PEqualNP/Outside/L_goldbach_residue_blocks_complete_period.lean",
+      "module": "PEqualNP.Outside.L_goldbach_residue_blocks_complete_period",
+      "statement": "∀ (q m a : ℕ), a<q → ((Finset.range (m*q)).filter (fun k => k%q=a)).card=m",
+      "plain_statement": {
+        "zh": "完整周期中各类等频",
+        "en": "Equal multiplicities over full periods"
+      },
+      "brief": {
+        "zh": "借鉴 everyCharacter_of_row 逐块归并；保持模数、权函数与频率统一。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Use the block assembly in everyCharacter_of_row; keep the modulus, weight and frequency fixed. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-residue-blocks",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-residue-blocks-partial-period",
+      "file": "lean/PEqualNP/Outside/L_goldbach_residue_blocks_partial_period.lean",
+      "module": "PEqualNP.Outside.L_goldbach_residue_blocks_partial_period",
+      "statement": "∀ (q X a : ℕ), a<q → ((Finset.range X).filter (fun k => k%q=a)).card≤X/q+1",
+      "plain_statement": {
+        "zh": "截断尾周期至多多一项",
+        "en": "At most one extra term from an incomplete period"
+      },
+      "brief": {
+        "zh": "借鉴 everyCharacter_of_row 逐块归并；保持模数、权函数与频率统一。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Use the block assembly in everyCharacter_of_row; keep the modulus, weight and frequency fixed. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-residue-blocks",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-residue-blocks-center-error",
+      "file": "lean/PEqualNP/Outside/L_goldbach_residue_blocks_center_error.lean",
+      "module": "PEqualNP.Outside.L_goldbach_residue_blocks_center_error",
+      "statement": "∀ (q : ℕ) (w : Fin q → ℝ), 0<q → (∑ a,w a-(∑ b,w b)/(q:ℝ))=0",
+      "plain_statement": {
+        "zh": "扣除类均值后总偏差为零",
+        "en": "Centering annihilates total discrepancy"
+      },
+      "brief": {
+        "zh": "借鉴 everyCharacter_of_row 逐块归并；保持模数、权函数与频率统一。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Use the block assembly in everyCharacter_of_row; keep the modulus, weight and frequency fixed. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-residue-blocks",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-residue-blocks-phase-center",
+      "file": "lean/PEqualNP/Outside/L_goldbach_residue_blocks_phase_center.lean",
+      "module": "PEqualNP.Outside.L_goldbach_residue_blocks_phase_center",
+      "statement": "∀ (q : ℕ) (w u : Fin q → ℂ) (c : ℂ), (∑ a,w a)=0 → (∑ a,w a*u a)=∑ a,w a*(u a-c)",
+      "plain_statement": {
+        "zh": "零和误差允许平移测试函数",
+        "en": "Center a test function against zero-sum errors"
+      },
+      "brief": {
+        "zh": "借鉴 everyCharacter_of_row 逐块归并；保持模数、权函数与频率统一。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Use the block assembly in everyCharacter_of_row; keep the modulus, weight and frequency fixed. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-residue-blocks",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-residue-blocks-variance-phase",
+      "file": "lean/PEqualNP/Outside/L_goldbach_residue_blocks_variance_phase.lean",
+      "module": "PEqualNP.Outside.L_goldbach_residue_blocks_variance_phase",
+      "statement": "∀ (q : ℕ) (w u : Fin q → ℝ), (∑ a,w a*u a)^2≤(∑ a,(w a)^2)*(∑ a,(u a)^2)",
+      "plain_statement": {
+        "zh": "以相位方差控制频率误差",
+        "en": "Control frequency error by phase variance"
+      },
+      "brief": {
+        "zh": "借鉴 everyCharacter_of_row 逐块归并；保持模数、权函数与频率统一。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Use the block assembly in everyCharacter_of_row; keep the modulus, weight and frequency fixed. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-residue-blocks",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-residue-blocks-merge-scales",
+      "file": "lean/PEqualNP/Outside/L_goldbach_residue_blocks_merge_scales.lean",
+      "module": "PEqualNP.Outside.L_goldbach_residue_blocks_merge_scales",
+      "statement": "∀ (q d k : ℕ), d∣q → k%q%d=k%d",
+      "plain_statement": {
+        "zh": "按除数链兼容地合并剩余类",
+        "en": "Compose residue projections along divisibility"
+      },
+      "brief": {
+        "zh": "借鉴 everyCharacter_of_row 逐块归并；保持模数、权函数与频率统一。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Use the block assembly in everyCharacter_of_row; keep the modulus, weight and frequency fixed. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-residue-blocks",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-moving-weights-prefix-invert",
+      "file": "lean/PEqualNP/Outside/L_goldbach_moving_weights_prefix_invert.lean",
+      "module": "PEqualNP.Outside.L_goldbach_moving_weights_prefix_invert",
+      "statement": "∀ (a : ℕ → ℂ) (k : ℕ), (∑ j ∈ Finset.range (k+1),a j)-(∑ j ∈ Finset.range k,a j)=a k",
+      "plain_statement": {
+        "zh": "前缀差恢复单项",
+        "en": "Invert a prefix sum"
+      },
+      "brief": {
+        "zh": "先控制权的离散差分，再用已知的前缀和误差做分部求和。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Bound discrete variation before summation by parts against prefix discrepancies. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-moving-weights",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-moving-weights-window-diff",
+      "file": "lean/PEqualNP/Outside/L_goldbach_moving_weights_window_diff.lean",
+      "module": "PEqualNP.Outside.L_goldbach_moving_weights_window_diff",
+      "statement": "∀ (a : ℕ → ℂ) (u v : ℕ), u≤v → (∑ k ∈ Finset.Ico u v,a k)=(∑ k ∈ Finset.range v,a k)-(∑ k ∈ Finset.range u,a k)",
+      "plain_statement": {
+        "zh": "两个前缀之差给出窗口",
+        "en": "Recover a half-open window from prefixes"
+      },
+      "brief": {
+        "zh": "先控制权的离散差分，再用已知的前缀和误差做分部求和。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Bound discrete variation before summation by parts against prefix discrepancies. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-moving-weights",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-moving-weights-window-bound",
+      "file": "lean/PEqualNP/Outside/L_goldbach_moving_weights_window_bound.lean",
+      "module": "PEqualNP.Outside.L_goldbach_moving_weights_window_bound",
+      "statement": "∀ (a : ℕ → ℂ) (u v : ℕ) (B : ℝ), u≤v → ‖∑ k ∈ Finset.range u,a k‖≤B → ‖∑ k ∈ Finset.range v,a k‖≤B → ‖∑ k ∈ Finset.Ico u v,a k‖≤2*B",
+      "plain_statement": {
+        "zh": "用两个端点的误差预算控制窗口",
+        "en": "Endpoint budgets for a window"
+      },
+      "brief": {
+        "zh": "先控制权的离散差分，再用已知的前缀和误差做分部求和。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Bound discrete variation before summation by parts against prefix discrepancies. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-moving-weights",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-moving-weights-monotone-var",
+      "file": "lean/PEqualNP/Outside/L_goldbach_moving_weights_monotone_var.lean",
+      "module": "PEqualNP.Outside.L_goldbach_moving_weights_monotone_var",
+      "statement": "∀ (w : ℕ → ℝ) (n : ℕ), Antitone w → (∑ k ∈ Finset.range n, |w (k+1)-w k|)=w 0-w n",
+      "plain_statement": {
+        "zh": "单调实权总变差等于端点落差",
+        "en": "Exact variation of a decreasing weight"
+      },
+      "brief": {
+        "zh": "先控制权的离散差分，再用已知的前缀和误差做分部求和。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Bound discrete variation before summation by parts against prefix discrepancies. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-moving-weights",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-moving-weights-product-var",
+      "file": "lean/PEqualNP/Outside/L_goldbach_moving_weights_product_var.lean",
+      "module": "PEqualNP.Outside.L_goldbach_moving_weights_product_var",
+      "statement": "∀ (u v : ℕ → ℂ) (k : ℕ), ‖u (k+1)*v (k+1)-u k*v k‖≤‖u (k+1)‖*‖v (k+1)-v k‖+‖v k‖*‖u (k+1)-u k‖",
+      "plain_statement": {
+        "zh": "乘积权的差分预算",
+        "en": "Variation budget for product weights"
+      },
+      "brief": {
+        "zh": "先控制权的离散差分，再用已知的前缀和误差做分部求和。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Bound discrete variation before summation by parts against prefix discrepancies. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-moving-weights",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-moving-weights-mesh-var",
+      "file": "lean/PEqualNP/Outside/L_goldbach_moving_weights_mesh_var.lean",
+      "module": "PEqualNP.Outside.L_goldbach_moving_weights_mesh_var",
+      "statement": "∀ (w : ℝ → ℝ) (n : ℕ) (L : ℝ), 0<n → (∀ x y, |w x-w y|≤L*|x-y|) → (∑ k ∈ Finset.range n, |w (((k:ℝ)+1)/n)-w ((k:ℝ)/n)|)≤L",
+      "plain_statement": {
+        "zh": "Lipschitz 权在均匀网格上的总变差",
+        "en": "Variation of a Lipschitz weight on a mesh"
+      },
+      "brief": {
+        "zh": "先控制权的离散差分，再用已知的前缀和误差做分部求和。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Bound discrete variation before summation by parts against prefix discrepancies. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-moving-weights",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-moving-weights-linear-taper",
+      "file": "lean/PEqualNP/Outside/L_goldbach_moving_weights_linear_taper.lean",
+      "module": "PEqualNP.Outside.L_goldbach_moving_weights_linear_taper",
+      "statement": "∀ n : ℕ, 0<n → (∑ k ∈ Finset.range n,(1-(k:ℝ)/n))=((n:ℝ)+1)/2",
+      "plain_statement": {
+        "zh": "三角截断权的精确质量",
+        "en": "Exact mass of a linear taper"
+      },
+      "brief": {
+        "zh": "先控制权的离散差分，再用已知的前缀和误差做分部求和。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Bound discrete variation before summation by parts against prefix discrepancies. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-moving-weights",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-moving-weights-smooth-step",
+      "file": "lean/PEqualNP/Outside/L_goldbach_moving_weights_smooth_step.lean",
+      "module": "PEqualNP.Outside.L_goldbach_moving_weights_smooth_step",
+      "statement": "∀ (n : ℕ) (w v a : Fin n → ℝ) (e : ℝ), (∀ i,|w i-v i|≤e) → |∑ i,a i*(w i-v i)|≤e*∑ i,|a i|",
+      "plain_statement": {
+        "zh": "阶梯逼近的加权误差",
+        "en": "Weighted error of a step approximation"
+      },
+      "brief": {
+        "zh": "先控制权的离散差分，再用已知的前缀和误差做分部求和。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Bound discrete variation before summation by parts against prefix discrepancies. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-moving-weights",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-moving-weights-complex-step",
+      "file": "lean/PEqualNP/Outside/L_goldbach_moving_weights_complex_step.lean",
+      "module": "PEqualNP.Outside.L_goldbach_moving_weights_complex_step",
+      "statement": "∀ (n : ℕ) (a u v : Fin n → ℂ), ‖∑ i,a i*(u i-v i)‖^2≤(∑ i,‖a i‖^2)*(∑ i,‖u i-v i‖^2)",
+      "plain_statement": {
+        "zh": "替换相位的平方误差预算",
+        "en": "Quadratic budget for phase replacement"
+      },
+      "brief": {
+        "zh": "先控制权的离散差分，再用已知的前缀和误差做分部求和。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Bound discrete variation before summation by parts against prefix discrepancies. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-moving-weights",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-moving-weights-box-to-tent",
+      "file": "lean/PEqualNP/Outside/L_goldbach_moving_weights_box_to_tent.lean",
+      "module": "PEqualNP.Outside.L_goldbach_moving_weights_box_to_tent",
+      "statement": "∀ (n : ℕ) (a : ℕ → ℝ), (∑ j ∈ Finset.range n,∑ k ∈ Finset.range (j+1),a k)=∑ k ∈ Finset.range n,((n-k:ℕ):ℝ)*a k",
+      "plain_statement": {
+        "zh": "用窗口前缀平均生成三角权",
+        "en": "Generate a triangular weight by averaging prefixes"
+      },
+      "brief": {
+        "zh": "先控制权的离散差分，再用已知的前缀和误差做分部求和。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Bound discrete variation before summation by parts against prefix discrepancies. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-moving-weights",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-pair-errors-swap",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pair_errors_swap.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pair_errors_swap",
+      "statement": "let C := fun (a b : ℕ → ℝ) (n : ℕ) => ∑ k ∈ Finset.range (n+1), a k*b (n-k); ∀ a b n,C a b n=C b a n",
+      "plain_statement": {
+        "zh": "交换卷积的两个输入",
+        "en": "Swap the reflected factors"
+      },
+      "brief": {
+        "zh": "固定同一个目标偶数；在有限反射卷积内展开两个输入，保留交叉项的符号。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Keep the target fixed, expand both inputs in the reflected convolution, and track the cross term. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-pair-errors",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-pair-errors-left-diff",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pair_errors_left_diff.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pair_errors_left_diff",
+      "statement": "let C := fun (a b : ℕ → ℝ) (n : ℕ) => ∑ k ∈ Finset.range (n+1), a k*b (n-k); ∀ a b d n,C a b n-C d b n=C (fun k => a k-d k) b n",
+      "plain_statement": {
+        "zh": "替换左输入的精确差",
+        "en": "Exact difference under left replacement"
+      },
+      "brief": {
+        "zh": "固定同一个目标偶数；在有限反射卷积内展开两个输入，保留交叉项的符号。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Keep the target fixed, expand both inputs in the reflected convolution, and track the cross term. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-pair-errors",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-pair-errors-cross",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pair_errors_cross.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pair_errors_cross",
+      "statement": "let C := fun (a b : ℕ → ℝ) (n : ℕ) => ∑ k ∈ Finset.range (n+1), a k*b (n-k); ∀ a b e f n,C (fun k => a k+e k) (fun k => b k+f k) n=C a b n+C a f n+C e b n+C e f n",
+      "plain_statement": {
+        "zh": "同时扰动两端的二阶交叉项",
+        "en": "Second-order cross term from perturbing both inputs"
+      },
+      "brief": {
+        "zh": "固定同一个目标偶数；在有限反射卷积内展开两个输入，保留交叉项的符号。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Keep the target fixed, expand both inputs in the reflected convolution, and track the cross term. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-pair-errors",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-pair-errors-self",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pair_errors_self.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pair_errors_self",
+      "statement": "let C := fun (a b : ℕ → ℝ) (n : ℕ) => ∑ k ∈ Finset.range (n+1), a k*b (n-k); ∀ a e n,C (fun k => a k+e k) (fun k => a k+e k) n-C a a n=2*C a e n+C e e n",
+      "plain_statement": {
+        "zh": "平方模型误差拆成线性与自相关",
+        "en": "Linear and autocorrelation terms in a squared model"
+      },
+      "brief": {
+        "zh": "固定同一个目标偶数；在有限反射卷积内展开两个输入，保留交叉项的符号。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Keep the target fixed, expand both inputs in the reflected convolution, and track the cross term. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-pair-errors",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-pair-errors-l2",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pair_errors_l2.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pair_errors_l2",
+      "statement": "let C := fun (a b : ℕ → ℝ) (n : ℕ) => ∑ k ∈ Finset.range (n+1), a k*b (n-k); ∀ a b n,(C a b n)^2≤(∑ k ∈ Finset.range (n+1),(a k)^2)*(∑ k ∈ Finset.range (n+1),(b k)^2)",
+      "plain_statement": {
+        "zh": "反射不改变二范数预算",
+        "en": "Pointwise convolution energy bound"
+      },
+      "brief": {
+        "zh": "固定同一个目标偶数；在有限反射卷积内展开两个输入，保留交叉项的符号。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Keep the target fixed, expand both inputs in the reflected convolution, and track the cross term. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-pair-errors",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-pair-errors-linfty",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pair_errors_linfty.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pair_errors_linfty",
+      "statement": "let C := fun (a b : ℕ → ℝ) (n : ℕ) => ∑ k ∈ Finset.range (n+1), a k*b (n-k); ∀ a b n (E : ℝ), (∀ k≤n, |a k|≤E) → |C a b n|≤E*(∑ k ∈ Finset.range (n+1),|b k|)",
+      "plain_statement": {
+        "zh": "一侧一致误差与另一侧质量",
+        "en": "Uniform error times the partner mass"
+      },
+      "brief": {
+        "zh": "固定同一个目标偶数；在有限反射卷积内展开两个输入，保留交叉项的符号。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Keep the target fixed, expand both inputs in the reflected convolution, and track the cross term. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-pair-errors",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-pair-errors-diagonal",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pair_errors_diagonal.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pair_errors_diagonal",
+      "statement": "let C := fun (a b : ℕ → ℝ) (n : ℕ) => ∑ k ∈ Finset.range (n+1), a k*b (n-k); ∀ a m,C a a (2*m)=2*(∑ k ∈ Finset.range m,a k*a (2*m-k))+(a m)^2",
+      "plain_statement": {
+        "zh": "偶数目标的中心对角项",
+        "en": "Extract the diagonal of an even target"
+      },
+      "brief": {
+        "zh": "固定同一个目标偶数；在有限反射卷积内展开两个输入，保留交叉项的符号。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Keep the target fixed, expand both inputs in the reflected convolution, and track the cross term. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-pair-errors",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-pair-errors-odd",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pair_errors_odd.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pair_errors_odd",
+      "statement": "let C := fun (a b : ℕ → ℝ) (n : ℕ) => ∑ k ∈ Finset.range (n+1), a k*b (n-k); ∀ a m,C a a (2*m+1)=2*(∑ k ∈ Finset.range (m+1),a k*a (2*m+1-k))",
+      "plain_statement": {
+        "zh": "奇数目标的配对对称性",
+        "en": "Reflection pairing at odd targets"
+      },
+      "brief": {
+        "zh": "固定同一个目标偶数；在有限反射卷积内展开两个输入，保留交叉项的符号。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Keep the target fixed, expand both inputs in the reflected convolution, and track the cross term. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-pair-errors",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-pair-errors-mass-product",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pair_errors_mass_product.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pair_errors_mass_product",
+      "statement": "let C := fun (a b : ℕ → ℝ) (n : ℕ) => ∑ k ∈ Finset.range (n+1), a k*b (n-k); ∀ a b X,(∀ k,0≤a k) → (∀ k,0≤b k) → (∑ n ∈ Finset.range (X+1),C a b n)≤(∑ k ∈ Finset.range (X+1),a k)*(∑ k ∈ Finset.range (X+1),b k)",
+      "plain_statement": {
+        "zh": "截断总质量受单边质量乘积控制",
+        "en": "Truncated convolution mass under nonnegative weights"
+      },
+      "brief": {
+        "zh": "固定同一个目标偶数；在有限反射卷积内展开两个输入，保留交叉项的符号。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Keep the target fixed, expand both inputs in the reflected convolution, and track the cross term. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-pair-errors",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-pair-errors-minor-margin",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pair_errors_minor_margin.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pair_errors_minor_margin",
+      "statement": "let C := fun (a b : ℕ → ℝ) (n : ℕ) => ∑ k ∈ Finset.range (n+1), a k*b (n-k); ∀ a e n (B D : ℝ), -B≤C a e n → -D≤C e e n → 2*B+D<C a a n → 0<C (fun k => a k+e k) (fun k => a k+e k) n",
+      "plain_statement": {
+        "zh": "单侧误差预算推出逐点正性",
+        "en": "One-sided signed budgets imply pointwise positivity"
+      },
+      "brief": {
+        "zh": "固定同一个目标偶数；在有限反射卷积内展开两个输入，保留交叉项的符号。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Keep the target fixed, expand both inputs in the reflected convolution, and track the cross term. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-pair-errors",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-grh-windows-window",
+      "file": "lean/PEqualNP/Outside/L_goldbach_grh_windows_window.lean",
+      "module": "PEqualNP.Outside.L_goldbach_grh_windows_window",
+      "statement": "(∀ (Q : ℕ) [NeZero Q] (χ : DirichletCharacter ℂ Q) (s : ℂ), 0<s.re → s.re<1 → DirichletCharacter.LFunction χ s=0 → s.re=1/2) → let A := fun (q a X : ℕ) => ∑ k ∈ (Finset.range (X+1)).filter (fun k => k%q=a%q), ArithmeticFunction.vonMangoldt k; ∃ C:ℝ, 0<C ∧ ∀ q a u v:ℕ, 0<q → Nat.Coprime a q → 2≤u → u≤v → |(A q a v-A q a u)-((v:ℝ)-u)/Nat.totient q|≤C*Real.sqrt v*(Real.log (2*(q:ℝ)*v))^2",
+      "plain_statement": {
+        "zh": "任意窗口的显式绝对误差",
+        "en": "Absolute discrepancy on arbitrary windows"
+      },
+      "brief": {
+        "zh": "先核对上游任意模数的零点命题，再从本项目 grh-progression-error 的单端点界推导；保留 GRH 前提。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Check the upstream all-moduli zero statement and derive from the project's grh-progression-error endpoint bound. Keep GRH explicit. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
+      "track": "rh-grh-windows",
+      "role": "conditional"
+    },
+    {
+      "id": "L-goldbach-grh-windows-dyadic",
+      "file": "lean/PEqualNP/Outside/L_goldbach_grh_windows_dyadic.lean",
+      "module": "PEqualNP.Outside.L_goldbach_grh_windows_dyadic",
+      "statement": "(∀ (Q : ℕ) [NeZero Q] (χ : DirichletCharacter ℂ Q) (s : ℂ), 0<s.re → s.re<1 → DirichletCharacter.LFunction χ s=0 → s.re=1/2) → let A := fun (q a X : ℕ) => ∑ k ∈ (Finset.range (X+1)).filter (fun k => k%q=a%q), ArithmeticFunction.vonMangoldt k; ∀ q a:ℕ, 0<q → Nat.Coprime a q → ∀ e:ℝ, 0<e → ∃ N:ℕ, ∀ X≥N, |(A q a (2*X)-A q a X)-(X:ℝ)/Nat.totient q|≤e*(X:ℝ)",
+      "plain_statement": {
+        "zh": "二进区间的相对渐近式",
+        "en": "Dyadic asymptotic at fixed modulus"
+      },
+      "brief": {
+        "zh": "先核对上游任意模数的零点命题，再从本项目 grh-progression-error 的单端点界推导；保留 GRH 前提。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Check the upstream all-moduli zero statement and derive from the project's grh-progression-error endpoint bound. Keep GRH explicit. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
+      "track": "rh-grh-windows",
+      "role": "conditional"
+    },
+    {
+      "id": "L-goldbach-grh-windows-thirds",
+      "file": "lean/PEqualNP/Outside/L_goldbach_grh_windows_thirds.lean",
+      "module": "PEqualNP.Outside.L_goldbach_grh_windows_thirds",
+      "statement": "(∀ (Q : ℕ) [NeZero Q] (χ : DirichletCharacter ℂ Q) (s : ℂ), 0<s.re → s.re<1 → DirichletCharacter.LFunction χ s=0 → s.re=1/2) → let A := fun (q a X : ℕ) => ∑ k ∈ (Finset.range (X+1)).filter (fun k => k%q=a%q), ArithmeticFunction.vonMangoldt k; ∀ q a:ℕ, 0<q → Nat.Coprime a q → ∀ e:ℝ, 0<e → ∃ N:ℕ, ∀ X≥N, |(A q a (2*X/3)-A q a (X/3))-(X:ℝ)/(3*Nat.totient q)|≤e*(X:ℝ)",
+      "plain_statement": {
+        "zh": "中央三分区间的剩余类质量",
+        "en": "Progression mass in the central thirds"
+      },
+      "brief": {
+        "zh": "先核对上游任意模数的零点命题，再从本项目 grh-progression-error 的单端点界推导；保留 GRH 前提。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Check the upstream all-moduli zero statement and derive from the project's grh-progression-error endpoint bound. Keep GRH explicit. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
+      "track": "rh-grh-windows",
+      "role": "conditional"
+    },
+    {
+      "id": "L-goldbach-grh-windows-class-gap",
+      "file": "lean/PEqualNP/Outside/L_goldbach_grh_windows_class_gap.lean",
+      "module": "PEqualNP.Outside.L_goldbach_grh_windows_class_gap",
+      "statement": "(∀ (Q : ℕ) [NeZero Q] (χ : DirichletCharacter ℂ Q) (s : ℂ), 0<s.re → s.re<1 → DirichletCharacter.LFunction χ s=0 → s.re=1/2) → let A := fun (q a X : ℕ) => ∑ k ∈ (Finset.range (X+1)).filter (fun k => k%q=a%q), ArithmeticFunction.vonMangoldt k; ∃ C:ℝ, 0<C ∧ ∀ q a b X:ℕ, 0<q → Nat.Coprime a q → Nat.Coprime b q → 2≤X → |A q a X-A q b X|≤C*Real.sqrt X*(Real.log (2*(q:ℝ)*X))^2",
+      "plain_statement": {
+        "zh": "两个单位类在同一窗口的差",
+        "en": "Difference of two reduced residue classes"
+      },
+      "brief": {
+        "zh": "先核对上游任意模数的零点命题，再从本项目 grh-progression-error 的单端点界推导；保留 GRH 前提。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Check the upstream all-moduli zero statement and derive from the project's grh-progression-error endpoint bound. Keep GRH explicit. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
+      "track": "rh-grh-windows",
+      "role": "conditional"
+    },
+    {
+      "id": "L-goldbach-grh-windows-coarse-moduli",
+      "file": "lean/PEqualNP/Outside/L_goldbach_grh_windows_coarse_moduli.lean",
+      "module": "PEqualNP.Outside.L_goldbach_grh_windows_coarse_moduli",
+      "statement": "(∀ (Q : ℕ) [NeZero Q] (χ : DirichletCharacter ℂ Q) (s : ℂ), 0<s.re → s.re<1 → DirichletCharacter.LFunction χ s=0 → s.re=1/2) → let A := fun (q a X : ℕ) => ∑ k ∈ (Finset.range (X+1)).filter (fun k => k%q=a%q), ArithmeticFunction.vonMangoldt k; ∃ N:ℕ, ∀ X q a:ℕ, N≤X → 0<q → q^4≤X → Nat.Coprime a q → (X:ℝ)/(2*Nat.totient q)≤A q a X",
+      "plain_statement": {
+        "zh": "四次根以内的模数有统一正主项",
+        "en": "Uniform lower mass for fourth-root moduli"
+      },
+      "brief": {
+        "zh": "先核对上游任意模数的零点命题，再从本项目 grh-progression-error 的单端点界推导；保留 GRH 前提。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Check the upstream all-moduli zero statement and derive from the project's grh-progression-error endpoint bound. Keep GRH explicit. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
+      "track": "rh-grh-windows",
+      "role": "conditional"
+    },
+    {
+      "id": "L-goldbach-grh-windows-dyadic-gain",
+      "file": "lean/PEqualNP/Outside/L_goldbach_grh_windows_dyadic_gain.lean",
+      "module": "PEqualNP.Outside.L_goldbach_grh_windows_dyadic_gain",
+      "statement": "(∀ (Q : ℕ) [NeZero Q] (χ : DirichletCharacter ℂ Q) (s : ℂ), 0<s.re → s.re<1 → DirichletCharacter.LFunction χ s=0 → s.re=1/2) → let A := fun (q a X : ℕ) => ∑ k ∈ (Finset.range (X+1)).filter (fun k => k%q=a%q), ArithmeticFunction.vonMangoldt k; ∃ N:ℕ, ∀ X q a:ℕ,N≤X → 0<q → q^4≤X → Nat.Coprime a q → (X:ℝ)/(2*Nat.totient q)≤A q a (2*X)-A q a X",
+      "plain_statement": {
+        "zh": "四次根模数在二进窗口中获得正质量",
+        "en": "Positive dyadic mass for fourth-root moduli"
+      },
+      "brief": {
+        "zh": "先核对上游任意模数的零点命题，再从本项目 grh-progression-error 的单端点界推导；保留 GRH 前提。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Check the upstream all-moduli zero statement and derive from the project's grh-progression-error endpoint bound. Keep GRH explicit. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
+      "track": "rh-grh-windows",
+      "role": "conditional"
+    },
+    {
+      "id": "L-goldbach-grh-windows-short",
+      "file": "lean/PEqualNP/Outside/L_goldbach_grh_windows_short.lean",
+      "module": "PEqualNP.Outside.L_goldbach_grh_windows_short",
+      "statement": "(∀ (Q : ℕ) [NeZero Q] (χ : DirichletCharacter ℂ Q) (s : ℂ), 0<s.re → s.re<1 → DirichletCharacter.LFunction χ s=0 → s.re=1/2) → let A := fun (q a X : ℕ) => ∑ k ∈ (Finset.range (X+1)).filter (fun k => k%q=a%q), ArithmeticFunction.vonMangoldt k; ∀ q a:ℕ,0<q → Nat.Coprime a q → ∃ K:ℕ, ∀ k≥K, (k:ℝ)^2/(2*Nat.totient q)≤A q a (k^3+k^2)-A q a (k^3)",
+      "plain_statement": {
+        "zh": "立方尺度上的平方长度短窗",
+        "en": "Square-length windows at cubic scale"
+      },
+      "brief": {
+        "zh": "先核对上游任意模数的零点命题，再从本项目 grh-progression-error 的单端点界推导；保留 GRH 前提。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Check the upstream all-moduli zero statement and derive from the project's grh-progression-error endpoint bound. Keep GRH explicit. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
+      "track": "rh-grh-windows",
+      "role": "conditional"
+    },
+    {
+      "id": "L-goldbach-grh-windows-class-energy",
+      "file": "lean/PEqualNP/Outside/L_goldbach_grh_windows_class_energy.lean",
+      "module": "PEqualNP.Outside.L_goldbach_grh_windows_class_energy",
+      "statement": "(∀ (Q : ℕ) [NeZero Q] (χ : DirichletCharacter ℂ Q) (s : ℂ), 0<s.re → s.re<1 → DirichletCharacter.LFunction χ s=0 → s.re=1/2) → let A := fun (q a X : ℕ) => ∑ k ∈ (Finset.range (X+1)).filter (fun k => k%q=a%q), ArithmeticFunction.vonMangoldt k; ∃ C:ℝ, 0<C ∧ ∀ q X:ℕ,0<q → 2≤X → (∑ a ∈ (Finset.range q).filter (fun a => Nat.Coprime a q),(A q a X-(X:ℝ)/Nat.totient q)^2)≤C*(q:ℝ)*X*(Real.log (2*(q:ℝ)*X))^4",
+      "plain_statement": {
+        "zh": "单位类偏差的合计平方预算",
+        "en": "Aggregate squared discrepancy of unit classes"
+      },
+      "brief": {
+        "zh": "先核对上游任意模数的零点命题，再从本项目 grh-progression-error 的单端点界推导；保留 GRH 前提。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Check the upstream all-moduli zero statement and derive from the project's grh-progression-error endpoint bound. Keep GRH explicit. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
+      "track": "rh-grh-windows",
+      "role": "conditional"
+    },
+    {
+      "id": "L-goldbach-grh-windows-uniform-test",
+      "file": "lean/PEqualNP/Outside/L_goldbach_grh_windows_uniform_test.lean",
+      "module": "PEqualNP.Outside.L_goldbach_grh_windows_uniform_test",
+      "statement": "(∀ (Q : ℕ) [NeZero Q] (χ : DirichletCharacter ℂ Q) (s : ℂ), 0<s.re → s.re<1 → DirichletCharacter.LFunction χ s=0 → s.re=1/2) → let A := fun (q a X : ℕ) => ∑ k ∈ (Finset.range (X+1)).filter (fun k => k%q=a%q), ArithmeticFunction.vonMangoldt k; ∃ C:ℝ, 0<C ∧ ∀ (q X:ℕ) (w:ℕ→ℝ),0<q → 2≤X → (∀ a<q, |w a|≤1) → |∑ a ∈ (Finset.range q).filter (fun a => Nat.Coprime a q), w a*(A q a X-(X:ℝ)/Nat.totient q)|≤C*(q:ℝ)*Real.sqrt X*(Real.log (2*(q:ℝ)*X))^2",
+      "plain_statement": {
+        "zh": "对任意有界实测试权的分布误差",
+        "en": "Uniform discrepancy against bounded real test weights"
+      },
+      "brief": {
+        "zh": "先核对上游任意模数的零点命题，再从本项目 grh-progression-error 的单端点界推导；保留 GRH 前提。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Check the upstream all-moduli zero statement and derive from the project's grh-progression-error endpoint bound. Keep GRH explicit. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
+      "track": "rh-grh-windows",
+      "role": "conditional"
+    },
+    {
+      "id": "L-goldbach-grh-windows-centered-prime",
+      "file": "lean/PEqualNP/Outside/L_goldbach_grh_windows_centered_prime.lean",
+      "module": "PEqualNP.Outside.L_goldbach_grh_windows_centered_prime",
+      "statement": "(∀ (Q : ℕ) [NeZero Q] (χ : DirichletCharacter ℂ Q) (s : ℂ), 0<s.re → s.re<1 → DirichletCharacter.LFunction χ s=0 → s.re=1/2) → let A := fun (q a X : ℕ) => ∑ k ∈ (Finset.range (X+1)).filter (fun k => k%q=a%q), ArithmeticFunction.vonMangoldt k; ∀ q a:ℕ, 0<q → Nat.Coprime a q → ∃ N:ℕ, ∀ X≥N, ∃ p:ℕ, Nat.Prime p ∧ p%q=a%q ∧ X<3*p ∧ 3*p<2*X",
+      "plain_statement": {
+        "zh": "固定单位类的中央区间素数见证",
+        "en": "An actual prime in a central window at fixed modulus"
+      },
+      "brief": {
+        "zh": "先核对上游任意模数的零点命题，再从本项目 grh-progression-error 的单端点界推导；保留 GRH 前提。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Check the upstream all-moduli zero statement and derive from the project's grh-progression-error endpoint bound. Keep GRH explicit. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "grh",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean",
+      "track": "rh-grh-windows",
+      "role": "conditional"
+    },
+    {
+      "id": "L-goldbach-central-support-mirror",
+      "file": "lean/PEqualNP/Outside/L_goldbach_central_support_mirror.lean",
+      "module": "PEqualNP.Outside.L_goldbach_central_support_mirror",
+      "statement": "let S := fun (n : ℕ) => (Finset.range (n+1)).filter (fun k => n<3*k ∧ 3*k<2*n); ∀ n k:ℕ,k∈S n → n-k∈S n",
+      "plain_statement": {
+        "zh": "中央窗在反射下稳定",
+        "en": "Reflection preserves the central window"
+      },
+      "brief": {
+        "zh": "在中央窗口做集合计数；将密度输入同真正的逐点配对输入分开。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Count candidates on the central window. Distinguish marginal density from a pointwise overlap bound. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-central-support",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-central-support-diagonal",
+      "file": "lean/PEqualNP/Outside/L_goldbach_central_support_diagonal.lean",
+      "module": "PEqualNP.Outside.L_goldbach_central_support_diagonal",
+      "statement": "let S := fun (n : ℕ) => (Finset.range (n+1)).filter (fun k => n<3*k ∧ 3*k<2*n); ∀ n k:ℕ,k∈S n → (n-k=k ↔ n=2*k)",
+      "plain_statement": {
+        "zh": "中央窗内固定点的刻画",
+        "en": "Fixed points of the central reflection"
+      },
+      "brief": {
+        "zh": "在中央窗口做集合计数；将密度输入同真正的逐点配对输入分开。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Count candidates on the central window. Distinguish marginal density from a pointwise overlap bound. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-central-support",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-central-support-parity",
+      "file": "lean/PEqualNP/Outside/L_goldbach_central_support_parity.lean",
+      "module": "PEqualNP.Outside.L_goldbach_central_support_parity",
+      "statement": "let S := fun (n : ℕ) => (Finset.range (n+1)).filter (fun k => n<3*k ∧ 3*k<2*n); ∀ n:ℕ, Odd n → Even (S n).card",
+      "plain_statement": {
+        "zh": "奇数目标的中央窗口有偶数个点",
+        "en": "Even cardinality of the central window at odd targets"
+      },
+      "brief": {
+        "zh": "在中央窗口做集合计数；将密度输入同真正的逐点配对输入分开。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Count candidates on the central window. Distinguish marginal density from a pointwise overlap bound. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-central-support",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-central-support-size",
+      "file": "lean/PEqualNP/Outside/L_goldbach_central_support_size.lean",
+      "module": "PEqualNP.Outside.L_goldbach_central_support_size",
+      "statement": "let S := fun (n : ℕ) => (Finset.range (n+1)).filter (fun k => n<3*k ∧ 3*k<2*n); ∀ m:ℕ, (S (3*m)).card=m-1",
+      "plain_statement": {
+        "zh": "三倍尺度的精确窗口大小",
+        "en": "Exact central window size at triple scale"
+      },
+      "brief": {
+        "zh": "在中央窗口做集合计数；将密度输入同真正的逐点配对输入分开。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Count candidates on the central window. Distinguish marginal density from a pointwise overlap bound. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-central-support",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-central-support-image",
+      "file": "lean/PEqualNP/Outside/L_goldbach_central_support_image.lean",
+      "module": "PEqualNP.Outside.L_goldbach_central_support_image",
+      "statement": "let S := fun (n : ℕ) => (Finset.range (n+1)).filter (fun k => n<3*k ∧ 3*k<2*n); ∀ n (A:Finset ℕ), A⊆S n → (A.image (fun k => n-k)).card=A.card",
+      "plain_statement": {
+        "zh": "反射子集保持基数",
+        "en": "Reflected subsets preserve cardinality"
+      },
+      "brief": {
+        "zh": "在中央窗口做集合计数；将密度输入同真正的逐点配对输入分开。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Count candidates on the central window. Distinguish marginal density from a pointwise overlap bound. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-central-support",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-central-support-overlap",
+      "file": "lean/PEqualNP/Outside/L_goldbach_central_support_overlap.lean",
+      "module": "PEqualNP.Outside.L_goldbach_central_support_overlap",
+      "statement": "let S := fun (n : ℕ) => (Finset.range (n+1)).filter (fun k => n<3*k ∧ 3*k<2*n); ∀ n (A B : Finset ℕ), A⊆S n → B⊆S n → A.card+B.card≤(S n).card+(A∩B.image (fun k => n-k)).card",
+      "plain_statement": {
+        "zh": "双支撑的交叠下界",
+        "en": "Lower bound for overlap of two central supports"
+      },
+      "brief": {
+        "zh": "在中央窗口做集合计数；将密度输入同真正的逐点配对输入分开。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Count candidates on the central window. Distinguish marginal density from a pointwise overlap bound. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-central-support",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-central-support-many",
+      "file": "lean/PEqualNP/Outside/L_goldbach_central_support_many.lean",
+      "module": "PEqualNP.Outside.L_goldbach_central_support_many",
+      "statement": "let S := fun (n : ℕ) => (Finset.range (n+1)).filter (fun k => n<3*k ∧ 3*k<2*n); ∀ n (A : Finset ℕ), A⊆S n → (∀ p∈A,Nat.Prime p) → (S n).card+1<2*A.card → ∃ p∈A, ∃ q∈A, p≠q ∧ p+q=n",
+      "plain_statement": {
+        "zh": "交叠余量给出不同素数表示",
+        "en": "Surplus overlap forces distinct prime summands"
+      },
+      "brief": {
+        "zh": "在中央窗口做集合计数；将密度输入同真正的逐点配对输入分开。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Count candidates on the central window. Distinguish marginal density from a pointwise overlap bound. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-central-support",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-central-support-union-delete",
+      "file": "lean/PEqualNP/Outside/L_goldbach_central_support_union_delete.lean",
+      "module": "PEqualNP.Outside.L_goldbach_central_support_union_delete",
+      "statement": "let S := fun (n : ℕ) => (Finset.range (n+1)).filter (fun k => n<3*k ∧ 3*k<2*n); ∀ n (A D:Finset ℕ), A⊆S n → ((A∩A.image (fun k => n-k)).card)≤(((A\\D)∩(A\\D).image (fun k => n-k)).card)+2*D.card",
+      "plain_statement": {
+        "zh": "删去异常支撑的配对损失",
+        "en": "Loss of paired candidates under deletion"
+      },
+      "brief": {
+        "zh": "在中央窗口做集合计数；将密度输入同真正的逐点配对输入分开。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Count candidates on the central window. Distinguish marginal density from a pointwise overlap bound. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-central-support",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-central-support-max-weight",
+      "file": "lean/PEqualNP/Outside/L_goldbach_central_support_max_weight.lean",
+      "module": "PEqualNP.Outside.L_goldbach_central_support_max_weight",
+      "statement": "let S := fun (n : ℕ) => (Finset.range (n+1)).filter (fun k => n<3*k ∧ 3*k<2*n); ∀ n (A:Finset ℕ) (w:ℕ→ℝ) (M:ℝ), A⊆S n → (∀ k∈A,w k≤M) → (∑ k ∈ A,w k)≤(A.card:ℝ)*M",
+      "plain_statement": {
+        "zh": "由有界质量推回配对数量",
+        "en": "Convert bounded weight into witness multiplicity"
+      },
+      "brief": {
+        "zh": "在中央窗口做集合计数；将密度输入同真正的逐点配对输入分开。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Count candidates on the central window. Distinguish marginal density from a pointwise overlap bound. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-central-support",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-central-support-weighted-witness",
+      "file": "lean/PEqualNP/Outside/L_goldbach_central_support_weighted_witness.lean",
+      "module": "PEqualNP.Outside.L_goldbach_central_support_weighted_witness",
+      "statement": "let S := fun (n : ℕ) => (Finset.range (n+1)).filter (fun k => n<3*k ∧ 3*k<2*n); ∀ n (w:ℕ→ℝ), (∀ k,¬Nat.Prime k → w k=0) → 0<(∑ k ∈ (S n).filter (fun k => 2*k≠n),w k*w (n-k)) → ∃ p∈S n, ∃ q∈S n,Nat.Prime p ∧ Nat.Prime q ∧ p≠q ∧ p+q=n",
+      "plain_statement": {
+        "zh": "扣除中心后从正质量提取不同素数",
+        "en": "Extract distinct primes after removing the midpoint"
+      },
+      "brief": {
+        "zh": "在中央窗口做集合计数；将密度输入同真正的逐点配对输入分开。 提交时指出借用的上游结论或方法，以及仍缺的解析输入。",
+        "en": "Count candidates on the central window. Distinguish marginal density from a pointwise overlap bound. Identify the upstream result or method and any missing analytic input."
+      },
+      "program": "correlation",
+      "imports": [],
+      "parallel": true,
+      "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Development/AutomorphicArithmetic/CharacterBoxes/MainConclusion.lean",
+      "track": "rh-central-support",
+      "role": "lemma"
     }
   ],
   "tracks": [
@@ -2403,6 +4003,118 @@
         "en": "These estimates can give almost-all results. Eliminating the last exception needs pointwise information or an exceptional count strictly below one."
       },
       "feeds": []
+    },
+    {
+      "id": "rh-strip-geometry",
+      "title": {
+        "zh": "临界带与反射零点",
+        "en": "Strip geometry and reflected zeros"
+      },
+      "description": {
+        "zh": "对照 prim_reflect 和 strip；把所需的零点条件写在前提中。",
+        "en": "Trace prim_reflect and strip; keep the zero-location input explicit."
+      },
+      "feeds": [
+        "progressions"
+      ]
+    },
+    {
+      "id": "rh-zero-blocks",
+      "title": {
+        "zh": "带重数的截断零点和",
+        "en": "Truncated zero sums with multiplicity"
+      },
+      "description": {
+        "zh": "以有限指标记录重数；从 LFunction_eq_zero_re 只取实部信息，再处理各块系数。",
+        "en": "Index multiplicities separately; extract real parts from LFunction_eq_zero_re and estimate the coefficients."
+      },
+      "feeds": [
+        "progressions"
+      ]
+    },
+    {
+      "id": "rh-euler-loss",
+      "title": {
+        "zh": "从本原特征转回原模数",
+        "en": "Euler-factor losses under change of modulus"
+      },
+      "description": {
+        "zh": "从 prim_zero 的有限欧拉因子出发，区分单个因子的非消失、有限乘积的误差与总预算。",
+        "en": "Follow prim_zero; separate nonvanishing, product stability and the total cost."
+      },
+      "feeds": [
+        "progressions"
+      ]
+    },
+    {
+      "id": "rh-residue-blocks",
+      "title": {
+        "zh": "把剩余类的估计合并成频率估计",
+        "en": "From residue-class errors to frequency bounds"
+      },
+      "description": {
+        "zh": "借鉴 everyCharacter_of_row 逐块归并；保持模数、权函数与频率统一。",
+        "en": "Use the block assembly in everyCharacter_of_row; keep the modulus, weight and frequency fixed."
+      },
+      "feeds": [
+        "progressions"
+      ]
+    },
+    {
+      "id": "rh-moving-weights",
+      "title": {
+        "zh": "把区间误差转成平滑权误差",
+        "en": "Transfer interval bounds to smooth weights"
+      },
+      "description": {
+        "zh": "先控制权的离散差分，再用已知的前缀和误差做分部求和。",
+        "en": "Bound discrete variation before summation by parts against prefix discrepancies."
+      },
+      "feeds": [
+        "arc-budget"
+      ]
+    },
+    {
+      "id": "rh-pair-errors",
+      "title": {
+        "zh": "将单侧素数误差传给二元卷积",
+        "en": "Propagate one-variable errors into binary convolution"
+      },
+      "description": {
+        "zh": "固定同一个目标偶数；在有限反射卷积内展开两个输入，保留交叉项的符号。",
+        "en": "Keep the target fixed, expand both inputs in the reflected convolution, and track the cross term."
+      },
+      "feeds": [
+        "arc-budget"
+      ]
+    },
+    {
+      "id": "rh-grh-windows",
+      "title": {
+        "zh": "从 GRH 分布估计到区间主项",
+        "en": "GRH progression estimates on moving windows"
+      },
+      "description": {
+        "zh": "先核对上游任意模数的零点命题，再从本项目 grh-progression-error 的单端点界推导；保留 GRH 前提。",
+        "en": "Check the upstream all-moduli zero statement and derive from the project's grh-progression-error endpoint bound. Keep GRH explicit."
+      },
+      "feeds": [
+        "progressions"
+      ]
+    },
+    {
+      "id": "rh-central-support",
+      "title": {
+        "zh": "中央表示的支撑、重数和逐点缺口",
+        "en": "Central support, multiplicity and pointwise gaps"
+      },
+      "description": {
+        "zh": "在中央窗口做集合计数；将密度输入同真正的逐点配对输入分开。",
+        "en": "Count candidates on the central window. Distinguish marginal density from a pointwise overlap bound."
+      },
+      "feeds": [
+        "arc-budget"
+      ]
     }
   ]
 }

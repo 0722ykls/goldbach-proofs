@@ -242,6 +242,78 @@
         "program": "correlation",
         "imports": [],
         "parallel": true
+      },
+      {
+        "id": "L-no-three-in-line-det-shear",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_det_shear.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_det_shear",
+        "statement": "∀ x y u v t:ℤ, x*(v+t*u)-(y+t*x)*u=x*v-y*u",
+        "plain_statement": {
+          "zh": "整数剪切保持共线行列式",
+          "en": "Shears preserve the collinearity determinant"
+        },
+        "brief": {
+          "zh": "通过坐标差的行列式校验三点，再用行容量审查接近上界的构型。",
+          "en": "Use the determinant to certify collinearity and row capacity to check near-extremizers."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.goldbach.tech/problems/no-three-in-line/?lang=en#roadmap"
+      },
+      {
+        "id": "L-no-three-in-line-det-swap",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_det_swap.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_det_swap",
+        "statement": "∀ x y u v:ℤ, y*u-x*v= -(x*v-y*u)",
+        "plain_statement": {
+          "zh": "交换坐标只改变方向符号",
+          "en": "Axis swap reverses determinant sign"
+        },
+        "brief": {
+          "zh": "通过坐标差的行列式校验三点，再用行容量审查接近上界的构型。",
+          "en": "Use the determinant to certify collinearity and row capacity to check near-extremizers."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.goldbach.tech/problems/no-three-in-line/?lang=en#roadmap"
+      },
+      {
+        "id": "L-no-three-in-line-row-saturation",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_row_saturation.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_row_saturation",
+        "statement": "∀ (n:ℕ) (r:Fin n→ℕ), (∀ i,r i≤2) → (∑ i,r i)=2*n → ∀ i,r i=2",
+        "plain_statement": {
+          "zh": "达到 2n 时每行恰有两点",
+          "en": "Saturation forces two points in every row"
+        },
+        "brief": {
+          "zh": "通过坐标差的行列式校验三点，再用行容量审查接近上界的构型。",
+          "en": "Use the determinant to certify collinearity and row capacity to check near-extremizers."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.goldbach.tech/problems/no-three-in-line/?lang=en#roadmap"
+      },
+      {
+        "id": "L-no-three-in-line-sparse-rows",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_sparse_rows.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_sparse_rows",
+        "statement": "∀ (n:ℕ) (r:Fin n→ℕ), (∀ i,r i≤2) → ((Finset.univ:Finset (Fin n)).filter (fun i => r i<2)).card+(∑ i,r i)≤2*n",
+        "plain_statement": {
+          "zh": "欠饱和行数受总缺口控制",
+          "en": "Bound unsaturated rows by the total deficit"
+        },
+        "brief": {
+          "zh": "通过坐标差的行列式校验三点，再用行容量审查接近上界的构型。",
+          "en": "Use the determinant to certify collinearity and row capacity to check near-extremizers."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.goldbach.tech/problems/no-three-in-line/?lang=en#roadmap"
       }
     ],
     "roadmap": [
@@ -364,6 +436,38 @@
             "id": "L-no-three-in-line-density-gain",
             "zh": "突破 3/2 密度",
             "en": "Beat density 3/2"
+          }
+        ]
+      },
+      {
+        "zh": [
+          "格点行容量与斜线证书",
+          "通过坐标差的行列式校验三点，再用行容量审查接近上界的构型。"
+        ],
+        "en": [
+          "Row capacity and slope certificates",
+          "Use the determinant to certify collinearity and row capacity to check near-extremizers."
+        ],
+        "tasks": [
+          {
+            "id": "L-no-three-in-line-det-shear",
+            "zh": "整数剪切保持共线行列式",
+            "en": "Shears preserve the collinearity determinant"
+          },
+          {
+            "id": "L-no-three-in-line-det-swap",
+            "zh": "交换坐标只改变方向符号",
+            "en": "Axis swap reverses determinant sign"
+          },
+          {
+            "id": "L-no-three-in-line-row-saturation",
+            "zh": "达到 2n 时每行恰有两点",
+            "en": "Saturation forces two points in every row"
+          },
+          {
+            "id": "L-no-three-in-line-sparse-rows",
+            "zh": "欠饱和行数受总缺口控制",
+            "en": "Bound unsaturated rows by the total deficit"
           }
         ]
       }
@@ -598,6 +702,78 @@
         "imports": [],
         "parallel": true,
         "source": "https://doi.org/10.37236/1701"
+      },
+      {
+        "id": "L-square-packing-width-energy",
+        "file": "lean/PEqualNP/Outside/L_square_packing_width_energy.lean",
+        "module": "PEqualNP.Outside.L_square_packing_width_energy",
+        "statement": "∀ c s:ℝ,c^2+s^2=1 → (|c|+|s|)^2≤2",
+        "plain_statement": {
+          "zh": "单位方块投影宽度的平方上界",
+          "en": "Squared upper bound for the projected width"
+        },
+        "brief": {
+          "zh": "从中心到一致分离轴的投影界出发，量化旋转和证书误差。",
+          "en": "Use center projections and budget orientation and certificate errors."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.goldbach.tech/problems/square-packing/?lang=en#roadmap"
+      },
+      {
+        "id": "L-square-packing-width-floor",
+        "file": "lean/PEqualNP/Outside/L_square_packing_width_floor.lean",
+        "module": "PEqualNP.Outside.L_square_packing_width_floor",
+        "statement": "∀ c s:ℝ,c^2+s^2=1 → 1≤|c|+|s|",
+        "plain_statement": {
+          "zh": "任意朝向的投影宽度至少为一",
+          "en": "Orientation-independent width floor"
+        },
+        "brief": {
+          "zh": "从中心到一致分离轴的投影界出发，量化旋转和证书误差。",
+          "en": "Use center projections and budget orientation and certificate errors."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.goldbach.tech/problems/square-packing/?lang=en#roadmap"
+      },
+      {
+        "id": "L-square-packing-axis-margin",
+        "file": "lean/PEqualNP/Outside/L_square_packing_axis_margin.lean",
+        "module": "PEqualNP.Outside.L_square_packing_axis_margin",
+        "statement": "∀ a b u v e:ℝ,0≤e → |u-a|≤e → |v-b|≤e → a+2*e<b → u<v",
+        "plain_statement": {
+          "zh": "端点扰动后保留分离",
+          "en": "Separation survives bounded projection errors"
+        },
+        "brief": {
+          "zh": "从中心到一致分离轴的投影界出发，量化旋转和证书误差。",
+          "en": "Use center projections and budget orientation and certificate errors."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.goldbach.tech/problems/square-packing/?lang=en#roadmap"
+      },
+      {
+        "id": "L-square-packing-interval-hull",
+        "file": "lean/PEqualNP/Outside/L_square_packing_interval_hull.lean",
+        "module": "PEqualNP.Outside.L_square_packing_interval_hull",
+        "statement": "∀ c r L:ℝ,0≤r → (0≤c-r ∧ c+r≤L ↔ r≤c ∧ c≤L-r)",
+        "plain_statement": {
+          "zh": "中心和半径给出精确边界余量",
+          "en": "Exact containment test for a centered interval"
+        },
+        "brief": {
+          "zh": "从中心到一致分离轴的投影界出发，量化旋转和证书误差。",
+          "en": "Use center projections and budget orientation and certificate errors."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.goldbach.tech/problems/square-packing/?lang=en#roadmap"
       }
     ],
     "roadmap": [
@@ -674,6 +850,38 @@
             "id": "L-square-packing-eleven-construction",
             "zh": "十一块的上界证书",
             "en": "An eleven-square upper certificate"
+          }
+        ]
+      },
+      {
+        "zh": [
+          "分离轴与边界余量",
+          "从中心到一致分离轴的投影界出发，量化旋转和证书误差。"
+        ],
+        "en": [
+          "Separation axes and boundary slack",
+          "Use center projections and budget orientation and certificate errors."
+        ],
+        "tasks": [
+          {
+            "id": "L-square-packing-width-energy",
+            "zh": "单位方块投影宽度的平方上界",
+            "en": "Squared upper bound for the projected width"
+          },
+          {
+            "id": "L-square-packing-width-floor",
+            "zh": "任意朝向的投影宽度至少为一",
+            "en": "Orientation-independent width floor"
+          },
+          {
+            "id": "L-square-packing-axis-margin",
+            "zh": "端点扰动后保留分离",
+            "en": "Separation survives bounded projection errors"
+          },
+          {
+            "id": "L-square-packing-interval-hull",
+            "zh": "中心和半径给出精确边界余量",
+            "en": "Exact containment test for a centered interval"
           }
         ]
       }
@@ -1053,6 +1261,78 @@
         "imports": [],
         "parallel": true,
         "source": "https://arxiv.org/abs/1908.08816"
+      },
+      {
+        "id": "L-quadratic-primes-neighbor-gcd",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_neighbor_gcd.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_neighbor_gcd",
+        "statement": "∀ n d:ℕ,d∣n^2+1 → d∣(n+1)^2+1 → d∣5",
+        "plain_statement": {
+          "zh": "相邻二次值的公因子整除五",
+          "en": "Common divisors of neighboring quadratic values divide five"
+        },
+        "brief": {
+          "zh": "围绕二进窗口的大素因子证书，明确局部因子或质量转移所需要的输入。",
+          "en": "Track the local factors and mass transfer required for a dyadic largest-prime-factor certificate."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.goldbach.tech/problems/quadratic-primes/?lang=en#roadmap"
+      },
+      {
+        "id": "L-quadratic-primes-reflected-root",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_reflected_root.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_reflected_root",
+        "statement": "∀ q a:ℕ, a≤q → q∣a^2+1 → q∣(q-a)^2+1",
+        "plain_statement": {
+          "zh": "模数反射保存二次根",
+          "en": "Reflection preserves quadratic roots"
+        },
+        "brief": {
+          "zh": "围绕二进窗口的大素因子证书，明确局部因子或质量转移所需要的输入。",
+          "en": "Track the local factors and mass transfer required for a dyadic largest-prime-factor certificate."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.goldbach.tech/problems/quadratic-primes/?lang=en#roadmap"
+      },
+      {
+        "id": "L-quadratic-primes-large-factor-unique",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_large_factor_unique.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_large_factor_unique",
+        "statement": "∀ n p q:ℕ, Nat.Prime p → Nat.Prime q → p∣n^2+1 → q∣n^2+1 → n^2+1<p^2 → n^2+1<q^2 → p=q",
+        "plain_statement": {
+          "zh": "超过平方根的不同素因子至多一个",
+          "en": "Uniqueness of a prime divisor above the square root"
+        },
+        "brief": {
+          "zh": "围绕二进窗口的大素因子证书，明确局部因子或质量转移所需要的输入。",
+          "en": "Track the local factors and mass transfer required for a dyadic largest-prime-factor certificate."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.goldbach.tech/problems/quadratic-primes/?lang=en#roadmap"
+      },
+      {
+        "id": "L-quadratic-primes-mass-witness",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_mass_witness.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_mass_witness",
+        "statement": "∀ (X Y:ℕ), 0<(∑ n ∈ Finset.Ico X (2*X),∑ p ∈ (n^2+1).primeFactors.filter (fun p => Y<p),Real.log (p:ℝ)) → ∃ n∈Finset.Ico X (2*X),∃ p:ℕ,Nat.Prime p ∧ p∣n^2+1 ∧ Y<p",
+        "plain_statement": {
+          "zh": "截断对数质量为正推出大素因子见证",
+          "en": "Extract a large factor from positive truncated log mass"
+        },
+        "brief": {
+          "zh": "围绕二进窗口的大素因子证书，明确局部因子或质量转移所需要的输入。",
+          "en": "Track the local factors and mass transfer required for a dyadic largest-prime-factor certificate."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.goldbach.tech/problems/quadratic-primes/?lang=en#roadmap"
       }
     ],
     "roadmap": [
@@ -1151,6 +1431,38 @@
             "id": "L-quadratic-primes-lpf-endpoint",
             "zh": "指数 2 的终点",
             "en": "Reach exponent 2"
+          }
+        ]
+      },
+      {
+        "zh": [
+          "筛权与大素因子质量",
+          "围绕二进窗口的大素因子证书，明确局部因子或质量转移所需要的输入。"
+        ],
+        "en": [
+          "Sieve weights and large-factor mass",
+          "Track the local factors and mass transfer required for a dyadic largest-prime-factor certificate."
+        ],
+        "tasks": [
+          {
+            "id": "L-quadratic-primes-neighbor-gcd",
+            "zh": "相邻二次值的公因子整除五",
+            "en": "Common divisors of neighboring quadratic values divide five"
+          },
+          {
+            "id": "L-quadratic-primes-reflected-root",
+            "zh": "模数反射保存二次根",
+            "en": "Reflection preserves quadratic roots"
+          },
+          {
+            "id": "L-quadratic-primes-large-factor-unique",
+            "zh": "超过平方根的不同素因子至多一个",
+            "en": "Uniqueness of a prime divisor above the square root"
+          },
+          {
+            "id": "L-quadratic-primes-mass-witness",
+            "zh": "截断对数质量为正推出大素因子见证",
+            "en": "Extract a large factor from positive truncated log mass"
           }
         ]
       }
@@ -1491,6 +1803,78 @@
         "program": "correlation",
         "imports": [],
         "parallel": true
+      },
+      {
+        "id": "L-hash-collision-lab-triple-insert",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_triple_insert.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_triple_insert",
+        "statement": "∀ m:ℕ, Nat.choose (m+1) 3=Nat.choose m 3+Nat.choose m 2",
+        "plain_statement": {
+          "zh": "加入一个元素产生的三元组数",
+          "en": "Triples created by one insertion"
+        },
+        "brief": {
+          "zh": "在抽象有限占用模型中计数；从组合恒等式推导多重占用阈值。",
+          "en": "Count finite occupancy profiles and derive capacity bounds from binomial identities."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.goldbach.tech/problems/hash-collision-lab/?lang=en#roadmap"
+      },
+      {
+        "id": "L-hash-collision-lab-triple-merge",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_triple_merge.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_triple_merge",
+        "statement": "∀ a b:ℕ, Nat.choose (a+b) 3=Nat.choose a 3+Nat.choose b 3+Nat.choose a 2*b+a*Nat.choose b 2",
+        "plain_statement": {
+          "zh": "合并两桶时的跨桶三元组",
+          "en": "Cross terms when merging two buckets"
+        },
+        "brief": {
+          "zh": "在抽象有限占用模型中计数；从组合恒等式推导多重占用阈值。",
+          "en": "Count finite occupancy profiles and derive capacity bounds from binomial identities."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.goldbach.tech/problems/hash-collision-lab/?lang=en#roadmap"
+      },
+      {
+        "id": "L-hash-collision-lab-triple-balance",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_triple_balance.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_triple_balance",
+        "statement": "∀ a b:ℕ, b≤a → Nat.choose a 3+Nat.choose (b+1) 3≤Nat.choose (a+1) 3+Nat.choose b 3",
+        "plain_statement": {
+          "zh": "将一项移向轻桶降低三元组数",
+          "en": "Balancing move cannot increase triple count"
+        },
+        "brief": {
+          "zh": "在抽象有限占用模型中计数；从组合恒等式推导多重占用阈值。",
+          "en": "Count finite occupancy profiles and derive capacity bounds from binomial identities."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.goldbach.tech/problems/hash-collision-lab/?lang=en#roadmap"
+      },
+      {
+        "id": "L-hash-collision-lab-heavy-buckets",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_heavy_buckets.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_heavy_buckets",
+        "statement": "∀ (n:ℕ) (b:Fin n→ℕ), ((Finset.univ:Finset (Fin n)).filter (fun i => 3≤b i)).card≤∑ i,Nat.choose (b i) 3",
+        "plain_statement": {
+          "zh": "用三元组总数控制重桶数",
+          "en": "Triple counts bound the number of heavy buckets"
+        },
+        "brief": {
+          "zh": "在抽象有限占用模型中计数；从组合恒等式推导多重占用阈值。",
+          "en": "Count finite occupancy profiles and derive capacity bounds from binomial identities."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.goldbach.tech/problems/hash-collision-lab/?lang=en#roadmap"
       }
     ],
     "roadmap": [
@@ -1616,6 +2000,38 @@
             "id": "L-hash-collision-lab-quadratic-pair-total",
             "zh": "二次模型的碰撞对总数",
             "en": "Exact total for the quadratic model"
+          }
+        ]
+      },
+      {
+        "zh": [
+          "有限桶的计数与容量",
+          "在抽象有限占用模型中计数；从组合恒等式推导多重占用阈值。"
+        ],
+        "en": [
+          "Finite-bucket counts and capacity",
+          "Count finite occupancy profiles and derive capacity bounds from binomial identities."
+        ],
+        "tasks": [
+          {
+            "id": "L-hash-collision-lab-triple-insert",
+            "zh": "加入一个元素产生的三元组数",
+            "en": "Triples created by one insertion"
+          },
+          {
+            "id": "L-hash-collision-lab-triple-merge",
+            "zh": "合并两桶时的跨桶三元组",
+            "en": "Cross terms when merging two buckets"
+          },
+          {
+            "id": "L-hash-collision-lab-triple-balance",
+            "zh": "将一项移向轻桶降低三元组数",
+            "en": "Balancing move cannot increase triple count"
+          },
+          {
+            "id": "L-hash-collision-lab-heavy-buckets",
+            "zh": "用三元组总数控制重桶数",
+            "en": "Triple counts bound the number of heavy buckets"
           }
         ]
       }
@@ -1944,6 +2360,78 @@
         "imports": [],
         "parallel": true,
         "source": "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls/blob/20a856deb2a227f68f88f9e68193937e032ea11e/docs/CLAIMS_AND_LIMITATIONS.md"
+      },
+      {
+        "id": "L-log-rank-rectangle-restrict",
+        "file": "lean/PEqualNP/Outside/L_log_rank_rectangle_restrict.lean",
+        "module": "PEqualNP.Outside.L_log_rank_rectangle_restrict",
+        "statement": "∀ (m n:ℕ) (A:Fin m→Fin n→Bool) (I U:Finset (Fin m)) (J V:Finset (Fin n)) (b:Bool), U⊆I → V⊆J → (∀ i∈I,∀ j∈J,A i j=b) → ∀ i∈U,∀ j∈V,A i j=b",
+        "plain_statement": {
+          "zh": "单色矩形对子行列封闭",
+          "en": "Monochromatic rectangles survive restriction"
+        },
+        "brief": {
+          "zh": "跟踪子矩形的面积和覆盖数，用于单色矩形到确定性协议的归约。",
+          "en": "Track subrectangle area and cover size in the monochromatic-rectangle to protocol reduction."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.goldbach.tech/problems/log-rank/?lang=en#roadmap"
+      },
+      {
+        "id": "L-log-rank-opposite-disjoint",
+        "file": "lean/PEqualNP/Outside/L_log_rank_opposite_disjoint.lean",
+        "module": "PEqualNP.Outside.L_log_rank_opposite_disjoint",
+        "statement": "∀ (m n:ℕ) (A:Fin m→Fin n→Bool) (I U:Finset (Fin m)) (J V:Finset (Fin n)), (∀ i∈I,∀ j∈J,A i j=true) → (∀ i∈U,∀ j∈V,A i j=false) → Disjoint I U ∨ Disjoint J V",
+        "plain_statement": {
+          "zh": "异色矩形至少一侧不相交",
+          "en": "Opposite colors force disjointness on one axis"
+        },
+        "brief": {
+          "zh": "跟踪子矩形的面积和覆盖数，用于单色矩形到确定性协议的归约。",
+          "en": "Track subrectangle area and cover size in the monochromatic-rectangle to protocol reduction."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.goldbach.tech/problems/log-rank/?lang=en#roadmap"
+      },
+      {
+        "id": "L-log-rank-row-pattern",
+        "file": "lean/PEqualNP/Outside/L_log_rank_row_pattern.lean",
+        "module": "PEqualNP.Outside.L_log_rank_row_pattern",
+        "statement": "∀ (m n:ℕ) (A:Fin m→Fin n→Bool) (I U:Finset (Fin m)) (J:Finset (Fin n)) (b:Bool), (∀ i∈I,∀ j∈J,A i j=b) → (∀ i∈U,∀ j∈J,A i j=b) → ∀ i∈I∪U,∀ j∈J,A i j=b",
+        "plain_statement": {
+          "zh": "相同行型允许合并单色行集合",
+          "en": "Merge row sets with the same monochromatic columns"
+        },
+        "brief": {
+          "zh": "跟踪子矩形的面积和覆盖数，用于单色矩形到确定性协议的归约。",
+          "en": "Track subrectangle area and cover size in the monochromatic-rectangle to protocol reduction."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.goldbach.tech/problems/log-rank/?lang=en#roadmap"
+      },
+      {
+        "id": "L-log-rank-cover-area",
+        "file": "lean/PEqualNP/Outside/L_log_rank_cover_area.lean",
+        "module": "PEqualNP.Outside.L_log_rank_cover_area",
+        "statement": "∀ (m n k:ℕ) (I:Fin k→Finset (Fin m)) (J:Fin k→Finset (Fin n)), (∀ i j,∃ h,i∈I h ∧ j∈J h) → m*n≤∑ h,(I h).card*(J h).card",
+        "plain_statement": {
+          "zh": "任意矩形覆盖的面积和控制矩阵面积",
+          "en": "Area lower bound on a rectangle cover"
+        },
+        "brief": {
+          "zh": "跟踪子矩形的面积和覆盖数，用于单色矩形到确定性协议的归约。",
+          "en": "Track subrectangle area and cover size in the monochromatic-rectangle to protocol reduction."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://www.goldbach.tech/problems/log-rank/?lang=en#roadmap"
       }
     ],
     "roadmap": [
@@ -2072,6 +2560,38 @@
             "id": "L-log-rank-cyclic-detector-family",
             "zh": "构造线性规模的检测族",
             "en": "Seek a linear cyclic detector family"
+          }
+        ]
+      },
+      {
+        "zh": [
+          "单色矩形的收缩和覆盖",
+          "跟踪子矩形的面积和覆盖数，用于单色矩形到确定性协议的归约。"
+        ],
+        "en": [
+          "Restriction and coverage of monochromatic rectangles",
+          "Track subrectangle area and cover size in the monochromatic-rectangle to protocol reduction."
+        ],
+        "tasks": [
+          {
+            "id": "L-log-rank-rectangle-restrict",
+            "zh": "单色矩形对子行列封闭",
+            "en": "Monochromatic rectangles survive restriction"
+          },
+          {
+            "id": "L-log-rank-opposite-disjoint",
+            "zh": "异色矩形至少一侧不相交",
+            "en": "Opposite colors force disjointness on one axis"
+          },
+          {
+            "id": "L-log-rank-row-pattern",
+            "zh": "相同行型允许合并单色行集合",
+            "en": "Merge row sets with the same monochromatic columns"
+          },
+          {
+            "id": "L-log-rank-cover-area",
+            "zh": "任意矩形覆盖的面积和控制矩阵面积",
+            "en": "Area lower bound on a rectangle cover"
           }
         ]
       }
