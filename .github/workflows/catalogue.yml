@@ -47,3 +47,6 @@ jobs:
           print(f"Type-checking {len(gaps)} propositions")
           PY
           "$HOME/.elan/bin/lake" env lean "$RUNNER_TEMP/Catalogue.lean"
+      - name: Verify that both submissions compose in the pinned kernel
+        working-directory: lean
+        run: "$HOME/.elan/bin/lake env lean ../research/CollaborationCheck.lean"
