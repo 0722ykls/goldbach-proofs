@@ -1336,5 +1336,461 @@
         ]
       }
     ]
+  },
+  "log-rank": {
+    "title": {
+      "zh": "Log-rank 猜想",
+      "en": "The Log-Rank Conjecture"
+    },
+    "question": {
+      "zh": "两个人各知道一行和一列的编号，确定交叉位置是 0 还是 1，最少要交换多少比特？",
+      "en": "One person knows the row and another the column. How many bits must they exchange to determine the entry of a Boolean matrix?"
+    },
+    "formula": "D(M) ≤ polylog(r + 1)?",
+    "summary": {
+      "zh": "r 是矩阵的实数秩，D(M) 是确定性通信复杂度。我们从原项目对 Johnson 乘积层和稀疏列的对数通信上界出发，补齐组合计数与通信协议的形式证明，并寻找新的稀疏列族。一般猜想仍然开放。",
+      "en": "Here r is the real rank and D(M) is deterministic communication complexity. Build on the project’s logarithmic bounds for Johnson products and sparse columns by formalizing counting and protocols and seeking new sparse families. The general conjecture remains open."
+    },
+    "background": {
+      "zh": "李进文的原论文研究列具有特殊结构的布尔矩阵。18 个 Lean 模块已覆盖部分代数与有限组合引理。本站从论文的纤维计数、协议证明和新列族构造接着做，每条任务单独核验。",
+      "en": "JinWen Li’s manuscript studies Boolean matrices with structured columns. Its 18 Lean modules cover algebraic and finite-combinatorial lemmas. Here each contribution to the fiber counts, protocols and new column constructions is verified separately."
+    },
+    "materials": [
+      {
+        "zh": "原研究仓库",
+        "en": "Source project",
+        "url": "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls"
+      },
+      {
+        "zh": "研究论文",
+        "en": "Manuscript",
+        "url": "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls/blob/20a856deb2a227f68f88f9e68193937e032ea11e/output/pdf/spectral_lattice_logrank.pdf"
+      },
+      {
+        "zh": "Lean 形式化覆盖清单",
+        "en": "Lean coverage by theorem",
+        "url": "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls/blob/20a856deb2a227f68f88f9e68193937e032ea11e/formal/FORMALIZATION_MANIFEST.md"
+      }
+    ],
+    "gaps": [
+      {
+        "id": "L-log-rank-intersection-fibres",
+        "file": "lean/PEqualNP/Outside/L_log_rank_intersection_fibres.lean",
+        "module": "PEqualNP.Outside.L_log_rank_intersection_fibres",
+        "statement": "∀ (n k t : ℕ) (A : Finset (Fin n)), t ≤ k → let layer := (Finset.univ : Finset (Fin n)).powersetCard k; (layer.filter (fun B => (A ∩ B).card = t)).card = Nat.choose A.card t * Nat.choose (n-A.card) (k-t)",
+        "plain_statement": {
+          "zh": "恰有 t≤k 个标记点的 k 元列，其数目等于从标记与未标记坐标中分别选择的方式数之积。",
+          "en": "Count k-subsets with exactly t marked points for t≤k as a product of two binomial coefficients."
+        },
+        "brief": {
+          "zh": "把列拆成与 A 相交、与 A 的补集相交的两个集合，并给出逆映射。",
+          "en": "Split a column into its marked and unmarked parts and construct the inverse bijection."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls/blob/20a856deb2a227f68f88f9e68193937e032ea11e/formal/AffineSectionLogRank/UniformLayerIntersectionRange.lean"
+      },
+      {
+        "id": "L-log-rank-six-point-equality",
+        "file": "lean/PEqualNP/Outside/L_log_rank_six_point_equality.lean",
+        "module": "PEqualNP.Outside.L_log_rank_six_point_equality",
+        "statement": "∀ A : Finset (Fin 6), A.card = 3 → let L := (Finset.univ : Finset (Fin 6)).powersetCard 3; (L.filter (fun B => (A ∩ B).card ≠ 1 ∧ (A ∩ B).card ≠ 2)).card = 2 ∧ L.card = 20",
+        "plain_statement": {
+          "zh": "六个坐标中标记三个。20 个三元列里，恰有两个的交集大小落在 {1,2} 之外。",
+          "en": "Among the twenty triples on six coordinates, exactly two meet a marked triple outside the sizes one and two."
+        },
+        "brief": {
+          "zh": "两个例外是 A 和它的补集。用对称性给任意 A 的证明。",
+          "en": "Identify the two exceptional columns as A and its complement."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls/blob/20a856deb2a227f68f88f9e68193937e032ea11e/formal/AffineSectionLogRank/SharpSixCoordinateGap.lean"
+      },
+      {
+        "id": "L-log-rank-sharp-layer-escape",
+        "file": "lean/PEqualNP/Outside/L_log_rank_sharp_layer_escape.lean",
+        "module": "PEqualNP.Outside.L_log_rank_sharp_layer_escape",
+        "statement": "∀ (n k : ℕ) (A : Finset (Fin n)) (a : ℤ), 2 ≤ k → k+2 ≤ n → 2 ≤ A.card → A.card+2 ≤ n → let layer := (Finset.univ : Finset (Fin n)).powersetCard k; let esc := layer.filter (fun B => ((A ∩ B).card : ℤ) ≠ a ∧ ((A ∩ B).card : ℤ) ≠ a+1); 2*(min k (n-k))^2*layer.card ≤ 5*n^2*esc.card",
+        "plain_statement": {
+          "zh": "在内部层和内部行上，对任意相邻整数 a、a+1，落在这两个值之外的列占比至少为 (2/5)(min(k,n−k)/n)²。",
+          "en": "For interior layers and rows, at least (2/5)(min(k,n−k)/n)² of all columns escape any adjacent pair."
+        },
+        "brief": {
+          "zh": "计数任务给出分子。按论文证明衔接六坐标纤维与已形式化的多项式估计。",
+          "en": "Connect the fiber counts to the six-coordinate argument and the formalized polynomial inequalities."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls/blob/20a856deb2a227f68f88f9e68193937e032ea11e/paper/main.tex"
+      },
+      {
+        "id": "L-log-rank-survive-deletion",
+        "file": "lean/PEqualNP/Outside/L_log_rank_survive_deletion.lean",
+        "module": "PEqualNP.Outside.L_log_rank_survive_deletion",
+        "statement": "∀ (n : ℕ) (A : Finset (Fin n)) (a : ℤ) (Y D : Finset (Finset (Fin n))), let adj := fun (A B : Finset (Fin n)) (a : ℤ) => ((A ∩ B).card : ℤ) = a ∨ ((A ∩ B).card : ℤ) = a+1; (Y.filter (fun B => ¬ adj A B a)).card > D.card → ∃ B ∈ Y \\ D, ¬ adj A B a",
+        "plain_statement": {
+          "zh": "若检测到某一行的列数严格多于被删列数，则删除后仍能找到见证列。",
+          "en": "If a row has more detecting columns than the number deleted, at least one witness survives."
+        },
+        "brief": {
+          "zh": "对反设使用有限集包含关系。此引理可用于完整层或另行给定的稀疏样本。",
+          "en": "Under the contrary assumption all detecting columns lie in the deletion set."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls/blob/20a856deb2a227f68f88f9e68193937e032ea11e/paper/main.tex"
+      },
+      {
+        "id": "L-log-rank-product-four-corners",
+        "file": "lean/PEqualNP/Outside/L_log_rank_product_four_corners.lean",
+        "module": "PEqualNP.Outside.L_log_rank_product_four_corners",
+        "statement": "∀ u v s t a : ℤ, u ≠ v → s ≠ t → ¬ ((u+s=a ∨ u+s=a+1) ∧ (u+t=a ∨ u+t=a+1) ∧ (v+s=a ∨ v+s=a+1) ∧ (v+t=a ∨ v+t=a+1))",
+        "plain_statement": {
+          "zh": "两个块的整数贡献各自能改变时，四种组合的和不能都落在同一对相邻整数中。",
+          "en": "When two integer block contributions can each vary, the four sums cannot all lie in one adjacent pair."
+        },
+        "brief": {
+          "zh": "比较四个角的最小值与最大值。它是从单层推广到乘积层的局部障碍。",
+          "en": "Compare the minimum and maximum of the four corners in a product."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls/blob/20a856deb2a227f68f88f9e68193937e032ea11e/formal/AffineSectionLogRank/FourPointTwoLevel.lean"
+      },
+      {
+        "id": "L-log-rank-slice-classification",
+        "file": "lean/PEqualNP/Outside/L_log_rank_slice_classification.lean",
+        "module": "PEqualNP.Outside.L_log_rank_slice_classification",
+        "statement": "∀ (n k : ℕ) (A : Finset (Fin n)) (a : ℤ), 2 ≤ k → k+2 ≤ n → let layer := (Finset.univ : Finset (Fin n)).powersetCard k; let adj := fun (A B : Finset (Fin n)) (a : ℤ) => ((A ∩ B).card : ℤ) = a ∨ ((A ∩ B).card : ℤ) = a+1; (∀ B ∈ layer, adj A B a) → A.card ≤ 1 ∨ n ≤ A.card+1",
+        "plain_statement": {
+          "zh": "若 A 和完整内部层上每个 k 元列的交集大小都落在同一对相邻整数中，则 A 或其补集至多有一个元素。",
+          "en": "If all k-columns of an interior slice meet A in one adjacent pair of sizes, A or its complement has at most one element."
+        },
+        "brief": {
+          "zh": "使用交集可能取值的整个整数区间；也可从逃逸界的严格正性推出。",
+          "en": "Use the full integer interval of possible intersections, or positivity of the escape count."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls/blob/20a856deb2a227f68f88f9e68193937e032ea11e/formal/AffineSectionLogRank/UniformLayerIntersectionRange.lean"
+      },
+      {
+        "id": "L-log-rank-rank-sized-protocol",
+        "file": "lean/PEqualNP/Outside/L_log_rank_rank_sized_protocol.lean",
+        "module": "PEqualNP.Outside.L_log_rank_rank_sized_protocol",
+        "statement": "∀ (n k m : ℕ) (A : Fin m → Finset (Fin n)) (Y : Finset (Finset (Fin n))) (a : ℤ), 2 ≤ k → k+2 ≤ n → let layer := (Finset.univ : Finset (Fin n)).powersetCard k; let adj := fun (A B : Finset (Fin n)) (a : ℤ) => ((A ∩ B).card : ℤ) = a ∨ ((A ∩ B).card : ℤ) = a+1; let detects := fun (Y : Finset (Finset (Fin n))) => ∀ A : Finset (Fin n), 2 ≤ A.card → A.card + 2 ≤ n → ∀ a : ℤ, ∃ B ∈ Y, ¬ adj A B a; let lin := fun (w : Fin n → ℝ) (B : Finset (Fin n)) => Finset.sum B w; let uniqueOn := fun (Y : Finset (Finset (Fin n))) => ∀ (w : Fin n → ℝ) (c : ℝ), (∀ B ∈ Y, lin w B = c) → ∀ B ∈ layer, lin w B = c; Y.Nonempty → Y ⊆ layer → detects Y → uniqueOn Y → (∀ i, ∀ B ∈ Y, adj (A i) B a) → let M : Matrix (Fin m) (↥Y) ℝ := fun i j => (((A i ∩ j.val).card : ℝ) - (a : ℝ)); ∃ send : Fin m → Fin (M.rank+1), ∃ reply : Fin (M.rank+1) → ↥Y → Bool, ∃ out : Fin m → Bool → Bool, ∀ i j, (out i (reply (send i) j) = true ↔ M i j = 1)",
+        "plain_statement": {
+          "zh": "在检测性和仿射唯一性成立的稀疏列族上，Alice 用至多 r+1 种消息发送索引，Bob 回一比特，Alice 正确还原结果；r 为受限矩阵实秩。",
+          "en": "For detecting, affine-unisolvent columns, encode a correct protocol with r+1 possible first messages and one reply bit, using the restricted real rank r."
+        },
+        "brief": {
+          "zh": "选取秩基并汇集它们用到的坐标。单独处理常数行和补坐标行。",
+          "en": "Pool coordinates of a row basis, then handle constants and complemented coordinates in the output map."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls/blob/20a856deb2a227f68f88f9e68193937e032ea11e/paper/main.tex"
+      },
+      {
+        "id": "L-log-rank-large-rectangle",
+        "file": "lean/PEqualNP/Outside/L_log_rank_large_rectangle.lean",
+        "module": "PEqualNP.Outside.L_log_rank_large_rectangle",
+        "statement": "∀ (n k m : ℕ) (A : Fin m → Finset (Fin n)) (Y : Finset (Finset (Fin n))) (a : ℤ), 2 ≤ k → k+2 ≤ n → let layer := (Finset.univ : Finset (Fin n)).powersetCard k; let adj := fun (A B : Finset (Fin n)) (a : ℤ) => ((A ∩ B).card : ℤ) = a ∨ ((A ∩ B).card : ℤ) = a+1; let detects := fun (Y : Finset (Finset (Fin n))) => ∀ A : Finset (Fin n), 2 ≤ A.card → A.card + 2 ≤ n → ∀ a : ℤ, ∃ B ∈ Y, ¬ adj A B a; let lin := fun (w : Fin n → ℝ) (B : Finset (Fin n)) => Finset.sum B w; let uniqueOn := fun (Y : Finset (Finset (Fin n))) => ∀ (w : Fin n → ℝ) (c : ℝ), (∀ B ∈ Y, lin w B = c) → ∀ B ∈ layer, lin w B = c; Y.Nonempty → Y ⊆ layer → detects Y → uniqueOn Y → (∀ i, ∀ B ∈ Y, adj (A i) B a) → let M : Matrix (Fin m) (↥Y) ℝ := fun i j => (((A i ∩ j.val).card : ℝ) - (a : ℝ)); ∃ R : Finset (Fin m), ∃ C : Finset (↥Y), ∃ v : ℝ, (∀ i ∈ R, ∀ j ∈ C, M i j = v) ∧ m*Y.card ≤ 4*(M.rank+1)*R.card*C.card",
+        "plain_statement": {
+          "zh": "在同样条件下，找一块全同色子矩形，其大小至少是整张表的 1/[4(r+1)]。",
+          "en": "Under the same sparse-column hypotheses, extract a monochromatic rectangle of density at least 1/[4(r+1)]."
+        },
+        "brief": {
+          "zh": "按坐标与方向分组；对满坐标且恰少一秩的情形，另行统计零行。",
+          "en": "Group rows by coordinate and orientation and account separately for zero rows in the rank-deficient exceptional case."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls/blob/20a856deb2a227f68f88f9e68193937e032ea11e/paper/main.tex"
+      },
+      {
+        "id": "L-log-rank-adjacent-variance",
+        "file": "lean/PEqualNP/Outside/L_log_rank_adjacent_variance.lean",
+        "module": "PEqualNP.Outside.L_log_rank_adjacent_variance",
+        "statement": "∀ (n : ℕ) (A : Finset (Fin n)) (Y : Finset (Finset (Fin n))) (a : ℤ), let adj := fun (A B : Finset (Fin n)) (a : ℤ) => ((A ∩ B).card : ℤ) = a ∨ ((A ∩ B).card : ℤ) = a+1; let varY := fun (A : Finset (Fin n)) => let f := fun B : Finset (Fin n) => ((A ∩ B).card : ℝ); let avg := Finset.sum Y f / (Y.card : ℝ); Finset.sum Y (fun B => (f B - avg)^2) / (Y.card : ℝ); Y.Nonempty → (∀ B ∈ Y, adj A B a) → varY A ≤ 1/4",
+        "plain_statement": {
+          "zh": "在任意非空有限列族上，如果交集大小只取相邻两个整数，均匀抽一列得到的方差至多是 1/4。",
+          "en": "Intersection sizes supported on two consecutive integers have variance at most 1/4 under uniform sampling from any nonempty finite column family."
+        },
+        "brief": {
+          "zh": "把取较大值的频率记为 q，先证明此处的有限和等于 q(1−q)。",
+          "en": "Count the columns at the larger value and derive the finite-sum identity q(1−q)."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls/blob/20a856deb2a227f68f88f9e68193937e032ea11e/formal/AffineSectionLogRank/Variance.lean"
+      },
+      {
+        "id": "L-log-rank-spectral-detection",
+        "file": "lean/PEqualNP/Outside/L_log_rank_spectral_detection.lean",
+        "module": "PEqualNP.Outside.L_log_rank_spectral_detection",
+        "statement": "∀ (n : ℕ) (Y : Finset (Finset (Fin n))) (l : ℝ), 4 ≤ n → Y.Nonempty → let adj := fun (A B : Finset (Fin n)) (a : ℤ) => ((A ∩ B).card : ℤ) = a ∨ ((A ∩ B).card : ℤ) = a+1; let detects := fun (Y : Finset (Finset (Fin n))) => ∀ A : Finset (Fin n), 2 ≤ A.card → A.card + 2 ≤ n → ∀ a : ℤ, ∃ B ∈ Y, ¬ adj A B a; let varY := fun (A : Finset (Fin n)) => let f := fun B : Finset (Fin n) => ((A ∩ B).card : ℝ); let avg := Finset.sum Y f / (Y.card : ℝ); Finset.sum Y (fun B => (f B - avg)^2) / (Y.card : ℝ); (n:ℝ)/(8*((n:ℝ)-2)) < l → (∀ A : Finset (Fin n), l*(A.card:ℝ)*((n:ℝ)-(A.card:ℝ))/(n:ℝ) ≤ varY A) → detects Y",
+        "plain_statement": {
+          "zh": "若交集方差具有指定的统一下界，且系数严格超过 n/[8(n−2)]，则 Y 对每个内部行和每对相邻整数都有逃逸见证。",
+          "en": "The uniform intersection-variance inequality with coefficient strictly above n/[8(n−2)] forces detection of every interior row and adjacent pair."
+        },
+        "brief": {
+          "zh": "比较内部行的 m(n−m) 与 2(n−2)，再接两值方差上界。取得该方差下界是另一步。",
+          "en": "Use m(n−m)≥2(n−2) for interior rows and combine it with the two-value variance bound."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls/blob/20a856deb2a227f68f88f9e68193937e032ea11e/formal/AffineSectionLogRank/DeterministicSpectralSparseHLS.lean"
+      },
+      {
+        "id": "L-log-rank-design-second-moment",
+        "file": "lean/PEqualNP/Outside/L_log_rank_design_second_moment.lean",
+        "module": "PEqualNP.Outside.L_log_rank_design_second_moment",
+        "statement": "∀ (n d l : ℕ) (Y : Finset (Finset (Fin n))) (A : Finset (Fin n)), (∀ i : Fin n, (Y.filter (fun B => i ∈ B)).card = d) → (∀ i j : Fin n, i ≠ j → (Y.filter (fun B => i ∈ B ∧ j ∈ B)).card = l) → Finset.sum Y (fun B => (A ∩ B).card ^ 2) = d*A.card + l*A.card*(A.card-1)",
+        "plain_statement": {
+          "zh": "若每个点出现 d 次、每对不同点共同出现 l 次，则交集大小平方和有一个只依赖 |A|、d、l 的精确公式。",
+          "en": "Compute the sum of squared intersection sizes when point and distinct-pair incidences are constant."
+        },
+        "brief": {
+          "zh": "展开平方计有序点对，对角线和非对角线分别求和。这一步可用来计算设计列的方差。",
+          "en": "Expand the square as ordered pairs. Count diagonal and off-diagonal terms separately."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls/blob/20a856deb2a227f68f88f9e68193937e032ea11e/paper/main.tex"
+      },
+      {
+        "id": "L-log-rank-hadamard-parameters",
+        "file": "lean/PEqualNP/Outside/L_log_rank_hadamard_parameters.lean",
+        "module": "PEqualNP.Outside.L_log_rank_hadamard_parameters",
+        "statement": "∀ t : ℕ, 3 ≤ t → let n := 2^t-1; let k := 2^(t-1)-1; n^2*(n-1) < 8*k*(n-k)*(n-2)",
+        "plain_statement": {
+          "zh": "Sylvester–Hadamard 参数 n=2ᵗ−1、k=2ᵗ⁻¹−1 在 t≥3 时严格越过论文的设计谱阈值。",
+          "en": "For t≥3 the Sylvester–Hadamard design parameters strictly meet the paper’s spectral threshold."
+        },
+        "brief": {
+          "zh": "写成 2 的幂再比较整数多项式。该算术任务是核验显式构造的一步。",
+          "en": "Reduce to a polynomial inequality in a power of two. The task certifies the numerical threshold."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls/blob/20a856deb2a227f68f88f9e68193937e032ea11e/paper/main.tex"
+      },
+      {
+        "id": "L-log-rank-missing-pair",
+        "file": "lean/PEqualNP/Outside/L_log_rank_missing_pair.lean",
+        "module": "PEqualNP.Outside.L_log_rank_missing_pair",
+        "statement": "∀ (n : ℕ) (Y : Finset (Finset (Fin n))) (i j : Fin n), 4 ≤ n → i ≠ j → let adj := fun (A B : Finset (Fin n)) (a : ℤ) => ((A ∩ B).card : ℤ) = a ∨ ((A ∩ B).card : ℤ) = a+1; let detects := fun (Y : Finset (Finset (Fin n))) => ∀ A : Finset (Fin n), 2 ≤ A.card → A.card + 2 ≤ n → ∀ a : ℤ, ∃ B ∈ Y, ¬ adj A B a; (∀ B ∈ Y, ¬ (i ∈ B ∧ j ∈ B)) → ¬ detects Y",
+        "plain_statement": {
+          "zh": "当 n≥4 时，列族中若没有任何一列同时包含某对不同坐标，这个列族就无法检测所有内部行。",
+          "en": "For n≥4, missing even one pair of distinct coordinates prevents a family from detecting all interior rows."
+        },
+        "brief": {
+          "zh": "把这一对坐标本身用作标记行，检查它能产生的交集大小。",
+          "en": "Take the uncovered pair as the marked row and examine all its intersection sizes."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls/blob/20a856deb2a227f68f88f9e68193937e032ea11e/paper/main.tex"
+      },
+      {
+        "id": "L-log-rank-interval-anchor",
+        "file": "lean/PEqualNP/Outside/L_log_rank_interval_anchor.lean",
+        "module": "PEqualNP.Outside.L_log_rank_interval_anchor",
+        "statement": "∀ k : ℕ, 2 ≤ k → let n := 3*k+1; let layer := (Finset.univ : Finset (Fin n)).powersetCard k; let shift := fun (S : Finset (Fin n)) (t : Fin n) => S.image (fun i => i+t); let orbit := fun (S : Finset (Fin n)) => (Finset.univ : Finset (Fin n)).image (shift S); let I := (Finset.univ : Finset (Fin n)).filter (fun i => i.val < k); let lin := fun (w : Fin n → ℝ) (B : Finset (Fin n)) => Finset.sum B w; let uniqueOn := fun (Y : Finset (Finset (Fin n))) => ∀ (w : Fin n → ℝ) (c : ℝ), (∀ B ∈ Y, lin w B = c) → ∀ B ∈ layer, lin w B = c; uniqueOn (orbit I)",
+        "plain_statement": {
+          "zh": "在 n=3k+1 上，若一个仿射函数在长度 k 的所有循环区间上为零，则它在完整的 k 元层上也为零。",
+          "en": "At n=3k+1, vanishing on all translates of a length-k interval forces an affine function to vanish on the entire weight-k layer."
+        },
+        "brief": {
+          "zh": "相邻区间作差推出相距 k 的权重相同，再用 gcd(k,3k+1)=1。",
+          "en": "Subtract neighboring interval sums and use the coprimality of k and 3k+1."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls/blob/20a856deb2a227f68f88f9e68193937e032ea11e/paper/main.tex"
+      },
+      {
+        "id": "L-log-rank-orbit-column-budget",
+        "file": "lean/PEqualNP/Outside/L_log_rank_orbit_column_budget.lean",
+        "module": "PEqualNP.Outside.L_log_rank_orbit_column_budget",
+        "statement": "∀ (n k C : ℕ) (seed : Fin C → Finset (Fin n)), let shift := fun (S : Finset (Fin n)) (t : Fin n) => S.image (fun i => i+t); let orbit := fun (S : Finset (Fin n)) => (Finset.univ : Finset (Fin n)).image (shift S); (∀ i, (seed i).card=k) → let Y := Finset.univ.biUnion (fun i => orbit (seed i)); Y.card ≤ C*n ∧ ∀ B ∈ Y, B.card=k",
+        "plain_statement": {
+          "zh": "C 个 k 元种子的全部循环平移至多给出 Cn 列，且每列仍有 k 个坐标。",
+          "en": "All translates of C weight-k seeds give at most Cn columns, each still of weight k."
+        },
+        "brief": {
+          "zh": "平移是置换。对每个轨道计上界，再对并集计数，允许重复列。",
+          "en": "Translate by a permutation and bound the union by the sum of the orbit sizes."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls/blob/20a856deb2a227f68f88f9e68193937e032ea11e/paper/main.tex"
+      },
+      {
+        "id": "L-log-rank-cyclic-detector-family",
+        "file": "lean/PEqualNP/Outside/L_log_rank_cyclic_detector_family.lean",
+        "module": "PEqualNP.Outside.L_log_rank_cyclic_detector_family",
+        "statement": "∃ C K : ℕ, ∀ k : ℕ, K ≤ k → 2 ≤ k → let n := 3*k+1; let adj := fun (A B : Finset (Fin n)) (a : ℤ) => ((A ∩ B).card : ℤ) = a ∨ ((A ∩ B).card : ℤ) = a+1; let detects := fun (Y : Finset (Finset (Fin n))) => ∀ A : Finset (Fin n), 2 ≤ A.card → A.card + 2 ≤ n → ∀ a : ℤ, ∃ B ∈ Y, ¬ adj A B a; let shift := fun (S : Finset (Fin n)) (t : Fin n) => S.image (fun i => i+t); let orbit := fun (S : Finset (Fin n)) => (Finset.univ : Finset (Fin n)).image (shift S); let I := (Finset.univ : Finset (Fin n)).filter (fun i => i.val < k); ∃ seed : Fin C → Finset (Fin n), (∀ i, (seed i).card=k) ∧ detects (orbit I ∪ Finset.univ.biUnion (fun i => orbit (seed i)))",
+        "plain_statement": {
+          "zh": "开放目标：在所有充分大的 n=3k+1 上，给循环区间添加至多固定 C 个 k 元种子的平移轨道，检测全部内部行。",
+          "en": "Open target: for every sufficiently large n=3k+1, augment cyclic intervals by a fixed number C of seed orbits to detect every interior row."
+        },
+        "brief": {
+          "zh": "要用同一个 C 覆盖无界多个尺度。可从有公式的种子入手，证明覆盖所有行；此命题本身只要求存在性。",
+          "en": "Seek seed formulas, then prove coverage uniformly in k. The frozen proposition asks for existence with one constant C."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true,
+        "source": "https://github.com/CGandGameEngineLearner/log-rank-spectral-hls/blob/20a856deb2a227f68f88f9e68193937e032ea11e/docs/CLAIMS_AND_LIMITATIONS.md"
+      }
+    ],
+    "roadmap": [
+      {
+        "zh": [
+          "从层上的计数到锐常数",
+          "列是 n 个坐标中恰好选 k 个的子集。先按交集大小数列，再把论文的 2/5 概率界写成整数不等式。"
+        ],
+        "en": [
+          "Count the slice and recover the sharp constant",
+          "Columns are k-subsets of n coordinates. Count by intersection size, then turn the paper’s sharp 2/5 probability bound into an integer inequality."
+        ],
+        "tasks": [
+          {
+            "id": "L-log-rank-intersection-fibres",
+            "zh": "按交集大小分组",
+            "en": "Count an intersection fiber"
+          },
+          {
+            "id": "L-log-rank-six-point-equality",
+            "zh": "核对六坐标取等情形",
+            "en": "Check the six-coordinate equality"
+          },
+          {
+            "id": "L-log-rank-sharp-layer-escape",
+            "zh": "复现 2/5 逃逸界",
+            "en": "Recover the sharp escape bound"
+          },
+          {
+            "id": "L-log-rank-survive-deletion",
+            "zh": "删列后保留见证",
+            "en": "Preserve a witness after deletion"
+          }
+        ]
+      },
+      {
+        "zh": [
+          "从两值限制到通信协议",
+          "先刻画允许的行，再把坐标查询和取补编成双方的消息。协议任务以稀疏矩阵自身的实数秩计费。"
+        ],
+        "en": [
+          "Turn two-level structure into a protocol",
+          "Classify admissible rows and turn coordinate queries into messages. Measure communication against the real rank of the restricted matrix."
+        ],
+        "tasks": [
+          {
+            "id": "L-log-rank-product-four-corners",
+            "zh": "排除两个同时变化的块",
+            "en": "Rule out two varying blocks"
+          },
+          {
+            "id": "L-log-rank-slice-classification",
+            "zh": "刻画完整层上的行",
+            "en": "Classify full-slice rows"
+          },
+          {
+            "id": "L-log-rank-rank-sized-protocol",
+            "zh": "按实际秩编码消息",
+            "en": "Encode a rank-sensitive protocol"
+          },
+          {
+            "id": "L-log-rank-large-rectangle",
+            "zh": "提取单色矩形",
+            "en": "Extract a monochromatic rectangle"
+          }
+        ]
+      },
+      {
+        "zh": [
+          "用方差筛选稀疏列",
+          "在样本列上直接求和。把论文的方差阈值翻译成有限集可使用的检测定理，并复核设计族的参数。"
+        ],
+        "en": [
+          "Use variance to certify sparse columns",
+          "Sum over a finite family of sample columns. Translate the variance threshold into a detection theorem and verify the design parameters."
+        ],
+        "tasks": [
+          {
+            "id": "L-log-rank-adjacent-variance",
+            "zh": "两值分布的方差上界",
+            "en": "Bound two-value variance"
+          },
+          {
+            "id": "L-log-rank-spectral-detection",
+            "zh": "把谱余量接到检测性",
+            "en": "Turn a variance gap into detection"
+          },
+          {
+            "id": "L-log-rank-design-second-moment",
+            "zh": "从点对重数计算二阶矩",
+            "en": "Count the design second moment"
+          },
+          {
+            "id": "L-log-rank-hadamard-parameters",
+            "zh": "核验 Hadamard 中央层参数",
+            "en": "Check the Hadamard spectral margin"
+          }
+        ]
+      },
+      {
+        "zh": [
+          "探索三分之一密度的新列族",
+          "在 n=3k+1 上试一条更具体的路线：用循环区间确定仿射函数，再补少量平移轨道检测所有内部行。最后一题是候选研究目标。"
+        ],
+        "en": [
+          "Explore new columns at one-third density",
+          "At n=3k+1, try cyclic intervals for affine uniqueness and a bounded number of additional translation orbits for detection. The last task is a proposed research target."
+        ],
+        "tasks": [
+          {
+            "id": "L-log-rank-missing-pair",
+            "zh": "识别漏掉点对的构造",
+            "en": "Rule out an uncovered pair"
+          },
+          {
+            "id": "L-log-rank-interval-anchor",
+            "zh": "循环区间确定仿射函数",
+            "en": "Prove cyclic interval uniqueness"
+          },
+          {
+            "id": "L-log-rank-orbit-column-budget",
+            "zh": "给平移族核算列数",
+            "en": "Bound the column budget"
+          },
+          {
+            "id": "L-log-rank-cyclic-detector-family",
+            "zh": "构造线性规模的检测族",
+            "en": "Seek a linear cyclic detector family"
+          }
+        ]
+      }
+    ]
   }
 }

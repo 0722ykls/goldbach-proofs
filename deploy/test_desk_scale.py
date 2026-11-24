@@ -34,7 +34,7 @@ class DeskScaleTest(unittest.TestCase):
         (folder / "webhook").write_bytes(self.secret)
         (folder / "china-apnic.txt").write_bytes(b"")
         for source in ("deploy/server.py", "deploy/desk.py", "deploy/landau.py", "deploy/join.txt", "deploy/join-zh.txt",
-                       "deploy/zhihu_oauth.py", "deploy/github_identity.py",
+                       "deploy/zhihu_oauth.py", "deploy/github_identity.py", "deploy/zh.html", "deploy/en.html",
                        "research/gaps.json", "research/problems.json"):
             shutil.copy(ROOT / source, folder)
         openssl = os.environ.get("OPENSSL") or shutil.which("openssl")
@@ -246,6 +246,22 @@ class DeskScaleTest(unittest.TestCase):
             ))
         for path in paths:
             self.assertEqual(self.request(path + "/api/status")["desk"]["active"], 0)
+
+    def test_log_rank_sources_and_claim_links(self):
+        problem = PROBLEMS["log-rank"]
+        path = "/problems/log-rank"
+        ids = {g["id"] for g in problem["gaps"]}
+        self.assertEqual(ids, {t["id"] for step in problem["roadmap"] for t in step["tasks"]})
+        for lang, suffix in (("en", ""), ("zh", "-zh")):
+            self.assertIn(f'log-rank/?lang={lang}', self.request(f"/problems/?lang={lang}", text=True))
+            page = self.request(f"{path}/?lang={lang}", text=True)
+            guide = self.request(f"{path}/join{suffix}.txt", text=True)
+            for material in problem["materials"]:
+                self.assertIn(material["url"], page)
+                self.assertIn(material["url"], guide)
+            self.assertIn("claim --problem log-rank", guide)
+            for task in ids:
+                self.assertIn(f'data-roadmap-task="{task}"', page)
 
     def test_directory_counts_and_scoped_join_guides(self):
         slug, problem = next(iter(PROBLEMS.items()))

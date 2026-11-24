@@ -191,8 +191,13 @@ def problem_page(page, slug, lang):
     page = re.sub(r'<div class="target-figure".*?<div class="target-progress">',
                   lambda _: figure + '<div class="target-progress">', page, count=1, flags=re.S)
     page = re.sub(r'(<h2 id="lemma-title">).*?(</h2>)', lambda m: m[1] + title + ' · ' + translations["map"] + m[2], page)
+    materials = data.get("materials", [])
+    note_title = ("前期研究" if zh else "Prior research") if materials else translations["road"]
+    note_body = escape(data["background"][lang]) if materials else description
+    references = " · ".join(f'<a href="{escape(item["url"])}">{escape(item[lang])}</a>' for item in materials)
     page = re.sub(r'<aside class="method-note">.*?</aside>',
-                  f'<aside class="method-note"><h2>{translations["road"]}</h2><p>{description}</p></aside>', page, count=1, flags=re.S)
+                  lambda _: f'<aside class="method-note"><h2>{note_title}</h2><p>{note_body}</p>{references}</aside>',
+                  page, count=1, flags=re.S)
     def program_card(match):
         key = match[2]
         if key not in translations:
@@ -398,6 +403,10 @@ class Handler(BaseHTTPRequestHandler):
                                 "只有通过权威 Lean 核验的引理才会记入研究台。" if lang == "zh" else
                                 f"Use your GitHub account to claim and submit one Lean 4 lemma for {title}. "
                                 "The desk credits lemmas that pass authoritative Lean verification.")
+                if materials := PROBLEMS[slug].get("materials"):
+                    introduction += "\n" + PROBLEMS[slug]["background"][lang] + "\n" + "\n".join(
+                        f'{item[lang]}  {item["url"]}' for item in materials
+                    )
                 if slug == "quadratic-primes":
                     introduction += (
                         "\n研究目标是尽可能提高指数 α。先查看问题页的当前纪录，再领取解析转移、筛法估计或指数挑战。"
@@ -408,6 +417,11 @@ class Handler(BaseHTTPRequestHandler):
                         "by PR to research/problems.json. A record requires a prime divisor p of n²+1 exceeding nᵅ for infinitely many n."
                     )
                 _, _, instructions = asset.read_text(encoding="utf-8").split("\n\n", 2)
+                if materials:
+                    instructions = instructions.replace("不要提交固定偶数或有限闭区间的枚举结果。", "证明须覆盖所领取命题中的全部输入。").replace(
+                        "Fixed-input and finite-range enumeration are outside this research program.",
+                        "Cover the full range of inputs in the claimed proposition."
+                    )
                 instructions = instructions.replace(
                     "\npython tools/goldbach.py claim\n", f"\npython tools/goldbach.py claim --problem {slug}\n"
                 )
