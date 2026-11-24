@@ -746,10 +746,14 @@ button, a, input, select { -webkit-tap-highlight-color: transparent; }
   gap: clamp(1.45rem, 4.4vw, 4.75rem);
   padding-block: clamp(2.1rem, 4.8vw, 4.8rem) clamp(2rem, 4.3vw, 4.2rem);
 }
-.hero h1 { font-size: clamp(3.08rem, 6.3vw, 6.3rem); line-height: .99; }
+.hero h1 {
+  font: 500 clamp(3.08rem, 6.3vw, 6.3rem)/.99 var(--serif);
+  letter-spacing: -.05em;
+}
 .hero:lang(zh) h1 { font-size: clamp(2.08rem, 4.45vw, 4.4rem); line-height: 1.12; letter-spacing: -.04em; }
 .hero .title-phrase { display: block; }
 .hero .open-status {
+  display: inline-flex;
   align-items: center;
   gap: .48rem;
   margin: 0 0 1.05rem;
@@ -760,7 +764,7 @@ button, a, input, select { -webkit-tap-highlight-color: transparent; }
   background: #f1ead7;
   font: 650 .83rem/1.4 var(--sans);
 }
-.hero .open-status span { display: inline-block; width: .4rem; height: .4rem; background: #8c6b2d; border: 0; }
+.hero .open-status span { display: inline-block; width: .4rem; height: .4rem; background: #8c6b2d; border-radius: 50%; }
 .hero-question { margin-top: 1rem; color: var(--ink); }
 .hero-description { max-width: 34rem; font-size: .98rem; }
 .hero-counters { margin-top: 1.15rem; font-size: .88rem; }
