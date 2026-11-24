@@ -2466,7 +2466,7 @@
       "id": "L-goldbach-zero-blocks-cpow-norm",
       "file": "lean/PEqualNP/Outside/L_goldbach_zero_blocks_cpow_norm.lean",
       "module": "PEqualNP.Outside.L_goldbach_zero_blocks_cpow_norm",
-      "statement": "∀ (n : ℕ) (ρ a : Fin n → ℂ) (x : ℝ), 0<x → (∀ i,(ρ i).re=1/2) → ∀ i, ‖(x:ℂ)^(ρ i)‖=Real.sqrt x",
+      "statement": "∀ (n : ℕ) (ρ : Fin n → ℂ) (x : ℝ), 0<x → (∀ i,(ρ i).re=1/2) → ∀ i, ‖(x:ℂ)^(ρ i)‖=Real.sqrt x",
       "plain_statement": {
         "zh": "临界线上单项幂的精确模",
         "en": "Norm of a single critical-line power"
@@ -2486,7 +2486,7 @@
       "id": "L-goldbach-zero-blocks-normalized-phase",
       "file": "lean/PEqualNP/Outside/L_goldbach_zero_blocks_normalized_phase.lean",
       "module": "PEqualNP.Outside.L_goldbach_zero_blocks_normalized_phase",
-      "statement": "∀ (n : ℕ) (ρ a : Fin n → ℂ) (x : ℝ), 0<x → (∀ i,(ρ i).re=1/2) → ∀ i, ‖(x:ℂ)^(ρ i)/(Real.sqrt x:ℂ)‖=1",
+      "statement": "∀ (n : ℕ) (ρ : Fin n → ℂ) (x : ℝ), 0<x → (∀ i,(ρ i).re=1/2) → ∀ i, ‖(x:ℂ)^(ρ i)/(Real.sqrt x:ℂ)‖=1",
       "plain_statement": {
         "zh": "归一化零点相位模为一",
         "en": "Normalized zero phases have unit norm"
@@ -2546,7 +2546,7 @@
       "id": "L-goldbach-zero-blocks-pair-cancel",
       "file": "lean/PEqualNP/Outside/L_goldbach_zero_blocks_pair_cancel.lean",
       "module": "PEqualNP.Outside.L_goldbach_zero_blocks_pair_cancel",
-      "statement": "∀ (n : ℕ) (ρ a : Fin n → ℂ) (e : Fin n ≃ Fin n), (∀ i,a (e i) = -a i) → ∑ i,a i=0",
+      "statement": "∀ (n : ℕ) (a : Fin n → ℂ) (e : Fin n ≃ Fin n), (∀ i,a (e i) = -a i) → ∑ i,a i=0",
       "plain_statement": {
         "zh": "反号系数的精确配对消去",
         "en": "Exact cancellation under antisymmetric pairing"
@@ -2566,7 +2566,7 @@
       "id": "L-goldbach-zero-blocks-pair-defect",
       "file": "lean/PEqualNP/Outside/L_goldbach_zero_blocks_pair_defect.lean",
       "module": "PEqualNP.Outside.L_goldbach_zero_blocks_pair_defect",
-      "statement": "∀ (n : ℕ) (ρ a : Fin n → ℂ) (e : Fin n ≃ Fin n), 2*‖∑ i,a i‖≤∑ i,‖a i+a (e i)‖",
+      "statement": "∀ (n : ℕ) (a : Fin n → ℂ) (e : Fin n ≃ Fin n), 2*‖∑ i,a i‖≤∑ i,‖a i+a (e i)‖",
       "plain_statement": {
         "zh": "近似反号配对的剩余误差",
         "en": "Residual from approximate antisymmetry"
@@ -2586,7 +2586,7 @@
       "id": "L-goldbach-zero-blocks-cut-tail",
       "file": "lean/PEqualNP/Outside/L_goldbach_zero_blocks_cut_tail.lean",
       "module": "PEqualNP.Outside.L_goldbach_zero_blocks_cut_tail",
-      "statement": "∀ (n : ℕ) (ρ a : Fin n → ℂ) (T : ℝ), ‖(∑ i,a i)-(∑ i, if |(ρ i).im|≤T then a i else 0)‖ ≤ ∑ i, if T<|(ρ i).im| then ‖a i‖ else 0",
+      "statement": "∀ (n : ℕ) (ρ a : Fin n → ℂ) (T : ℝ), ‖(∑ i,a i)-(∑ i, if abs (ρ i).im≤T then a i else 0)‖ ≤ ∑ i, if T<abs (ρ i).im then ‖a i‖ else 0",
       "plain_statement": {
         "zh": "高度截断只损失尾部质量",
         "en": "A height cut costs only its tail mass"
@@ -2606,7 +2606,7 @@
       "id": "L-goldbach-zero-blocks-block-energy",
       "file": "lean/PEqualNP/Outside/L_goldbach_zero_blocks_block_energy.lean",
       "module": "PEqualNP.Outside.L_goldbach_zero_blocks_block_energy",
-      "statement": "∀ (n : ℕ) (ρ a : Fin n → ℂ), ‖∑ i,a i‖^2≤(n:ℝ)*∑ i,‖a i‖^2",
+      "statement": "∀ (n : ℕ) (a : Fin n → ℂ), ‖∑ i,a i‖^2≤(n:ℝ)*∑ i,‖a i‖^2",
       "plain_statement": {
         "zh": "用二阶能量控制有限零点块",
         "en": "Bound a zero block by its second moment"
@@ -2646,7 +2646,7 @@
       "id": "L-goldbach-zero-blocks-height-count",
       "file": "lean/PEqualNP/Outside/L_goldbach_zero_blocks_height_count.lean",
       "module": "PEqualNP.Outside.L_goldbach_zero_blocks_height_count",
-      "statement": "∀ (n : ℕ) (ρ a : Fin n → ℂ) (T : ℝ) (M : ℕ), 0<T → n≤M → (∀ i,T≤|(ρ i).im|) → (∑ i,‖(ρ i)⁻¹‖)≤(M:ℝ)/T",
+      "statement": "∀ (n : ℕ) (ρ : Fin n → ℂ) (T : ℝ) (M : ℕ), 0<T → n≤M → (∀ i,T≤|(ρ i).im|) → (∑ i,‖(ρ i)⁻¹‖)≤(M:ℝ)/T",
       "plain_statement": {
         "zh": "由分层计数控制逆高度总质量",
         "en": "Count-to-mass estimate for a height shell"
@@ -2786,7 +2786,7 @@
       "id": "L-goldbach-euler-loss-remove-prime",
       "file": "lean/PEqualNP/Outside/L_goldbach_euler_loss_remove_prime.lean",
       "module": "PEqualNP.Outside.L_goldbach_euler_loss_remove_prime",
-      "statement": "∀ (S : Finset ℕ) (z : ℕ → ℂ) (p : ℕ), p∈S → (∏ i ∈ S,1-z i)-(∏ i ∈ S.erase p,1-z i) = -z p*(∏ i ∈ S.erase p,1-z i)",
+      "statement": "∀ (S : Finset ℕ) (z : ℕ → ℂ) (p : ℕ), p∈S → (∏ i ∈ S,(1-z i))-(∏ i ∈ S.erase p,(1-z i)) = -z p*(∏ i ∈ S.erase p,(1-z i))",
       "plain_statement": {
         "zh": "删去一个素因子的精确损失",
         "en": "Exact loss from omitting one factor"
@@ -2986,7 +2986,7 @@
       "id": "L-goldbach-residue-blocks-center-error",
       "file": "lean/PEqualNP/Outside/L_goldbach_residue_blocks_center_error.lean",
       "module": "PEqualNP.Outside.L_goldbach_residue_blocks_center_error",
-      "statement": "∀ (q : ℕ) (w : Fin q → ℝ), 0<q → (∑ a,w a-(∑ b,w b)/(q:ℝ))=0",
+      "statement": "∀ (q : ℕ) (w : Fin q → ℝ), 0<q → (∑ a,(w a-(∑ b,w b)/(q:ℝ)))=0",
       "plain_statement": {
         "zh": "扣除类均值后总偏差为零",
         "en": "Centering annihilates total discrepancy"
@@ -3646,7 +3646,7 @@
       "id": "L-goldbach-grh-windows-centered-prime",
       "file": "lean/PEqualNP/Outside/L_goldbach_grh_windows_centered_prime.lean",
       "module": "PEqualNP.Outside.L_goldbach_grh_windows_centered_prime",
-      "statement": "(∀ (Q : ℕ) [NeZero Q] (χ : DirichletCharacter ℂ Q) (s : ℂ), 0<s.re → s.re<1 → DirichletCharacter.LFunction χ s=0 → s.re=1/2) → let A := fun (q a X : ℕ) => ∑ k ∈ (Finset.range (X+1)).filter (fun k => k%q=a%q), ArithmeticFunction.vonMangoldt k; ∀ q a:ℕ, 0<q → Nat.Coprime a q → ∃ N:ℕ, ∀ X≥N, ∃ p:ℕ, Nat.Prime p ∧ p%q=a%q ∧ X<3*p ∧ 3*p<2*X",
+      "statement": "(∀ (Q : ℕ) [NeZero Q] (χ : DirichletCharacter ℂ Q) (s : ℂ), 0<s.re → s.re<1 → DirichletCharacter.LFunction χ s=0 → s.re=1/2) → ∀ q a:ℕ, 0<q → Nat.Coprime a q → ∃ N:ℕ, ∀ X≥N, ∃ p:ℕ, Nat.Prime p ∧ p%q=a%q ∧ X<3*p ∧ 3*p<2*X",
       "plain_statement": {
         "zh": "固定单位类的中央区间素数见证",
         "en": "An actual prime in a central window at fixed modulus"

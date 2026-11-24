@@ -1320,7 +1320,7 @@
         "id": "L-quadratic-primes-mass-witness",
         "file": "lean/PEqualNP/Outside/L_quadratic_primes_mass_witness.lean",
         "module": "PEqualNP.Outside.L_quadratic_primes_mass_witness",
-        "statement": "∀ (X Y:ℕ), 0<(∑ n ∈ Finset.Ico X (2*X),∑ p ∈ (n^2+1).primeFactors.filter (fun p => Y<p),Real.log (p:ℝ)) → ∃ n∈Finset.Ico X (2*X),∃ p:ℕ,Nat.Prime p ∧ p∣n^2+1 ∧ Y<p",
+        "statement": "∀ (X Y:ℕ), 0<(∑ n ∈ Finset.Ico X (2*X),Finset.sum ((n^2+1).primeFactors.filter (fun p => Y<p)) (fun (p:ℕ) => Real.log (p:ℝ))) → ∃ n∈Finset.Ico X (2*X),∃ p:ℕ,Nat.Prime p ∧ p∣n^2+1 ∧ Y<p",
         "plain_statement": {
           "zh": "截断对数质量为正推出大素因子见证",
           "en": "Extract a large factor from positive truncated log mass"
