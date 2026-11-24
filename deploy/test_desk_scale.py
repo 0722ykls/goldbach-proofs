@@ -165,7 +165,7 @@ class DeskScaleTest(unittest.TestCase):
             token = claim["lease"]["token"]
             next_path = paths[(i + 1) % len(paths)]
             self.request(next_path + "/api/desk/beat", {}, token=token, expected=401)
-            self.request(path + "/api/desk/submit", {"pr": i + 1, "head": str(i + 1) * 40}, token=token)
+            self.request(path + "/api/desk/submit", {"pr": i + 1, "head": f"{i + 1:040x}"}, token=token)
         pending = self.request("/api/desk/pending", {}, signed=True)["pending"]
         self.assertEqual({row["gap"] for row in pending}, {claim["gap"]["id"] for claim in claims})
 
@@ -176,7 +176,7 @@ class DeskScaleTest(unittest.TestCase):
                       "manifest": {"rests_on": [{"module": task["module"], "sha256": "a" * 64}], "defs": []}}
             if i:
                 self.request("/api/verdict", record, signed=True, expected=409)
-            self.request("/api/desk/authorize", {"gap": task["id"], "pr": i + 1, "head": str(i + 1) * 40,
+            self.request("/api/desk/authorize", {"gap": task["id"], "pr": i + 1, "head": f"{i + 1:040x}",
                          "handle": "alice", "run_id": run_id,
                          "statement_sha256": hashlib.sha256(task["statement"].encode()).hexdigest()}, signed=True)
             self.request("/api/verdict", record, signed=True)
@@ -193,6 +193,8 @@ class DeskScaleTest(unittest.TestCase):
     def test_simultaneous_fleet_claims_and_submissions_across_problems(self):
         paths = ["", *(f"/problems/{slug}" for slug in PROBLEMS)]
         ticket = fleet_pass(self.secret, "lab", int(time.time()) + 3600)
+        expected_claims = Counter(paths[i % len(paths)] for i in range(SESSIONS))
+        quota = max(1, QUEUE_BATCH // len(paths))
 
         def claim(i):
             path = paths[i % len(paths)]
@@ -201,29 +203,32 @@ class DeskScaleTest(unittest.TestCase):
             return path, result["lease"]["token"], result["gap"]["id"]
 
         with ThreadPoolExecutor(max_workers=SESSIONS) as pool:
-            claims = self.wave(pool, "four problems", "claims", claim)
+            claims = self.wave(pool, f"{len(paths)} problems", "claims", claim)
             self.assertEqual(len({token for _, token, _ in claims}), SESSIONS)
             scopes = {gap: path for path, _, gap in claims}
             for path in paths:
                 expected = [gap for owner, _, gap in claims if owner == path]
                 status = self.request(path + "/api/status")
-                self.assertEqual(len(expected), SESSIONS // len(paths))
+                self.assertEqual(len(expected), expected_claims[path])
                 self.assertEqual(status["desk"]["active"], len(expected))
                 self.assertEqual(set(status["desk"]["assignments"]), set(expected))
                 self.assertEqual(set(expected), {gap["id"] for gap in status["gaps"]})
-            self.wave(pool, "four problems", "submissions", lambda i: self.request(
+            self.wave(pool, f"{len(paths)} problems", "submissions", lambda i: self.request(
                 claims[i][0] + "/api/desk/submit", {"pr": i + 1, "head": f"{i + 1:040x}"}, token=claims[i][1]
             ))
             queued = []
+            remaining = expected_claims.copy()
             for _ in range(0, SESSIONS, QUEUE_BATCH):
                 batch = self.request("/api/desk/pending", {}, signed=True)["pending"]
                 self.assertEqual(len(batch), QUEUE_BATCH)
-                self.assertEqual(Counter(scopes[row["gap"]] for row in batch),
-                                 {path: QUEUE_BATCH // len(paths) for path in paths})
+                per_problem = Counter(scopes[row["gap"]] for row in batch)
+                for path in paths:
+                    self.assertGreaterEqual(per_problem[path], min(quota, remaining[path]))
+                remaining.subtract(per_problem)
                 queued.extend((row["pr"], row["gap"]) for row in batch)
             self.assertCountEqual(queued, [(i + 1, gap) for i, (_, _, gap) in enumerate(claims)])
             self.assertEqual(self.request("/api/desk/pending", {}, signed=True)["pending"], [])
-            self.wave(pool, "four problems", "returns", lambda i: self.request(
+            self.wave(pool, f"{len(paths)} problems", "returns", lambda i: self.request(
                 claims[i][0] + "/api/desk/release", {"reason": "abandoned"}, token=claims[i][1]
             ))
         for path in paths:

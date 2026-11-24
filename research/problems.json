@@ -364,5 +364,136 @@
         ]
       }
     ]
+  },
+  "hash-collision-lab": {
+    "title": {
+      "zh": "哈希碰撞实验台",
+      "en": "Hash Collision Lab"
+    },
+    "question": {
+      "zh": "对自定义教学哈希，能否利用代数结构更快地构造两份不同、摘要相同的输入？",
+      "en": "Can algebraic structure yield faster collision constructions for our purpose-built teaching hashes?"
+    },
+    "formula": "h(x,y) = (ax + by + c) mod m",
+    "summary": {
+      "zh": "研究自定义二维模运算模型中的碰撞构造。每个方案证明适用条件、输入确实不同、摘要相同，并给出所用运算。",
+      "en": "Study collision constructions for custom two-coordinate modular models. Each result proves its assumptions, distinct inputs, equal digests, and the operations used."
+    },
+    "gaps": [
+      {
+        "id": "L-hash-collision-lab-affine-coordinate-shift",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_affine_coordinate_shift.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_affine_coordinate_shift",
+        "statement": "∀ (m : ℕ) (a b c x y : ZMod m), a ≠ 0 ∨ b ≠ 0 → (x + b, y - a) ≠ (x, y) ∧ a * (x + b) + b * (y - a) + c = a * x + b * y + c",
+        "plain_statement": {
+          "zh": "在仿射教学模型中，只要两个系数至少有一个非零，对任意输入 (x,y)，一次模加和一次模减就能构造碰撞伙伴 (x+b,y−a)。",
+          "en": "In the affine teaching model with at least one nonzero coefficient, one modular addition and one modular subtraction give a collision partner (x+b,y−a) for any (x,y)."
+        },
+        "brief": {
+          "zh": "直接核验给定构造，把构造伙伴和复算摘要的成本分开。该构造通过两个坐标运算得到伙伴。",
+          "en": "Verify the specified construction. Count the two coordinate operations for generating a partner separately from digest verification."
+        },
+        "program": "foundation",
+        "imports": []
+      },
+      {
+        "id": "L-hash-collision-lab-affine-one-coordinate-bound",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_affine_one_coordinate_bound.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_affine_one_coordinate_bound",
+        "statement": "∀ (p : ℕ) [Fact (Nat.Prime p)] (a b c x y u v : ZMod p), a ≠ 0 → b ≠ 0 → a * x + b * y + c = a * u + b * v + c → (x, y) ≠ (u, v) → x ≠ u ∧ y ≠ v",
+        "plain_statement": {
+          "zh": "在素数模数且两个系数均非零的仿射模型里，两份不同输入若摘要相同，就必须同时改变两个坐标。",
+          "en": "In the affine model over a prime modulus with both coefficients nonzero, any collision between distinct inputs must change both coordinates."
+        },
+        "brief": {
+          "zh": "这是坐标改动数的下界。与直接构造对照，明确这个下界成立的系数和模数条件。",
+          "en": "This is a lower bound on coordinate changes. Compare it with the direct construction under the stated coefficient and modulus assumptions."
+        },
+        "program": "correlation",
+        "parallel": true,
+        "imports": []
+      },
+      {
+        "id": "L-hash-collision-lab-quadratic-swap",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_quadratic_swap.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_quadratic_swap",
+        "statement": "∀ (m : ℕ) (a b c x y : ZMod m), x ≠ y → (y, x) ≠ (x, y) ∧ a * (y + x) ^ 2 + b * (y + x) + c = a * (x + y) ^ 2 + b * (x + y) + c",
+        "plain_statement": {
+          "zh": "对只依赖坐标和的二次教学哈希，若原来的两个坐标不同，交换坐标就构成碰撞，生成伙伴只需重排。",
+          "en": "For the quadratic teaching hash of the coordinate sum, swapping unequal coordinates creates a collision by reordering alone."
+        },
+        "brief": {
+          "zh": "核验交换法的适用范围。证明对应构造，比较重排与模加减的成本。",
+          "en": "Verify the swap construction under its stated precondition and compare reordering with modular arithmetic."
+        },
+        "program": "foundation",
+        "imports": []
+      },
+      {
+        "id": "L-hash-collision-lab-quadratic-balanced-shift",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_quadratic_balanced_shift.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_quadratic_balanced_shift",
+        "statement": "∀ (p : ℕ) [Fact (Nat.Prime p)] (a b c x y : ZMod p), (x + 1, y - 1) ≠ (x, y) ∧ a * ((x + 1) + (y - 1)) ^ 2 + b * ((x + 1) + (y - 1)) + c = a * (x + y) ^ 2 + b * (x + y) + c",
+        "plain_statement": {
+          "zh": "在素数模数下，对只依赖坐标和的二次教学哈希，构造 (x+1,y−1) 可为任何输入得到不同的同摘要伙伴，包括两个坐标相等的输入。",
+          "en": "Over a prime modulus, (x+1,y−1) is a distinct collision partner for every input of the quadratic teaching hash, including inputs with equal coordinates."
+        },
+        "brief": {
+          "zh": "用一次加和一次减补足交换法的适用范围。比较时分别列出保证覆盖的输入和生成伙伴的运算。",
+          "en": "Use one addition and one subtraction to extend coverage beyond the swap construction. Report guaranteed input coverage and construction operations separately."
+        },
+        "program": "correlation",
+        "imports": []
+      },
+      {
+        "id": "L-hash-collision-lab-quadratic-adaptive-cost",
+        "file": "lean/PEqualNP/Outside/L_hash_collision_lab_quadratic_adaptive_cost.lean",
+        "module": "PEqualNP.Outside.L_hash_collision_lab_quadratic_adaptive_cost",
+        "statement": "∀ (p : ℕ) [Fact (Nat.Prime p)] (a b c x y : ZMod p), let result := if x = y then ((x + 1, y - 1), (2 : ℕ)) else ((y, x), 0); result.1 ≠ (x, y) ∧ a * (result.1.1 + result.1.2) ^ 2 + b * (result.1.1 + result.1.2) + c = a * (x + y) ^ 2 + b * (x + y) + c ∧ result.2 ≤ 2 ∧ (result.2 = 0 ↔ x ≠ y)",
+        "plain_statement": {
+          "zh": "二次教学模型中，先判断两个坐标是否相等，再选择交换或平衡平移。所有输入都能找到碰撞伙伴，构造最多两次模加减，坐标不等时为零次。",
+          "en": "For the quadratic teaching model, choose swap or balanced shift after comparing the coordinates. The construction covers every input and uses at most two modular additions or subtractions, with zero when the coordinates differ."
+        },
+        "brief": {
+          "zh": "比较基线固定做两次模加减。这个成本模型只计构造中的模加减，另需一次坐标比较。按两种分支核验正确性和成本。",
+          "en": "The baseline always uses two modular additions or subtractions. This cost model counts those operations in the constructor, with one coordinate comparison accounted for separately. Prove each branch's correctness and cost."
+        },
+        "program": "correlation",
+        "parallel": true,
+        "imports": []
+      }
+    ],
+    "roadmap": [
+      {
+        "zh": [
+          "证明构造正确",
+          "固定仿射和二次教学函数，证明候选输入互异、摘要相同，并写清楚适用的系数和模数。"
+        ],
+        "en": [
+          "Prove the constructions",
+          "Fix the affine and quadratic teaching functions. Prove that each construction gives distinct inputs with equal digests under stated conditions."
+        ]
+      },
+      {
+        "zh": [
+          "比较构造成本与覆盖",
+          "在相同模型下记录生成伙伴使用的重排与模运算、以及覆盖哪些输入。验证结果时复算摘要的成本单独计算。"
+        ],
+        "en": [
+          "Compare costs and coverage",
+          "Within each model, record the reordering and modular operations used to construct a partner and the inputs covered. Count digest verification separately."
+        ]
+      },
+      {
+        "zh": [
+          "证明下界",
+          "先证明在给定条件下最少要改动几个坐标，再比较直接构造是否达到该下界。"
+        ],
+        "en": [
+          "Prove a lower bound",
+          "Prove the minimum number of coordinate changes under stated assumptions and compare the bound with the direct construction."
+        ]
+      }
+    ]
   }
 }
