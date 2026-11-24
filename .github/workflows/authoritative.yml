@@ -33,7 +33,7 @@ on:
         type: boolean
         default: false
 
-# Least privilege: read the code and read the pull request. This run cannot write anything.
+# The checker has read-only access. Only the isolated status publisher can write commit statuses.
 permissions:
   contents: read
   pull-requests: read
@@ -55,6 +55,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 150
     outputs:
+      checked_head: ${{ steps.pr.outputs.head }}
       verdict: ${{ steps.verdict.outputs.verdict }}
       lemma: ${{ steps.verdict.outputs.lemma }}
       manifest: ${{ steps.verdict.outputs.manifest }}
@@ -102,6 +103,7 @@ jobs:
           echo "base commit: $GITHUB_SHA"
 
       - name: Read the pull request through the API and refuse anything but one added proof file
+        id: pr
         env:
           # The credential of this run, read only, given to this step and the next one alone.
           GH_TOKEN: ${{ github.token }}
@@ -123,6 +125,7 @@ jobs:
           node "$W/base/.github/scripts/outside-guard.mjs" pr "$W/api/pr.json" "$W/api/files.json" "$W/api/tree.json" \
             "$GITHUB_REPOSITORY" "$DEFAULT_BRANCH" "$W/in"
           [ ! -e "$W/base/$(cat "$W/in/pr.file")" ] || { echo "REFUSED: the file already exists in the base"; exit 1; }
+          printf 'head=%s\n' "$head" >> "$GITHUB_OUTPUT"
 
       - name: Download that one file as data
         env:
@@ -537,6 +540,36 @@ jobs:
           [ "$verdict" = ACCEPTED ] && exit 0
           [ "$verdict" = REJECTED ] && exit 1
           exit 3
+
+  publish-status:
+    needs: check
+    if: >-
+      always() && needs.check.outputs.checked_head != '' &&
+      (needs.check.outputs.verdict == 'ACCEPTED' || needs.check.outputs.verdict == 'REJECTED')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    permissions:
+      statuses: write
+    steps:
+      - name: Publish the Lean verdict on the checked PR commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CHECKED_HEAD: ${{ needs.check.outputs.checked_head }}
+          VERDICT: ${{ needs.check.outputs.verdict }}
+          GAP: ${{ needs.check.outputs.lemma }}
+        run: |
+          set -eu
+          [[ "$CHECKED_HEAD" =~ ^[0-9a-f]{40}$ ]]
+          case "$VERDICT" in
+            ACCEPTED) state=success ;;
+            REJECTED) state=failure ;;
+            *) exit 1 ;;
+          esac
+          gh api --method POST "repos/$GITHUB_REPOSITORY/statuses/$CHECKED_HEAD" \
+            -f "state=$state" -f "context=Lean / authoritative" \
+            -f "description=$VERDICT · $GAP" \
+            -f "target_url=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/attempts/$GITHUB_RUN_ATTEMPT" \
+            --silent
 
   report:
     needs: check
