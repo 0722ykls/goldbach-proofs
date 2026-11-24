@@ -761,6 +761,16 @@ body:not([data-problem]) .brand .wordmark {
 }
 .hero:lang(zh) h1 { font-size: clamp(2.08rem, 4.45vw, 4.4rem); line-height: 1.12; letter-spacing: -.04em; }
 .hero .title-phrase { display: block; }
+body:not([data-problem]) .hero-copy::before {
+  content: "";
+  display: inline-block;
+  width: clamp(4rem, 7vw, 6rem);
+  aspect-ratio: 1;
+  margin: 0 1rem 1.05rem 0;
+  vertical-align: middle;
+  background: url("goldbach-icon.svg?v=d786b42") center / contain no-repeat;
+}
+body:not([data-problem]) .hero .open-status { vertical-align: middle; }
 .hero .open-status {
   display: inline-flex;
   align-items: center;
