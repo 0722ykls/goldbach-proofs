@@ -81,7 +81,7 @@ def discussion_widget(lang, prefix):
     if time.time() >= DISCUSSION_EXPIRES.timestamp():
         return ""
     zh = lang == "zh"
-    label = "微信扫码进群" if zh else "Join WeChat group"
+    label = "扫码进群 讨论进度" if zh else "Join WeChat group"
     name = "知乎 AI4S 讨论组" if zh else "Zhihu AI4S discussion group"
     instructions = "微信扫码，讨论研究进度" if zh else "Scan in WeChat to discuss research progress"
     cutoff = DISCUSSION_EXPIRES.date()
