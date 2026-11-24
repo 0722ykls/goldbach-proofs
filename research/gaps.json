@@ -906,7 +906,7 @@
       "id": "L-goldbach-factor-lower",
       "file": "lean/PEqualNP/Outside/L_goldbach_factor_lower.lean",
       "module": "PEqualNP.Outside.L_goldbach_factor_lower",
-      "statement": "let fac := fun p n : ℕ => if p ∣ n then (p:ℝ)/((p:ℝ)-1) else 1-1/((p:ℝ)-1)^2; ∀ p n, 2<p → 0 < 1-1/((p:ℝ)-1)^2 ∧ 1-1/((p:ℝ)-1)^2 ≤ fac p n",
+      "statement": "let fac := fun p n : ℕ => if p ∣ n then (p:ℝ)/((p:ℝ)-1) else 1-1/((p:ℝ)-1)^2; ∀ p n : ℕ, 2<p → 0 < 1-1/((p:ℝ)-1)^2 ∧ 1-1/((p:ℝ)-1)^2 ≤ fac p n",
       "plain_statement": {
         "zh": "每个奇素数因子都不小于一个正的通用基准。",
         "en": "Each odd-prime factor dominates a positive baseline."
@@ -1346,7 +1346,7 @@
       "id": "L-goldbach-trig-lipschitz",
       "file": "lean/PEqualNP/Outside/L_goldbach_trig_lipschitz.lean",
       "module": "PEqualNP.Outside.L_goldbach_trig_lipschitz",
-      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); ∀ n w s t, ‖S n w s-S n w t‖ ≤ 2*Real.pi*|s-t|*Finset.sum (Finset.range (n+1)) (fun k => (k:ℝ)*|w k|)",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); ∀ n w s t, ‖S n w s-S n w t‖ ≤ 2*Real.pi*|s-t| * Finset.sum (Finset.range (n+1)) (fun k => (k:ℝ)*|w k|)",
       "plain_statement": {
         "zh": "频率微扰造成的误差由权的一阶矩控制。",
         "en": "A frequency perturbation is controlled by the first absolute moment."
@@ -1386,7 +1386,7 @@
       "id": "L-goldbach-fourth-energy",
       "file": "lean/PEqualNP/Outside/L_goldbach_fourth_energy.lean",
       "module": "PEqualNP.Outside.L_goldbach_fourth_energy",
-      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); ∀ n w, let T := Finset.range (n+1); intervalIntegral (fun t => ‖S n w t‖^4) (0:ℝ) 1 MeasureTheory.volume = Finset.sum (Finset.range (2*n+1)) (fun s => (Finset.sum (T.filter (fun a => a≤s ∧ s-a≤n)) (fun a => w a*w (s-a)))^2)",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); ∀ n w, let T := Finset.range (n+1); intervalIntegral (fun t => ‖S n w t‖^4) (0:ℝ) 1 MeasureTheory.volume = Finset.sum (Finset.range (2*n+1)) (fun s => (Finset.sum (T.filter (fun a => a ≤ s ∧ s-a ≤ n)) (fun a => w a*w (s-a)))^2)",
       "plain_statement": {
         "zh": "四次矩等于所有加法和系数的平方和。",
         "en": "The fourth moment equals the sum of squared additive coefficients."
@@ -1546,7 +1546,7 @@
       "id": "L-goldbach-ap-rational-phase",
       "file": "lean/PEqualNP/Outside/L_goldbach_ap_rational_phase.lean",
       "module": "PEqualNP.Outside.L_goldbach_ap_rational_phase",
-      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let ap := fun (q a N : ℕ) (f : ℕ → ℝ) => Finset.sum ((Finset.range (N+1)).filter (fun k => k%q=a)) f; let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); ∀ N q h f, 0<q → S N f ((h:ℝ)/(q:ℝ)) = Finset.sum (Finset.range q) (fun a => (ap q a N f:ℂ)*E ((h:ℝ)*(a:ℝ)/(q:ℝ)))",
+      "statement": "let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let ap := fun (q a N : ℕ) (f : ℕ → ℝ) => Finset.sum ((Finset.range (N+1)).filter (fun k => k%q=a)) f; let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); ∀ (N q h : ℕ) (f : ℕ → ℝ), 0<q → S N f ((h:ℝ)/(q:ℝ)) = Finset.sum (Finset.range q) (fun a => (ap q a N f:ℂ)*E ((h:ℝ)*(a:ℝ)/(q:ℝ)))",
       "plain_statement": {
         "zh": "有理频率的和可由模 q 的各余类质量精确恢复。",
         "en": "Reconstruct a rational-frequency sum from exact progression masses."
@@ -2086,7 +2086,7 @@
       "id": "L-goldbach-exception-main-deficit",
       "file": "lean/PEqualNP/Outside/L_goldbach_exception_main_deficit.lean",
       "module": "PEqualNP.Outside.L_goldbach_exception_main_deficit",
-      "statement": "let reps := fun n : ℕ => (Finset.range (n+1)).filter (fun p => Nat.Prime p ∧ Nat.Prime (n-p)); let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let conv := fun (u v : ℕ → ℝ) (n : ℕ) => Finset.sum (Finset.range (n+1)) (fun k => u k*v (n-k)); let D := fun X : ℕ => (Finset.Ico X (2*X)).filter (fun n => 4 ≤ n ∧ Even n); let bad := fun X : ℕ => (D X).filter (fun n => (reps n).card=0); ∀ (X : ℕ) (m : ℕ → ℝ) (c : ℝ), (∀ n ∈ D X, c*(X:ℝ)≤m n) → ∀ n ∈ bad X, c*(X:ℝ)≤|conv w w n-m n|",
+      "statement": "let reps := fun n : ℕ => (Finset.range (n+1)).filter (fun p => Nat.Prime p ∧ Nat.Prime (n-p)); let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let conv := fun (u v : ℕ → ℝ) (n : ℕ) => Finset.sum (Finset.range (n+1)) (fun k => u k*v (n-k)); let D := fun X : ℕ => (Finset.Ico X (2*X)).filter (fun n => 4 ≤ n ∧ Even n); let bad := fun X : ℕ => (D X).filter (fun n => (reps n).card=0); ∀ (X : ℕ) (m : ℕ → ℝ) (c : ℝ), (∀ n ∈ D X, c*(X:ℝ) ≤ m n) → ∀ n ∈ bad X, c*(X:ℝ) ≤ |conv w w n-m n|",
       "plain_statement": {
         "zh": "若模型在区间上有下界，每个例外都造成至少同样大的误差。",
         "en": "Each exception incurs at least the block’s model floor in error."
@@ -2166,7 +2166,7 @@
       "id": "L-goldbach-exception-dyadic-bound",
       "file": "lean/PEqualNP/Outside/L_goldbach_exception_dyadic_bound.lean",
       "module": "PEqualNP.Outside.L_goldbach_exception_dyadic_bound",
-      "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let conv := fun (u v : ℕ → ℝ) (n : ℕ) => Finset.sum (Finset.range (n+1)) (fun k => u k*v (n-k)); let reps := fun n : ℕ => (Finset.range (n+1)).filter (fun p => Nat.Prime p ∧ Nat.Prime (n-p)); let D := fun X : ℕ => (Finset.Ico X (2*X)).filter (fun n => 4 ≤ n ∧ Even n); let bad := fun X : ℕ => (D X).filter (fun n => (reps n).card=0); ∀ (X : ℕ) (m : ℕ → ℝ) (c V : ℝ), 0≤c → (∀ n ∈ D X, c*(X:ℝ)≤m n) → Finset.sum (D X) (fun n => (conv w w n-m n)^2) ≤ V → ((bad X).card:ℝ)*(c*(X:ℝ))^2 ≤ V",
+      "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let conv := fun (u v : ℕ → ℝ) (n : ℕ) => Finset.sum (Finset.range (n+1)) (fun k => u k*v (n-k)); let reps := fun n : ℕ => (Finset.range (n+1)).filter (fun p => Nat.Prime p ∧ Nat.Prime (n-p)); let D := fun X : ℕ => (Finset.Ico X (2*X)).filter (fun n => 4 ≤ n ∧ Even n); let bad := fun X : ℕ => (D X).filter (fun n => (reps n).card=0); ∀ (X : ℕ) (m : ℕ → ℝ) (c V : ℝ), 0≤c → (∀ n ∈ D X, c*(X:ℝ) ≤ m n) → Finset.sum (D X) (fun n => (conv w w n-m n)^2) ≤ V → ((bad X).card:ℝ)*(c*(X:ℝ))^2 ≤ V",
       "plain_statement": {
         "zh": "从模型下界和总均方误差推出倍增区间上的例外个数界。",
         "en": "Combine a model floor and a variance bound into a dyadic exceptional count."
@@ -2186,7 +2186,7 @@
       "id": "L-goldbach-exception-no-outlier",
       "file": "lean/PEqualNP/Outside/L_goldbach_exception_no_outlier.lean",
       "module": "PEqualNP.Outside.L_goldbach_exception_no_outlier",
-      "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let conv := fun (u v : ℕ → ℝ) (n : ℕ) => Finset.sum (Finset.range (n+1)) (fun k => u k*v (n-k)); let reps := fun n : ℕ => (Finset.range (n+1)).filter (fun p => Nat.Prime p ∧ Nat.Prime (n-p)); let D := fun X : ℕ => (Finset.Ico X (2*X)).filter (fun n => 4 ≤ n ∧ Even n); let bad := fun X : ℕ => (D X).filter (fun n => (reps n).card=0); ∀ (X : ℕ) (m : ℕ → ℝ) (b : ℝ), 0≤b → (∀ n ∈ D X, b≤m n) → Finset.sum (D X) (fun n => (conv w w n-m n)^2)<b^2 → bad X=∅",
+      "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let conv := fun (u v : ℕ → ℝ) (n : ℕ) => Finset.sum (Finset.range (n+1)) (fun k => u k*v (n-k)); let reps := fun n : ℕ => (Finset.range (n+1)).filter (fun p => Nat.Prime p ∧ Nat.Prime (n-p)); let D := fun X : ℕ => (Finset.Ico X (2*X)).filter (fun n => 4 ≤ n ∧ Even n); let bad := fun X : ℕ => (D X).filter (fun n => (reps n).card=0); ∀ (X : ℕ) (m : ℕ → ℝ) (b : ℝ), 0≤b → (∀ n ∈ D X, b ≤ m n) → Finset.sum (D X) (fun n => (conv w w n-m n)^2)<b^2 → bad X=∅",
       "plain_statement": {
         "zh": "若整个区间的均方总量严格低于单个例外的代价，则例外集为空。",
         "en": "A strict total squared-error budget below the cost of one exception excludes all exceptions in that block."
