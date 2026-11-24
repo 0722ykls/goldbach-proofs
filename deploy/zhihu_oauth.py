@@ -172,7 +172,7 @@ class ZhihuOAuth:
                         return err(403, "请先登录知乎", "Sign in with Zhihu")
                     fresh = self.session(db, lang)
                     row = db.execute("SELECT * FROM sessions WHERE sid=?", (digest(fresh),)).fetchone()
-                result = sponsors.handle(method,path,params,headers,db,row,lang,page,redirect)
+                result = sponsors.handle(method,path,params,headers,db,row,lang,redirect)
                 if fresh:
                     result[1]["Set-Cookie"] = redirect(BASE, fresh)[1]["Set-Cookie"]
                 return result

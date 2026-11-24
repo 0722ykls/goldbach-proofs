@@ -12,6 +12,7 @@ from html import escape
 from PIL import Image, UnidentifiedImageError
 
 DESK = "/auth/zhihu/sponsors"
+STYLE = "/sponsor-settings.css"
 PUBLIC = "/sponsors/logo/"
 ORIGIN = "https://www.goldbach.tech"
 LIMIT = 192 * 1024
@@ -81,19 +82,33 @@ def public_logo(path, ident):
     return row[0] if row else None
 
 
-def handle(method, path, params, headers, db, row, lang, page, redirect):
+def settings_page(status, lang, title, content):
+    back = "返回研究台" if lang == "zh" else "Research desk"
+    html = f"""<!doctype html><html lang="{lang}"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{title} · {back}</title><link rel="stylesheet" href="{STYLE}">
+<link rel="icon" href="/goldbach-icon.svg"></head><body>
+<header><div class="shell masthead"><a href="/?lang={lang}">
+<img src="/goldbach-icon.svg" width="40" height="40" alt=""><span>{back}</span></a></div></header>
+<main class="shell"><h1>{title}</h1>{content}</main></body></html>"""
+    return status, {"Content-Type": "text/html; charset=utf-8"}, html.encode()
+
+
+def handle(method, path, params, headers, db, row, lang, redirect):
     def tr(zh, en):
         return en if lang == "en" else zh
     title = tr("赞助单位 Logo", "Sponsor logos")
-    msg = lambda code, text: page(code, title, f'<p>{text}</p><a href="{DESK}?lang={lang}">{tr("返回","Back")}</a>', lang)
+    def msg(code, text):
+        return settings_page(code, lang, title,
+                             f'<section class="card"><p>{text}</p><a href="{DESK}?lang={lang}">{tr("返回设置","Back to settings")}</a></section>')
     uid = row["subject"]
     csrf = f'<input type="hidden" name="csrf" value="{row["csrf"]}">'
     if not uid:
         if method == "GET" and path == DESK:
             dest = "home" if params.get("entry")=="home" else "sponsors"
-            return page(200, title, f'<p>{tr("使用知乎账号投稿或登录审核。","Sign in with Zhihu to submit or review logos.")}</p>'
+            return settings_page(200, lang, title, f'<section class="card signin"><p>{tr("使用知乎账号投稿或登录审核。","Sign in with Zhihu to submit or review logos.")}</p>'
                         f'<form action="/auth/zhihu/start" method="post">{csrf}<input type="hidden" name="next" value="{dest}">'
-                        f'<button>{tr("使用知乎登录","Sign in with Zhihu")}</button></form>', lang)
+                        f'<button class="primary">{tr("使用知乎登录","Sign in with Zhihu")}</button></form></section>')
         return msg(403, tr("请先登录知乎。","Please sign in with Zhihu."))
     admin = db.execute("SELECT 1 FROM site_admins WHERE subject=?", (uid,)).fetchone()
     if method == "POST":
@@ -138,24 +153,51 @@ def handle(method, path, params, headers, db, row, lang, page, redirect):
         return (200,{"Content-Type":"image/png"},image[0]) if image else msg(404,"404")
     if path != DESK:
         return msg(404, "404")
-    body = (f'<form method="post" action="{DESK}/upload" enctype="multipart/form-data">{csrf}'
+    upload = (f'<section class="card upload"><h2>{tr("提交单位 Logo","Submit a logo")}</h2>'
+            f'<form method="post" action="{DESK}/upload" enctype="multipart/form-data">{csrf}'
             f'<label>{tr("单位名称","Organization")} <input name="name" maxlength="80" required></label>'
             '<label>Logo <input type="file" name="logo" accept="image/png,image/jpeg,image/webp" required></label>'
-            f'<p>{tr("PNG、JPEG 或 WebP，最大 180 KiB、200 万像素，单边最多 2048 像素。仅上传获授权的标识，审核通过后公开。","PNG, JPEG or WebP, up to 180 KiB, 2 MP and 2048 px per side. Submit authorized artwork for public display after review.")}</p>'
-            f'<button>{tr("提交审核","Submit for review")}</button></form>')
+            f'<p class="hint">{tr("PNG、JPEG 或 WebP，最大 180 KiB、200 万像素，单边最多 2048 像素。仅上传获授权的标识，审核通过后公开。","PNG, JPEG or WebP, up to 180 KiB, 2 MP and 2048 px per side. Submit authorized artwork for public display after review.")}</p>'
+            f'<button class="primary">{tr("提交审核","Submit for review")}</button></form></section>')
     labels = {"pending":tr("待审核","Pending"),"approved":tr("已展示","Approved"),"rejected":tr("已拒绝","Rejected"),"withdrawn":tr("已撤下","Withdrawn")}
-    body += '<h2>'+ (tr("管理员审核","Administrator review") if admin else tr("我的投稿","My submissions"))+'</h2>'
-    for item in db.execute("SELECT id,name,state FROM sponsor_logos WHERE owner=? OR ? ORDER BY (state='pending') DESC,id DESC",(uid,bool(admin))):
-        i,name,state = item
-        body += f'<article><strong>{escape(name)}</strong> · {labels[state]}'
+    items = db.execute("SELECT id,name,state FROM sponsor_logos WHERE owner=? OR ? ORDER BY (state='pending') DESC,id DESC",
+                       (uid,bool(admin))).fetchall()
+    selected = params.get("view")
+    filters = {"all": tr("全部","All"), **labels}
+    if selected not in filters:
+        selected = "all"
+    counts = {key: 0 for key in labels}
+    for _, _, state in items:
+        counts[state] += 1
+    counts["all"] = len(items)
+    tabs = "".join(f'<a href="{DESK}?view={key}"{(" aria-current=page" if selected == key else "")}>'
+                   f'{label} <span>{counts[key]}</span></a>' for key, label in filters.items())
+    heading = tr("管理员审核","Administrator review") if admin else tr("我的投稿","My submissions")
+    queue = [f'<section class="card queue"><h2>{heading}</h2><nav class="filters" aria-label="{heading}">{tabs}</nav>']
+    if not counts[selected]:
+        queue.append(f'<p class="empty">{tr("暂无符合条件的投稿。","No submissions in this view.")}</p>')
+    actions = {"approved":tr("通过","Approve"),"rejected":tr("拒绝","Reject"),"withdrawn":tr("撤下","Withdraw")}
+    for i, name, state in items:
+        if selected not in ("all", state):
+            continue
+        queue.append('<article class="submission">')
         if state in ("pending","approved"):
-            body += f'<p><img src="{DESK}/preview/{i}" alt="" style="max-width:100%;max-height:90px"></p>'
-            if admin:
-                buttons = ("approved","rejected") if state=="pending" else ("withdrawn",)
-                actions = {"approved":tr("通过","Approve"),"rejected":tr("拒绝","Reject"),"withdrawn":tr("撤下","Withdraw")}
-                body += f'<form method="post" action="{DESK}/review">{csrf}<input type="hidden" name="id" value="{i}">'+''.join(f'<button name="decision" value="{v}">{actions[v]}</button>' for v in buttons)+'</form>'
-        body += '</article>'
-    account = (f'<p>{tr("知乎账号","Zhihu account")} · {escape(row["subject"])} · '
-               f'<a href="/auth/zhihu?lang={lang}">{tr("贡献榜署名","Leaderboard attribution")}</a></p>')
-    return page(200,tr("设置","Settings"),account+body+f'<a href="/?lang={lang}">{tr("返回研究台","Research desk")}</a>'
-                f'<form method="post" action="{DESK}/logout">{csrf}<button>{tr("退出登录","Sign out")}</button></form>',lang)
+            queue.append(f'<div class="preview"><img loading="lazy" src="{DESK}/preview/{i}" alt=""></div>')
+        queue.append(f'<div class="submission-info"><strong>{escape(name)}</strong>'
+                     f'<span class="status {state}">{labels[state]}</span></div>')
+        if admin and state in ("pending","approved"):
+            buttons = ("approved","rejected") if state == "pending" else ("withdrawn",)
+            queue.append(f'<form class="review" method="post" action="{DESK}/review">{csrf}'
+                         f'<input type="hidden" name="id" value="{i}">')
+            for value in buttons:
+                style = "primary" if value == "approved" else "danger"
+                queue.append(f'<button class="{style}" name="decision" value="{value}">{actions[value]}</button>')
+            queue.append('</form>')
+        queue.append('</article>')
+    queue.append('</section>')
+    account = (f'<section class="card account"><h2>{tr("知乎账号","Zhihu account")}</h2>'
+               f'<p class="hint">UID {escape(row["subject"])}</p>'
+               f'<a href="/auth/zhihu?lang={lang}">{tr("贡献榜署名","Leaderboard attribution")}</a>'
+               f'<form method="post" action="{DESK}/logout">{csrf}<button>{tr("退出登录","Sign out")}</button></form></section>')
+    return settings_page(200, lang, tr("设置","Settings"),
+                         '<div class="layout">'+''.join(queue)+'<aside>'+upload+account+'</aside></div>')

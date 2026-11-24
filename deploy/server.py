@@ -64,6 +64,7 @@ with closing(sqlite3.connect(PAGE_VIEWS_DB)) as conn, conn:
     conn.execute("INSERT OR IGNORE INTO page_views VALUES ('live', 0)")
 
 ASSETS = {
+    sponsors.STYLE: "text/css",
     "/wechat.svg": "image/svg+xml",
     "/discussion-qr.png": "image/png",
     "/discussion.js": "text/javascript",
@@ -418,7 +419,7 @@ class Handler(BaseHTTPRequestHandler):
         # Form pages must preserve Origin on same-site POSTs for CSRF validation.
         policy = "same-origin" if path != ZHIHU_PATH + "/callback" else "no-referrer"
         self.send_header("Referrer-Policy", policy)
-        self.send_header("Content-Security-Policy", "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; form-action 'self' https://openapi.zhihu.com https://www.zhihu.com; frame-ancestors 'none'; base-uri 'none'")
+        self.send_header("Content-Security-Policy", "default-src 'none'; img-src 'self'; style-src 'self' 'unsafe-inline'; form-action 'self' https://openapi.zhihu.com https://www.zhihu.com; frame-ancestors 'none'; base-uri 'none'")
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
