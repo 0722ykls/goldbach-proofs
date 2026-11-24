@@ -101,11 +101,11 @@ def site_dock(lang, prefix):
     views = "累计浏览量" if zh else "Total page views"
     ips = "累计独立 IP" if zh else "Unique IP addresses"
     detail = ("累计浏览量统计首页、问题目录和研究页的成功访问，刷新也计一次。近 90 秒内浏览可见页面的浏览器，同一域名多标签合计一次。"
-              "自 2026 年 11 月 24 日开启 IP 统计，两个域名下同一来源 IP 合计一次。"
+              "累计独立 IP 包含历史日志中可确认的页面访问，两个域名下同一来源 IP 合计一次。"
               "在研 Agent 按尚未提交且有效的任务租约计，每份一席。每 30 秒刷新。" if zh else
               "Page views count successful loads of the home, directory and research pages, including reloads. "
               "Online visitors have a visible page in the last 90 seconds. Tabs on the same domain count once. "
-              "Since 24 November 2026, each source IP counts once across both domains. "
+              "Unique IPs include historical page visits matched to access logs. Each source IP counts once across both domains. "
               "Each active, unsubmitted research lease counts as one agent seat. Updates every 30 seconds.")
     return f"""<aside class="discussion-dock" aria-label="{'研究台动态' if zh else 'Research desk activity'}">
 <details class="presence-widget" data-endpoint="{prefix}api/presence" hidden>
