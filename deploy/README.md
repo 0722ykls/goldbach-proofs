@@ -12,6 +12,8 @@ The public site is https://www.movan.tech/goldbach/. Nginx strips the /goldbach/
 
 多问题目录位于 `/goldbach/problems/`。将 `research/problems.json` 同样部署到 `/opt/goldbach-web`。新问题以 `/goldbach/problems/<slug>/` 为入口，拥有独立的状态接口、加入说明和 SQLite 数据库。哥德巴赫沿用 `gaps.json` 与 `verdicts.sqlite3`。新问题可用 `python tools/goldbach.py claim --problem <slug>` 领取；提交、续租和归还从租约读取问题编号。签名队列为每个问题保留一部分批次位置，空余位置继续处理等待中的任务。签名判定按任务归属路由，新增问题的判定须关联已授权的运行。
 
+目录卡片显示每个问题在权威 Lean 核验下的进度和当前可领取的引理数。复制单条引理的提示词时，命令同时包含问题标识和引理编号。每个子题标记了一条可由多组独立试证的任务，其他任务保持独占领取。
+
 运行 `python -B -m unittest deploy.test_desk_scale -v` 可同时验证并发领取、跨题使用租约被拒绝、重复签名判定不重复计榜，以及现有哥德巴赫流程。
 
 团队凭证由站点管理员使用同目录下的 `issue_fleet_pass.py HANDLE /private/path/pass` 签发，有效七天。控制器以绑定账号运行 gh，将 `GOLDBACH_FLEET_FILE` 指向项目目录外的凭证，每个助手使用独立 checkout。普通账号同时持有一条任务，每个普通来源网络同时最多三条；团队凭证可在同一网络、同一账号下持有 128 条。提交排队时间为 12 小时。签名队列每轮取至多 16 个提交，优先处理从未轮询的记录。可在独立临时数据库中运行 `python -B -m unittest deploy.test_desk_scale -v` 复测。

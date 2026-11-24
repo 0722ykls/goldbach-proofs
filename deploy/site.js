@@ -4,6 +4,7 @@ const lang = document.documentElement.lang.startsWith('zh') ? 'zh' : 'en';
 const topic = document.body.dataset.problem;
 const guideUrl = 'https://www.movan.tech/goldbach/' + (topic ? 'problems/' + topic + '/' : '') +
   (lang === 'zh' ? 'join-zh.txt' : 'join.txt');
+const claimCommand = 'python tools/goldbach.py claim' + (topic ? ' --problem ' + topic : '');
 const repository = 'https://github.com/CGandGameEngineLearner/goldbach-proofs';
 const menu = document.querySelector('.menu-toggle');
 const navigation = document.getElementById('site-nav');
@@ -48,7 +49,7 @@ const strings = {
     copyLemma: '复制这条引理的参与提示词',
     occupied: '这条引理当前正在处理。',
     alreadyVerified: '这条引理已通过权威验证。',
-    lemmaPrompt: id => '读取 ' + guideUrl + '，按指南用 python tools/goldbach.py claim ' + id + ' 领取并验证这一条引理。如果无法领取这条引理，请说明原因，不要改领其他题。'
+    lemmaPrompt: id => '读取 ' + guideUrl + '，按指南用 ' + claimCommand + ' ' + id + ' 领取并验证这一条引理。如果无法领取这条引理，请说明原因，不要改领其他题。'
   },
   en: {
     open: 'Open', proved: 'Verified', accepted: 'Accepted', rejected: 'Rejected',
@@ -84,7 +85,7 @@ const strings = {
     copyLemma: 'Copy this lemma’s join prompt',
     occupied: 'This lemma is currently in progress.',
     alreadyVerified: 'The authoritative verifier has accepted this lemma.',
-    lemmaPrompt: id => 'Read ' + guideUrl + ' and follow it to claim and verify exactly ' + id + ' with python tools/goldbach.py claim ' + id + '. If that lemma is unavailable, report why and do not choose another.'
+    lemmaPrompt: id => 'Read ' + guideUrl + ' and follow it to claim and verify exactly ' + id + ' with ' + claimCommand + ' ' + id + '. If that lemma is unavailable, report why and do not choose another.'
   }
 }[lang];
 

@@ -23,6 +23,7 @@ from deploy.desk import QUEUE_BATCH, fleet_pass
 
 ROOT = Path(__file__).resolve().parents[1]
 SESSIONS = 128
+PROBLEMS = json.loads((ROOT / "research/problems.json").read_text(encoding="utf-8"))
 
 
 class DeskScaleTest(unittest.TestCase):
@@ -31,7 +32,8 @@ class DeskScaleTest(unittest.TestCase):
         self.secret = secrets.token_hex(32).encode()
         (folder / "webhook").write_bytes(self.secret)
         (folder / "china-apnic.txt").write_bytes(b"")
-        for source in ("deploy/server.py", "deploy/desk.py", "research/gaps.json", "research/problems.json"):
+        for source in ("deploy/server.py", "deploy/desk.py", "deploy/join.txt", "deploy/join-zh.txt",
+                       "research/gaps.json", "research/problems.json"):
             shutil.copy(ROOT / source, folder)
         openssl = os.environ.get("OPENSSL") or shutil.which("openssl")
         if not openssl and shutil.which("git"):
@@ -68,7 +70,7 @@ class DeskScaleTest(unittest.TestCase):
         self.server.wait(timeout=10)
         self.server.stdout.close()
 
-    def request(self, path, body=None, *, token=None, signed=False, ip=None, ticket=None, expected=200):
+    def request(self, path, body=None, *, token=None, signed=False, ip=None, ticket=None, expected=200, text=False):
         raw = json.dumps(body).encode() if body is not None else None
         headers = {"Content-Type": "application/json"}
         if token:
@@ -83,6 +85,9 @@ class DeskScaleTest(unittest.TestCase):
         with closing(HTTPSConnection("127.0.0.1", self.port, timeout=45, context=self.context)) as conn:
             conn.request("POST" if raw is not None else "GET", path, body=raw, headers=headers)
             response = conn.getresponse()
+            if text:
+                self.assertEqual(response.status, expected, path)
+                return response.read().decode("utf-8")
             result = json.load(response)
             self.assertEqual(response.status, expected, (path, result.get("error")))
             return result
@@ -149,7 +154,7 @@ class DeskScaleTest(unittest.TestCase):
                     self.assertEqual(self.request("/api/status")["desk"]["active"], 0)
 
     def test_parallel_problems_keep_independent_leases_and_verdicts(self):
-        paths = ["", "/problems/no-three-in-line", "/problems/square-packing"]
+        paths = ["", *(f"/problems/{slug}" for slug in PROBLEMS)]
         with ThreadPoolExecutor(max_workers=len(paths)) as pool:
             claims = list(pool.map(lambda path: self.request(
                 path + "/api/desk/claim", {"handle": "alice"}, ip="192.0.2.17", expected=201
@@ -183,6 +188,53 @@ class DeskScaleTest(unittest.TestCase):
             self.assertEqual(result["counts"]["attempts"], 1)
             self.assertEqual(result["desk"]["rankings"]["proofs"], 1)
             self.assertEqual(result["results"][0]["lemma_id"], claim["gap"]["id"])
+
+    def test_simultaneous_fleet_claims_across_problems(self):
+        paths = ["", *(f"/problems/{slug}" for slug in PROBLEMS)]
+        ticket = fleet_pass(self.secret, "lab", int(time.time()) + 3600)
+
+        def claim(i):
+            path = paths[i % len(paths)]
+            result = self.request(path + "/api/desk/claim", {"handle": "lab"},
+                                  ticket=ticket, ip="192.0.2.7", expected=201)
+            return path, result["lease"]["token"], result["gap"]["id"]
+
+        with ThreadPoolExecutor(max_workers=SESSIONS) as pool:
+            claims = self.wave(pool, "four problems", "claims", claim)
+            self.assertEqual(len({token for _, token, _ in claims}), SESSIONS)
+            for path in paths:
+                expected = [gap for owner, _, gap in claims if owner == path]
+                status = self.request(path + "/api/status")
+                self.assertEqual(len(expected), SESSIONS // len(paths))
+                self.assertEqual(status["desk"]["active"], len(expected))
+                self.assertEqual(set(status["desk"]["assignments"]), set(expected))
+                self.assertEqual(set(expected), {gap["id"] for gap in status["gaps"]})
+            self.wave(pool, "four problems", "returns", lambda i: self.request(
+                claims[i][0] + "/api/desk/release", {"reason": "abandoned"}, token=claims[i][1]
+            ))
+        for path in paths:
+            self.assertEqual(self.request(path + "/api/status")["desk"]["active"], 0)
+
+    def test_directory_counts_and_scoped_join_guides(self):
+        slug, problem = next(iter(PROBLEMS.items()))
+        path = f"/problems/{slug}"
+        total = len(problem["gaps"])
+        directory = self.request("/problems/?lang=en", text=True)
+        self.assertIn(f"Lean verified 0/{total} · {total} available", directory)
+        self.request(path + "/api/desk/claim", {"handle": "reader", "gap": problem["gaps"][0]["id"]},
+                     ip="192.0.2.11", expected=201)
+        self.assertIn(f"Lean verified 0/{total} · {total - 1} available",
+                      self.request("/problems/?lang=en", text=True))
+        self.assertIn(f"Lean 已核验 0/{total} · {total - 1} 条可领取",
+                      self.request("/problems/?lang=zh", text=True))
+        for lang, suffix in (("en", ""), ("zh", "-zh")):
+            guide = self.request(f"{path}/join{suffix}.txt", text=True)
+            self.assertIn(f"python tools/goldbach.py claim --problem {slug}\n", guide)
+            self.assertNotIn("python tools/goldbach.py claim\n", guide)
+            self.assertIn(f"{path}/?lang={lang}#records", guide)
+            goldbach_guide = self.request(f"/join{suffix}.txt", text=True)
+            self.assertIn("python tools/goldbach.py claim", goldbach_guide)
+            self.assertNotIn(f"--problem {slug}", goldbach_guide)
 
 
 if __name__ == "__main__":

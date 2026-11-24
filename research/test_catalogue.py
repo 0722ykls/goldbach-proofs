@@ -7,9 +7,29 @@ from urllib.parse import urlparse
 
 
 GAPS = json.loads(Path(__file__).with_name("gaps.json").read_text(encoding="utf-8"))["gaps"]
+PROBLEMS = json.loads(Path(__file__).with_name("problems.json").read_text(encoding="utf-8"))
 
 
 class CatalogueTests(unittest.TestCase):
+    def test_problem_tasks_have_unique_names_and_respect_scope(self):
+        all_gaps = GAPS + [gap for problem in PROBLEMS.values() for gap in problem["gaps"]]
+        for key in ("id", "file", "module"):
+            values = [gap[key] for gap in all_gaps]
+            self.assertEqual(len(values), len(set(values)), key)
+        for slug, problem in PROBLEMS.items():
+            self.assertRegex(slug, r"^[a-z]+(?:-[a-z]+)*$")
+            self.assertTrue(any(gap.get("parallel") is True for gap in problem["gaps"]), slug)
+            for gap in problem["gaps"]:
+                with self.subTest(problem=slug, gap=gap["id"]):
+                    self.assertRegex(gap["id"], rf"^L-{slug}-[a-z0-9]+(?:-[a-z0-9]+)*$")
+                    self.assertLessEqual(len(gap["id"]), 64)
+                    name = gap["id"].replace("-", "_")
+                    self.assertEqual(gap["file"], f"lean/PEqualNP/Outside/{name}.lean")
+                    self.assertEqual(gap["module"], f"PEqualNP.Outside.{name}")
+                    self.assertIn(gap["program"], {"foundation", "correlation"})
+                    for lang in ("en", "zh"):
+                        self.assertTrue(gap["plain_statement"][lang].strip())
+
     def test_lease_ids_and_pr_paths(self):
         for key in ("id", "file", "module"):
             values = [gap[key] for gap in GAPS]

@@ -37,6 +37,55 @@
         },
         "program": "correlation",
         "imports": []
+      },
+      {
+        "id": "L-no-three-in-line-grid-upper-bound",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_grid_upper_bound.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_grid_upper_bound",
+        "statement": "∀ (n : ℕ) (S : Finset (ℕ × ℕ)), (∀ p ∈ S, p.1 < n ∧ p.2 < n) → (∀ a ∈ S, ∀ b ∈ S, ∀ c ∈ S, a ≠ b → a ≠ c → b ≠ c → ((b.1 : ℤ) - (a.1 : ℤ)) * ((c.2 : ℤ) - (a.2 : ℤ)) ≠ ((b.2 : ℤ) - (a.2 : ℤ)) * ((c.1 : ℤ) - (a.1 : ℤ))) → S.card ≤ 2 * n",
+        "plain_statement": {
+          "zh": "如果 n × n 点阵的选点集中，每三个互异点的整数行列式都非零，那么选点数不超过 2n。",
+          "en": "If every triple of distinct selected points in an n × n grid has a nonzero integer determinant, then there are at most 2n selected points."
+        },
+        "brief": {
+          "zh": "按第一坐标分组，先证明每组至多两个点，再把分组计数相加。",
+          "en": "Group by the first coordinate, show each fibre has at most two points, then sum the fibre sizes."
+        },
+        "program": "foundation",
+        "imports": [],
+        "parallel": true
+      },
+      {
+        "id": "L-no-three-in-line-integer-parabola",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_integer_parabola.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_integer_parabola",
+        "statement": "∀ (a b c : ℤ), a ≠ b → a ≠ c → b ≠ c → (b - a) * (c ^ 2 - a ^ 2) ≠ (b ^ 2 - a ^ 2) * (c - a)",
+        "plain_statement": {
+          "zh": "整数抛物线 y = x² 上，横坐标互异的三个点不共线。",
+          "en": "Three points on y = x² with distinct integer x-coordinates are not collinear."
+        },
+        "brief": {
+          "zh": "把行列式分解成三个差的乘积。这个无界引理可用于检查抛物线构型。",
+          "en": "Factor the determinant into a product of three differences. This uniform identity can certify parabolic constructions."
+        },
+        "program": "correlation",
+        "imports": []
+      },
+      {
+        "id": "L-no-three-in-line-prime-field-parabola",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_prime_field_parabola.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_prime_field_parabola",
+        "statement": "∀ (p : ℕ), Nat.Prime p → ∀ (a b c : ZMod p), a ≠ b → a ≠ c → b ≠ c → (b - a) * (c ^ 2 - a ^ 2) ≠ (b ^ 2 - a ^ 2) * (c - a)",
+        "plain_statement": {
+          "zh": "在素数模 p 的有限域上，抛物线 y = x² 上横坐标互异的三点行列式非零。",
+          "en": "Over the field of prime order p, three points on y = x² with distinct first coordinates have nonzero determinant."
+        },
+        "brief": {
+          "zh": "将素数假设注册为 Fact，再使用有限域中非零因子的乘积仍非零。",
+          "en": "Use the primality hypothesis as a Fact so that the product of nonzero factors stays nonzero."
+        },
+        "program": "correlation",
+        "imports": []
       }
     ],
     "roadmap": [
@@ -110,6 +159,55 @@
         },
         "program": "correlation",
         "imports": []
+      },
+      {
+        "id": "L-square-packing-rotation-distance",
+        "file": "lean/PEqualNP/Outside/L_square_packing_rotation_distance.lean",
+        "module": "PEqualNP.Outside.L_square_packing_rotation_distance",
+        "statement": "∀ (a b x y u v : ℝ), a ^ 2 + b ^ 2 = 1 → ((a * x - b * y) - (a * u - b * v)) ^ 2 + ((b * x + a * y) - (b * u + a * v)) ^ 2 = (x - u) ^ 2 + (y - v) ^ 2",
+        "plain_statement": {
+          "zh": "同一平面旋转作用于两点，保持它们的平方距离。",
+          "en": "Applying one planar rotation to two points preserves their squared distance."
+        },
+        "brief": {
+          "zh": "可以用差向量表述，核验旋转单位正方形的任意两顶点之间的距离。",
+          "en": "Apply the rotation to a difference vector. This certifies distances between any two vertices of a rotated unit square."
+        },
+        "program": "foundation",
+        "imports": []
+      },
+      {
+        "id": "L-square-packing-axis-grid-slots",
+        "file": "lean/PEqualNP/Outside/L_square_packing_axis_grid_slots.lean",
+        "module": "PEqualNP.Outside.L_square_packing_axis_grid_slots",
+        "statement": "∀ (n k : ℕ), n ≤ k ^ 2 → ∃ centers : Fin n → ℕ × ℕ, Function.Injective centers ∧ ∀ i, (centers i).1 < k ∧ (centers i).2 < k",
+        "plain_statement": {
+          "zh": "若 n ≤ k²，就能为 n 个正方形分配 k × k 整数网格中互异的单元编号。",
+          "en": "If n ≤ k², n squares can be assigned distinct cell indices in a k × k integer grid."
+        },
+        "brief": {
+          "zh": "用商与余数构造单元编号，单独处理 k = 0。后续可用单元编号构造轴对齐装填。",
+          "en": "Construct the cell indices using quotient and remainder, including k = 0. The indices can then be used in an axis-aligned construction."
+        },
+        "program": "correlation",
+        "imports": []
+      },
+      {
+        "id": "L-square-packing-rotated-square-containment",
+        "file": "lean/PEqualNP/Outside/L_square_packing_rotated_square_containment.lean",
+        "module": "PEqualNP.Outside.L_square_packing_rotated_square_containment",
+        "statement": "∀ (s x y a b : ℝ), a ^ 2 + b ^ 2 = 1 → ((∀ u ∈ Set.Icc (-(1 / 2 : ℝ)) (1 / 2), ∀ v ∈ Set.Icc (-(1 / 2 : ℝ)) (1 / 2), 0 ≤ x + a * u - b * v ∧ x + a * u - b * v ≤ s ∧ 0 ≤ y + b * u + a * v ∧ y + b * u + a * v ≤ s) ↔ (|a| + |b| ≤ 2 * x ∧ |a| + |b| ≤ 2 * (s - x) ∧ |a| + |b| ≤ 2 * y ∧ |a| + |b| ≤ 2 * (s - y)))",
+        "plain_statement": {
+          "zh": "以 (x, y) 为中心的旋转单位正方形位于边长 s 的轴对齐外框内，当且仅当中心到四条边的距离都至少为 (|a| + |b|)/2。",
+          "en": "A rotated unit square centred at (x, y) lies inside [0,s] × [0,s] exactly when each of the four coordinate margins is at least (|a| + |b|)/2."
+        },
+        "brief": {
+          "zh": "用绝对值不等式证明充分性，再按旋转系数符号选取顶点证明必要性。",
+          "en": "Prove sufficiency with absolute-value inequalities and necessity by choosing vertices according to the coefficient signs."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true
       }
     ],
     "roadmap": [
@@ -182,6 +280,55 @@
           "en": "A common divisor of n and n² + 1 must equal one."
         },
         "program": "correlation",
+        "imports": []
+      },
+      {
+        "id": "L-quadratic-primes-prime-divisors-mod-four",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_prime_divisors_mod_four.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_prime_divisors_mod_four",
+        "statement": "∀ (n p : ℕ), Nat.Prime p → p ∣ n ^ 2 + 1 → p = 2 ∨ p % 4 = 1",
+        "plain_statement": {
+          "zh": "n² + 1 的素因子要么为 2，要么模 4 余 1。",
+          "en": "Every prime divisor of n² + 1 is either 2 or congruent to 1 modulo 4."
+        },
+        "brief": {
+          "zh": "对奇素数，研究 n 在模 p 的乘法群中的阶，再把局部约束接到筛法输入。",
+          "en": "For odd p, study the multiplicative order of n modulo p to obtain a local sieve constraint."
+        },
+        "program": "correlation",
+        "imports": [],
+        "parallel": true
+      },
+      {
+        "id": "L-quadratic-primes-local-root-pair",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_local_root_pair.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_local_root_pair",
+        "statement": "∀ (p : ℕ), Nat.Prime p → ∀ (a b : ZMod p), a ^ 2 + 1 = 0 → b ^ 2 + 1 = 0 → a = b ∨ a = -b",
+        "plain_statement": {
+          "zh": "模素数 p 时，若 a、b 都是 x² + 1 的根，则它们相同或互为相反数。",
+          "en": "Modulo a prime p, two roots of x² + 1 are equal or negatives of each other."
+        },
+        "brief": {
+          "zh": "将两式相减，用平方差分解及有限域的无零因子性质。",
+          "en": "Subtract the equations, factor the difference of squares, and use the absence of zero divisors."
+        },
+        "program": "correlation",
+        "imports": []
+      },
+      {
+        "id": "L-quadratic-primes-residue-invariance",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_residue_invariance.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_residue_invariance",
+        "statement": "∀ (m a b : ℕ), a % m = b % m → (a ^ 2 + 1) % m = (b ^ 2 + 1) % m",
+        "plain_statement": {
+          "zh": "参数 a、b 模 m 同余时，a² + 1 和 b² + 1 也模 m 同余。",
+          "en": "If a and b represent the same residue modulo m, then a² + 1 and b² + 1 do as well."
+        },
+        "brief": {
+          "zh": "用同余关系的乘法和加法相容性，把整除检查转为剩余类检查。",
+          "en": "Use compatibility of congruence with multiplication and addition to reduce divisibility to residue classes."
+        },
+        "program": "foundation",
         "imports": []
       }
     ],

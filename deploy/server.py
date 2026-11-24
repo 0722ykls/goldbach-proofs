@@ -24,6 +24,7 @@ GAPS = json.loads((ROOT / "gaps.json").read_text(encoding="utf-8"))["gaps"]
 DESK = Desk(DB, GAPS, SECRET)
 PROBLEM_FILE = ROOT / "problems.json"
 PROBLEMS = json.loads(PROBLEM_FILE.read_text(encoding="utf-8")) if PROBLEM_FILE.exists() else {}
+PUBLIC_SITE = "https://www.movan.tech/goldbach/"
 problem_ids = set(gap["id"] for gap in GAPS)
 for slug, problem in PROBLEMS.items():
     if slug in {"goldbach", DB.stem} or not re.fullmatch(r"[a-z]+(?:-[a-z]+)*", slug):
@@ -113,6 +114,7 @@ def problem_page(page, slug, lang):
     page = re.sub(r'<title>[^<]*</title>', f'<title>{title}</title>', page, count=1)
     page = re.sub(r'<meta (?:name|property)="(?:description|og:[^"]+|twitter:[^"]+)"[^>]*>\n?', '', page)
     page = re.sub(r'(<a href="#top" class="brand">.*?</span>)[^<]+', lambda m: m[1] + title, page, count=1)
+    page = page.replace('aria-hidden="true">p + q ?</span>', f'aria-hidden="true">{escape(data["formula"])}</span>', 1)
     page = page.replace('href="problems/?', 'href="../?').replace('href="site.css"', 'href="../../site.css"').replace(
         'src="site.js"', 'src="../../site.js"')
     page = re.sub(r'(<h1 id="page-title">).*?(</h1>)', lambda m: m[1] + title + m[2], page)
@@ -144,11 +146,25 @@ def problem_page(page, slug, lang):
                   lambda _: f'<section class="section road-section" id="roadmap"><div class="section-heading"><div>'
                   f'<h2>{translations["road"]}</h2></div></div><ol class="roadmap topic-roadmap">{stages}</ol></section>',
                   page, count=1, flags=re.S)
-    url = "https://www.movan.tech/goldbach/problems/" + slug + "/join" + ("-zh" if zh else "") + ".txt"
+    url = PUBLIC_SITE + "problems/" + slug + "/join" + ("-zh" if zh else "") + ".txt"
     prompt = (f"阅读 {url}，按说明领取一条任务，提交 Lean 证明并跟踪核验。" if zh else
               f"Read {url}, claim one task, and submit a Lean proof for verification.")
     page = re.sub(r'(<p id="agent-prompt"[^>]*>).*?(</p>)', lambda m: m[1] + escape(prompt) + m[2], page)
     return page
+
+
+def problem_card(slug, data, lang):
+    zh = lang == "zh"
+    try:
+        verified, published, available = DESKS[slug].progress()
+    except sqlite3.Error:
+        progress = "暂时无法读取进度" if zh else "Progress temporarily unavailable"
+    else:
+        progress = (f"Lean 已核验 {verified}/{published} · {available} 条可领取" if zh else
+                    f"Lean verified {verified}/{published} · {available} available")
+    return (f'<a class="problem-card" href="{slug}/?lang={lang}"><span class="problem-formula">{escape(data["formula"])}</span>'
+            f'<h2>{escape(data["title"][lang])}</h2><p>{escape(data["question"][lang])}</p>'
+            f'<p class="problem-progress">{progress}</p></a>')
 
 
 def directory_page(lang):
@@ -157,11 +173,7 @@ def directory_page(lang):
     back = "返回强哥德巴赫猜想" if zh else "Back to Strong Goldbach"
     intro = ("选择一道题，查看其研究地图、开放引理和核验证据。" if zh else
              "Select a problem to explore its research map, open lemmas and verification record.")
-    cards = "\n".join(
-        f'<a class="problem-card" href="{slug}/?lang={lang}"><span class="problem-formula">{escape(data["formula"])}</span>'
-        f'<h2>{escape(data["title"][lang])}</h2><p>{escape(data["question"][lang])}</p></a>'
-        for slug, data in PROBLEMS.items()
-    )
+    cards = "\n".join(problem_card(slug, data, lang) for slug, data in PROBLEMS.items())
     return f"""<!doctype html>
 <html lang="{lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{heading} · Goldbach Research</title><link rel="stylesheet" href="../site.css"></head>
@@ -270,12 +282,20 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply(404, b'{}')
             content = asset.read_bytes()
             if slug != "goldbach" and path in {"/join.txt", "/join-zh.txt"}:
-                # The original participation workflow applies, with a scoped claim command.
                 lang = "zh" if path.endswith("-zh.txt") else "en"
-                guide = content.decode().replace(
-                    "python tools/goldbach.py claim\n", f"python tools/goldbach.py claim --problem {slug}\n"
+                title = PROBLEMS[slug]["title"][lang]
+                introduction = (f"请使用自己的 GitHub 账号，领取并提交一条「{title}」的 Lean 4 引理。"
+                                "只有通过权威 Lean 核验的引理才会记入研究台。" if lang == "zh" else
+                                f"Use your GitHub account to claim and submit one Lean 4 lemma for {title}. "
+                                "The desk credits lemmas that pass authoritative Lean verification.")
+                _, _, instructions = asset.read_text(encoding="utf-8").split("\n\n", 2)
+                instructions = instructions.replace(
+                    "\npython tools/goldbach.py claim\n", f"\npython tools/goldbach.py claim --problem {slug}\n"
                 )
-                content = (PROBLEMS[slug]["title"][lang] + "\n\n" + guide).encode()
+                instructions = instructions.replace("https://www.goldbach.tech/#records\n", "").replace(
+                    PUBLIC_SITE + "#records", f"{PUBLIC_SITE}problems/{slug}/?lang={lang}#records"
+                )
+                content = f"{title}\n\n{introduction}\n\n{instructions}".encode()
             return self.reply(200, content, ASSETS[path])
         if path != "/":
             return self.reply(404, b'{}')

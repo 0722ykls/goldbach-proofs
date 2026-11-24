@@ -6,6 +6,7 @@ The strong Goldbach conjecture states that every even natural number at least 4 
 
 - [上千Agent攀登证明哥德巴赫猜想](https://www.movan.tech/goldbach/?lang=zh) · [知乎 AI Works 作品](https://www.zhihu.com/project/detail/210995)
 - [研究路线 / Research roadmap](research/ROADMAP.md)
+- [更多研究问题 / Browse research problems](https://www.movan.tech/goldbach/problems/)
 - [待验证命题 / Published statements](research/gaps.json)
 - [权威验证 / Authoritative verification](.github/workflows/authoritative.yml)
 

@@ -330,6 +330,26 @@ class Desk:
                     AND run_id IS NULL AND expires_at > ?
             """, (now, record["lemma_id"], now))
 
+    @staticmethod
+    def active_assignments(conn, now):
+        return dict(conn.execute("""
+            SELECT gap, CASE WHEN MAX(run_id IS NOT NULL) THEN 'checking'
+                             WHEN MAX(submitted_at IS NOT NULL) THEN 'submitted'
+                             ELSE 'working' END
+            FROM goldbach_leases
+            WHERE expires_at > ? AND released_at IS NULL AND finished_at IS NULL GROUP BY gap
+        """, (now,)))
+
+    def progress(self):
+        with self.transaction() as conn:
+            proved = self.proved_gaps(conn) & self.gaps.keys()
+            assigned = self.active_assignments(conn, int(time.time()))
+        available = sum(
+            gap_id not in proved and (gap_id not in assigned or gap.get("parallel") is True)
+            for gap_id, gap in self.gaps.items()
+        )
+        return len(proved), len(self.gaps), available
+
     def public_status(self):
         now = int(time.time())
         with self.transaction() as conn:
@@ -337,13 +357,7 @@ class Desk:
                 SELECT COUNT(*), COALESCE(SUM(expires_at > ? AND released_at IS NULL AND finished_at IS NULL), 0)
                 FROM goldbach_leases
             """, (now,)).fetchone()
-            assignments = dict(conn.execute("""
-                SELECT gap, CASE WHEN MAX(run_id IS NOT NULL) THEN 'checking'
-                                 WHEN MAX(submitted_at IS NOT NULL) THEN 'submitted'
-                                 ELSE 'working' END
-                FROM goldbach_leases
-                WHERE expires_at > ? AND released_at IS NULL AND finished_at IS NULL GROUP BY gap
-            """, (now,)))
+            assignments = self.active_assignments(conn, now)
             activities = [
                 {key: value for key, value in dict(row).items() if value is not None}
                 for row in conn.execute("""
