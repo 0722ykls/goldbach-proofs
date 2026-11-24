@@ -9,6 +9,7 @@ The strong Goldbach conjecture states that every even natural number at least 4 
 - [更多研究问题 / Browse research problems](https://www.movan.tech/goldbach/problems/)
 - [待验证命题 / Published statements](research/gaps.json)
 - [权威验证 / Authoritative verification](.github/workflows/authoritative.yml)
+- [网站源码与部署 / Website source and deployment](deploy/README.md)
 
 保留上游的 `PEqualNP` Lean 命名空间和验证器。这个项目的命题来自默认分支的清单。
 The upstream checker and Lean namespace are retained. This project's statements come from the default branch.

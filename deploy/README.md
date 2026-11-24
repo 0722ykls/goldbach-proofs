@@ -1,5 +1,25 @@
 # Deployment / 部署
 
+## 网站文件
+
+主域名是 [www.goldbach.tech](https://www.goldbach.tech/)，另一个入口是 [movan.tech/goldbach](https://www.movan.tech/goldbach/)。两个入口共用本仓库的应用和任务清单。
+
+| 用途 | 仓库文件 | 部署位置 |
+| --- | --- | --- |
+| HTTPS 服务、任务台、研究指数和账号绑定 | `deploy/{server,desk,landau,github_identity,zhihu_oauth}.py` | `/opt/goldbach-web/` |
+| 中英文页面、脚本、样式、参与指南和图片 | `deploy/*.{html,js,css,svg,png}`、`deploy/join*.txt` | 同上。页面图标使用 SVG，部署目录还保存 PNG 版本。 |
+| 主问题及分站任务 | `research/gaps.json`、`research/problems.json` | 同上，保留文件名 |
+| 默认语言选择 | `deploy/china-apnic.txt` | 同上，服务启动时读取 |
+| systemd 服务及知乎凭据引用 | `deploy/goldbach-web.service`、`deploy/zhihu-oauth.conf` | `/etc/systemd/system/goldbach-web.service` 及其 `.d/` 目录 |
+| 主域名代理 | [goldbach.tech.conf](nginx/goldbach.tech.conf) | `/etc/nginx/sites-enabled/goldbach.tech` |
+| movan.tech 的子路径代理 | [goldbach-location.conf](nginx/goldbach-location.conf) | `/etc/nginx/snippets/goldbach-location.conf`，在已有 HTTPS 虚拟主机的 `server` 块中通过 `include` 加载 |
+
+`deploy/issue_fleet_pass.py` 供管理员签发团队凭证。`tools/goldbach.py` 是参与者客户端。证明源文件、验证器和队列分别在 `lean/`、`tools/` 和 `.github/workflows/`。线上 SQLite 状态由 systemd 的 `StateDirectory` 管理，证书和服务凭据按 unit 指定的路径在部署机上提供。
+
+### 地区数据来源
+
+`china-apnic.txt` 保存本次线上核对的 10,845 条 APNIC 分配记录。更新时，从 APNIC 的标准 `delegated-apnic-latest` 中选取注册机构为 `apnic`、国家代码为 `CN`、类型为 `ipv4` 或 `ipv6`、状态为 `allocated` 或 `assigned` 的完整记录，保留竖线分隔格式。国家代码表示地址资源登记分配地，本站将其用作默认语言提示。APNIC 对数据准确性不作保证，使用者按其发布条件承担使用风险。[APNIC 数据与格式说明](https://ftp.apnic.net/stats/apnic/)
+
 ## 知乎署名
 
 随 `server.py` 部署 `zhihu_oauth.py` 与 `github_identity.py`。将应用凭据 JSON（字段 `app_id`、`app_key`）保存到仅 root 可读的 `/etc/goldbach-web/zhihu-oauth`，安装 `zhihu-oauth.conf` 到 `/etc/systemd/system/goldbach-web.service.d/`，再执行 daemon-reload 并重启 goldbach-web。凭据保留在服务器。已登记回调为 `https://www.goldbach.tech/auth/zhihu/callback`，应从这个域名启动会话，并在该虚拟主机的访问日志中排除授权路径。
@@ -8,7 +28,7 @@
 
 运行 `python -B -m unittest deploy.test_zhihu deploy.test_github_identity` 检查绑定流程。实测授权需使用可公开访问的登记域名与参与者自己的知乎账号。若平台回调缺少 state，页面终止绑定，需向平台确认 state 回传或受支持的替代机制。
 
-The public site is https://www.movan.tech/goldbach/. Nginx strips the /goldbach/ prefix and forwards to the HTTPS service on 127.0.0.1:8443. The upstream service reads its certificate through systemd credentials. Restart the service after its certificate renews. Install the APNIC CN IPv4 and IPv6 allocation rows in /opt/goldbach-web/china-apnic.txt and restart the service after refreshing them. Nginx sets the visitor address used for language selection. Visitors can override it with ?lang=zh or ?lang=en.
+Nginx strips the /goldbach/ prefix on movan.tech and forwards to the HTTPS service on 127.0.0.1:8443. The upstream service reads its certificate through systemd credentials. Restart the service after its certificate renews or the APNIC file is refreshed. Nginx sets the visitor address used for language selection. Visitors can override it with ?lang=zh or ?lang=en.
 
 权威工作流仅在生成 ACCEPTED 或 REJECTED 时回传。配置 GitHub Actions 仓库变量 GOLDBACH_WEBHOOK_URL 与密钥 GOLDBACH_WEBHOOK_SECRET 后，由单独的 runner 向 https://www.movan.tech/goldbach/api/verdict 发送 HTTPS POST。端点校验 X-Goldbach-Signature，格式为 sha256=<对原始请求体的 HMAC-SHA256>。
 
@@ -22,7 +42,7 @@ gh secret set GOLDBACH_WEBHOOK_SECRET --repo CGandGameEngineLearner/goldbach-pro
 
 服务端目录 /opt/goldbach-web，状态目录 /var/lib/goldbach-web。公网入口使用 nginx 的 HTTPS 443 端口。
 
-发布站点时，将 deploy/ 下的 server.py、desk.py、landau.py、zh.html、en.html、site.css、site.js、goldbach-icon.svg、join.txt、join-zh.txt，以及 research/gaps.json 部署到 /opt/goldbach-web，再重启 goldbach-web。GET /goldbach/api/status 从命题清单和 SQLite 返回公开引理、最近的验证结果及累计统计。
+发布站点时，按上表将应用、页面、静态资源、两个任务清单和地区数据放入 `/opt/goldbach-web/`，再重启 `goldbach-web`。主域名的 `GET /api/status` 和 movan.tech 的 `GET /goldbach/api/status` 都从命题清单和 SQLite 返回公开引理、最近的验证结果及累计统计。
 
 讨论群浮窗的 `deploy/discussion.js`、`deploy/discussion-qr.png` 和 `deploy/wechat.svg` 也放在 `/opt/goldbach-web/`。换群码时同步更新 `server.py` 的 `DISCUSSION_EXPIRES`，按微信标注的北京时间有效期填写；到期后页面自动隐藏入口。
 
