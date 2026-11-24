@@ -90,8 +90,8 @@
     <div class="research-brief">
       <section class="frontier-feed"><h2><i class="live-light" aria-hidden="true"></i> Latest research activity</h2><div id="frontier-events">—</div><a href="#community">Open the activity feed</a></section>
       <aside class="method-note">
-          <h2>Method notes</h2><p>From a Lean proof of RH to a count of prime pairs.</p>
-          <a href="https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean">Read the upstream theorems</a>
+          <h2>The Goldbach story</h2><p>What connects a young reader of Hua Luogeng’s book to today’s search for pairs of primes?</p>
+          <a href="#research-story">Read the story and recent papers</a>
         </aside>
     </div>
 
@@ -222,10 +222,38 @@
       </div>
       <ol class="roadmap">
         <li><span class="stage-marker" aria-hidden="true">1</span><h3>Extract a pair from positivity</h3><p>Weight each prime by its logarithm. Prove that the additive convolution at n is positive exactly when n is a sum of two primes.</p></li>
-        <li><span class="stage-marker" aria-hidden="true">2</span><h3>Trace Levent’s Lean proof</h3><p>Follow everyCharacter through primitive characters, the functional equation and the local-to-global inputs. Identify which zero estimates govern arithmetic progressions.</p></li>
+        <li><span class="stage-marker" aria-hidden="true">2</span><h3>Trace Levent’s Lean proof</h3><p>Follow everyCharacter through primitive characters, the functional equation and the local-to-global inputs. Identify which zero estimates govern arithmetic progressions. <a href="https://github.com/leanprover-community/riemann-hypothesis/blob/dc76b2788ef7ad0a6d2d4575ca3320a677c72cd9/src/Main.lean">Read the upstream theorems</a></p></li>
         <li><span class="stage-marker" aria-hidden="true">3</span><h3>Compare major and minor arcs</h3><p>Fix the Fourier coefficient at n, bound the positive major-arc contribution, then seek cancellation in the signed minor-arc contribution at that same n.</p></li>
         <li><span class="stage-marker" aria-hidden="true">4</span><h3>Exclude remaining exceptions</h3><p>Use second moments to bound exceptions, then study local oscillation of the actual correlation. Strict positivity at every even input remains open.</p></li>
       </ol>
+      <article class="goldbach-story" id="research-story" aria-labelledby="story-title">
+        <header class="section-heading"><div><h2 id="story-title">Given an even number, where are its two primes?</h2>
+          <p>There are three ways to make 30 from two primes. They are 7 + 23, 11 + 19 and 13 + 17. Can we always find at least one pair for any even number greater than 2?</p></div></header>
+        <div class="story-chapters">
+          <div><h3>From Hua Luogeng’s book to Chen Jingrun’s “1 + 2”</h3>
+            <p>In <cite>Additive Theory of Prime Numbers</cite>, Hua Luogeng studied how to write integers as sums of primes and their powers. As a young mathematician in Xiamen, Chen Jingrun improved a result in the book on Tarry’s problem. Hua read his paper and recommended him. In 1957 Chen joined the Institute of Mathematics at the Chinese Academy of Sciences.</p>
+            <p>Chen announced his “1 + 2” theorem in 1966 and published the full proof in 1973. Every sufficiently large even number is a prime plus either a prime or a product of two primes. To reach “1 + 1”, we still need to show that we can always choose a representation in which the second summand is itself prime.</p>
+            <p class="story-sources"><a href="https://www.cas.cn/xzfc/202507/t20250725_5077687.shtml">Academy biography (Chinese)</a><a href="https://doi.org/10.1360/za1973-3-2-111">Chen’s 1973 paper (Chinese)</a></p>
+          </div>
+          <div><h3>How far does the Riemann hypothesis narrow the search?</h3>
+            <p>The zeros of the Riemann zeta function tell us how far the count of primes can stray from its predicted value. The generalized Riemann hypothesis (GRH) for Dirichlet L-functions gives estimates even when we group primes by their remainder modulo a chosen integer.</p>
+            <p>In August 2026, Chirre and Hagen proved that, assuming RH, every interval (x, x + 123(ln x)²] with x ≥ 2 contains at least one even number that is a sum of two primes. Now pick a particular even number N in that interval. We still need a prime p for which N − p is also prime. Our research tasks ask how to bound that pair count from below.</p>
+            <p class="story-sources"><a href="https://link.springer.com/article/10.1007/s40993-026-00767-6">Short intervals paper · Theorem 1</a><a href="#lemmas">Explore the prime-pair tasks</a></p>
+          </div>
+        </div>
+        <h3 class="story-news-title">Recent results and original sources</h3>
+        <ol class="story-news">
+          <li><time datetime="2026-11-21">21 Nov 2026</time><div><h4>What did the Lean community verify?</h4>
+            <p>On 20 November, Levent Alpöge released a formal proof developed with Claude. The following day, the Lean and Mathlib communities confirmed that the statement matched Mathlib’s Riemann hypothesis and that multiple proof checkers accepted the proof.</p>
+            <p class="story-sources"><a href="https://www.nature.com/articles/d41586-026-03812-7">Nature news report</a><a href="https://leanprover-community.github.io/blog/posts/riemann-hypothesis/">Community verification statement</a><a href="https://math.mit.edu/~drew/grh/">MIT verification record</a></p></div></li>
+          <li><time datetime="2026-11-13">13 Nov 2026</time><div><h4>A conditional route to binary Goldbach</h4>
+            <p>In a manuscript posted by Shandong University, Jiamin Li and Jianya Liu derive prime-pair representations for every sufficiently large even number. They assume Dirichlet GRH together with either of two additional hypotheses on a spectrum. Establishing one of those extra hypotheses remains a step on this route.</p>
+            <p class="story-sources"><a href="https://mrc.sdu.edu.cn/english/info/1018/1514.htm">Shandong University abstract</a><a href="https://mrc.sdu.edu.cn/__local/6/14/8E/28753731EE31D7635BAF60732C2_0C644604_2CE958.pdf">Authors’ manuscript (PDF)</a></p></div></li>
+          <li><time datetime="2026-06-01">1 Jun 2026</time><div><h4>Refining “1 + 2” to “1 + 1.9”</h4>
+            <p>Li and Liu’s preprint gives a sharper form of Chen’s decomposition for sufficiently large even N. Write N = p + rq, where p and q are primes and r is 1 or a prime. Their bound on the smaller factor is r ≤ q<sup>0.9</sup>. A representation with r = 1 gives a sum of two primes.</p>
+            <p class="story-sources"><a href="https://arxiv.org/abs/2606.05224">arXiv preprint</a><a href="https://math.xmu.edu.cn/info/1017/41540.htm">Xiamen University lecture report (Chinese)</a></p></div></li>
+        </ol>
+      </article>
     </section>
 
     <section class="section" id="records" aria-labelledby="records-title">

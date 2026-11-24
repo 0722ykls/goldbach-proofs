@@ -329,6 +329,21 @@ button, a, input, select { -webkit-tap-highlight-color: transparent; }
 .roadmap h3 { margin-top: .44rem; font-size: 1rem; line-height: 1.28; }
 .roadmap p { margin-top: .3rem; color: var(--body); font-size: .85rem; line-height: 1.48; }
 
+.goldbach-story { margin-top: clamp(2rem, 5vw, 4rem); border-top: 1px solid var(--line); padding-top: 2rem; }
+.story-chapters { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr)); gap: 1.5rem 3rem; }
+.goldbach-story h3 { font: 600 1.35rem/1.35 var(--serif); }
+.story-chapters p, .story-news p { margin: .6rem 0 0; max-width: 70ch; color: var(--body); }
+.goldbach-story .story-sources { display: flex; flex-wrap: wrap; gap: .35rem 1rem; margin-top: .75rem; font-size: .88rem; }
+.story-news-title { margin: 2rem 0 .5rem; }
+.story-news { padding: 0; margin: 0; list-style: none; }
+.story-news li { display: grid; grid-template-columns: 7rem minmax(0, 1fr); gap: .3rem 1rem; border-top: 1px solid var(--line); padding: 1rem 0; }
+.story-news time { color: var(--muted); font-size: .88rem; font-variant-numeric: tabular-nums; }
+.story-news h4 { margin: 0; font-size: 1.05rem; }
+.story-news p { margin-top: .3rem; }
+@media (max-width: 36rem) {
+  .story-news li { grid-template-columns: minmax(0, 1fr); }
+}
+
 .log article + article { border-top: 1px solid var(--line); }
 .log-entry { display: grid; grid-template-columns: minmax(6rem, 8rem) minmax(0, 1fr) auto; gap: .85rem; padding: .86rem 1rem; align-items: start; }
 .log-id { display: block; margin-bottom: .12rem; font: .79rem var(--mono); overflow-wrap: anywhere; }
