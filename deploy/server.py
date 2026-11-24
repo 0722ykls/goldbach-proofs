@@ -49,6 +49,10 @@ GAP_DESKS = {
     gap_id: slug for slug, desk in DESKS.items() for gap_id in desk.gaps
 }
 PRESENCE = SitePresence(DESKS.values())
+PAGE_VIEWS_DB = DB.with_name("page-views.sqlite3")
+with closing(sqlite3.connect(PAGE_VIEWS_DB)) as conn, conn:
+    conn.execute("CREATE TABLE IF NOT EXISTS page_views (source TEXT PRIMARY KEY, total INTEGER NOT NULL)")
+    conn.execute("INSERT OR IGNORE INTO page_views VALUES ('live', 0)")
 
 ASSETS = {
     "/wechat.svg": "image/svg+xml",
@@ -86,14 +90,17 @@ def site_dock(lang, prefix):
     zh = lang == "zh"
     visitors = "在线访客" if zh else "Visitors online"
     agents = "在研 Agent" if zh else "Working agents"
-    detail = ("全站近 90 秒内浏览可见页面的浏览器，同一域名多标签合计一次。"
+    views = "累计浏览量" if zh else "Total page views"
+    detail = ("累计浏览量统计首页、问题目录和研究页的成功访问，刷新也计一次。近 90 秒内浏览可见页面的浏览器，同一域名多标签合计一次。"
               "在研 Agent 按尚未提交且有效的任务租约计，每份一席。每 30 秒刷新。" if zh else
-              "Browsers with a visible page in the last 90 seconds. Tabs on the same domain count once. "
+              "Page views count successful loads of the home, directory and research pages, including reloads. "
+              "Online visitors have a visible page in the last 90 seconds. Tabs on the same domain count once. "
               "Each active, unsubmitted research lease counts as one agent seat. Updates every 30 seconds.")
     return f"""<aside class="discussion-dock" aria-label="{'研究台动态' if zh else 'Research desk activity'}">
 <details class="presence-widget" data-endpoint="{prefix}api/presence" hidden>
 <summary><span><i aria-hidden="true"></i>{visitors} <b data-count="visitors">—</b></span>
-<span>{agents} <b data-count="agents">—</b></span></summary>
+<span>{agents} <b data-count="agents">—</b></span>
+<span class="total-views">{views} <b data-count="page_views">—</b></span></summary>
 <p>{detail}</p></details>
 {discussion_widget(lang, prefix)}</aside><script src="{prefix}presence.js" defer></script>"""
 
@@ -375,6 +382,12 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def reply(self, status, body, content_type="application/json", language=None):
+        if status == 200 and self.command == "GET" and content_type == "text/html":
+            try:
+                with closing(sqlite3.connect(PAGE_VIEWS_DB)) as conn, conn:
+                    conn.execute("UPDATE page_views SET total = total + 1 WHERE source = 'live'")
+            except sqlite3.Error:
+                self.log_error("Page view counter unavailable")
         self.send_response(status)
         if content_type == "application/json" or content_type.startswith("text/"):
             content_type += "; charset=utf-8"
@@ -413,10 +426,19 @@ class Handler(BaseHTTPRequestHandler):
             return DESKS.get(match[1]) if match[1] in PROBLEMS else None, match[2], match[1]
         return DESK, path, "goldbach"
 
+    def reply_presence(self, visitor=None):
+        counts = PRESENCE.snapshot(visitor)
+        try:
+            with closing(sqlite3.connect(PAGE_VIEWS_DB)) as conn:
+                counts["page_views"] = conn.execute("SELECT sum(total) FROM page_views").fetchone()[0]
+        except sqlite3.Error:
+            counts["page_views"] = None
+        return self.reply(200, json.dumps(counts).encode())
+
     def do_GET(self):
         url = urlsplit(self.path)
         if url.path == "/api/presence":
-            return self.reply(200, json.dumps(PRESENCE.snapshot()).encode())
+            return self.reply_presence()
         if url.path == ZHIHU_PATH or url.path.startswith(ZHIHU_PATH + "/"):
             return self.zhihu_request(url.path, url.query)
         if url.path == "/problems" or url.path.removeprefix("/problems/") in PROBLEMS:
@@ -523,7 +545,7 @@ class Handler(BaseHTTPRequestHandler):
             visitor = self.headers.get("X-Goldbach-Visit", "")
             if not re.fullmatch(r"[0-9a-f]{32}", visitor):
                 return self.reply(400, b'{"error":"invalid presence identifier"}')
-            return self.reply(200, json.dumps(PRESENCE.snapshot(visitor)).encode())
+            return self.reply_presence(visitor)
         if self.path.startswith(ZHIHU_PATH + "/"):
             return self.zhihu_request(urlsplit(self.path).path)
         desk, path, slug = self.scope(self.path)

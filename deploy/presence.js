@@ -5,6 +5,7 @@
   const cookiePath = new URL('../', endpoint).pathname;
   const visitors = widget.querySelector('[data-count="visitors"]');
   const agents = widget.querySelector('[data-count="agents"]');
+  const views = widget.querySelector('[data-count="page_views"]');
   const format = new Intl.NumberFormat(document.documentElement.lang);
   let visit;
   let timer;
@@ -36,8 +37,9 @@
       const value = await response.json();
       visitors.textContent = Number.isSafeInteger(value.visitors) ? format.format(value.visitors) : '—';
       agents.textContent = Number.isSafeInteger(value.agents) ? format.format(value.agents) : '—';
+      views.textContent = Number.isSafeInteger(value.page_views) ? format.format(value.page_views) : '—';
     } catch {
-      visitors.textContent = agents.textContent = '—';
+      visitors.textContent = agents.textContent = views.textContent = '—';
     } finally {
       clearTimeout(timeout);
       pending = false;

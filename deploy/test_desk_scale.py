@@ -72,6 +72,21 @@ class DeskScaleTest(unittest.TestCase):
         self.server.wait(timeout=10)
         self.server.stdout.close()
 
+    def test_page_views_count_only_successful_page_gets(self):
+        def total():
+            return self.request("/api/presence")["page_views"]
+
+        start = total()
+        for path in ("/", "/?lang=zh", "/problems/", "/problems/log-rank/"):
+            self.assertIn('data-count="page_views"', self.request(path, text=True))
+        self.request("/health")
+        self.request("/absent", expected=404)
+        with closing(HTTPSConnection("127.0.0.1", self.port, context=self.context)) as conn:
+            conn.request("HEAD", "/")
+            self.assertEqual(conn.getresponse().status, 200)
+        self.assertEqual(total(), start + 4)
+        self.assertEqual(total(), start + 4)
+
     def request(self, path, body=None, *, token=None, signed=False, ip=None, ticket=None, expected=200, text=False):
         raw = json.dumps(body).encode() if body is not None else None
         headers = {"Content-Type": "application/json"}
