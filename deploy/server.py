@@ -249,10 +249,10 @@ def problem_page(page, slug, lang):
         article = "https://www.cambridge.org/engage/coe/article-details/6aa045a1810b9dcc82ba1e4b"
         news = "最新成果" if zh else "Research news"
         headline = "n² + 1 的大素因子：指数达到 1.323" if zh else "Large prime factors of n² + 1 reach exponent 1.323"
-        summary = ("李进文（JinWen Li）在预印本中报告，通过在 Harman 筛中递归使用 Buchstab 恒等式，可证明对无穷多个正整数 n，"
+        summary = ("这篇预印本报告，通过在 Harman 筛中递归使用 Buchstab 恒等式，可证明对无穷多个正整数 n，"
                    "存在素数 p 整除 n² + 1，且 p > n¹·³²³。这个界允许 n² + 1 还有其他因子。"
                    "本站以 1.323 为外部基线，下一步是提高这个指数。" if zh else
-                   "In a preprint, JinWen Li reports that recursive Buchstab switching in a Harman sieve gives infinitely many "
+                   "The preprint reports that recursive Buchstab switching in a Harman sieve gives infinitely many "
                    "positive integers n for which a prime divisor p of n² + 1 exceeds n¹·³²³. Other factors may remain. "
                    "The project takes 1.323 as its external baseline and aims to raise the exponent.")
         read = "阅读预印本" if zh else "Read the preprint"
