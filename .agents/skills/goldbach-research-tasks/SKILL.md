@@ -5,6 +5,23 @@ description: 为哥德巴赫研究台及其并列问题设计或调整研究路�
 
 # 研究路线与命题发布
 
+## 逐题拆解与批量发布接口 v1
+
+所有问题共用[变更集 JSON Schema](../../../research/schema/change-set.v1.json)；每次拆解选择一个研究台、一条父命题。参照[次弧拆解示例](../../../research/schema/example-minor-split.json)，示例供校验，不加入任务队列。
+
+1. **读取**：从研究台快照取得父题 ID、冻结声明和基线 Git SHA。对原声明 UTF-8 字节计算 SHA-256。读取父题、已完成输入和在途任务，先查重。
+2. **拆解**：将数学家的意图写入 `motivation`。每条子题给出独立 Lean 声明、显式前提、中英文解释、证明提示、所属路线、来源和依赖 ID。用 `links` 指向下游：`input` 提供必要步骤或可复用输入，`exploration` 是探索，`sufficient_reduction` 要列全输入并提供组合引理 `bridge`。检查组合引理的类型确实把这些输入推到父题。证明状态始终读取权威流水线裁决。
+3. **校验**：先用 Draft 2020-12 验证 JSON 结构，再验证父题哈希、ID 唯一性、引用在本台存在、路线存在、依赖无环和双语语义。服务端从 ID 派生固定文件名与模块名；v1 新题使用 Mathlib 并遵循该台的 program/role 规则。新路线或新增允许导入项需要扩展协议；v1 的 `route_note` 更新父题对应路线的双语说明。仅调整说明时允许空任务列表。最后运行仓库目录测试和固定版本 Lean。
+4. **发布**：以下 HTTP 路径为网站对接约定，当前尚未实现。已授权的仓库维护流程仍见下文。普通数学家会话可生成变更集；未来的 AI 发布客户端遇到未实现接口或鉴权失败时仅返回草稿，不自动改用 Git 或 SSH 发布。
+
+| 接口 | 输入与返回 |
+| --- | --- |
+| `GET /api/research/v1/problems/{slug}/snapshot` | 返回该台 `base_revision`、任务及声明哈希、路线、依赖和在途状态。当前公开任务可从该台 `api/status` 读取。 |
+| `POST /api/research/v1/problems/{slug}/changes` | 正文为变更集；URL 与正文的问题必须一致。使用 lifesize 通过知乎 OAuth 授予本 AI 会话的限时、分问题凭据。服务端按稳定知乎 ID 验证管理员，校验成功后返回 202 和 `change_id`。同一授权主体、问题和 `request_id` 对相同正文返回原记录。 |
+| `GET /api/research/v1/changes/{change_id}` | 返回 `status`（queued、validating、publishing、published、failed 或 conflict）、候选 SHA、CI 链接、发布 SHA、线上任务链接和错误详情。仅在生产回读与候选版本一致后报告 published。 |
+
+正文无效或引用错误返回 422，基线冲突或同一请求 ID 被用于不同正文返回 409，缺少有效会话返回 401，越权返回 403。冲突时重新读取快照，复核数学意图，生成新的请求 ID。服务端在激活前再次核对授权与基线。管理员网页只读展示变更记录；凭据留在受控会话中，变更集和日志只记录授权主体与变更内容。
+
 ## 定位缺口
 
 从仓库根目录运行命令。用 `git fetch origin main` 核对研究基线，保留其他维护者的工作树改动。查询主站 `/api/status` 或分站 `/problems/<slug>/api/status`，按 `gaps[].proved` 查看已证与开放命题。结合 `desk.assignments` 查看在途任务。记录取样时间、目标 ID、冻结声明和已经可复用的结果。用户只要方案时，到路线建议为止。
