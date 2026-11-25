@@ -93,11 +93,10 @@ def discussion_widget(lang, prefix):
     cutoff = DISCUSSION_EXPIRES.date()
     validity = f"{cutoff.month} 月 {cutoff.day} 日前有效" if zh else f"Valid before {cutoff:%Y-%m-%d} (UTC+8)"
     alt = "知乎 AI4S 讨论组（哥猜）微信群二维码" if zh else "WeChat QR code for the Zhihu AI4S Goldbach discussion group"
-    return f"""<details class="discussion-widget" aria-label="{name}"><summary><img class="wechat-mark" src="{prefix}wechat.svg" width="34" height="34" alt="">{label}<span aria-hidden="true"></span></summary>
+    return f"""<details class="discussion-widget" id="wechat-discussion" name="research-qr" aria-label="{name}"><summary><img class="wechat-mark" src="{prefix}wechat.svg" width="34" height="34" alt="">{label}<span aria-hidden="true"></span></summary>
 <div class="discussion-body"><strong>{name}</strong><p>{instructions}</p>
 <div class="discussion-code"><img src="{prefix}discussion-qr.png" alt="{alt}" width="360" height="544"></div>
-<small>{validity}</small></div></details>
-<script src="{prefix}discussion.js" defer></script>"""
+<small>{validity}</small></div></details>"""
 
 
 def core_team_signup(lang, prefix):
@@ -113,11 +112,12 @@ def core_team_signup(lang, prefix):
         research = "Mathematics researchers set the research direction, break it into proof tasks, and adjust the roadmap as results come in."
         development = "Software developers maintain the website infrastructure."
         caption = "Scan to apply"
-    return f"""<section class="core-team-signup" id="core-team" aria-labelledby="core-team-title">
-<div><h2 id="core-team-title">{title}</h2><p>{intro}</p>
-<p><strong>{research}</strong> {development}</p></div>
+    return f"""<details class="discussion-widget" id="core-team" name="research-qr">
+<summary>{title}<span aria-hidden="true"></span></summary>
+<div class="core-team-signup"><p>{intro}</p>
+<p><strong>{research}</strong> {development}</p>
 <figure><img src="{prefix}core-team-signup.png" width="176" height="176" alt="{caption}">
-<figcaption>{caption}</figcaption></figure></section>"""
+<figcaption>{caption}</figcaption></figure></div></details>"""
 
 
 def site_dock(lang, prefix):
@@ -140,7 +140,8 @@ def site_dock(lang, prefix):
 <span class="total-views">{views} <b data-count="page_views">—</b></span>
 <span class="total-views">{ips} <b data-count="unique_ips">—</b></span></summary>
 <p>{detail}</p></details>
-{discussion_widget(lang, prefix)}</aside><script src="{prefix}presence.js" defer></script>"""
+{discussion_widget(lang, prefix)}{core_team_signup(lang, prefix)}</aside>
+<script src="{prefix}discussion.js" defer></script><script src="{prefix}presence.js" defer></script>"""
 
 
 def research_status(desk=DESK):
@@ -574,7 +575,6 @@ class Handler(BaseHTTPRequestHandler):
         if url.path == "/problems/":
             lang = self.language(url)
             directory = directory_page(lang).replace("</main>", "</main>" + sponsors.wall(ZHIHU.db,lang,"../"), 1)
-            directory = directory.replace('<div class="problem-list">', core_team_signup(lang, "../") + '<div class="problem-list">', 1)
             directory = directory.replace('</a></div></header>', '</a>'+ZHIHU.account_link(self.headers,lang)+'</div></header>',1)
             return self.reply(200, directory.encode(), "text/html", lang)
         desk, path, slug = self.scope(url.path)
@@ -641,7 +641,7 @@ class Handler(BaseHTTPRequestHandler):
         prefix = "" if slug == "goldbach" else "../../"
         page = page.replace("<!-- account -->", ZHIHU.account_link(self.headers, lang), 1)
         hero = '<section class="hero" aria-labelledby="page-title">'
-        page = page.replace(hero, sponsors.wall(ZHIHU.db, lang, prefix) + core_team_signup(lang, prefix) + hero, 1)
+        page = page.replace(hero, sponsors.wall(ZHIHU.db, lang, prefix) + hero, 1)
         page = page.replace("</body>", site_dock(lang, prefix) + "</body>", 1)
         self.reply(200, page.encode(), "text/html", lang)
 
