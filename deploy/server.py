@@ -194,7 +194,7 @@ def research_status(desk=DESK, *, compact=False):
     gaps = []
     for gap in desk.gaps.values():
         result, proved = latest.get(gap["id"], (None, False))
-        gaps.append({**gap, "latest": result, "proved": proved})
+        gaps.append({**gap, "latest": result, "proved": proved, "route_id": TASK_ROUTE[gap["id"]]})
     accepted = sum(gap["proved"] for gap in gaps)
     desk_status = desk.public_status()
     rankings = desk_status["rankings"]
@@ -240,7 +240,7 @@ def status_body(desk, web_view):
 def desk_routes(slug, lang):
     """Read route membership from the catalogue used by the claim service."""
     if slug != "goldbach":
-        routes = [(stage.get("route_source", f"stage-{i+1}"), *stage[lang],
+        routes = [(stage.get("route_id") or stage.get("route_source") or f"stage-{i+1}", *stage[lang],
                    {task["id"]: task[lang] for task in stage["tasks"]}, [])
                   for i, stage in enumerate(PROBLEMS[slug]["roadmap"])]
     else:
@@ -257,6 +257,18 @@ def desk_routes(slug, lang):
         routes.append(("unclassified", "未分路线的命题" if lang == "zh" else "Unassigned tasks",
                        "", remaining, []))
     return routes
+
+
+# Shared by the map, claim receipt and public verification records.
+TASK_ROUTE = {task: key for slug in DESKS for key, _, _, tasks, _ in desk_routes(slug, "en") for task in tasks}
+
+def route_filters(slug, lang):
+    return "".join(
+        f'<button type="button" class="map-program-button" data-program="{escape(key)}" aria-pressed="false">'
+        f'<strong class="program-name">{escape(title)}</strong><span class="program-count">{len(tasks)} '
+        f'{"题" if lang == "zh" else "tasks"}</span></button>'
+        for key, title, _, tasks, _ in desk_routes(slug, lang)
+    )
 
 
 def route_panels(slug, lang):
@@ -281,23 +293,10 @@ def route_panels(slug, lang):
 
 
 def goldbach_roadmap_page(page, lang):
-    # Catalogue order sets the two featured tracks; all tracks remain in the task list.
     if RELEASE_SHA:
         page = page.replace("</head>", f'<meta name="catalogue-revision" content="{escape(RELEASE_SHA)}"></head>', 1)
-    featured = GOLDBACH_CATALOGUE.get("tracks", [])[:2]
-    cards, stages = [], []
-    for track in featured:
-        key = escape(track["id"])
-        title = escape(track["title"][lang])
-        summary = escape(track["description"][lang])
-        count = sum(g.get("track") == track["id"] for g in GAPS)
-        tasks = f"{count} 个子命题" if lang == "zh" else f"{count} proof tasks"
-        cards.append(f'<button type="button" class="map-program-button" data-program="{key}" aria-pressed="false">'
-                     f'<strong class="program-name">{title}</strong><span class="program-count">{tasks}</span></button>')
-        stages.append(f'<li><h3>{title}</h3><p>{summary}</p><a href="#track-{key}">{tasks}</a></li>')
-    overview = '<ul class="roadmap topic-roadmap">' + "".join(stages) + '</ul>'
-    return page.replace("<!-- catalogue filters -->", "".join(cards)).replace(
-        "<!-- catalogue roadmap -->", overview + route_panels("goldbach", lang))
+    return page.replace("<!-- catalogue filters -->", route_filters("goldbach", lang)).replace(
+        "<!-- catalogue roadmap -->", route_panels("goldbach", lang))
 
 
 def problem_page(page, slug, lang):
@@ -374,15 +373,7 @@ def problem_page(page, slug, lang):
     page = re.sub(r'<aside class="method-note">.*?</aside>',
                   lambda _: f'<aside class="method-note"><h2>{note_title}</h2><p>{note_body}</p>{references}</aside>',
                   page, count=1, flags=re.S)
-    def program_card(match):
-        key = match[2]
-        if key not in translations:
-            return ""
-        text = re.sub(r'(<strong class="program-name">).*?(</strong>)',
-                      lambda m: m[1] + translations[key] + m[2], match[0])
-        return re.sub(r'<span class="program-description">.*?</span>', '', text)
-    page = re.sub(r'<button type="button" class="map-program-button" (data-program="([^"]+)").*?</button>',
-                  program_card, page, flags=re.S)
+    page = page.replace("<!-- catalogue filters -->", route_filters(slug, lang))
     stages = route_panels(slug, lang)
     page = re.sub(r'<section class="section road-section" id="roadmap".*?</section>',
                   lambda _: f'<section class="section road-section" id="roadmap"><div class="section-heading"><div>'
@@ -752,6 +743,8 @@ class Handler(BaseHTTPRequestHandler):
                     if isinstance(gap, str):
                         desk = DESKS[GAP_DESKS.get(gap, "goldbach")]
                 status, result = desk.dispatch(path, body, self.headers, str(self.client_ip()), raw)
+                if path == "/api/desk/claim" and status == 201:
+                    result["route_id"] = TASK_ROUTE[result["gap"]["id"]]
         except (ValueError, OSError):
             return self.reply(400, b'{"error":"invalid request body"}')
         except sqlite3.Error as error:

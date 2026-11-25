@@ -324,6 +324,10 @@ class DeskScaleTest(unittest.TestCase):
         for lang, suffix in (("en", ""), ("zh", "-zh")):
             self.assertIn(f'log-rank/?lang={lang}', self.request(f"/problems/?lang={lang}", text=True))
             page = self.request(f"{path}/?lang={lang}", text=True)
+            for stage in problem["roadmap"]:
+                key = stage.get("route_id") or stage["route_source"]
+                self.assertIn(f'data-program="{key}"', page)
+                self.assertIn(f'id="track-{key}"', page)
             guide = self.request(f"{path}/join{suffix}.txt", text=True)
             for material in problem["materials"]:
                 self.assertIn(material["url"], page)
@@ -338,8 +342,10 @@ class DeskScaleTest(unittest.TestCase):
         total = len(problem["gaps"])
         directory = self.request("/problems/?lang=en", text=True)
         self.assertIn(f"Lean verified 0/{total} · {total} available", directory)
-        self.request(path + "/api/desk/claim", {"handle": "reader", "gap": problem["gaps"][0]["id"]},
-                     ip="192.0.2.11", expected=201)
+        claim = self.request(path + "/api/desk/claim", {"handle": "reader", "gap": problem["gaps"][0]["id"]},
+                             ip="192.0.2.11", expected=201)
+        gap = next(g for g in self.request(path + "/api/status")["gaps"] if g["id"] == claim["gap"]["id"])
+        self.assertEqual(claim["route_id"], gap["route_id"])
         self.assertIn(f"Lean verified 0/{total} · {total - 1} available",
                       self.request("/problems/?lang=en", text=True))
         self.assertIn(f"Lean 已核验 0/{total} · {total - 1} 条可领取",

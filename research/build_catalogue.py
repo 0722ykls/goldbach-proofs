@@ -54,6 +54,8 @@ def build(root):
         else:
             stage = meta.get("existing_stage_en")
             existing = next((r for r in desk["roadmap"] if r["en"][0] == stage), None)
+            if existing and existing.get("route_id", route) != route:
+                raise ValueError(f"Use the existing stage route_id for {path}")
             if stage and not existing:
                 raise ValueError(f"Unknown roadmap stage: {stage}")
         if existing is None:

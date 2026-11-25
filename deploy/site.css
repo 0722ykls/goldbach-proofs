@@ -1111,3 +1111,6 @@ body:not([data-problem]) .hero .open-status { vertical-align: middle; }
 .route-active .route-meta, .desk-running { color: var(--blue); }
 .route-panel[open] .route-meta { margin-bottom: .75rem; }
 .task-activity { display: inline-block; margin-inline-start: .5em; padding: .05em .5em; border: 1px solid currentColor; border-radius: .25em; }
+
+.map-program-button.route-active { border-color: var(--program-tint, #9cdaa2); }
+.map-program-button.route-active .program-count { font-weight: 700; }

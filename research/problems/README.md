@@ -22,7 +22,7 @@ goldbach/routes/signed-window/
 }
 ```
 
-沿用主站已有路线时，只需在 route.json 写入对应的 id。分站新路线使用双语 title、description；接入既有分站路线时填写 id 和 existing_stage_en（原阶段完整英文标题）。任务文件沿用同研究台的完整目录记录，包括 id、file、module、statement、双语 plain_statement 和 brief、program、imports、source 等字段。任务的 track 从目录名生成。复用同一研究台的引理时在 depends_on 中引用其 ID。Lean 文件和模块沿用原签名约定。
+沿用主站已有路线时，只需在 route.json 写入对应的 id。分站新路线使用双语 title、description；接入既有分站路线时以其固定 route_id 作为目录名和 id，填写 existing_stage_en（原阶段完整英文标题）。任务文件沿用同研究台的完整目录记录，包括 id、file、module、statement、双语 plain_statement 和 brief、program、imports、source 等字段。任务的 track 从目录名生成。复用同一研究台的引理时在 depends_on 中引用其 ID。Lean 文件和模块沿用原签名约定。
 
 ## 提交和核验
 
