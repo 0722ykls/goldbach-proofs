@@ -7341,6 +7341,126 @@
       "parallel": true,
       "track": "modulus-certificates",
       "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-minor-bilinear-split",
+      "file": "lean/PEqualNP/Outside/L_goldbach_minor_bilinear_split.lean",
+      "module": "PEqualNP.Outside.L_goldbach_minor_bilinear_split",
+      "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); let Q := fun n : ℕ => (Nat.log 2 (n+2))^2; let arcs := fun n : ℕ => {t : ℝ | ∃ q a : ℕ, 1≤q ∧ q≤Q n ∧ a≤q ∧ Nat.Coprime a q ∧ |t-(a:ℝ)/(q:ℝ)| ≤ (Q n:ℝ)/((q:ℝ)*(n:ℝ))}; let low := fun (n k : ℕ) => if k^3≤n then w k else 0; let high := fun (n k : ℕ) => w k-low n k; let I := fun (n:ℕ) (a b:ℕ→ℝ) => intervalIntegral (fun t => (arcs n)ᶜ.indicator (fun u => S n a u*S n b u*E (-(n:ℝ)*u)) t) (0:ℝ) 1 MeasureTheory.volume; ∀ n:ℕ,I n w w=I n (low n) (low n)+2*I n (low n) (high n)+I n (high n) (high n)",
+      "plain_statement": {
+        "zh": "次弧系数精确分成低低、低高、高高三项",
+        "en": "Exact three-term minor-arc decomposition"
+      },
+      "brief": {
+        "zh": "保持原题的弧和频率；先用低段长度与 Parseval 控制低低、低高项，再单独攻高高项的有符号下界。 对应原题 L-goldbach-arc-minor-saving。",
+        "en": "Keep the original arcs and frequency. Use the short support and Parseval on the small terms, then study the signed bulk. Parent: L-goldbach-arc-minor-saving."
+      },
+      "source": "https://www.goldbach.tech/?lemma=L-goldbach-arc-minor-saving#roadmap",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "minor-truncation",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-small-spectrum-cap",
+      "file": "lean/PEqualNP/Outside/L_goldbach_small_spectrum_cap.lean",
+      "module": "PEqualNP.Outside.L_goldbach_small_spectrum_cap",
+      "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); let Q := fun n : ℕ => (Nat.log 2 (n+2))^2; let arcs := fun n : ℕ => {t : ℝ | ∃ q a : ℕ, 1≤q ∧ q≤Q n ∧ a≤q ∧ Nat.Coprime a q ∧ |t-(a:ℝ)/(q:ℝ)| ≤ (Q n:ℝ)/((q:ℝ)*(n:ℝ))}; let low := fun (n k : ℕ) => if k^3≤n then w k else 0; let high := fun (n k : ℕ) => w k-low n k; let I := fun (n:ℕ) (a b:ℕ→ℝ) => intervalIntegral (fun t => (arcs n)ᶜ.indicator (fun u => S n a u*S n b u*E (-(n:ℝ)*u)) t) (0:ℝ) 1 MeasureTheory.volume; ∀ (n:ℕ) (t:ℝ), 2≤n → ‖S n (low n) t‖≤((n:ℝ)^(1/3:ℝ)+1)*Real.log (n:ℝ)",
+      "plain_statement": {
+        "zh": "低段指数和逐点受立方根尺度约束",
+        "en": "Pointwise cube-root bound for the small spectrum"
+      },
+      "brief": {
+        "zh": "保持原题的弧和频率；先用低段长度与 Parseval 控制低低、低高项，再单独攻高高项的有符号下界。 对应原题 L-goldbach-arc-minor-saving。",
+        "en": "Keep the original arcs and frequency. Use the short support and Parseval on the small terms, then study the signed bulk. Parent: L-goldbach-arc-minor-saving."
+      },
+      "source": "https://www.goldbach.tech/?lemma=L-goldbach-arc-minor-saving#roadmap",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "minor-truncation",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-bulk-energy-cap",
+      "file": "lean/PEqualNP/Outside/L_goldbach_bulk_energy_cap.lean",
+      "module": "PEqualNP.Outside.L_goldbach_bulk_energy_cap",
+      "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); let Q := fun n : ℕ => (Nat.log 2 (n+2))^2; let arcs := fun n : ℕ => {t : ℝ | ∃ q a : ℕ, 1≤q ∧ q≤Q n ∧ a≤q ∧ Nat.Coprime a q ∧ |t-(a:ℝ)/(q:ℝ)| ≤ (Q n:ℝ)/((q:ℝ)*(n:ℝ))}; let low := fun (n k : ℕ) => if k^3≤n then w k else 0; let high := fun (n k : ℕ) => w k-low n k; let I := fun (n:ℕ) (a b:ℕ→ℝ) => intervalIntegral (fun t => (arcs n)ᶜ.indicator (fun u => S n a u*S n b u*E (-(n:ℝ)*u)) t) (0:ℝ) 1 MeasureTheory.volume; ∀ n:ℕ,2≤n → intervalIntegral (fun t => ‖S n (high n) t‖^2) (0:ℝ) 1 MeasureTheory.volume≤((n:ℝ)+1)*(Real.log (n:ℝ))^2",
+      "plain_statement": {
+        "zh": "高段单位周期二阶能量预算",
+        "en": "Full-period energy bound for the bulk"
+      },
+      "brief": {
+        "zh": "保持原题的弧和频率；先用低段长度与 Parseval 控制低低、低高项，再单独攻高高项的有符号下界。 对应原题 L-goldbach-arc-minor-saving。",
+        "en": "Keep the original arcs and frequency. Use the short support and Parseval on the small terms, then study the signed bulk. Parent: L-goldbach-arc-minor-saving."
+      },
+      "source": "https://www.goldbach.tech/?lemma=L-goldbach-arc-minor-saving#roadmap",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "minor-truncation",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-small-small-saving",
+      "file": "lean/PEqualNP/Outside/L_goldbach_small_small_saving.lean",
+      "module": "PEqualNP.Outside.L_goldbach_small_small_saving",
+      "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); let Q := fun n : ℕ => (Nat.log 2 (n+2))^2; let arcs := fun n : ℕ => {t : ℝ | ∃ q a : ℕ, 1≤q ∧ q≤Q n ∧ a≤q ∧ Nat.Coprime a q ∧ |t-(a:ℝ)/(q:ℝ)| ≤ (Q n:ℝ)/((q:ℝ)*(n:ℝ))}; let low := fun (n k : ℕ) => if k^3≤n then w k else 0; let high := fun (n k : ℕ) => w k-low n k; let I := fun (n:ℕ) (a b:ℕ→ℝ) => intervalIntegral (fun t => (arcs n)ᶜ.indicator (fun u => S n a u*S n b u*E (-(n:ℝ)*u)) t) (0:ℝ) 1 MeasureTheory.volume; ∀ e:ℝ, 0<e → ∃ N:ℕ, ∀ n≥N, ‖I n (low n) (low n)‖≤e*(n:ℝ)",
+      "plain_statement": {
+        "zh": "低低项绝对值为次线性",
+        "en": "Sublinear small–small contribution"
+      },
+      "brief": {
+        "zh": "保持原题的弧和频率；先用低段长度与 Parseval 控制低低、低高项，再单独攻高高项的有符号下界。 对应原题 L-goldbach-arc-minor-saving。",
+        "en": "Keep the original arcs and frequency. Use the short support and Parseval on the small terms, then study the signed bulk. Parent: L-goldbach-arc-minor-saving."
+      },
+      "source": "https://www.goldbach.tech/?lemma=L-goldbach-arc-minor-saving#roadmap",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "minor-truncation",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-small-bulk-saving",
+      "file": "lean/PEqualNP/Outside/L_goldbach_small_bulk_saving.lean",
+      "module": "PEqualNP.Outside.L_goldbach_small_bulk_saving",
+      "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); let Q := fun n : ℕ => (Nat.log 2 (n+2))^2; let arcs := fun n : ℕ => {t : ℝ | ∃ q a : ℕ, 1≤q ∧ q≤Q n ∧ a≤q ∧ Nat.Coprime a q ∧ |t-(a:ℝ)/(q:ℝ)| ≤ (Q n:ℝ)/((q:ℝ)*(n:ℝ))}; let low := fun (n k : ℕ) => if k^3≤n then w k else 0; let high := fun (n k : ℕ) => w k-low n k; let I := fun (n:ℕ) (a b:ℕ→ℝ) => intervalIntegral (fun t => (arcs n)ᶜ.indicator (fun u => S n a u*S n b u*E (-(n:ℝ)*u)) t) (0:ℝ) 1 MeasureTheory.volume; ∀ e:ℝ, 0<e → ∃ N:ℕ, ∀ n≥N, ‖I n (low n) (high n)‖≤e*(n:ℝ)",
+      "plain_statement": {
+        "zh": "低高项绝对值为次线性",
+        "en": "Sublinear mixed contribution"
+      },
+      "brief": {
+        "zh": "保持原题的弧和频率；先用低段长度与 Parseval 控制低低、低高项，再单独攻高高项的有符号下界。 对应原题 L-goldbach-arc-minor-saving。",
+        "en": "Keep the original arcs and frequency. Use the short support and Parseval on the small terms, then study the signed bulk. Parent: L-goldbach-arc-minor-saving."
+      },
+      "source": "https://www.goldbach.tech/?lemma=L-goldbach-arc-minor-saving#roadmap",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "minor-truncation",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-bulk-signed-floor",
+      "file": "lean/PEqualNP/Outside/L_goldbach_bulk_signed_floor.lean",
+      "module": "PEqualNP.Outside.L_goldbach_bulk_signed_floor",
+      "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k:ℝ) else 0; let E := fun x : ℝ => Complex.exp (((2*Real.pi*x:ℝ):ℂ)*Complex.I); let S := fun (n : ℕ) (w : ℕ → ℝ) (t : ℝ) => Finset.sum (Finset.range (n+1)) (fun k => (w k:ℂ)*E ((k:ℝ)*t)); let Q := fun n : ℕ => (Nat.log 2 (n+2))^2; let arcs := fun n : ℕ => {t : ℝ | ∃ q a : ℕ, 1≤q ∧ q≤Q n ∧ a≤q ∧ Nat.Coprime a q ∧ |t-(a:ℝ)/(q:ℝ)| ≤ (Q n:ℝ)/((q:ℝ)*(n:ℝ))}; let low := fun (n k : ℕ) => if k^3≤n then w k else 0; let high := fun (n k : ℕ) => w k-low n k; let I := fun (n:ℕ) (a b:ℕ→ℝ) => intervalIntegral (fun t => (arcs n)ᶜ.indicator (fun u => S n a u*S n b u*E (-(n:ℝ)*u)) t) (0:ℝ) 1 MeasureTheory.volume; ∀ e:ℝ,0<e → ∃ N:ℕ,∀ n≥N, Even n → -(e*(n:ℝ))≤(I n (high n) (high n)).re",
+      "plain_statement": {
+        "zh": "只对高高项证明逐偶数单侧抵消",
+        "en": "One-sided bulk cancellation for each even target"
+      },
+      "brief": {
+        "zh": "保持原题的弧和频率；先用低段长度与 Parseval 控制低低、低高项，再单独攻高高项的有符号下界。 对应原题 L-goldbach-arc-minor-saving。",
+        "en": "Keep the original arcs and frequency. Use the short support and Parseval on the small terms, then study the signed bulk. Parent: L-goldbach-arc-minor-saving."
+      },
+      "source": "https://www.goldbach.tech/?lemma=L-goldbach-arc-minor-saving#roadmap",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "minor-truncation",
+      "role": "target"
     }
   ],
   "tracks": [
@@ -7619,6 +7739,20 @@
       "description": {
         "zh": "调用一般 Ramanujan 和，再核对 Möbius 值与单位类数；频率分子保持任意互素。",
         "en": "Apply the Ramanujan sum identity and certify the totient and Möbius coefficient."
+      },
+      "feeds": [
+        "arc-budget"
+      ]
+    },
+    {
+      "id": "minor-truncation",
+      "title": {
+        "zh": "次弧：先剔除立方根以下的素数",
+        "en": "Minor arcs after removing small primes"
+      },
+      "description": {
+        "zh": "保持原题的弧和频率；先用低段长度与 Parseval 控制低低、低高项，再单独攻高高项的有符号下界。",
+        "en": "Keep the original arcs and frequency. Use the short support and Parseval on the small terms, then study the signed bulk."
       },
       "feeds": [
         "arc-budget"

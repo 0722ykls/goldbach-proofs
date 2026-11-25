@@ -3428,6 +3428,78 @@
         "program": "foundation",
         "imports": [],
         "parallel": true
+      },
+      {
+        "id": "L-no-three-in-line-repair-cover",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_repair_cover.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_repair_cover",
+        "statement": "let valid := fun (n : ℕ) (S : Finset (ℕ × ℕ)) => (∀ z ∈ S, z.1 < n ∧ z.2 < n) ∧ (∀ a ∈ S, ∀ b ∈ S, ∀ c ∈ S, a ≠ b → a ≠ c → b ≠ c → ((b.1 : ℤ) - (a.1 : ℤ)) * ((c.2 : ℤ) - (a.2 : ℤ)) ≠ ((b.2 : ℤ) - (a.2 : ℤ)) * ((c.1 : ℤ) - (a.1 : ℤ))); ∀ n (U D:Finset (ℕ×ℕ)), (∀ z∈U,z.1<n ∧ z.2<n) → (∀ a∈U,∀ b∈U,∀ c∈U,a≠b → a≠c → b≠c → ((b.1:ℤ)-a.1)*((c.2:ℤ)-a.2)=((b.2:ℤ)-a.2)*((c.1:ℤ)-a.1) → a∈D ∨ b∈D ∨ c∈D) → valid n (U \\ D)",
+        "plain_statement": {
+          "zh": "坏三元组都命中删点集则余集合法",
+          "en": "A transversal of bad triples repairs a candidate"
+        },
+        "brief": {
+          "zh": "先产生超额候选，再用删点集击中所有共线三元组。计数归约和构造目标分别领取。 对应原题 L-no-three-in-line-density-gain。",
+          "en": "Generate surplus candidates and hit every collinear triple by deleting points. Separate the construction from the counting transfer. Parent: L-no-three-in-line-density-gain."
+        },
+        "source": "https://www.goldbach.tech/problems/no-three-in-line/?lemma=L-no-three-in-line-density-gain#roadmap",
+        "program": "correlation",
+        "parallel": true,
+        "imports": []
+      },
+      {
+        "id": "L-no-three-in-line-repair-net-gain",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_repair_net_gain.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_repair_net_gain",
+        "statement": "let valid := fun (n : ℕ) (S : Finset (ℕ × ℕ)) => (∀ z ∈ S, z.1 < n ∧ z.2 < n) ∧ (∀ a ∈ S, ∀ b ∈ S, ∀ c ∈ S, a ≠ b → a ≠ c → b ≠ c → ((b.1 : ℤ) - (a.1 : ℤ)) * ((c.2 : ℤ) - (a.2 : ℤ)) ≠ ((b.2 : ℤ) - (a.2 : ℤ)) * ((c.1 : ℤ) - (a.1 : ℤ))); ∀ a b:ℝ,b<a → (∀ B:ℕ,∃ n>B,∃ U D:Finset (ℕ×ℕ),valid n (U \\ D) ∧ (3/2+a)*(n:ℝ)≤U.card ∧ (D.card:ℝ)≤b*n) → ∃ d : ℝ, 0 < d ∧ ∀ B : ℕ, ∃ n : ℕ, B < n ∧ ∃ S : Finset (ℕ × ℕ), valid n S ∧ (3/2+d)*(n:ℝ) ≤ (S.card:ℝ)",
+        "plain_statement": {
+          "zh": "同一构型的超额与修复预算推出固定密度增益",
+          "en": "Transfer surplus and deletion budgets on the same configurations"
+        },
+        "brief": {
+          "zh": "先产生超额候选，再用删点集击中所有共线三元组。计数归约和构造目标分别领取。 对应原题 L-no-three-in-line-density-gain。",
+          "en": "Generate surplus candidates and hit every collinear triple by deleting points. Separate the construction from the counting transfer. Parent: L-no-three-in-line-density-gain."
+        },
+        "source": "https://www.goldbach.tech/problems/no-three-in-line/?lemma=L-no-three-in-line-density-gain#roadmap",
+        "program": "correlation",
+        "parallel": true,
+        "imports": []
+      },
+      {
+        "id": "L-no-three-in-line-repair-disjoint",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_repair_disjoint.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_repair_disjoint",
+        "statement": "∀ (T:Finset (Finset (ℕ×ℕ))) (D:Finset (ℕ×ℕ)), (∀ A∈T,(A∩D).Nonempty) → (∀ A∈T,∀ B∈T,A≠B → Disjoint A B) → T.card≤D.card",
+        "plain_statement": {
+          "zh": "互不相交的坏三元组给出修复成本下界",
+          "en": "A matching of bad triples lower-bounds repair cost"
+        },
+        "brief": {
+          "zh": "先产生超额候选，再用删点集击中所有共线三元组。计数归约和构造目标分别领取。 对应原题 L-no-three-in-line-density-gain。",
+          "en": "Generate surplus candidates and hit every collinear triple by deleting points. Separate the construction from the counting transfer. Parent: L-no-three-in-line-density-gain."
+        },
+        "source": "https://www.goldbach.tech/problems/no-three-in-line/?lemma=L-no-three-in-line-density-gain#roadmap",
+        "program": "correlation",
+        "parallel": true,
+        "imports": []
+      },
+      {
+        "id": "L-no-three-in-line-repair-budget",
+        "file": "lean/PEqualNP/Outside/L_no_three_in_line_repair_budget.lean",
+        "module": "PEqualNP.Outside.L_no_three_in_line_repair_budget",
+        "statement": "∀ (T:Finset (Finset (ℕ×ℕ))) (D:Finset (ℕ×ℕ)) (f:Finset (ℕ×ℕ)→ℕ×ℕ), (∀ A∈T,f A∈A ∧ f A∈D) → (∀ p∈D,2≤(T.filter (fun A => f A=p)).card) → 2*D.card≤T.card",
+        "plain_statement": {
+          "zh": "每步至少覆盖两个剩余冲突时的修复上界",
+          "en": "A repair budget when each selected point hits two new conflicts"
+        },
+        "brief": {
+          "zh": "先产生超额候选，再用删点集击中所有共线三元组。计数归约和构造目标分别领取。 对应原题 L-no-three-in-line-density-gain。",
+          "en": "Generate surplus candidates and hit every collinear triple by deleting points. Separate the construction from the counting transfer. Parent: L-no-three-in-line-density-gain."
+        },
+        "source": "https://www.goldbach.tech/problems/no-three-in-line/?lemma=L-no-three-in-line-density-gain#roadmap",
+        "program": "correlation",
+        "parallel": true,
+        "imports": []
       }
     ],
     "roadmap": [
@@ -4471,6 +4543,38 @@
             "id": "L-no-three-in-line-cert-28-5",
             "zh": "步向量 (28,5) 的全网格三连点计数",
             "en": "Grid triple count for stride (28,5)"
+          }
+        ]
+      },
+      {
+        "zh": [
+          "增密：候选点、冲突覆盖和净增益",
+          "先产生超额候选，再用删点集击中所有共线三元组。计数归约和构造目标分别领取。"
+        ],
+        "en": [
+          "Density gain via candidates and conflict covers",
+          "Generate surplus candidates and hit every collinear triple by deleting points. Separate the construction from the counting transfer."
+        ],
+        "tasks": [
+          {
+            "id": "L-no-three-in-line-repair-cover",
+            "zh": "坏三元组都命中删点集则余集合法",
+            "en": "A transversal of bad triples repairs a candidate"
+          },
+          {
+            "id": "L-no-three-in-line-repair-net-gain",
+            "zh": "同一构型的超额与修复预算推出固定密度增益",
+            "en": "Transfer surplus and deletion budgets on the same configurations"
+          },
+          {
+            "id": "L-no-three-in-line-repair-disjoint",
+            "zh": "互不相交的坏三元组给出修复成本下界",
+            "en": "A matching of bad triples lower-bounds repair cost"
+          },
+          {
+            "id": "L-no-three-in-line-repair-budget",
+            "zh": "每步至少覆盖两个剩余冲突时的修复上界",
+            "en": "A repair budget when each selected point hits two new conflicts"
           }
         ]
       }
@@ -12453,6 +12557,78 @@
         "program": "foundation",
         "imports": [],
         "parallel": true
+      },
+      {
+        "id": "L-quadratic-primes-mid-band-partition",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_mid_band_partition.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_mid_band_partition",
+        "statement": "let w := fun (n p : ℕ) => (((n^2+1).factorization p : ℕ) : ℝ) * Real.log (p:ℝ); let middle := fun (x : ℕ) => Finset.sum (Finset.Ioc x (2*x)) (fun n => Finset.sum ((n^2+1).primeFactors.filter (fun p => x < p ∧ p^100000 ≤ n^132301)) (w n)); let band := fun (x:ℕ) (first:Bool) => Finset.sum (Finset.Ioc x (2*x)) (fun n => Finset.sum ((n^2+1).primeFactors.filter (fun p => x<p ∧ p^100000≤n^132301 ∧ (if first then p^20≤n^23 else n^23<p^20))) (w n)); ∀ x:ℕ,middle x=band x true+band x false",
+        "plain_statement": {
+          "zh": "中段质量精确分割，包含边界等号",
+          "en": "Exact disjoint mass partition including the boundary"
+        },
+        "brief": {
+          "zh": "先分离两个互斥素因子带。下带预算要求最终一致，上带允许在无界多个相同尺度上成立。两项预算是研究目标。 对应原题 L-quadratic-primes-middle-prime-saving。",
+          "en": "Split disjoint prime bands. Seek a uniform lower-band budget and a recurrent upper-band budget on compatible scales. Parent: L-quadratic-primes-middle-prime-saving."
+        },
+        "source": "https://www.goldbach.tech/problems/quadratic-primes/?lemma=L-quadratic-primes-middle-prime-saving#roadmap",
+        "program": "correlation",
+        "parallel": true,
+        "imports": []
+      },
+      {
+        "id": "L-quadratic-primes-mid-small-uniform",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_mid_small_uniform.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_mid_small_uniform",
+        "statement": "let w := fun (n p : ℕ) => (((n^2+1).factorization p : ℕ) : ℝ) * Real.log (p:ℝ); let middle := fun (x : ℕ) => Finset.sum (Finset.Ioc x (2*x)) (fun n => Finset.sum ((n^2+1).primeFactors.filter (fun p => x < p ∧ p^100000 ≤ n^132301)) (w n)); let band := fun (x:ℕ) (first:Bool) => Finset.sum (Finset.Ioc x (2*x)) (fun n => Finset.sum ((n^2+1).primeFactors.filter (fun p => x<p ∧ p^100000≤n^132301 ∧ (if first then p^20≤n^23 else n^23<p^20))) (w n)); ∃ X:ℕ,∀ x≥X,band x true≤(46/100:ℝ)*x*Real.log (x:ℝ)",
+        "plain_statement": {
+          "zh": "在所有充分大尺度压低下带到 0.46",
+          "en": "Uniform 0.46 budget for the lower band"
+        },
+        "brief": {
+          "zh": "先分离两个互斥素因子带。下带预算要求最终一致，上带允许在无界多个相同尺度上成立。两项预算是研究目标。 对应原题 L-quadratic-primes-middle-prime-saving。",
+          "en": "Split disjoint prime bands. Seek a uniform lower-band budget and a recurrent upper-band budget on compatible scales. Parent: L-quadratic-primes-middle-prime-saving."
+        },
+        "source": "https://www.goldbach.tech/problems/quadratic-primes/?lemma=L-quadratic-primes-middle-prime-saving#roadmap",
+        "program": "correlation",
+        "parallel": true,
+        "imports": []
+      },
+      {
+        "id": "L-quadratic-primes-mid-high-recurrent",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_mid_high_recurrent.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_mid_high_recurrent",
+        "statement": "let w := fun (n p : ℕ) => (((n^2+1).factorization p : ℕ) : ℝ) * Real.log (p:ℝ); let middle := fun (x : ℕ) => Finset.sum (Finset.Ioc x (2*x)) (fun n => Finset.sum ((n^2+1).primeFactors.filter (fun p => x < p ∧ p^100000 ≤ n^132301)) (w n)); let band := fun (x:ℕ) (first:Bool) => Finset.sum (Finset.Ioc x (2*x)) (fun n => Finset.sum ((n^2+1).primeFactors.filter (fun p => x<p ∧ p^100000≤n^132301 ∧ (if first then p^20≤n^23 else n^23<p^20))) (w n)); ∀ B:ℕ, ∃ x>B,band x false≤(53/100:ℝ)*x*Real.log (x:ℝ)",
+        "plain_statement": {
+          "zh": "在无界多个尺度压低上带到 0.53",
+          "en": "Recurrent 0.53 budget for the upper band"
+        },
+        "brief": {
+          "zh": "先分离两个互斥素因子带。下带预算要求最终一致，上带允许在无界多个相同尺度上成立。两项预算是研究目标。 对应原题 L-quadratic-primes-middle-prime-saving。",
+          "en": "Split disjoint prime bands. Seek a uniform lower-band budget and a recurrent upper-band budget on compatible scales. Parent: L-quadratic-primes-middle-prime-saving."
+        },
+        "source": "https://www.goldbach.tech/problems/quadratic-primes/?lemma=L-quadratic-primes-middle-prime-saving#roadmap",
+        "program": "correlation",
+        "parallel": true,
+        "imports": []
+      },
+      {
+        "id": "L-quadratic-primes-mid-compatible",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_mid_compatible.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_mid_compatible",
+        "statement": "let w := fun (n p : ℕ) => (((n^2+1).factorization p : ℕ) : ℝ) * Real.log (p:ℝ); let middle := fun (x : ℕ) => Finset.sum (Finset.Ioc x (2*x)) (fun n => Finset.sum ((n^2+1).primeFactors.filter (fun p => x < p ∧ p^100000 ≤ n^132301)) (w n)); let band := fun (x:ℕ) (first:Bool) => Finset.sum (Finset.Ioc x (2*x)) (fun n => Finset.sum ((n^2+1).primeFactors.filter (fun p => x<p ∧ p^100000≤n^132301 ∧ (if first then p^20≤n^23 else n^23<p^20))) (w n)); ∀ a b:ℝ,a+b<1 → (∃ X:ℕ,∀ x≥X,band x true≤a*x*Real.log (x:ℝ)) → (∀ B:ℕ,∃ x>B,band x false≤b*x*Real.log (x:ℝ)) → ∃ d : ℝ, 0 < d ∧ ∀ B : ℕ, ∃ x : ℕ, B < x ∧ middle x ≤ (1-d)*(x:ℝ)*Real.log (x:ℝ)",
+        "plain_statement": {
+          "zh": "一般预算之和小于一时推出原题节省",
+          "en": "Transfer compatible budgets with sum below one"
+        },
+        "brief": {
+          "zh": "先分离两个互斥素因子带。下带预算要求最终一致，上带允许在无界多个相同尺度上成立。两项预算是研究目标。 对应原题 L-quadratic-primes-middle-prime-saving。",
+          "en": "Split disjoint prime bands. Seek a uniform lower-band budget and a recurrent upper-band budget on compatible scales. Parent: L-quadratic-primes-middle-prime-saving."
+        },
+        "source": "https://www.goldbach.tech/problems/quadratic-primes/?lemma=L-quadratic-primes-middle-prime-saving#roadmap",
+        "program": "correlation",
+        "parallel": true,
+        "imports": []
       }
     ],
     "roadmap": [
@@ -13472,6 +13648,38 @@
             "id": "L-quadratic-primes-cert-2309",
             "zh": "模 2309 的两条筛根及其完整性",
             "en": "Complete sieve roots modulo 2309"
+          }
+        ]
+      },
+      {
+        "zh": [
+          "中段筛：在指数 1.15 处分开质量",
+          "先分离两个互斥素因子带。下带预算要求最终一致，上带允许在无界多个相同尺度上成立。两项预算是研究目标。"
+        ],
+        "en": [
+          "Split middle-prime mass at exponent 1.15",
+          "Split disjoint prime bands. Seek a uniform lower-band budget and a recurrent upper-band budget on compatible scales."
+        ],
+        "tasks": [
+          {
+            "id": "L-quadratic-primes-mid-band-partition",
+            "zh": "中段质量精确分割，包含边界等号",
+            "en": "Exact disjoint mass partition including the boundary"
+          },
+          {
+            "id": "L-quadratic-primes-mid-small-uniform",
+            "zh": "在所有充分大尺度压低下带到 0.46",
+            "en": "Uniform 0.46 budget for the lower band"
+          },
+          {
+            "id": "L-quadratic-primes-mid-high-recurrent",
+            "zh": "在无界多个尺度压低上带到 0.53",
+            "en": "Recurrent 0.53 budget for the upper band"
+          },
+          {
+            "id": "L-quadratic-primes-mid-compatible",
+            "zh": "一般预算之和小于一时推出原题节省",
+            "en": "Transfer compatible budgets with sum below one"
           }
         ]
       }
