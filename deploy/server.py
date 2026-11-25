@@ -31,10 +31,13 @@ DB = Path(os.environ["STATE_DIRECTORY"]) / "verdicts.sqlite3"
 oauth_credential = CREDS / "zhihu-oauth"
 ZHIHU = ZhihuOAuth(DB.with_name("contributor-links.sqlite3"), json.loads(oauth_credential.read_bytes())
                    if oauth_credential.is_file() else None)
-GOLDBACH_CATALOGUE = json.loads((ROOT / "gaps.json").read_text(encoding="utf-8"))
+LIVE_RELEASE = Path("/opt/goldbach-catalogues/current")
+CATALOGUE_ROOT = LIVE_RELEASE.resolve(strict=True) if LIVE_RELEASE.is_symlink() else ROOT
+RELEASE_SHA = (CATALOGUE_ROOT / "revision").read_text() if CATALOGUE_ROOT != ROOT else None
+GOLDBACH_CATALOGUE = json.loads((CATALOGUE_ROOT / "gaps.json").read_text(encoding="utf-8"))
 GAPS = GOLDBACH_CATALOGUE["gaps"]
 DESK = Desk(DB, GAPS, SECRET)
-PROBLEM_FILE = ROOT / "problems.json"
+PROBLEM_FILE = CATALOGUE_ROOT / "problems.json"
 PROBLEMS = json.loads(PROBLEM_FILE.read_text(encoding="utf-8")) if PROBLEM_FILE.exists() else {}
 PUBLIC_SITE = "https://www.movan.tech/goldbach/"
 problem_ids = set(gap["id"] for gap in GAPS)
@@ -584,7 +587,23 @@ class Handler(BaseHTTPRequestHandler):
         if desk is None:
             return self.reply(404, b'{}')
         if path == "/health":
-            return self.reply(200, b'{"status":"ok"}')
+            return self.reply(200, json.dumps({"status":"ok","catalogue_revision":RELEASE_SHA}).encode())
+        if path == "/research-changes":
+            zh = self.language(url) == "zh"
+            title = "研究路线变更记录" if zh else "Research change history"
+            entries = json.loads((CATALOGUE_ROOT / "history.json").read_bytes()) if RELEASE_SHA else []
+            repo = "https://github.com/CGandGameEngineLearner/goldbach-proofs"
+            rows = "".join(
+                f'<li><time>{escape(row["at"])}</time> · <a href="{repo}/pull/{int(row["pr"])}">'
+                f'{escape(row["title"])}</a> · {escape(row["actor"])} · '
+                f'<a href="{repo}/actions/runs/{int(row["run"])}">CI</a></li>'
+                for row in reversed(entries))
+            empty = "尚无自动发布记录。" if zh else "No automated releases yet."
+            page = (f'<!doctype html><html lang="{"zh" if zh else "en"}"><meta charset="utf-8">'
+                    f'<meta name="viewport" content="width=device-width,initial-scale=1"><title>{title}</title>'
+                    f'<link rel="stylesheet" href="site.css"><main class="shell"><h1>{title}</h1>'
+                    f'{("<ol>"+rows+"</ol>") if rows else empty}</main></html>')
+            return self.reply(200, page.encode(), "text/html")
         if path == "/api/status":
             try:
                 status = research_status(desk)
