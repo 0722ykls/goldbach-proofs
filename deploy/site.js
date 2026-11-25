@@ -884,6 +884,60 @@ function renderResults(results) {
   verificationLog.replaceChildren(...(entries.length ? entries : [element('p', strings.noRecords, 'empty-state')]));
 }
 
+// Each cursor identifies a boundary in this desk's immutable (run, attempt) order.
+const recordStarts = [''];
+const recordPrev = document.getElementById('record-prev');
+const recordNext = document.getElementById('record-next');
+const recordRetry = document.getElementById('record-retry');
+const recordPage = document.getElementById('record-page');
+let currentRecordPage = 0;
+let nextRecordCursor = null;
+let recordPending = false;
+let recordVisible = false;
+let retryPage = 0;
+let latestRecordKey = '';
+let displayedHead = null;
+
+async function loadRecordPage(index) {
+  if (recordPending) return;
+  const cursor = recordStarts[index];
+  const requestedHead = latestRecordKey;
+  recordPending = true;
+  recordPrev.disabled = recordNext.disabled = true;
+  recordRetry.hidden = true;
+  try {
+    const response = await fetch('api/records' + (cursor ? '?before=' + encodeURIComponent(cursor) : ''),
+      {signal: AbortSignal.timeout(15000)});
+    if (!response.ok) throw new Error('Records unavailable');
+    const page = await response.json();
+    renderResults(page.results);
+    currentRecordPage = index;
+    recordStarts.length = index + 1;
+    nextRecordCursor = page.next;
+    if (!index) displayedHead = requestedHead;
+    recordPage.textContent = lang === 'zh' ? '第 ' + (index + 1) + ' 页' : 'Page ' + (index + 1);
+  } catch {
+    retryPage = index;
+    recordRetry.hidden = false;
+    recordPage.textContent = strings.failure;
+  } finally {
+    recordPending = false;
+    recordPrev.disabled = currentRecordPage === 0;
+    recordNext.disabled = !nextRecordCursor;
+  }
+}
+
+recordPrev.addEventListener('click', () => loadRecordPage(currentRecordPage - 1));
+recordNext.addEventListener('click', () => {
+  recordStarts[currentRecordPage + 1] = nextRecordCursor;
+  loadRecordPage(currentRecordPage + 1);
+});
+recordRetry.addEventListener('click', () => loadRecordPage(retryPage));
+new IntersectionObserver(([entry]) => {
+  recordVisible = entry.isIntersecting;
+  if (recordVisible && !currentRecordPage && displayedHead !== latestRecordKey) loadRecordPage(0);
+}, {rootMargin: '200px'}).observe(verificationLog);
+
 lemmaSearch.addEventListener('input', () => setPage(1));
 lemmaState.addEventListener('change', () => setPage(1));
 
@@ -942,7 +996,7 @@ async function loadStatus() {
   const request = new AbortController();
   const timeout = window.setTimeout(() => request.abort(), 30000);
   try {
-    const response = await fetch('api/status?view=web-gzip', {
+    const response = await fetch('api/status?view=board-gzip', {
       headers: { Accept: 'application/json' },
       signal: request.signal,
     });
@@ -986,7 +1040,8 @@ async function loadStatus() {
       document.getElementById('proof-progress-caption').textContent =
         counts.accepted.toLocaleString(locale) + ' / ' + counts.published.toLocaleString(locale);
     }
-    renderResults(results);
+    latestRecordKey = latest ? latest.run_id + '/' + latest.run_attempt : '';
+    if (recordVisible && !currentRecordPage && displayedHead !== latestRecordKey) loadRecordPage(0);
     renderDesk(desk);
   } catch {
     renderExponent(null);
@@ -994,11 +1049,6 @@ async function loadStatus() {
       lemmaRows.replaceChildren(messageRow(strings.failure, anchor(strings.published, repository + '/blob/main/research/' + (topic ? 'problems.json' : 'gaps.json'))));
       lemmaSearch.disabled = true;
       lemmaState.disabled = true;
-    }
-    if (lastResults === null) {
-      const error = element('p', strings.failure, 'empty-state');
-      error.append(anchor(strings.actions, repository + '/actions'));
-      verificationLog.replaceChildren(error);
     }
     renderDesk(null);
   } finally {

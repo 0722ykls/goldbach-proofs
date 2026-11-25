@@ -113,6 +113,25 @@ class DeskScaleTest(unittest.TestCase):
                 guide = self.request(path + "/join" + ("-zh" if lang == "zh" else "") + ".txt", text=True)
                 self.assertIn('--model MODEL_ID --harness HARNESS', guide)
 
+    def test_verification_history_pagination(self):
+        api = "/api/"
+        def publish(run, attempt):
+            self.request("/api/verdict", {"lemma_id": "L-goldbach-history", "run_id": run,
+                         "run_attempt": attempt, "verdict": "REJECTED", "manifest": None}, signed=True)
+
+        for run in range(100, 113):
+            publish(run, 1)
+        publish(101, 2)
+        first = self.request(api + "records")
+        self.assertEqual(len(first["results"]), 12)
+        self.assertEqual(first["next"], "101-2")
+        publish(113, 1)
+        last = self.request(api + "records?before=" + first["next"])
+        self.assertEqual([r["run_id"] for r in last["results"]], [101, 100])
+        self.assertIsNone(last["next"])
+        self.assertEqual(self.request("/problems/log-rank/api/records")["results"], [])
+        self.request(api + "records?before=invalid", expected=400)
+
     def test_page_views_count_only_successful_page_gets(self):
         def total():
             return self.request("/api/presence")["page_views"]

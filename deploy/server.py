@@ -157,7 +157,7 @@ def site_dock(lang, prefix):
 <script src="{prefix}discussion.js" defer></script><script src="{prefix}presence.js" defer></script>"""
 
 
-def research_status(desk=DESK, *, compact=False):
+def research_status(desk=DESK, *, compact=False, board=False):
     db = desk.db_path
     results = []
     latest = {}
@@ -169,8 +169,9 @@ def research_status(desk=DESK, *, compact=False):
             if desk is DESKS.get("quadratic-primes"):
                 extra["lpf_record"] = exponent_record(desk, conn)
             if conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='verdicts'").fetchone():
+                projection = "json_object('lemma_id', json_extract(CAST(body AS TEXT), '$.lemma_id'), 'verdict', json_extract(CAST(body AS TEXT), '$.verdict'), 'run_id', run_id, 'run_attempt', attempt)" if board else "body"
                 results = [json.loads(body) for (body,) in conn.execute(
-                    "SELECT body FROM verdicts ORDER BY run_id DESC, attempt DESC LIMIT 12"
+                    f"SELECT {projection} FROM verdicts ORDER BY run_id DESC, attempt DESC LIMIT ?", (1 if board else 12,)
                 )]
                 payload = "json_remove(CAST(v.body AS TEXT), '$.manifest')" if compact else "v.body"
                 rows = conn.execute(f"""
@@ -194,7 +195,8 @@ def research_status(desk=DESK, *, compact=False):
                 for lemma, body, proved, count in rows:
                     latest[lemma] = (json.loads(body), bool(proved))
                     attempts += count
-                desk.annotate_verdicts(results, conn)
+                if not board:
+                    desk.annotate_verdicts(results, conn)
                 desk.annotate_verdicts([result for result, _ in latest.values()], conn)
 
     gaps = []
@@ -229,21 +231,22 @@ STATUS_BUILD = BoundedSemaphore(1)
 WEB_SNAPSHOTS = {}
 
 
-def status_body(desk, web_view):
+def status_body(desk, web_view, board=False):
+    key = (desk, board)
     # A cache hit for one desk need not wait for another desk to build its snapshot.
-    cached = WEB_SNAPSHOTS.get(desk) if web_view else None
+    cached = WEB_SNAPSHOTS.get(key) if web_view else None
     if cached and cached[0] > time.monotonic():
         return cached[1]
     with STATUS_BUILD:
         if web_view:
-            cached = WEB_SNAPSHOTS.get(desk)
+            cached = WEB_SNAPSHOTS.get(key)
             if cached and cached[0] > time.monotonic():
                 return cached[1]
-        status = research_status(desk, compact=web_view)
+        status = research_status(desk, compact=web_view, board=board)
         body = json.dumps(status, ensure_ascii=False, separators=(",", ":")).encode()
         if web_view:
             body = gzip.compress(body, compresslevel=3)
-            WEB_SNAPSHOTS[desk] = (time.monotonic() + 10, body)
+            WEB_SNAPSHOTS[key] = (time.monotonic() + 10, body)
         return body
 
 
@@ -658,21 +661,58 @@ class Handler(BaseHTTPRequestHandler):
             title = "研究路线变更记录" if zh else "Research change history"
             entries = json.loads((CATALOGUE_ROOT / "history.json").read_bytes()) if RELEASE_SHA else []
             repo = "https://github.com/CGandGameEngineLearner/goldbach-proofs"
+            params = parse_qs(url.query)
+            raw_end = params.get("end", [str(len(entries))])[0]
+            if not re.fullmatch(r"[0-9]{1,10}", raw_end):
+                return self.reply(400, b'{"error":"invalid page"}')
+            end = min(int(raw_end), len(entries))
+            start = max(0, end - 20)
+            nav = []
+            lang = "zh" if zh else "en"
+            if end < len(entries):
+                nav.append(f'<a href="?lang={lang}&amp;end={min(end+20,len(entries))}">{"上一页" if zh else "Previous"}</a>')
+            if start:
+                nav.append(f'<a href="?lang={lang}&amp;end={start}">{"下一页" if zh else "Next"}</a>')
             rows = "".join(
                 f'<li><time>{escape(row["at"])}</time> · <a href="{repo}/pull/{int(row["pr"])}">'
                 f'{escape(row["title"])}</a> · {escape(row["actor"])} · '
                 f'<a href="{repo}/actions/runs/{int(row["run"])}">CI</a></li>'
-                for row in reversed(entries))
+                for row in reversed(entries[start:end]))
             empty = "尚无自动发布记录。" if zh else "No automated releases yet."
             page = (f'<!doctype html><html lang="{"zh" if zh else "en"}"><meta charset="utf-8">'
                     f'<meta name="viewport" content="width=device-width,initial-scale=1"><title>{title}</title>'
                     f'<link rel="stylesheet" href="site.css"><main class="shell"><h1>{title}</h1>'
-                    f'{("<ol>"+rows+"</ol>") if rows else empty}</main></html>')
+                    f'{("<ol>"+rows+"</ol>") if rows else empty}<nav>{" · ".join(nav)}</nav></main></html>')
             return self.reply(200, page.encode(), "text/html")
+        if path == "/api/records":
+            query = parse_qs(url.query, keep_blank_values=True)
+            before = query.get("before", [])
+            if query and (set(query) != {"before"} or len(before) != 1 or
+                          not re.fullmatch(r"[0-9]{1,18}-[0-9]{1,18}", before[0])):
+                return self.reply(400, b'{"error":"invalid cursor"}')
+            cursor = tuple(map(int, before[0].split("-"))) if before else ()
+            where = "WHERE (run_id, attempt) < (?, ?)" if cursor else ""
+            try:
+                with desk.transaction() as conn:
+                    rows = []
+                    if conn.execute("SELECT 1 FROM sqlite_master WHERE name='verdicts'").fetchone():
+                        rows = conn.execute(f"SELECT run_id, attempt, body FROM verdicts {where} "
+                                            "ORDER BY run_id DESC, attempt DESC LIMIT 13", cursor).fetchall()
+                    results = [json.loads(row[2]) for row in rows[:12]]
+                    desk.annotate_verdicts(results, conn)
+                following = f"{rows[11][0]}-{rows[11][1]}" if len(rows) == 13 else None
+                body = json.dumps({"results": results, "next": following}, ensure_ascii=False).encode()
+                if "gzip" in (t.strip() for t in self.headers.get("Accept-Encoding", "").lower().split(",")):
+                    return self.reply(200, gzip.compress(body, compresslevel=3), encoding="gzip")
+                return self.reply(200, body)
+            except sqlite3.Error:
+                return self.reply(503, b'{"error":"records unavailable"}')
         if path == "/api/status":
             try:
-                web_view = parse_qs(url.query).get("view") == ["web-gzip"]
-                body = status_body(desk, web_view)
+                view = parse_qs(url.query).get("view")
+                board = view == ["board-gzip"]
+                web_view = board or view == ["web-gzip"]
+                body = status_body(desk, web_view, board)
             except sqlite3.Error as error:
                 self.log_error("Unable to read verdicts: %s", error)
                 return self.reply(503, b'{"error":"verdicts unavailable"}')
