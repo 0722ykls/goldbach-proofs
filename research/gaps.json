@@ -9671,6 +9671,101 @@
         "L-goldbach-coset-nonunit-bias",
         "L-goldbach-theta-orthogonal-residual"
       ]
+    },
+    {
+      "id": "L-goldbach-coset-primepower-lift",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_primepower_lift.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_primepower_lift",
+      "statement": "let R := fun n q : ℕ => ((Finset.range q).filter (fun r => r.Coprime q ∧ ((n+q-r)%q).Coprime q)).card; ∀ n p a : ℕ, p.Prime → 0<a → R n (p^a)=p^(a-1)*(if p∣n then p-1 else p-2)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0055 · 单位反射对从素模提升到素数幂模引理",
+        "en": "New route · Theta reflection · TH-0055 · Lift reflected unit pairs from a prime modulus to its powers"
+      },
+      "brief": {
+        "zh": "可行根类由模 p 的两个禁类决定，每个可行类恰有 p^(a−1) 个提升。 建议先读 L-goldbach-theta-coset-factor。",
+        "en": "A residue pair survives precisely when its reduction avoids both forbidden classes. Count all lifts. Read first: L-goldbach-theta-coset-factor."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-theta-coset-factor"
+      ]
+    },
+    {
+      "id": "L-goldbach-coset-unit-crt",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_unit_crt.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_unit_crt",
+      "statement": "let R := fun n q : ℕ => ((Finset.range q).filter (fun r => r.Coprime q ∧ ((n+q-r)%q).Coprime q)).card; ∀ n a b : ℕ, 0<a → 0<b → a.Coprime b → R n (a*b)=R n a*R n b",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0056 · 互素模的局部反射系数相乘引理",
+        "en": "New route · Theta reflection · TH-0056 · CRT multiplicativity of reflected unit-pair counts"
+      },
+      "brief": {
+        "zh": "构造单位余类双射，并验证余类反射在 CRT 下逐分量运算。 建议先读 L-goldbach-coset-sum-reflection。",
+        "en": "Build a CRT bijection that respects both the unit tests and additive reflection. Read first: L-goldbach-coset-sum-reflection."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-coset-sum-reflection"
+      ]
+    },
+    {
+      "id": "L-goldbach-coset-normalized-euler",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_normalized_euler.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_normalized_euler",
+      "statement": "let R := fun n q : ℕ => ((Finset.range q).filter (fun r => r.Coprime q ∧ ((n+q-r)%q).Coprime q)).card; ∀ n q : ℕ, 0<q → (q:ℝ)*(R n q:ℝ)/(q.totient:ℝ)^2 = ∏ p ∈ q.primeFactors, (p:ℝ)*(if p∣n then (p:ℝ)-1 else (p:ℝ)-2)/((p:ℝ)-1)^2",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0057 · 投影主项的局部 Euler 乘积公式引理",
+        "en": "New route · Theta reflection · TH-0057 · Euler factorization of the projected main-term coefficient"
+      },
+      "brief": {
+        "zh": "将固定模数主项转成显式局部乘积。素数幂指数在归一化后抵消；p=2 必须原样保留。 建议先读 L-goldbach-coset-primepower-lift, L-goldbach-coset-unit-crt, L-goldbach-coset-model-limit。",
+        "en": "Combine prime-power lifting, CRT and totient normalization, retaining the parity factor at two. Read first: L-goldbach-coset-primepower-lift, L-goldbach-coset-unit-crt, L-goldbach-coset-model-limit."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-coset-primepower-lift",
+        "L-goldbach-coset-unit-crt",
+        "L-goldbach-coset-model-limit"
+      ]
+    },
+    {
+      "id": "L-goldbach-coset-local-obstruction",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_local_obstruction.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_local_obstruction",
+      "statement": "let R := fun n q : ℕ => ((Finset.range q).filter (fun r => r.Coprime q ∧ ((n+q-r)%q).Coprime q)).card; ∀ n q : ℕ, 0<q → (0<R n q ↔ Odd q ∨ Even n)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0058 · 有限单位模型的唯一奇偶局部障碍引理",
+        "en": "New route · Theta reflection · TH-0058 · Characterize the parity obstruction in every finite unit model"
+      },
+      "brief": {
+        "zh": "对每个奇素点至少有一个允许类；二进素点恰在 n 为奇数时阻断。证明这个局部可解性结论后，真正的缺口仍是素数残差。 建议先读 L-goldbach-coset-primepower-lift, L-goldbach-coset-unit-crt。",
+        "en": "All odd local factors have an admissible class. Check parity at two and recombine; the actual prime residual remains. Read first: L-goldbach-coset-primepower-lift, L-goldbach-coset-unit-crt."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-coset-primepower-lift",
+        "L-goldbach-coset-unit-crt"
+      ]
     }
   ],
   "tracks": [
