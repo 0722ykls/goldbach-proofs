@@ -7468,8 +7468,8 @@
       "module": "PEqualNP.Outside.L_goldbach_reflection_energy",
       "statement": "∀ (n : ℕ) (b : ℕ → ℝ), (∑ k ∈ Finset.range (n+1), (b k + b (n-k))^2) - (∑ k ∈ Finset.range (n+1), (b k - b (n-k))^2) = 4 * ∑ k ∈ Finset.range (n+1), b k * b (n-k)",
       "plain_statement": {
-        "zh": "反射能量差等于四倍卷积",
-        "en": "Reflection energy difference equals four times the convolution"
+        "zh": "新路线 · Theta 反射 · TH-0001 · 反射能量差等于四倍卷积引理",
+        "en": "New route · Theta reflection · TH-0001 · Reflection energy difference equals four times the convolution"
       },
       "brief": {
         "zh": "在区间 0 到 n 逐项展开，反射取 n−k。",
@@ -7480,7 +7480,8 @@
       "parallel": true,
       "imports": [],
       "track": "theta-reflection",
-      "role": "lemma"
+      "role": "lemma",
+      "depends_on": []
     },
     {
       "id": "L-goldbach-reflection-phase",
@@ -7488,8 +7489,8 @@
       "module": "PEqualNP.Outside.L_goldbach_reflection_phase",
       "statement": "∀ (n : ℕ) (b : ℕ → ℂ) (z : ℂ), z ≠ 0 → (∑ k ∈ Finset.range (n+1), b (n-k)*z^k) = z^n * ∑ k ∈ Finset.range (n+1), b k*(z⁻¹)^k",
       "plain_statement": {
-        "zh": "反射的傅里叶相位",
-        "en": "Fourier phase of interval reflection"
+        "zh": "新路线 · Theta 反射 · TH-0002 · 反射的傅里叶相位引理",
+        "en": "New route · Theta reflection · TH-0002 · Fourier phase of interval reflection"
       },
       "brief": {
         "zh": "换元 k ↦ n−k，同时追踪平移相位与频率反号。",
@@ -7500,7 +7501,8 @@
       "parallel": true,
       "imports": [],
       "track": "theta-reflection",
-      "role": "lemma"
+      "role": "lemma",
+      "depends_on": []
     },
     {
       "id": "L-goldbach-reflection-mask",
@@ -7508,8 +7510,8 @@
       "module": "PEqualNP.Outside.L_goldbach_reflection_mask",
       "statement": "∀ (n : ℕ) (a : ℕ → ℝ), (let b := fun k => if Nat.Prime k then a k else 0; (∑ k ∈ Finset.range (n+1), a k*a (n-k)) - (∑ k ∈ Finset.range (n+1), b k*b (n-k)) = ∑ k ∈ Finset.range (n+1), if Nat.Prime k ∧ Nat.Prime (n-k) then 0 else a k*a (n-k))",
       "plain_statement": {
-        "zh": "中心权卷积剔除非素数支撑",
-        "en": "Bound contamination outside prime support"
+        "zh": "新路线 · Theta 反射 · TH-0003 · 中心权卷积剔除非素数支撑引理",
+        "en": "New route · Theta reflection · TH-0003 · Bound contamination outside prime support"
       },
       "brief": {
         "zh": "给出确切污染项；真素数幂及其他非素数项随后要估计。",
@@ -7520,7 +7522,8 @@
       "parallel": true,
       "imports": [],
       "track": "theta-reflection",
-      "role": "lemma"
+      "role": "lemma",
+      "depends_on": []
     },
     {
       "id": "L-goldbach-rallis-gap-budget",
@@ -7528,8 +7531,8 @@
       "module": "PEqualNP.Outside.L_goldbach_rallis_gap_budget",
       "statement": "∀ A C B P M U V e f g : ℝ, 0 < A → |(P-M)-4*A*C| ≤ e → |P-U| ≤ f → |M-V| ≤ g → 4*A*B+e+f+g < U-V → B < C",
       "plain_statement": {
-        "zh": "同一尺度上的谱间隔推出正性",
-        "en": "Transfer a strict spectral gap to positivity"
+        "zh": "新路线 · Theta 反射 · TH-0004 · 同一尺度上的谱间隔推出正性引理",
+        "en": "New route · Theta reflection · TH-0004 · Transfer a strict spectral gap to positivity"
       },
       "brief": {
         "zh": "P、M 分别是固定测试向量的两个提升范数平方。需另证三个误差界，A 必须共用。",
@@ -7540,7 +7543,8 @@
       "parallel": true,
       "imports": [],
       "track": "theta-reflection",
-      "role": "conditional"
+      "role": "conditional",
+      "depends_on": []
     },
     {
       "id": "L-goldbach-zero-index-cross",
@@ -7548,8 +7552,8 @@
       "module": "PEqualNP.Outside.L_goldbach_zero_index_cross",
       "statement": "∀ (m : ℕ) (u : Fin m → ℂ), (∑ j, u j) * (∑ j, star (u j)) - (∑ j, u j * star (u j)) = ∑ j, ∑ l ∈ Finset.univ.erase j, u j * star (u l)",
       "plain_statement": {
-        "zh": "带重数的非对角和恒等式",
-        "en": "Off-diagonal identity for indexed zeros"
+        "zh": "新路线 · 奇特征干涉 · OC-0001 · 带重数的非对角和恒等式引理",
+        "en": "New route · Odd-character interference · OC-0001 · Off-diagonal identity for indexed zeros"
       },
       "brief": {
         "zh": "按索引删对角；不同副本即使高度相等也保留。",
@@ -7560,7 +7564,8 @@
       "parallel": true,
       "imports": [],
       "track": "odd-character-interference",
-      "role": "lemma"
+      "role": "lemma",
+      "depends_on": []
     },
     {
       "id": "L-goldbach-zero-phase-product",
@@ -7568,8 +7573,8 @@
       "module": "PEqualNP.Outside.L_goldbach_zero_phase_product",
       "statement": "∀ (a b x : ℝ), Complex.exp (((a*x : ℝ) : ℂ)*Complex.I) * Complex.exp (-(((b*x : ℝ) : ℂ)*Complex.I)) = Complex.exp (((((a-b)*x) : ℝ) : ℂ)*Complex.I)",
       "plain_statement": {
-        "zh": "零点对的相位化成频差",
-        "en": "Turn paired phases into a frequency difference"
+        "zh": "新路线 · 奇特征干涉 · OC-0002 · 零点对的相位化成频差引理",
+        "en": "New route · Odd-character interference · OC-0002 · Turn paired phases into a frequency difference"
       },
       "brief": {
         "zh": "取 x 为 log N 后用于交叉项，需保留符号。",
@@ -7580,7 +7585,8 @@
       "parallel": true,
       "imports": [],
       "track": "odd-character-interference",
-      "role": "lemma"
+      "role": "lemma",
+      "depends_on": []
     },
     {
       "id": "L-goldbach-conductor-average-split",
@@ -7588,8 +7594,8 @@
       "module": "PEqualNP.Outside.L_goldbach_conductor_average_split",
       "statement": "∀ (n m : ℕ) (d : Fin m → ℕ) (u : Fin m → ℝ), (2/(Nat.totient n : ℝ))*(∑ j, u j) = (2/(Nat.totient n : ℝ))*(∑ j ∈ Finset.univ.filter (fun j => n^3 < (d j)^4), u j) + (2/(Nat.totient n : ℝ))*(∑ j ∈ Finset.univ.filter (fun j => (d j)^4 ≤ n^3), u j)",
       "plain_statement": {
-        "zh": "按导子截断保留原平均分母",
-        "en": "Split by conductor with the original normalization"
+        "zh": "新路线 · 奇特征干涉 · OC-0003 · 按导子截断保留原平均分母引理",
+        "en": "New route · Odd-character interference · OC-0003 · Split by conductor with the original normalization"
       },
       "brief": {
         "zh": "以 d⁴>N³ 表示导子阈值；两部分均按全部奇特征的原尺度计。",
@@ -7600,7 +7606,8 @@
       "parallel": true,
       "imports": [],
       "track": "odd-character-interference",
-      "role": "lemma"
+      "role": "lemma",
+      "depends_on": []
     },
     {
       "id": "L-goldbach-cross-margin-transfer",
@@ -7608,8 +7615,8 @@
       "module": "PEqualNP.Outside.L_goldbach_cross_margin_transfer",
       "statement": "∀ G K C T pp κ e : ℝ, |G-(K-C)| ≤ e → |C-T| ≤ κ → T ≤ K-2*κ → pp+e < κ → pp < G",
       "plain_statement": {
-        "zh": "截断裕量与素数幂误差合成",
-        "en": "Transfer a truncated margin past prime-power noise"
+        "zh": "新路线 · 奇特征干涉 · OC-0004 · 截断裕量与素数幂误差合成引理",
+        "en": "New route · Odd-character interference · OC-0004 · Transfer a truncated margin past prime-power noise"
       },
       "brief": {
         "zh": "G 是归一化 Mangoldt 卷积，pp 是非素数对污染上界；每个输入估计仍须独立证明。",
@@ -7620,7 +7627,8 @@
       "parallel": true,
       "imports": [],
       "track": "odd-character-interference",
-      "role": "conditional"
+      "role": "conditional",
+      "depends_on": []
     },
     {
       "id": "L-goldbach-dyadic-central-prime-mass",
@@ -7628,8 +7636,8 @@
       "module": "PEqualNP.Outside.L_goldbach_dyadic_central_prime_mass",
       "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k : ℝ) else 0; ∃ c : ℝ, 0 < c ∧ ∃ k₀ : ℕ, ∀ k ≥ k₀, let n : ℕ := 2^k; c*(n : ℝ) ≤ ∑ p ∈ (Finset.range (n+1)).filter (fun p => n ≤ 3*p ∧ 3*p ≤ 2*n), w p * w (n-p)",
       "plain_statement": {
-        "zh": "二次幂子族的中心素数对数质量下界",
-        "en": "Positive central prime mass along powers of two"
+        "zh": "新路线 · 奇特征干涉 · OC-0005 · 二次幂子族的中心素数对数质量下界（开放目标）",
+        "en": "New route · Odd-character interference · OC-0005 · Positive central prime mass along powers of two"
       },
       "brief": {
         "zh": "开放的较强诊断目标。先攻无限子族的定量质量；正的固定裕量和窗口支撑都需证明。",
@@ -7640,7 +7648,406 @@
       "parallel": true,
       "imports": [],
       "track": "odd-character-interference",
-      "role": "target"
+      "role": "target",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-reflect-center",
+      "file": "lean/PEqualNP/Outside/L_goldbach_reflect_center.lean",
+      "module": "PEqualNP.Outside.L_goldbach_reflect_center",
+      "statement": "∀ n k : ℕ, k ≤ n → (n-k=k ↔ 2*k=n)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0005 · 反射固定点恰为中点引理",
+        "en": "New route · Theta reflection · TH-0005 · The midpoint is the unique fixed point"
+      },
+      "brief": {
+        "zh": "在闭区间上用自然数减法；用于单列 p=q 的贡献。",
+        "en": "Use bounded subtraction to isolate the diagonal p=q."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-reflect-half",
+      "file": "lean/PEqualNP/Outside/L_goldbach_reflect_half.lean",
+      "module": "PEqualNP.Outside.L_goldbach_reflect_half",
+      "statement": "∀ (n : ℕ) (w : ℕ → ℝ), (∑ k ∈ Finset.range (n+1), w k*w (n-k)) = 2*(∑ k ∈ (Finset.range (n+1)).filter (fun k => 2*k<n), w k*w (n-k)) + (if Even n then (w (n/2))^2 else 0)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0006 · 非中心反射配对引理",
+        "en": "New route · Theta reflection · TH-0006 · Halve a reflected sum away from the midpoint"
+      },
+      "brief": {
+        "zh": "分成左半、右半和固定点。求和同时允许两个素数相等。 建议先读 L-goldbach-reflect-center。",
+        "en": "Pair left and right halves and retain the fixed point. Read first: L-goldbach-reflect-center."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-reflect-center"
+      ]
+    },
+    {
+      "id": "L-goldbach-reflect-isometry",
+      "file": "lean/PEqualNP/Outside/L_goldbach_reflect_isometry.lean",
+      "module": "PEqualNP.Outside.L_goldbach_reflect_isometry",
+      "statement": "∀ (n : ℕ) (b : ℕ → ℂ), (∑ k ∈ Finset.range (n+1), ‖b (n-k)‖^2) = ∑ k ∈ Finset.range (n+1), ‖b k‖^2",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0007 · 区间反射的平方范数等距性引理",
+        "en": "New route · Theta reflection · TH-0007 · Reflection preserves interval energy"
+      },
+      "brief": {
+        "zh": "用 k ↦ n−k 建立有限区间双射，供投影能量计算使用。",
+        "en": "Reindex by interval reversal for the projection energy calculation."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-reflect-orthogonal",
+      "file": "lean/PEqualNP/Outside/L_goldbach_reflect_orthogonal.lean",
+      "module": "PEqualNP.Outside.L_goldbach_reflect_orthogonal",
+      "statement": "∀ (n : ℕ) (b : ℕ → ℝ), (∑ k ∈ Finset.range (n+1), (b k + b (n-k))*(b k - b (n-k)))=0",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0008 · 正负反射分量的实内积正交引理",
+        "en": "New route · Theta reflection · TH-0008 · Real orthogonality of the reflection components"
+      },
+      "brief": {
+        "zh": "先展开为平方差，再换元消去。 建议先读 L-goldbach-reflect-isometry。",
+        "en": "Expand the difference of squares and reverse the index. Read first: L-goldbach-reflect-isometry."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-reflect-isometry"
+      ]
+    },
+    {
+      "id": "L-goldbach-reflect-period-alias",
+      "file": "lean/PEqualNP/Outside/L_goldbach_reflect_period_alias.lean",
+      "module": "PEqualNP.Outside.L_goldbach_reflect_period_alias",
+      "statement": "∀ (n : ℕ) (b : ℕ → ℝ), 0<n → (∑ k ∈ Finset.range (n+1), b k*b (n-k)) = (∑ k ∈ Finset.range n, b k*b ((n-k)%n)) + 2*b 0*b n-(b 0)^2",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0009 · 周期延拓在端点的混叠校正引理",
+        "en": "New route · Theta reflection · TH-0009 · Endpoint alias correction under periodic extension"
+      },
+      "brief": {
+        "zh": "模 n 会识别 0 与 n，单列两端再对内点换元。",
+        "en": "Isolate both endpoints before using the cyclic model."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-reflect-unit-support",
+      "file": "lean/PEqualNP/Outside/L_goldbach_reflect_unit_support.lean",
+      "module": "PEqualNP.Outside.L_goldbach_reflect_unit_support",
+      "statement": "∀ n k : ℕ, k ≤ n → (Nat.Coprime k n ↔ Nat.Coprime (n-k) n)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0010 · 互素筛在反射下稳定引理",
+        "en": "New route · Theta reflection · TH-0010 · Coprimality is invariant under reflection"
+      },
+      "brief": {
+        "zh": "利用公因子同时整除 n 和 k 当且仅当同时整除 n 和 n−k。",
+        "en": "Transfer common divisors across subtraction."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-reflect-badpair-diagonal",
+      "file": "lean/PEqualNP/Outside/L_goldbach_reflect_badpair_diagonal.lean",
+      "module": "PEqualNP.Outside.L_goldbach_reflect_badpair_diagonal",
+      "statement": "∀ p q : ℕ, p.Prime → q.Prime → ¬ Nat.Coprime p (p+q) → p=q",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0011 · 素数对被互素筛排除时必在对角引理",
+        "en": "New route · Theta reflection · TH-0011 · A prime pair removed by the unit sieve is diagonal"
+      },
+      "brief": {
+        "zh": "由 p 整除 p+q 推出 p 整除 q，再用 q 为素数。",
+        "en": "A prime divisor of p+q equal to p divides q."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-reflect-unit-mass",
+      "file": "lean/PEqualNP/Outside/L_goldbach_reflect_unit_mass.lean",
+      "module": "PEqualNP.Outside.L_goldbach_reflect_unit_mass",
+      "statement": "let w := fun k : ℕ => if k.Prime then Real.log (k : ℝ) else 0; ∀ n : ℕ, 4 ≤ n → Even n → (∑ k ∈ Finset.range (n+1), w k*w (n-k)) = (∑ k ∈ (Finset.range (n+1)).filter (fun k => Nat.Coprime k n), w k*w (n-k)) + (w (n/2))^2",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0012 · 素数卷积的非单位对角修正引理",
+        "en": "New route · Theta reflection · TH-0012 · Diagonal correction to unit-restricted prime mass"
+      },
+      "brief": {
+        "zh": "承担从奇特征单位群到不受限终点的对角接口。 建议先读 L-goldbach-reflect-unit-support, L-goldbach-reflect-badpair-diagonal, L-goldbach-reflect-center。",
+        "en": "Reconnect the unit-group calculation to unrestricted prime mass. Read first: L-goldbach-reflect-unit-support, L-goldbach-reflect-badpair-diagonal, L-goldbach-reflect-center."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-reflect-unit-support",
+        "L-goldbach-reflect-badpair-diagonal",
+        "L-goldbach-reflect-center"
+      ]
+    },
+    {
+      "id": "L-goldbach-unit-diagonal-range",
+      "file": "lean/PEqualNP/Outside/L_goldbach_unit_diagonal_range.lean",
+      "module": "PEqualNP.Outside.L_goldbach_unit_diagonal_range",
+      "statement": "∀ n a b : ℕ, a<n → b<n → (Nat.ModEq n a b ↔ a=b)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0006 · 单位剩余类的同余对角消歧引理",
+        "en": "New route · Odd-character interference · OC-0006 · Identify congruent indices in the open support interval"
+      },
+      "brief": {
+        "zh": "使用严格窗口上界把模 n 的对角还原为算术对角。",
+        "en": "Use strict support to unwrap the modular diagonal."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-unit-anti-range",
+      "file": "lean/PEqualNP/Outside/L_goldbach_unit_anti_range.lean",
+      "module": "PEqualNP.Outside.L_goldbach_unit_anti_range",
+      "statement": "∀ n a b : ℕ, 0<a → a<n → 0<b → b<n → (n ∣ a+b ↔ a+b=n)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0007 · 负同余在支撑内等价于和为模数引理",
+        "en": "New route · Odd-character interference · OC-0007 · Unwrap the negative congruence inside the support"
+      },
+      "brief": {
+        "zh": "和落在开区间 (0,2n)，其中 n 的正倍数只有一个。",
+        "en": "Locate the sum strictly between zero and twice the modulus."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-unit-diagonal-disjoint",
+      "file": "lean/PEqualNP/Outside/L_goldbach_unit_diagonal_disjoint.lean",
+      "module": "PEqualNP.Outside.L_goldbach_unit_diagonal_disjoint",
+      "statement": "∀ n a : ℕ, 2<n → Nat.Coprime a n → ¬ n ∣ a+a",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0008 · 大于二的模数上两个单位对角不交引理",
+        "en": "New route · Odd-character interference · OC-0008 · Unit diagonal and antidiagonal are disjoint above modulus two"
+      },
+      "brief": {
+        "zh": "处理奇特征正交核的两种指示函数会否重合。",
+        "en": "Cancel the unit a in the doubled congruence."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-odd-kernel-quadratic",
+      "file": "lean/PEqualNP/Outside/L_goldbach_odd_kernel_quadratic.lean",
+      "module": "PEqualNP.Outside.L_goldbach_odd_kernel_quadratic",
+      "statement": "∀ (n : ℕ) (a : ℕ → ℝ), (∑ i ∈ Finset.range (n+1), ∑ j ∈ Finset.range (n+1), a i*a j*((if i=j then 1 else 0)-(if i+j=n then 1 else 0))) = (∑ i ∈ Finset.range (n+1), (a i)^2) - ∑ i ∈ Finset.range (n+1), a i*a (n-i)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0009 · 奇投影核二次型提取反射卷积引理",
+        "en": "New route · Odd-character interference · OC-0009 · Extract reflected mass from the odd projection kernel"
+      },
+      "brief": {
+        "zh": "逐行收缩正对角和反对角，得到 D−G。 建议先读 L-goldbach-unit-diagonal-range, L-goldbach-unit-anti-range。",
+        "en": "Contract the two diagonals separately to obtain D−G. Read first: L-goldbach-unit-diagonal-range, L-goldbach-unit-anti-range."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-unit-diagonal-range",
+        "L-goldbach-unit-anti-range"
+      ]
+    },
+    {
+      "id": "L-goldbach-cross-repeated-height",
+      "file": "lean/PEqualNP/Outside/L_goldbach_cross_repeated_height.lean",
+      "module": "PEqualNP.Outside.L_goldbach_cross_repeated_height",
+      "statement": "∀ (m : ℕ) (v : ℂ), (∑ i : Fin m, ∑ _j ∈ Finset.univ.erase i, (v * star v).re) = (m : ℝ)*((m : ℝ)-1)*‖v‖^2",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0010 · 同高不同零点副本的正贡献引理",
+        "en": "New route · Odd-character interference · OC-0010 · Repeated indices at the same height contribute nonnegative mass"
+      },
+      "brief": {
+        "zh": "一个高度有 m 个副本时，有 m(m−1) 个有序非对角对。 建议先读 L-goldbach-zero-index-cross。",
+        "en": "Count ordered pairs in one height cluster. Read first: L-goldbach-zero-index-cross."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-zero-index-cross"
+      ]
+    },
+    {
+      "id": "L-goldbach-cross-horizontal-shift",
+      "file": "lean/PEqualNP/Outside/L_goldbach_cross_horizontal_shift.lean",
+      "module": "PEqualNP.Outside.L_goldbach_cross_horizontal_shift",
+      "statement": "∀ a b t x : ℝ, Complex.exp (((((a+t)-(b+t))*x : ℝ) : ℂ)*Complex.I) = Complex.exp (((((a-b)*x) : ℝ) : ℂ)*Complex.I)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0011 · 统一平移零点高度保持频差核引理",
+        "en": "New route · Odd-character interference · OC-0011 · Uniform translation of heights preserves the phase kernel"
+      },
+      "brief": {
+        "zh": "仅相位具有平移不变性；权 W 的自变量仍用原高度。 建议先读 L-goldbach-zero-phase-product。",
+        "en": "Only translate the phase inputs; evaluate the weight at the original height. Read first: L-goldbach-zero-phase-product."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-zero-phase-product"
+      ]
+    },
+    {
+      "id": "L-goldbach-cross-signed-swap",
+      "file": "lean/PEqualNP/Outside/L_goldbach_cross_signed_swap.lean",
+      "module": "PEqualNP.Outside.L_goldbach_cross_signed_swap",
+      "statement": "∀ a b : ℂ, (a*star b).re=(b*star a).re",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0012 · 交换零点索引保留交叉项实部引理",
+        "en": "New route · Odd-character interference · OC-0012 · Swapping a pair preserves the real part"
+      },
+      "brief": {
+        "zh": "交换索引时复乘积取共轭，用于上三角配对。",
+        "en": "Use conjugation to pass to unordered pairs."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-cross-upper-triangle",
+      "file": "lean/PEqualNP/Outside/L_goldbach_cross_upper_triangle.lean",
+      "module": "PEqualNP.Outside.L_goldbach_cross_upper_triangle",
+      "statement": "∀ (m : ℕ) (u : Fin m → ℂ), (∑ i, ∑ j ∈ Finset.univ.erase i, (u i*star (u j)).re) = 2*∑ i, ∑ j ∈ Finset.univ.filter (fun j => i<j), (u i*star (u j)).re",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0013 · 实交叉项收缩到严格上三角引理",
+        "en": "New route · Odd-character interference · OC-0013 · Reduce the real cross term to its strict upper triangle"
+      },
+      "brief": {
+        "zh": "按索引而非高度排序，避免漏掉重零点。 建议先读 L-goldbach-cross-signed-swap, L-goldbach-zero-index-cross。",
+        "en": "Order indices, retaining repeated heights. Read first: L-goldbach-cross-signed-swap, L-goldbach-zero-index-cross."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-cross-signed-swap",
+        "L-goldbach-zero-index-cross"
+      ]
+    },
+    {
+      "id": "L-goldbach-cross-tail-mixed",
+      "file": "lean/PEqualNP/Outside/L_goldbach_cross_tail_mixed.lean",
+      "module": "PEqualNP.Outside.L_goldbach_cross_tail_mixed",
+      "statement": "∀ (a b : ℂ), ‖a+b‖^2 - ‖a‖^2 - ‖b‖^2 = 2*(a*star b).re",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0014 · 截断遗漏的双线性交叉项引理",
+        "en": "New route · Odd-character interference · OC-0014 · Recover mixed pairs omitted by a height cutoff"
+      },
+      "brief": {
+        "zh": "令 a、b 为截断内外的带相位总和。先恢复混合项，再估计尾项。",
+        "en": "Apply to the retained and omitted phase sums before bounding the tail."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-cross-tail-error",
+      "file": "lean/PEqualNP/Outside/L_goldbach_cross_tail_error.lean",
+      "module": "PEqualNP.Outside.L_goldbach_cross_tail_error",
+      "statement": "∀ a b : ℂ, |‖a+b‖^2-‖a‖^2| ≤ 2*‖a‖*‖b‖+‖b‖^2",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0015 · 截断误差由尾质量和主块幅度控制引理",
+        "en": "New route · Odd-character interference · OC-0015 · Control the squared-amplitude truncation error"
+      },
+      "brief": {
+        "zh": "利用混合项实部的双边界，供截断到全和的预算使用。 建议先读 L-goldbach-cross-tail-mixed。",
+        "en": "Bound the real mixed product on both sides. Read first: L-goldbach-cross-tail-mixed."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-cross-tail-mixed"
+      ]
     }
   ],
   "tracks": [
