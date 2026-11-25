@@ -10936,6 +10936,100 @@
         "L-goldbach-diagonal-riemann-constant",
         "L-goldbach-diagonal-square-power-budget"
       ]
+    },
+    {
+      "id": "L-goldbach-residual-class-affine",
+      "file": "lean/PEqualNP/Outside/L_goldbach_residual_class_affine.lean",
+      "module": "PEqualNP.Outside.L_goldbach_residual_class_affine",
+      "statement": "let F := fun x q r : ℕ => (Finset.range (x+1)).filter (fun k => k%q=r); let e := fun (x q : ℕ) (a : ℕ → ℝ) k => let f := F x q (k%q); a k-(∑ i ∈ f, a i)/(f.card:ℝ); let C := fun (x : ℕ) (a b : ℕ → ℝ) s => ∑ k ∈ (Finset.range (x+1)).filter (fun k => k ≤ s ∧ s-k ≤ x), a k*b (s-k); ∀ (x q c : ℕ) (a b : ℕ → ℝ) (u v : ℝ), 0<q → (∑ s ∈ (Finset.range (2*x+1)).filter (fun s => s%q=c), (u+v*(s:ℝ))*C x (e x q a) (e x q b) s)=0",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0086 · 局部中心化残差卷积消去各余类的仿射观测引理",
+        "en": "New route · Theta reflection · TH-0086 · Centered residual convolution annihilates affine probes on each residue class"
+      },
+      "brief": {
+        "zh": "在同一固定输入区间内按两个余类重排。展开 u+v(i+j)，每项至少有一个完全中心化的因子。 建议先读 L-goldbach-theta-fiber-projection, L-goldbach-coset-alias-mass。",
+        "en": "Fix both input supports before summing targets. Each term of the affine probe has a centered factor after grouping by input residues. Read first: L-goldbach-theta-fiber-projection, L-goldbach-coset-alias-mass."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-theta-fiber-projection",
+        "L-goldbach-coset-alias-mass"
+      ]
+    },
+    {
+      "id": "L-goldbach-residual-quadratic-signal",
+      "file": "lean/PEqualNP/Outside/L_goldbach_residual_quadratic_signal.lean",
+      "module": "PEqualNP.Outside.L_goldbach_residual_quadratic_signal",
+      "statement": "let F := fun x q r : ℕ => (Finset.range (x+1)).filter (fun k => k%q=r); let e := fun (x q : ℕ) (a : ℕ → ℝ) k => let f := F x q (k%q); a k-(∑ i ∈ f, a i)/(f.card:ℝ); let C := fun (x : ℕ) (a b : ℕ → ℝ) s => ∑ k ∈ (Finset.range (x+1)).filter (fun k => k ≤ s ∧ s-k ≤ x), a k*b (s-k); ∀ (x q c : ℕ) (a b : ℕ → ℝ), c<q → (∑ s ∈ (Finset.range (2*x+1)).filter (fun s => s%q=c), (s:ℝ)^2*C x (e x q a) (e x q b) s) = 2*∑ r ∈ Finset.range q, ((∑ i ∈ F x q r, (i:ℝ)*e x q a i)*(∑ j ∈ F x q ((c%q+q-r)%q), (j:ℝ)*e x q b j))",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0087 · 二次观测残留为两个一阶纤维矩的乘积引理",
+        "en": "New route · Theta reflection · TH-0087 · First surviving quadratic probe is a product of within-fiber first moments"
+      },
+      "brief": {
+        "zh": "要求 c 为标准余类。二次展开只留下 2ij 项，测量常数局部模型看不见的第一个矩。 建议先读 L-goldbach-residual-class-affine。",
+        "en": "For a canonical output residue the pure square terms vanish; only the mixed first moments survive. Read first: L-goldbach-residual-class-affine."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-residual-class-affine"
+      ]
+    },
+    {
+      "id": "L-goldbach-residual-polynomial-order",
+      "file": "lean/PEqualNP/Outside/L_goldbach_residual_polynomial_order.lean",
+      "module": "PEqualNP.Outside.L_goldbach_residual_polynomial_order",
+      "statement": "let F := fun x q r : ℕ => (Finset.range (x+1)).filter (fun k => k%q=r); let C := fun (x : ℕ) (a b : ℕ → ℝ) s => ∑ k ∈ (Finset.range (x+1)).filter (fun k => k ≤ s ∧ s-k ≤ x), a k*b (s-k); ∀ (x q c m l d : ℕ) (a b : ℕ → ℝ), 0<q → d<m+l → (∀ r<q, ∀ j<m, (∑ i ∈ F x q r, (i:ℝ)^j*a i)=0) → (∀ r<q, ∀ j<l, (∑ i ∈ F x q r, (i:ℝ)^j*b i)=0) → (∑ s ∈ (Finset.range (2*x+1)).filter (fun s => s%q=c), (s:ℝ)^d*C x a b s)=0",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0088 · 高阶中心化后卷积的消矩阶数相加引理",
+        "en": "New route · Theta reflection · TH-0088 · Convolution adds the cancellation orders of local moments"
+      },
+      "brief": {
+        "zh": "对 (i+j)^d 作二项展开；每个次数分配至少一侧低于已消去的阶数。两边可以采用不同拟合阶数。 建议先读 L-goldbach-residual-class-affine, L-goldbach-residual-quadratic-signal。",
+        "en": "Use the binomial expansion, allowing different cancellation orders on the two inputs. Read first: L-goldbach-residual-class-affine, L-goldbach-residual-quadratic-signal."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-residual-class-affine",
+        "L-goldbach-residual-quadratic-signal"
+      ]
+    },
+    {
+      "id": "L-goldbach-residual-test-approximation",
+      "file": "lean/PEqualNP/Outside/L_goldbach_residual_test_approximation.lean",
+      "module": "PEqualNP.Outside.L_goldbach_residual_test_approximation",
+      "statement": "let C := fun (x : ℕ) (a b : ℕ → ℝ) s => ∑ k ∈ (Finset.range (x+1)).filter (fun k => k ≤ s ∧ s-k ≤ x), a k*b (s-k); ∀ (x q c : ℕ) (a b g p : ℕ → ℝ) (δ : ℝ), let S := (Finset.range (2*x+1)).filter (fun s => s%q=c); (∀ s ∈ S, |g s-p s|≤δ) → 0≤δ → (∑ s ∈ S, p s*C x a b s)=0 → |∑ s ∈ S, g s*C x a b s| ≤ δ*(∑ i ∈ Finset.range (x+1), |a i|)*(∑ j ∈ Finset.range (x+1), |b j|)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0089 · 将平滑目标权的多项式逼近误差转成残差偏差引理",
+        "en": "New route · Theta reflection · TH-0089 · Transfer approximation of a target probe to its residual bias"
+      },
+      "brief": {
+        "zh": "利用同一余类上的消矩去掉多项式拟合，剩余项使用卷积的 ℓ¹ 界。估计适用于指定平滑探针，点质量仍需另行估计。 建议先读 L-goldbach-residual-polynomial-order。",
+        "en": "Subtract the annihilated probe and bound the remaining convolution in ℓ¹; delta probes require a separate estimate. Read first: L-goldbach-residual-polynomial-order."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-residual-polynomial-order"
+      ]
     }
   ],
   "tracks": [
