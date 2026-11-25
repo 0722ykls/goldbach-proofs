@@ -10607,6 +10607,124 @@
       "depends_on": [
         "L-goldbach-mellin-decay-seminorm"
       ]
+    },
+    {
+      "id": "L-goldbach-primitive-window-powers",
+      "file": "lean/PEqualNP/Outside/L_goldbach_primitive_window_powers.lean",
+      "module": "PEqualNP.Outside.L_goldbach_primitive_window_powers",
+      "statement": "let B := fun n p : ℕ => (Finset.Icc 1 (Nat.log 2 n)).filter (fun a => n≤3*p^a ∧ 3*p^a≤2*n); ∀ n p : ℕ, 0<n → p.Prime → (B n p).card ≤ (if p=2 then 2 else 1)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0075 · 中心窗内一个坏素点最多留下两个幂次引理",
+        "en": "New route · Odd-character interference · OC-0075 · At most two powers per bad prime in the central window"
+      },
+      "brief": {
+        "zh": "两次相邻幂的比为 p，而窗口端点比为 2；二进端点重合时保留两份。 建议先读 L-goldbach-pp-exp-cutoff。",
+        "en": "Use the endpoint ratio of two; retain both endpoint powers in the dyadic case. Read first: L-goldbach-pp-exp-cutoff."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-pp-exp-cutoff"
+      ]
+    },
+    {
+      "id": "L-goldbach-primitive-ramified-total",
+      "file": "lean/PEqualNP/Outside/L_goldbach_primitive_ramified_total.lean",
+      "module": "PEqualNP.Outside.L_goldbach_primitive_ramified_total",
+      "statement": "∀ n : ℕ, 2≤n → (∑ k ∈ (Finset.range (n+1)).filter (fun k => n≤3*k ∧ 3*k≤2*n ∧ ¬k.Coprime n), ArithmeticFunction.vonMangoldt k) ≤ 2*Real.log (n:ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0076 · 中心窗中模数坏素点的 Mangoldt 总质量界引理",
+        "en": "New route · Odd-character interference · OC-0076 · Bound ramified Mangoldt mass inside the central window"
+      },
+      "brief": {
+        "zh": "支撑只有 p|n 的素数幂，各 p 至多收两次 log p；最后用 rad(n)≤n。 建议先读 L-goldbach-primitive-window-powers。",
+        "en": "Sum log p over distinct ramified primes with at most two powers each, then use the radical bound. Read first: L-goldbach-primitive-window-powers."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-primitive-window-powers"
+      ]
+    },
+    {
+      "id": "L-goldbach-primitive-ramified-square",
+      "file": "lean/PEqualNP/Outside/L_goldbach_primitive_ramified_square.lean",
+      "module": "PEqualNP.Outside.L_goldbach_primitive_ramified_square",
+      "statement": "∀ n : ℕ, 2≤n → (∑ k ∈ (Finset.range (n+1)).filter (fun k => n≤3*k ∧ 3*k≤2*n ∧ ¬k.Coprime n), (ArithmeticFunction.vonMangoldt k)^2) ≤ 2*(Real.log (n:ℝ))^2",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0077 · 中心窗中删去坏素点的平方权代价引理",
+        "en": "New route · Odd-character interference · OC-0077 · Squared-weight cost of removing the ramified primes from the diagonal"
+      },
+      "brief": {
+        "zh": "平方权对角必须单算：∑(log p)²≤(∑log p)²，系数 2 来自中心窗的端点。 建议先读 L-goldbach-primitive-window-powers。",
+        "en": "Handle the squared diagonal separately, preserving the factor two from the central window. Read first: L-goldbach-primitive-window-powers."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-primitive-window-powers"
+      ]
+    },
+    {
+      "id": "L-goldbach-primitive-induced-discrepancy",
+      "file": "lean/PEqualNP/Outside/L_goldbach_primitive_induced_discrepancy.lean",
+      "module": "PEqualNP.Outside.L_goldbach_primitive_induced_discrepancy",
+      "statement": "∀ (n : ℕ) [NeZero n], 2<n → ∀ (χ : DirichletCharacter ℂ n) (v : ℕ → ℂ), (∀ k, ‖v k‖≤1) → ‖∑ k ∈ (Finset.range (n+1)).filter (fun k => n≤3*k ∧ 3*k≤2*n), (ArithmeticFunction.vonMangoldt k:ℂ)*v k*(χ (k:ZMod n)-χ.primitiveCharacter (k:ZMod χ.conductor))‖ ≤ 2*Real.log (n:ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0078 · 诱导特征与原始母特征在中心素数和上的差引理",
+        "en": "New route · Odd-character interference · OC-0078 · Bound imprimitive-to-primitive replacement in the central prime sum"
+      },
+      "brief": {
+        "zh": "在单位类上两特征相等；非单位类原模特征为零，原始母特征模至多一。损失只有一份坏素质量。 建议先读 L-goldbach-primitive-ramified-total, L-goldbach-characters-primitive-parity。",
+        "en": "Unit terms agree and the imprimitive value vanishes on nonunits, so only one copy of ramified mass is charged. Read first: L-goldbach-primitive-ramified-total, L-goldbach-characters-primitive-parity."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-primitive-ramified-total",
+        "L-goldbach-characters-primitive-parity"
+      ]
+    },
+    {
+      "id": "L-goldbach-primitive-mean-power-replacement",
+      "file": "lean/PEqualNP/Outside/L_goldbach_primitive_mean_power_replacement.lean",
+      "module": "PEqualNP.Outside.L_goldbach_primitive_mean_power_replacement",
+      "statement": "∀ (n : ℕ) [NeZero n], 2<n → let X := (Finset.univ : Finset (DirichletCharacter ℂ n)).filter (fun χ => χ (-1) = -1); ∀ (A B : DirichletCharacter ℂ n → ℂ) (e : ℝ), 0≤e → (∀ χ∈X, ‖A χ-B χ‖ ≤ e) → let avg := fun f : DirichletCharacter ℂ n → ℝ => (2/(n.totient:ℝ))*∑ χ ∈ X, f χ; |avg (fun χ => ‖A χ‖^2)-avg (fun χ => ‖B χ‖^2)| ≤ 2*e*Real.sqrt (avg (fun χ => ‖B χ‖^2))+e^2",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0079 · 按原分母平均的特征功率替换误差引理",
+        "en": "New route · Odd-character interference · OC-0079 · Second-moment cost of replacing induced amplitudes by primitive ones"
+      },
+      "brief": {
+        "zh": "将中心和除以 √n 后可取 e=2 log n/√n；用精确奇特征数把点态替换误差转成二阶矩误差。 建议先读 L-goldbach-primitive-induced-discrepancy, L-goldbach-characters-odd-card, L-goldbach-cross-block-l2-tail。",
+        "en": "After square-root normalization take e=2 log(n)/sqrt(n). Preserve the full odd-character average when replacing squared amplitudes. Read first: L-goldbach-primitive-induced-discrepancy, L-goldbach-characters-odd-card, L-goldbach-cross-block-l2-tail."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-primitive-induced-discrepancy",
+        "L-goldbach-characters-odd-card",
+        "L-goldbach-cross-block-l2-tail"
+      ]
     }
   ],
   "tracks": [
