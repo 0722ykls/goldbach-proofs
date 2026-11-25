@@ -9351,6 +9351,138 @@
       "track": "theta-reflection",
       "role": "lemma",
       "depends_on": []
+    },
+    {
+      "id": "L-goldbach-bulk-overlap-floor",
+      "file": "lean/PEqualNP/Outside/L_goldbach_bulk_overlap_floor.lean",
+      "module": "PEqualNP.Outside.L_goldbach_bulk_overlap_floor",
+      "statement": "let J := fun x : ℕ => (Finset.range (2*x+1)).filter (fun n => Even n ∧ 13*x≤12*n ∧ 4*n≤5*x); let B := fun x : ℕ => (Finset.range (x+1)).filter (fun k => x≤2*k ∧ 3*k≤2*x); ∃ X : ℕ, ∀ x≥X, ∀ n ∈ J x, x ≤ 13*((B x).filter (fun p => p≤n ∧ n-p∈B x)).card",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0039 · 内区间目标有线性长度的双窗交集引理",
+        "en": "New route · Theta reflection · TH-0039 · Linear overlap of two fixed prime windows on interior targets"
+      },
+      "brief": {
+        "zh": "预期系数近两端会退化；目标限制在 [13x/12,5x/4] 后，用区间交长度和取整误差证明统一下界。",
+        "en": "Keep away from the triangular profile's endpoints. Include integer rounding when lower-bounding the overlap."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-bulk-no-alias",
+      "file": "lean/PEqualNP/Outside/L_goldbach_bulk_no_alias.lean",
+      "module": "PEqualNP.Outside.L_goldbach_bulk_no_alias",
+      "statement": "∀ (x n : ℕ) (w : ℕ → ℝ), n≤2*x → (∑ p ∈ Finset.range (x+1), ∑ q ∈ Finset.range (x+1), if (p+q)%(2*x+1)=n then w p*w q else 0) = ∑ p ∈ (Finset.range (x+1)).filter (fun p => p≤n ∧ n-p≤x), w p*w (n-p)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0040 · 零填充后的循环卷积与区间卷积一致引理",
+        "en": "New route · Theta reflection · TH-0040 · Zero padding removes aliasing in the fixed block"
+      },
+      "brief": {
+        "zh": "将频率侧放在长度 2x+1 的循环群上；必须对所有系数避免卷回。",
+        "en": "Use a single cyclic group of length 2x+1 with no wraparound for any coefficient."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-bulk-exception-budget",
+      "file": "lean/PEqualNP/Outside/L_goldbach_bulk_exception_budget.lean",
+      "module": "PEqualNP.Outside.L_goldbach_bulk_exception_budget",
+      "statement": "∀ (s : Finset ℕ) (r m : ℕ → ℝ) (L : ℝ), 0<L → (∀ n∈s, L≤m n) → (((s.filter (fun n => r n=0)).card : ℝ)*L^2) ≤ ∑ n ∈ s, (r n-m n)^2",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0041 · 模型均方误差控制零表示目标数引理",
+        "en": "New route · Theta reflection · TH-0041 · Model mean-square error bounds exceptional targets"
+      },
+      "brief": {
+        "zh": "只要求模型在选定目标上有下界，允许误差在个别目标很大。",
+        "en": "Charge a squared lower-bound cost only to targets with zero representations."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-bulk-patch-cover",
+      "file": "lean/PEqualNP/Outside/L_goldbach_bulk_patch_cover.lean",
+      "module": "PEqualNP.Outside.L_goldbach_bulk_patch_cover",
+      "statement": "∃ J : Finset ℚ, (∀ r∈J, 0<r) ∧ ∀ t : ℝ, 1≤t → t≤2 → ∃ r∈J, 13*(r:ℝ)/12<t ∧ t<5*(r:ℝ)/4",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0042 · 有限个缩放窗口能覆盖整个二倍区间引理",
+        "en": "New route · Theta reflection · TH-0042 · A fixed finite family of scaled interior windows covers a dyadic block"
+      },
+      "brief": {
+        "zh": "给出有限有理覆盖并保留开区间余量，方便随后把 rx 取整。",
+        "en": "Choose a finite rational cover with strict slack for rounding each scaled window."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-bulk-rounded-cover",
+      "file": "lean/PEqualNP/Outside/L_goldbach_bulk_rounded_cover.lean",
+      "module": "PEqualNP.Outside.L_goldbach_bulk_rounded_cover",
+      "statement": "let J := fun x : ℕ => (Finset.range (2*x+1)).filter (fun n => Even n ∧ 13*x≤12*n ∧ 4*n≤5*x); ∃ S : Finset ℚ, (∀ r∈S, 0<r) ∧ ∃ X : ℕ, ∀ x≥X, ∀ n∈Finset.Icc x (2*x), Even n → ∃ r∈S, n∈J ⌊(r:ℝ)*(x:ℝ)⌋₊",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0043 · 取整后中心窗口仍覆盖大规模偶目标引理",
+        "en": "New route · Theta reflection · TH-0043 · Round the rational scales while retaining all large even targets"
+      },
+      "brief": {
+        "zh": "利用紧区间上的统一覆盖裕量，吸收每个尺度不足一个单位的误差。 建议先读 L-goldbach-bulk-patch-cover。",
+        "en": "Use uniform cover slack to absorb less than one unit of scale rounding. Read first: L-goldbach-bulk-patch-cover."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-bulk-patch-cover"
+      ]
+    },
+    {
+      "id": "L-goldbach-bulk-density-one",
+      "file": "lean/PEqualNP/Outside/L_goldbach_bulk_density_one.lean",
+      "module": "PEqualNP.Outside.L_goldbach_bulk_density_one",
+      "statement": "let J := fun x : ℕ => (Finset.range (2*x+1)).filter (fun n => Even n ∧ 13*x≤12*n ∧ 4*n≤5*x); let B := fun x : ℕ => (Finset.range (x+1)).filter (fun k => x≤2*k ∧ 3*k≤2*x); let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let R := fun x n : ℕ => ∑ p ∈ (B x).filter (fun p => n-p ∈ B x ∧ p≤n), w p*w (n-p); ∀ ε : ℝ, 0<ε → ∃ X : ℕ, ∀ x≥X, (((J x).filter (fun n => R x n=0)).card : ℝ) ≤ ε*(x:ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0044 · 内窗口中无中心素数对的偶数为零密度（开放目标）",
+        "en": "New route · Theta reflection · TH-0044 · Density-zero exceptional set in an interior fixed-window model"
+      },
+      "brief": {
+        "zh": "此目标改善有表示的偶数比例，同时放宽了每个成功目标的质量要求。研究固定窗口的主弧模型与系数均方误差；这里允许例外无限，不蕴含强哥德巴赫。 建议先读 L-goldbach-bulk-overlap-floor, L-goldbach-bulk-no-alias, L-goldbach-bulk-exception-budget。",
+        "en": "Seek a major-arc model with small coefficient mean-square error on the interior window. Even infinitely many exceptions are allowed. Read first: L-goldbach-bulk-overlap-floor, L-goldbach-bulk-no-alias, L-goldbach-bulk-exception-budget."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "target",
+      "depends_on": [
+        "L-goldbach-bulk-overlap-floor",
+        "L-goldbach-bulk-no-alias",
+        "L-goldbach-bulk-exception-budget"
+      ]
     }
   ],
   "tracks": [
