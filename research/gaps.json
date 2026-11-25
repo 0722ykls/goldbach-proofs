@@ -7461,9 +7461,218 @@
       "imports": [],
       "track": "minor-truncation",
       "role": "target"
+    },
+    {
+      "id": "L-goldbach-reflection-energy",
+      "file": "lean/PEqualNP/Outside/L_goldbach_reflection_energy.lean",
+      "module": "PEqualNP.Outside.L_goldbach_reflection_energy",
+      "statement": "∀ (n : ℕ) (b : ℕ → ℝ), (∑ k ∈ Finset.range (n+1), (b k + b (n-k))^2) - (∑ k ∈ Finset.range (n+1), (b k - b (n-k))^2) = 4 * ∑ k ∈ Finset.range (n+1), b k * b (n-k)",
+      "plain_statement": {
+        "zh": "反射能量差等于四倍卷积",
+        "en": "Reflection energy difference equals four times the convolution"
+      },
+      "brief": {
+        "zh": "在区间 0 到 n 逐项展开，反射取 n−k。",
+        "en": "Expand pointwise on the interval from zero to n."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-reflection-phase",
+      "file": "lean/PEqualNP/Outside/L_goldbach_reflection_phase.lean",
+      "module": "PEqualNP.Outside.L_goldbach_reflection_phase",
+      "statement": "∀ (n : ℕ) (b : ℕ → ℂ) (z : ℂ), z ≠ 0 → (∑ k ∈ Finset.range (n+1), b (n-k)*z^k) = z^n * ∑ k ∈ Finset.range (n+1), b k*(z⁻¹)^k",
+      "plain_statement": {
+        "zh": "反射的傅里叶相位",
+        "en": "Fourier phase of interval reflection"
+      },
+      "brief": {
+        "zh": "换元 k ↦ n−k，同时追踪平移相位与频率反号。",
+        "en": "Reverse the finite sum and track the translation and inverse frequency."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-reflection-mask",
+      "file": "lean/PEqualNP/Outside/L_goldbach_reflection_mask.lean",
+      "module": "PEqualNP.Outside.L_goldbach_reflection_mask",
+      "statement": "∀ (n : ℕ) (a : ℕ → ℝ), (let b := fun k => if Nat.Prime k then a k else 0; (∑ k ∈ Finset.range (n+1), a k*a (n-k)) - (∑ k ∈ Finset.range (n+1), b k*b (n-k)) = ∑ k ∈ Finset.range (n+1), if Nat.Prime k ∧ Nat.Prime (n-k) then 0 else a k*a (n-k))",
+      "plain_statement": {
+        "zh": "中心权卷积剔除非素数支撑",
+        "en": "Bound contamination outside prime support"
+      },
+      "brief": {
+        "zh": "给出确切污染项；真素数幂及其他非素数项随后要估计。",
+        "en": "Identify the exact error before estimating prime powers or other contamination."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-rallis-gap-budget",
+      "file": "lean/PEqualNP/Outside/L_goldbach_rallis_gap_budget.lean",
+      "module": "PEqualNP.Outside.L_goldbach_rallis_gap_budget",
+      "statement": "∀ A C B P M U V e f g : ℝ, 0 < A → |(P-M)-4*A*C| ≤ e → |P-U| ≤ f → |M-V| ≤ g → 4*A*B+e+f+g < U-V → B < C",
+      "plain_statement": {
+        "zh": "同一尺度上的谱间隔推出正性",
+        "en": "Transfer a strict spectral gap to positivity"
+      },
+      "brief": {
+        "zh": "P、M 分别是固定测试向量的两个提升范数平方。需另证三个误差界，A 必须共用。",
+        "en": "P and M are squared norms of prescribed lifts. Prove the three error bounds separately using the same positive scale."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "conditional"
+    },
+    {
+      "id": "L-goldbach-zero-index-cross",
+      "file": "lean/PEqualNP/Outside/L_goldbach_zero_index_cross.lean",
+      "module": "PEqualNP.Outside.L_goldbach_zero_index_cross",
+      "statement": "∀ (m : ℕ) (u : Fin m → ℂ), (∑ j, u j) * (∑ j, star (u j)) - (∑ j, u j * star (u j)) = ∑ j, ∑ l ∈ Finset.univ.erase j, u j * star (u l)",
+      "plain_statement": {
+        "zh": "带重数的非对角和恒等式",
+        "en": "Off-diagonal identity for indexed zeros"
+      },
+      "brief": {
+        "zh": "按索引删对角；不同副本即使高度相等也保留。",
+        "en": "Erase an index, retaining distinct copies even at identical heights."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-zero-phase-product",
+      "file": "lean/PEqualNP/Outside/L_goldbach_zero_phase_product.lean",
+      "module": "PEqualNP.Outside.L_goldbach_zero_phase_product",
+      "statement": "∀ (a b x : ℝ), Complex.exp (((a*x : ℝ) : ℂ)*Complex.I) * Complex.exp (-(((b*x : ℝ) : ℂ)*Complex.I)) = Complex.exp (((((a-b)*x) : ℝ) : ℂ)*Complex.I)",
+      "plain_statement": {
+        "zh": "零点对的相位化成频差",
+        "en": "Turn paired phases into a frequency difference"
+      },
+      "brief": {
+        "zh": "取 x 为 log N 后用于交叉项，需保留符号。",
+        "en": "Specialize x to log N in the signed cross term."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-conductor-average-split",
+      "file": "lean/PEqualNP/Outside/L_goldbach_conductor_average_split.lean",
+      "module": "PEqualNP.Outside.L_goldbach_conductor_average_split",
+      "statement": "∀ (n m : ℕ) (d : Fin m → ℕ) (u : Fin m → ℝ), (2/(Nat.totient n : ℝ))*(∑ j, u j) = (2/(Nat.totient n : ℝ))*(∑ j ∈ Finset.univ.filter (fun j => n^3 < (d j)^4), u j) + (2/(Nat.totient n : ℝ))*(∑ j ∈ Finset.univ.filter (fun j => (d j)^4 ≤ n^3), u j)",
+      "plain_statement": {
+        "zh": "按导子截断保留原平均分母",
+        "en": "Split by conductor with the original normalization"
+      },
+      "brief": {
+        "zh": "以 d⁴>N³ 表示导子阈值；两部分均按全部奇特征的原尺度计。",
+        "en": "Use the integral conductor cutoff and retain the same normalization in both sums."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma"
+    },
+    {
+      "id": "L-goldbach-cross-margin-transfer",
+      "file": "lean/PEqualNP/Outside/L_goldbach_cross_margin_transfer.lean",
+      "module": "PEqualNP.Outside.L_goldbach_cross_margin_transfer",
+      "statement": "∀ G K C T pp κ e : ℝ, |G-(K-C)| ≤ e → |C-T| ≤ κ → T ≤ K-2*κ → pp+e < κ → pp < G",
+      "plain_statement": {
+        "zh": "截断裕量与素数幂误差合成",
+        "en": "Transfer a truncated margin past prime-power noise"
+      },
+      "brief": {
+        "zh": "G 是归一化 Mangoldt 卷积，pp 是非素数对污染上界；每个输入估计仍须独立证明。",
+        "en": "G is normalized Mangoldt mass and pp bounds non-prime-pair mass. The analytic inputs remain to be proved."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "conditional"
+    },
+    {
+      "id": "L-goldbach-dyadic-central-prime-mass",
+      "file": "lean/PEqualNP/Outside/L_goldbach_dyadic_central_prime_mass.lean",
+      "module": "PEqualNP.Outside.L_goldbach_dyadic_central_prime_mass",
+      "statement": "let w := fun k : ℕ => if Nat.Prime k then Real.log (k : ℝ) else 0; ∃ c : ℝ, 0 < c ∧ ∃ k₀ : ℕ, ∀ k ≥ k₀, let n : ℕ := 2^k; c*(n : ℝ) ≤ ∑ p ∈ (Finset.range (n+1)).filter (fun p => n ≤ 3*p ∧ 3*p ≤ 2*n), w p * w (n-p)",
+      "plain_statement": {
+        "zh": "二次幂子族的中心素数对数质量下界",
+        "en": "Positive central prime mass along powers of two"
+      },
+      "brief": {
+        "zh": "开放的较强诊断目标。先攻无限子族的定量质量；正的固定裕量和窗口支撑都需证明。",
+        "en": "Open quantitative diagnostic on an infinite subfamily. Prove a uniform positive margin inside the stated central window."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "target"
     }
   ],
   "tracks": [
+    {
+      "id": "theta-reflection",
+      "title": {
+        "zh": "Theta 提升与素数反射",
+        "en": "Theta lifts and prime reflection"
+      },
+      "description": {
+        "zh": "固定测试向量，比较正负反射范数；核心缺口是同一归一化下的算术匹配与严格间隔。",
+        "en": "Fix both test vectors and compare their norms with one normalization. Arithmetic matching and strict separation remain open."
+      },
+      "feeds": [
+        "representations"
+      ]
+    },
+    {
+      "id": "odd-character-interference",
+      "title": {
+        "zh": "奇特征零点干涉",
+        "en": "Odd-character zero interference"
+      },
+      "description": {
+        "zh": "固定偶模数，保留相位、重数和原平均分母；目标是截断交叉项的逐点单侧裕量。",
+        "en": "Keep phases, multiplicities and the original denominator. Seek a one-sided margin at each even modulus."
+      },
+      "feeds": [
+        "powers",
+        "exceptions"
+      ]
+    },
     {
       "id": "representations",
       "title": {
