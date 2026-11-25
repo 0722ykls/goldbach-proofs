@@ -1,3 +1,4 @@
+import re
 """Check the public research queue and the scope of its analytic targets."""
 
 import json
@@ -67,6 +68,29 @@ class CatalogueTests(unittest.TestCase):
         self.assertTrue(all(g["role"] in {"lemma", "conditional", "target"} for g in tasks))
         self.assertEqual([g["id"] for g in GAPS if g.get("role") == "endpoint"],
                          ["L-goldbach-binary-pointwise-positivity"])
+
+    def test_new_route_labels_and_dependencies(self):
+        from graphlib import TopologicalSorter
+
+        by_id = {g["id"]: g for g in GAPS}
+        graph = TopologicalSorter()
+        seen = set()
+        for track, prefix in (("theta-reflection", "TH"), ("odd-character-interference", "OC")):
+            cohort = [g for g in GAPS if g.get("track") == track]
+            self.assertTrue(cohort)
+            for g in cohort:
+                title = g["plain_statement"]
+                match = re.search(rf" · ({prefix}-[0-9]{{4}}) · ", title["zh"])
+                self.assertTrue(match, g["id"])
+                serial = match.group(1)
+                self.assertNotIn(serial, seen)
+                seen.add(serial)
+                self.assertTrue(title["zh"].startswith("新路线 · "))
+                self.assertIn(serial, title["en"])
+                for dep in g["depends_on"]:
+                    self.assertIn(dep, by_id)
+                graph.add(g["id"], *g["depends_on"])
+        list(graph.static_order())
 
     def test_analytic_programs_and_context(self):
         self.assertEqual({g["program"] for g in GAPS},
