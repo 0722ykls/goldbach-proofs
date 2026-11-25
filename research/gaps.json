@@ -8463,6 +8463,484 @@
       "depends_on": [
         "L-goldbach-reflection-phase"
       ]
+    },
+    {
+      "id": "L-goldbach-conductor-denom-positive",
+      "file": "lean/PEqualNP/Outside/L_goldbach_conductor_denom_positive.lean",
+      "module": "PEqualNP.Outside.L_goldbach_conductor_denom_positive",
+      "statement": "∀ n : ℕ, 2<n → 0 < 2/(Nat.totient n : ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0029 · 偶模数平均的正分母引理",
+        "en": "New route · Odd-character interference · OC-0029 · Positivity of the odd-character normalization"
+      },
+      "brief": {
+        "zh": "先确认平均因子为正再比较有符号和。",
+        "en": "Establish the sign before comparing signed sums."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-conductor-dyadic-sum",
+      "file": "lean/PEqualNP/Outside/L_goldbach_conductor_dyadic_sum.lean",
+      "module": "PEqualNP.Outside.L_goldbach_conductor_dyadic_sum",
+      "statement": "∀ k : ℕ, 2≤k → (∑ j ∈ Finset.Icc 1 k, if 2 < 2^k/2^j then (Nat.totient (2^k/2^j) : ℝ)/Nat.totient (2^k) else 0) = 1-4/(2:ℝ)^k",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0030 · 二次幂的导子损失精确求和引理",
+        "en": "New route · Odd-character interference · OC-0030 · Exact conductor loss for powers of two"
+      },
+      "brief": {
+        "zh": "模数降至 2 或 1 时无奇特征。其余项为截断的几何级数。",
+        "en": "Remove quotient moduli one and two and sum the remaining geometric progression."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-conductor-dyadic-scale",
+      "file": "lean/PEqualNP/Outside/L_goldbach_conductor_dyadic_scale.lean",
+      "module": "PEqualNP.Outside.L_goldbach_conductor_dyadic_scale",
+      "statement": "∀ (c ε : ℝ), 0<c → 0<ε → ∀ k : ℕ, 4*c*Real.log 2/ε < (2:ℝ)^k → |4*c*Real.log 2/(2:ℝ)^k|<ε",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0031 · 二次幂修正的有效衰减阈值引理",
+        "en": "New route · Odd-character interference · OC-0031 · Effective threshold for the dyadic conductor correction"
+      },
+      "brief": {
+        "zh": "给固定正裕量分配可检查的导子修正预算。 建议先读 L-goldbach-conductor-dyadic-sum。",
+        "en": "Allocate an explicit part of the positive margin to conductor loss. Read first: L-goldbach-conductor-dyadic-sum."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-conductor-dyadic-sum"
+      ]
+    },
+    {
+      "id": "L-goldbach-conductor-odd-split",
+      "file": "lean/PEqualNP/Outside/L_goldbach_conductor_odd_split.lean",
+      "module": "PEqualNP.Outside.L_goldbach_conductor_odd_split",
+      "statement": "∀ (m : ℕ) (r : Fin m → Fin m) (v : Fin m → ℂ), Function.Involutive r → let p := fun x i => (x i-x (r i))/2; ∀ i, p (p v) i=p v i",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0032 · 反号配对的奇投影平方等于自身引理",
+        "en": "New route · Odd-character interference · OC-0032 · Odd sign projection is idempotent"
+      },
+      "brief": {
+        "zh": "这是奇特征正交算子的有限模型，先核对因子二。",
+        "en": "Check the half-normalization on the finite involution model."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-conductor-odd-image",
+      "file": "lean/PEqualNP/Outside/L_goldbach_conductor_odd_image.lean",
+      "module": "PEqualNP.Outside.L_goldbach_conductor_odd_image",
+      "statement": "∀ (m : ℕ) (r : Fin m → Fin m) (v : Fin m → ℂ), Function.Involutive r → ∀ i, (v (r i)-v (r (r i)))/2 = -((v i-v (r i))/2)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0033 · 奇投影像具有反对称性引理",
+        "en": "New route · Odd-character interference · OC-0033 · Identify antisymmetry of the odd projection"
+      },
+      "brief": {
+        "zh": "反号矩阵投影的像将在单位群上实现。 建议先读 L-goldbach-conductor-odd-split。",
+        "en": "Use this image condition for negation on the unit group. Read first: L-goldbach-conductor-odd-split."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-conductor-odd-split"
+      ]
+    },
+    {
+      "id": "L-goldbach-conductor-odd-fixed",
+      "file": "lean/PEqualNP/Outside/L_goldbach_conductor_odd_fixed.lean",
+      "module": "PEqualNP.Outside.L_goldbach_conductor_odd_fixed",
+      "statement": "∀ (m : ℕ) (r : Fin m → Fin m) (v : Fin m → ℂ), (∀ i, v (r i)= -v i) → ∀ i, r i=i → v i=0",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0034 · 反对称函数在负号固定点为零引理",
+        "en": "New route · Odd-character interference · OC-0034 · Odd functions vanish at sign-fixed points"
+      },
+      "brief": {
+        "zh": "用于解释小模数的特殊项。 建议先读 L-goldbach-conductor-odd-image。",
+        "en": "Use at exceptional moduli with sign-fixed units. Read first: L-goldbach-conductor-odd-image."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-conductor-odd-image"
+      ]
+    },
+    {
+      "id": "L-goldbach-conductor-high-edge",
+      "file": "lean/PEqualNP/Outside/L_goldbach_conductor_high_edge.lean",
+      "module": "PEqualNP.Outside.L_goldbach_conductor_high_edge",
+      "statement": "∀ n d : ℕ, (n^3 < d^4 ↔ (n : ℝ)^((3:ℝ)/4) < (d : ℝ))",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0035 · 导子严格阈值的四次幂等价式引理",
+        "en": "New route · Odd-character interference · OC-0035 · Translate the strict conductor cutoff exactly"
+      },
+      "brief": {
+        "zh": "实幂与整数比较接轨，等号必须分配到低导子侧。",
+        "en": "Match the real-power cutoff, placing equality on the discarded side."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-height-endpoint",
+      "file": "lean/PEqualNP/Outside/L_goldbach_height_endpoint.lean",
+      "module": "PEqualNP.Outside.L_goldbach_height_endpoint",
+      "statement": "∀ (n : ℕ) (γ : ℝ), |γ| ≤ Real.log (2*(n:ℝ)) ↔ -Real.log (2*(n:ℝ)) ≤ γ ∧ γ ≤ Real.log (2*(n:ℝ))",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0036 · 高度窗为闭对称区间引理",
+        "en": "New route · Odd-character interference · OC-0036 · Express the closed symmetric height window"
+      },
+      "brief": {
+        "zh": "用两条单侧条件构造闭窗，保留端点副本。",
+        "en": "Construct the window with both endpoints included."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-height-near-phase",
+      "file": "lean/PEqualNP/Outside/L_goldbach_height_near_phase.lean",
+      "module": "PEqualNP.Outside.L_goldbach_height_near_phase",
+      "statement": "∀ a b x : ℝ, ‖Complex.exp ((((a-b)*x : ℝ) : ℂ)*Complex.I)-1‖ ≤ |a-b|*|x|",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0037 · 近邻零点相位偏离一的线性界引理",
+        "en": "New route · Odd-character interference · OC-0037 · Linear phase deviation for nearby zeros"
+      },
+      "brief": {
+        "zh": "沿单位圆弧积分或用正弦界；取 x=log N 标定近邻尺度。 建议先读 L-goldbach-zero-phase-product。",
+        "en": "Use the unit circle chord bound, then take x=log N. Read first: L-goldbach-zero-phase-product."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-zero-phase-product"
+      ]
+    },
+    {
+      "id": "L-goldbach-height-quadratic-loss",
+      "file": "lean/PEqualNP/Outside/L_goldbach_height_quadratic_loss.lean",
+      "module": "PEqualNP.Outside.L_goldbach_height_quadratic_loss",
+      "statement": "∀ a b x : ℝ, 1-Real.cos ((a-b)*x) ≤ (a-b)^2*x^2/2",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0038 · 近邻频差的实部二阶损失引理",
+        "en": "New route · Odd-character interference · OC-0038 · Quadratic real-part loss for near frequencies"
+      },
+      "brief": {
+        "zh": "有符号和只取实部时应保存二阶误差。",
+        "en": "Preserve second-order accuracy in the real part."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-height-real-product",
+      "file": "lean/PEqualNP/Outside/L_goldbach_height_real_product.lean",
+      "module": "PEqualNP.Outside.L_goldbach_height_real_product",
+      "statement": "∀ (u v : ℂ) (x : ℝ), (u * star v * Complex.exp ((x:ℂ)*Complex.I)).re = (u*star v).re*Real.cos x - (u*star v).im*Real.sin x",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0039 · 带复权的实部干涉公式引理",
+        "en": "New route · Odd-character interference · OC-0039 · Real interference with complex Mellin weights"
+      },
+      "brief": {
+        "zh": "保留虚部引起的正弦项，以便分别估计近邻与远邻。 建议先读 L-goldbach-zero-phase-product。",
+        "en": "Retain the sine contribution of the imaginary weight product. Read first: L-goldbach-zero-phase-product."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-zero-phase-product"
+      ]
+    },
+    {
+      "id": "L-goldbach-height-weight-lipschitz",
+      "file": "lean/PEqualNP/Outside/L_goldbach_height_weight_lipschitz.lean",
+      "module": "PEqualNP.Outside.L_goldbach_height_weight_lipschitz",
+      "statement": "∀ (u v : ℂ), ‖u*star v-u*star u‖=‖u‖*‖v-u‖",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0040 · 近邻权差的乘积误差引理",
+        "en": "New route · Odd-character interference · OC-0040 · Product error when replacing a nearby weight"
+      },
+      "brief": {
+        "zh": "把一个邻点的权换到中心后量化误差。",
+        "en": "Factor the difference before using regularity of the Mellin weight."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-cluster-coherent-energy",
+      "file": "lean/PEqualNP/Outside/L_goldbach_cluster_coherent_energy.lean",
+      "module": "PEqualNP.Outside.L_goldbach_cluster_coherent_energy",
+      "statement": "∀ (m : ℕ) (u : Fin m → ℂ), ‖∑ i, u i‖^2 ≤ (m : ℝ)*∑ i, ‖u i‖^2",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0041 · 一个零点簇的相干能量上界引理",
+        "en": "New route · Odd-character interference · OC-0041 · Coherent energy budget inside one zero cluster"
+      },
+      "brief": {
+        "zh": "用 Cauchy–Schwarz 保留簇内重数代价。",
+        "en": "Use Cauchy–Schwarz without dropping multiplicities."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-cluster-balanced-energy",
+      "file": "lean/PEqualNP/Outside/L_goldbach_cluster_balanced_energy.lean",
+      "module": "PEqualNP.Outside.L_goldbach_cluster_balanced_energy",
+      "statement": "∀ (m : ℕ) (u : Fin m → ℂ), (m : ℝ)*(∑ i, ‖u i‖^2)-‖∑ i, u i‖^2 = (∑ i, ∑ j, ‖u i-u j‖^2)/2",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0042 · 簇内能量亏损等于成对距离平方引理",
+        "en": "New route · Odd-character interference · OC-0042 · Pairwise distances measure loss of coherence"
+      },
+      "brief": {
+        "zh": "证明精确恒等式，保留相位离散带来的能量下降。 建议先读 L-goldbach-cluster-coherent-energy。",
+        "en": "Quantify the deficit when the phase vectors do not coincide. Read first: L-goldbach-cluster-coherent-energy."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-cluster-coherent-energy"
+      ]
+    },
+    {
+      "id": "L-goldbach-cluster-block-remainder",
+      "file": "lean/PEqualNP/Outside/L_goldbach_cluster_block_remainder.lean",
+      "module": "PEqualNP.Outside.L_goldbach_cluster_block_remainder",
+      "statement": "∀ (m k : ℕ) (u : Fin m → Fin k → ℂ), ‖∑ i, ∑ j, u i j‖^2-(∑ i, ‖∑ j, u i j‖^2) = ∑ i, ∑ l ∈ Finset.univ.erase i, ((∑ j, u i j)*star (∑ j, u l j)).re",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0043 · 簇间交叉项由块总幅度恢复引理",
+        "en": "New route · Odd-character interference · OC-0043 · Recover intercluster interference from block amplitudes"
+      },
+      "brief": {
+        "zh": "先在每个簇内求复和，再取簇间交叉，避免过早取绝对值。 建议先读 L-goldbach-zero-index-cross。",
+        "en": "Aggregate complex amplitudes before taking cross terms between clusters. Read first: L-goldbach-zero-index-cross."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-zero-index-cross"
+      ]
+    },
+    {
+      "id": "L-goldbach-signed-positive-spectrum",
+      "file": "lean/PEqualNP/Outside/L_goldbach_signed_positive_spectrum.lean",
+      "module": "PEqualNP.Outside.L_goldbach_signed_positive_spectrum",
+      "statement": "∀ (m : ℕ) (μ c : Fin m → ℝ), (∑ j, μ j*(c j)^2) ≤ ∑ j, max (μ j) 0*(c j)^2",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0044 · 固定向量二次型的正谱上界引理",
+        "en": "New route · Odd-character interference · OC-0044 · Positive-spectrum upper bound for a fixed vector"
+      },
+      "brief": {
+        "zh": "负特征值有利于目标；只在上界中舍弃负谱。",
+        "en": "Discard negative eigenvalues only for the required upper bound."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-signed-cutoff-projector",
+      "file": "lean/PEqualNP/Outside/L_goldbach_signed_cutoff_projector.lean",
+      "module": "PEqualNP.Outside.L_goldbach_signed_cutoff_projector",
+      "statement": "∀ (m : ℕ) (μ c : Fin m → ℝ) (t : ℝ), (∑ j, μ j*(c j)^2) ≤ t*(∑ j, (c j)^2) + ∑ j ∈ Finset.univ.filter (fun j => t<μ j), (μ j-t)*(c j)^2",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0045 · 超过阈值的正谱单独计费引理",
+        "en": "New route · Odd-character interference · OC-0045 · Charge high positive spectral modes separately"
+      },
+      "brief": {
+        "zh": "把危险方向的投影质量和谱超额相乘。 建议先读 L-goldbach-signed-positive-spectrum。",
+        "en": "Charge the spectral excess only against the projected vector mass. Read first: L-goldbach-signed-positive-spectrum."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-signed-positive-spectrum"
+      ]
+    },
+    {
+      "id": "L-goldbach-signed-norm-insufficient",
+      "file": "lean/PEqualNP/Outside/L_goldbach_signed_norm_insufficient.lean",
+      "module": "PEqualNP.Outside.L_goldbach_signed_norm_insufficient",
+      "statement": "∀ M : ℝ, 0<M → ∃ a b u v : ℝ, max |a| |b|=M ∧ u^2+v^2=1 ∧ a*u^2+b*v^2= -M",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0046 · 算子范数与指定方向二次型的反例引理",
+        "en": "New route · Odd-character interference · OC-0046 · A two-mode counterexample to using the norm as the signed form"
+      },
+      "brief": {
+        "zh": "构造负特征方向，检查范数与单侧上界的方向。",
+        "en": "Choose the negative eigendirection to calibrate the interpretation of the norm."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-rallis-scale-normalize",
+      "file": "lean/PEqualNP/Outside/L_goldbach_rallis_scale_normalize.lean",
+      "module": "PEqualNP.Outside.L_goldbach_rallis_scale_normalize",
+      "statement": "∀ A x y e : ℝ, 0<A → (|A*x-y|≤e ↔ |x-y/A|≤e/A)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0019 · 正归一化下范数误差的换算引理",
+        "en": "New route · Theta reflection · TH-0019 · Rescale a norm error by a positive common factor"
+      },
+      "brief": {
+        "zh": "用同一 A 除算术差和误差两侧。",
+        "en": "Divide both the arithmetic discrepancy and its error by the same scale."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-rallis-two-scale-bias",
+      "file": "lean/PEqualNP/Outside/L_goldbach_rallis_two_scale_bias.lean",
+      "module": "PEqualNP.Outside.L_goldbach_rallis_two_scale_bias",
+      "statement": "∀ A B P M : ℝ, A*P-B*M = A*(P-M)+(A-B)*M",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0020 · 不同归一化引入额外偏差引理",
+        "en": "New route · Theta reflection · TH-0020 · Quantify bias from mismatched normalizations"
+      },
+      "brief": {
+        "zh": "在局部测度核对中追踪两侧尺度差产生的附加项。",
+        "en": "Track the extra negative-channel term from unequal local normalizations."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-rallis-local-product-sign",
+      "file": "lean/PEqualNP/Outside/L_goldbach_rallis_local_product_sign.lean",
+      "module": "PEqualNP.Outside.L_goldbach_rallis_local_product_sign",
+      "statement": "∀ (s : Finset ℕ) (A : ℕ → ℝ), (∀ p ∈ s, 0<A p) → 0<∏ p ∈ s, A p",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0021 · 局部因子乘积的正性引理",
+        "en": "New route · Theta reflection · TH-0021 · Positivity of the finite local normalization"
+      },
+      "brief": {
+        "zh": "用于允许有限多个坏素点的公共归一化因子。",
+        "en": "Use for the finite product over exceptional places."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-rallis-local-zero",
+      "file": "lean/PEqualNP/Outside/L_goldbach_rallis_local_zero.lean",
+      "module": "PEqualNP.Outside.L_goldbach_rallis_local_zero",
+      "statement": "∀ (s : Finset ℕ) (A : ℕ → ℝ), (∃ p ∈ s, A p=0) → (∏ p ∈ s, A p)=0",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0022 · 局部因子消失会消灭全局乘积引理",
+        "en": "New route · Theta reflection · TH-0022 · One vanishing local factor kills the finite product"
+      },
+      "brief": {
+        "zh": "诊断预指定测试数据在哪个坏点可能失去非零性。",
+        "en": "Detect a local obstruction for prescribed test data."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
     }
   ],
   "tracks": [
