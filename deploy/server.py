@@ -150,7 +150,7 @@ def site_dock(lang, prefix):
 <script src="{prefix}discussion.js" defer></script><script src="{prefix}presence.js" defer></script>"""
 
 
-def research_status(desk=DESK):
+def research_status(desk=DESK, *, compact=False):
     db = desk.db_path
     results = []
     latest = {}
@@ -165,14 +165,15 @@ def research_status(desk=DESK):
                 results = [json.loads(body) for (body,) in conn.execute(
                     "SELECT body FROM verdicts ORDER BY run_id DESC, attempt DESC LIMIT 12"
                 )]
-                rows = conn.execute("""
+                payload = "json_remove(CAST(v.body AS TEXT), '$.manifest')" if compact else "v.body"
+                rows = conn.execute(f"""
                     WITH runs AS (
-                        SELECT body, run_id, attempt,
+                        SELECT run_id, attempt,
                                json_extract(CAST(body AS TEXT), '$.lemma_id') AS lemma,
                                json_extract(CAST(body AS TEXT), '$.verdict') AS verdict
                         FROM verdicts
                     ), ranked AS (
-                        SELECT body, lemma,
+                        SELECT run_id, attempt, lemma,
                                ROW_NUMBER() OVER (
                                    PARTITION BY lemma ORDER BY run_id DESC, attempt DESC
                                ) AS position,
@@ -180,7 +181,8 @@ def research_status(desk=DESK):
                                COUNT(*) OVER (PARTITION BY lemma) AS attempts
                         FROM runs
                     )
-                    SELECT lemma, body, proved, attempts FROM ranked WHERE position = 1
+                    SELECT lemma, {payload}, proved, attempts FROM ranked
+                    JOIN verdicts AS v USING (run_id, attempt) WHERE position = 1
                 """)
                 for lemma, body, proved, count in rows:
                     latest[lemma] = (json.loads(body), bool(proved))
@@ -214,6 +216,25 @@ def research_status(desk=DESK):
             "attempts": attempts,
         },
     }
+
+# Bound the memory used by concurrent full-history renders across all problem desks.
+STATUS_BUILD = BoundedSemaphore(1)
+WEB_SNAPSHOTS = {}
+
+
+def status_body(desk, web_view):
+    with STATUS_BUILD:
+        if web_view:
+            cached = WEB_SNAPSHOTS.get(desk)
+            if cached and cached[0] > time.monotonic():
+                return cached[1]
+        status = research_status(desk, compact=web_view)
+        body = json.dumps(status, ensure_ascii=False, separators=(",", ":")).encode()
+        if web_view:
+            body = gzip.compress(body, compresslevel=3)
+            WEB_SNAPSHOTS[desk] = (time.monotonic() + 10, body)
+        return body
+
 
 def goldbach_task_routes(lang):
     zh = lang == "zh"
@@ -631,18 +652,13 @@ class Handler(BaseHTTPRequestHandler):
             return self.reply(200, page.encode(), "text/html")
         if path == "/api/status":
             try:
-                status = research_status(desk)
                 web_view = parse_qs(url.query).get("view") == ["web-gzip"]
-                if web_view:
-                    for gap in status["gaps"]:
-                        if gap["latest"]:
-                            gap["latest"] = {k: v for k, v in gap["latest"].items() if k != "manifest"}
-                body = json.dumps(status, ensure_ascii=False, separators=(",", ":")).encode()
+                body = status_body(desk, web_view)
             except sqlite3.Error as error:
                 self.log_error("Unable to read verdicts: %s", error)
                 return self.reply(503, b'{"error":"verdicts unavailable"}')
             if web_view:
-                return self.reply(200, gzip.compress(body, compresslevel=3), encoding="gzip")
+                return self.reply(200, body, encoding="gzip")
             return self.reply(200, body)
         if path == "/platform-logo.svg":
             path = "/goldbach-icon.svg"
