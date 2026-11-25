@@ -8221,7 +8221,7 @@
       "id": "L-goldbach-pp-count-squares",
       "file": "lean/PEqualNP/Outside/L_goldbach_pp_count_squares.lean",
       "module": "PEqualNP.Outside.L_goldbach_pp_count_squares",
-      "statement": "∀ n : ℕ, ((Finset.range (n+1)).filter (fun m => ∃ p ∈ Finset.range (n+1), Nat.Prime p ∧ p^2=m)).card ≤ Nat.sqrt n",
+      "statement": "∀ n : ℕ, ((Finset.range (n+1)).filter (fun m => (Nat.sqrt m).Prime ∧ (Nat.sqrt m)^2=m)).card ≤ Nat.sqrt n",
       "plain_statement": {
         "zh": "新路线 · 奇特征干涉 · OC-0024 · 平方污染支撑基数界引理",
         "en": "New route · Odd-character interference · OC-0024 · Count the square support"
@@ -8941,6 +8941,212 @@
       "track": "theta-reflection",
       "role": "lemma",
       "depends_on": []
+    },
+    {
+      "id": "L-goldbach-central-block-prime-input",
+      "file": "lean/PEqualNP/Outside/L_goldbach_central_block_prime_input.lean",
+      "module": "PEqualNP.Outside.L_goldbach_central_block_prime_input",
+      "statement": "let w := fun p : ℕ => if p.Prime then Real.log (p : ℝ) else 0; let P := fun x : ℕ => (Finset.range (x+1)).filter (fun p => p.Prime ∧ x≤2*p ∧ 3*p≤2*x); ∃ c : ℝ, 0<c ∧ ∃ X : ℕ, ∀ x≥X, c*(x:ℝ) ≤ ∑ p ∈ P x, w p",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0023 · 窄素数块的切比雪夫权质量下界引理",
+        "en": "New route · Theta reflection · TH-0023 · Chebyshev mass of the interior prime block"
+      },
+      "brief": {
+        "zh": "区间为 [x/2,2x/3]。由切比雪夫 θ 函数的素数定理及两端误差推出；此处只需要一维素数分布。",
+        "en": "Subtract the two Chebyshev theta estimates at x/2 and 2x/3; only one-dimensional prime distribution is needed."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-central-block-moment-transfer",
+      "file": "lean/PEqualNP/Outside/L_goldbach_central_block_moment_transfer.lean",
+      "module": "PEqualNP.Outside.L_goldbach_central_block_moment_transfer",
+      "statement": "let w := fun p : ℕ => if p.Prime then Real.log (p : ℝ) else 0; let C := fun n : ℕ => ∑ p ∈ (Finset.range (n+1)).filter (fun p => n≤3*p ∧ 3*p≤2*n), w p*w (n-p); let I := fun x : ℕ => (Finset.Icc x (2*x)).filter (fun n => Even n); let P := fun x : ℕ => (Finset.range (x+1)).filter (fun p => p.Prime ∧ x≤2*p ∧ 3*p≤2*x); ∀ x : ℕ, 5≤x → (∑ p ∈ P x, w p)^2 ≤ ∑ n ∈ I x, C n",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0024 · 把窄块素数质量转移到偶目标一阶矩引理",
+        "en": "New route · Theta reflection · TH-0024 · Transfer a short prime block into the first moment"
+      },
+      "brief": {
+        "zh": "重排为有序素数对；块内素数均为奇数，其和在 [x,2x]，两加数均在和的中心窗。对角只计一次。 建议先读 L-goldbach-central-window-reflection。",
+        "en": "Reindex ordered prime pairs by their sum. The two summands lie in the central window and all output sums are even. Read first: L-goldbach-central-window-reflection."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-central-window-reflection"
+      ]
+    },
+    {
+      "id": "L-goldbach-central-first-moment",
+      "file": "lean/PEqualNP/Outside/L_goldbach_central_first_moment.lean",
+      "module": "PEqualNP.Outside.L_goldbach_central_first_moment",
+      "statement": "let w := fun p : ℕ => if p.Prime then Real.log (p : ℝ) else 0; let C := fun n : ℕ => ∑ p ∈ (Finset.range (n+1)).filter (fun p => n≤3*p ∧ 3*p≤2*n), w p*w (n-p); let I := fun x : ℕ => (Finset.Icc x (2*x)).filter (fun n => Even n); ∃ c : ℝ, 0<c ∧ ∃ X : ℕ, ∀ x≥X, c*(x:ℝ)^2 ≤ ∑ n ∈ I x, C n",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0025 · 中心素数卷积在偶数上的一阶矩下界引理",
+        "en": "New route · Theta reflection · TH-0025 · First moment of central prime mass on even targets"
+      },
+      "brief": {
+        "zh": "合并窄素数块质量和一阶矩转移。该结论允许某些偶数的卷积为零。 建议先读 L-goldbach-central-block-prime-input, L-goldbach-central-block-moment-transfer。",
+        "en": "Combine block mass with the ordered-pair injection. Individual targets may still have zero mass. Read first: L-goldbach-central-block-prime-input, L-goldbach-central-block-moment-transfer."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-central-block-prime-input",
+        "L-goldbach-central-block-moment-transfer"
+      ]
+    },
+    {
+      "id": "L-goldbach-central-sieve-upper",
+      "file": "lean/PEqualNP/Outside/L_goldbach_central_sieve_upper.lean",
+      "module": "PEqualNP.Outside.L_goldbach_central_sieve_upper",
+      "statement": "let w := fun p : ℕ => if p.Prime then Real.log (p : ℝ) else 0; let C := fun n : ℕ => ∑ p ∈ (Finset.range (n+1)).filter (fun p => n≤3*p ∧ 3*p≤2*n), w p*w (n-p); let S := fun n : ℕ => ∏ p ∈ n.primeFactors.filter (fun p => 2<p), (1+1/((p:ℝ)-2)); ∃ K : ℝ, 0<K ∧ ∃ X : ℕ, ∀ n≥X, Even n → C n ≤ K*(n:ℝ)*S n",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0026 · 中心素数对数权卷积的上界筛估计引理",
+        "en": "New route · Theta reflection · TH-0026 · Upper-bound sieve for the central log-weighted correlation"
+      },
+      "brief": {
+        "zh": "对 p 与 n−p 做二元上界筛，再恢复对数权。它约束表示数的尖峰，对没有表示的偶数仍然成立。",
+        "en": "Apply a two-dimensional upper-bound sieve and restore log weights. This controls spikes and allows zero counts."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-central-factor-square",
+      "file": "lean/PEqualNP/Outside/L_goldbach_central_factor_square.lean",
+      "module": "PEqualNP.Outside.L_goldbach_central_factor_square",
+      "statement": "let S := fun n : ℕ => ∏ p ∈ n.primeFactors.filter (fun p => 2<p), (1+1/((p:ℝ)-2)); let I := fun x : ℕ => (Finset.Icc x (2*x)).filter (fun n => Even n); ∃ K : ℝ, 0<K ∧ ∀ x : ℕ, 1≤x → (∑ n ∈ I x, (S n)^2) ≤ K*(x:ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0027 · 偶目标上奇异因子平方的均值有界引理",
+        "en": "New route · Theta reflection · TH-0027 · Bound the mean square of the local singular factor"
+      },
+      "brief": {
+        "zh": "按平方自由因子展开乘积，交换因子和与倍数计数；局部增量除以 p 后为 O(p⁻²)。",
+        "en": "Expand over squarefree divisors, then count multiples. The local increment divided by p is summable."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-central-second-moment",
+      "file": "lean/PEqualNP/Outside/L_goldbach_central_second_moment.lean",
+      "module": "PEqualNP.Outside.L_goldbach_central_second_moment",
+      "statement": "let w := fun p : ℕ => if p.Prime then Real.log (p : ℝ) else 0; let C := fun n : ℕ => ∑ p ∈ (Finset.range (n+1)).filter (fun p => n≤3*p ∧ 3*p≤2*n), w p*w (n-p); let I := fun x : ℕ => (Finset.Icc x (2*x)).filter (fun n => Even n); ∃ K : ℝ, 0<K ∧ ∃ X : ℕ, ∀ x≥X, (∑ n ∈ I x, (C n)^2) ≤ K*(x:ℝ)^3",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0028 · 中心素数卷积二阶矩的立方界引理",
+        "en": "New route · Theta reflection · TH-0028 · Cubic second-moment bound for central prime mass"
+      },
+      "brief": {
+        "zh": "将逐点上界平方，再使用局部因子二阶均值，控制一阶矩集中在少数目标上的可能性。 建议先读 L-goldbach-central-sieve-upper, L-goldbach-central-factor-square。",
+        "en": "Square the sieve envelope and average the local factor to control concentration. Read first: L-goldbach-central-sieve-upper, L-goldbach-central-factor-square."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-central-sieve-upper",
+        "L-goldbach-central-factor-square"
+      ]
+    },
+    {
+      "id": "L-goldbach-central-positive-density",
+      "file": "lean/PEqualNP/Outside/L_goldbach_central_positive_density.lean",
+      "module": "PEqualNP.Outside.L_goldbach_central_positive_density",
+      "statement": "let w := fun p : ℕ => if p.Prime then Real.log (p : ℝ) else 0; let C := fun n : ℕ => ∑ p ∈ (Finset.range (n+1)).filter (fun p => n≤3*p ∧ 3*p≤2*n), w p*w (n-p); let I := fun x : ℕ => (Finset.Icc x (2*x)).filter (fun n => Even n); ∃ a b : ℝ, 0<a ∧ 0<b ∧ ∃ X : ℕ, ∀ x≥X, b*(x:ℝ) ≤ (((I x).filter (fun n => a*(x:ℝ) ≤ C n)).card : ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0029 · 正比例偶数拥有线性规模的中心素数质量引理",
+        "en": "New route · Theta reflection · TH-0029 · Linear central mass on a positive proportion of even targets"
+      },
+      "brief": {
+        "zh": "用一阶矩给出总质量，再用二阶矩及 Cauchy–Schwarz 排除过度集中。剩余例外集仍是逐点路线的缺口。 建议先读 L-goldbach-central-first-moment, L-goldbach-central-second-moment。",
+        "en": "Apply a second-moment argument to the superlevel set. Exceptional even targets remain outside the conclusion. Read first: L-goldbach-central-first-moment, L-goldbach-central-second-moment."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-central-first-moment",
+        "L-goldbach-central-second-moment"
+      ]
+    },
+    {
+      "id": "L-goldbach-cross-block-l2-tail",
+      "file": "lean/PEqualNP/Outside/L_goldbach_cross_block_l2_tail.lean",
+      "module": "PEqualNP.Outside.L_goldbach_cross_block_l2_tail",
+      "statement": "∀ (m : ℕ) (a b : Fin m → ℂ), |∑ i, ((a i+b i)*star (a i+b i)-a i*star (a i)-b i*star (b i)).re|^2 ≤ 4*(∑ i, ‖a i‖^2)*(∑ i, ‖b i‖^2)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0047 · 用均方控制跨特征的截断混合误差引理",
+        "en": "New route · Odd-character interference · OC-0047 · Mean-square control of the mixed truncation error"
+      },
+      "brief": {
+        "zh": "截断内外的振幅按同一特征配对；应用跨特征 Cauchy–Schwarz，可避免要求所有特征都有同样好的尾界。 建议先读 L-goldbach-cross-tail-mixed。",
+        "en": "Pair retained and omitted amplitudes at the same character. Use an averaged tail budget instead of a uniform estimate per character. Read first: L-goldbach-cross-tail-mixed."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-cross-tail-mixed"
+      ]
+    },
+    {
+      "id": "L-goldbach-pp-uniform-removal",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pp_uniform_removal.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pp_uniform_removal",
+      "statement": "let A := fun k : ℕ => if (Finset.Icc 2 (Nat.log 2 k)).any (fun a => decide (k.minFac ^ a=k)) then Real.log (k:ℝ) else 0; ∀ ε : ℝ, 0<ε → ∃ X : ℕ, ∀ n≥X, ∀ v : ℕ → ℝ, (∀ k, |v k|≤1) → |(∑ k ∈ Finset.range (n+1), A k*v k*Real.log ((n+1:ℕ):ℝ))/(n:ℝ)| < ε",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0048 · 对所有有界中心权统一消去真幂污染引理",
+        "en": "New route · Odd-character interference · OC-0048 · Uniform removal of proper-power pollution for bounded windows"
+      },
+      "brief": {
+        "zh": "阈值须先于权 v 选定。按指数分离平方与高次幂，再将根号级支撑上界乘上对数损失。 建议先读 L-goldbach-pp-count-squares, L-goldbach-pp-count-cubes, L-goldbach-pp-exp-cutoff。",
+        "en": "Choose the threshold before the window. Separate squares from higher powers and absorb logarithmic losses. Read first: L-goldbach-pp-count-squares, L-goldbach-pp-count-cubes, L-goldbach-pp-exp-cutoff."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-pp-count-squares",
+        "L-goldbach-pp-count-cubes",
+        "L-goldbach-pp-exp-cutoff"
+      ]
     }
   ],
   "tracks": [

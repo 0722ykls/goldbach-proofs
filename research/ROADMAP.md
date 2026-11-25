@@ -10,6 +10,10 @@
 
 **奇特征交叉项。** 对每个偶模数 N 使用中心对称光滑权及除以 N 的 Mangoldt 卷积。固定奇特征的原始诱导特征，截取导子 d⁴>N³ 和高度 |γ|≤log(2N)，按索引删去对角；相同零点的不同副本仍需计数。每项保留频差乘 log N 的相位，以及权 W(γⱼ) 与 W(γₗ) 的共轭乘积。整个和取实部并乘 2/φ(N)。第一批任务锁定指标、相位及分母。研究瓶颈是按给定权函数推导 Kφ(N)，在所有充分大的偶数上一致证明截断交叉项 ≤ Kφ(N)−2κ，其中 κ>0 固定，并独立控制截断误差和素数幂污染。涉及 GRH 的公式须保留假设。二次幂的中心素数质量是可独立攻关的无限子族；一般偶数和小于有效阈值的输入仍需覆盖。若使用分析稿的圆法分解，主弧取圆周距离、分母上限 Q=⌊N^(1/40)⌋、宽度 Q/N，须另证与所用积分的匹配。
 
+**优先领取的中间里程碑：中心表示质量的正密度。** 对 x≤n≤2x 的偶数，C(n) 只累计 n/3≤p≤2n/3 的真素数对数权。先把 [x/2,2x/3] 的一维素数质量平方，按两素数的和重排，得到 ∑C(n) ≥ c x²。另一支用上界筛得到 C(n) ≤ K n S(n)，并按平方自由因子展开证明 ∑S(n)² ≤ K′x，推出 ∑C(n)² ≤ K″x³。两支通过二阶矩法汇合，可得至少 bx 个偶数满足 C(n) ≥ ax。这个里程碑测量质量是否集中；它允许剩余偶数全部落在例外集，不能替代逐个偶数的证明。可先独立攻一维素数块、上界筛、局部因子均值三路。对照任务 TH 编号，按任务标题和依赖 ID 接续。
+
+**Intermediate milestone.** Seek linear central prime mass on a positive proportion of even targets in each sufficiently large dyadic interval. An interior prime block supplies the first moment; an upper-bound sieve and the mean square of the local factor control the second. The remaining exceptional set needs a separate pointwise argument.
+
 **提交顺序。** 两组有限恒等式可并行领取；条件性误差合成任务可同步进行。随后提交具体测试向量或零点权的 Lean 定义及其算术解释，最后再攻逐偶数估计。终点始终要求每个偶数 n≥4 都是两个可相同素数之和，包含 4=2+2。目录 CI 将冻结终点与该自然数陈述的等价证明一同交给 Lean 检查。
 
 **English.** The theta track requires a common normalized realization of both reflected vectors and a strict spectral gap after all errors. The character track keeps indexed multiplicities, phases and the full odd-character denominator. Its open analytic input is a uniform one-sided margin after conductor and height truncation. A dyadic result or a GRH-conditional estimate would be an intermediate result.
