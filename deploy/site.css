@@ -1064,8 +1064,13 @@ body:not([data-problem]) .hero .open-status { vertical-align: middle; }
 .discussion-widget summary span { margin-inline-start: auto; }
 .discussion-widget summary span::after { content: "+"; font-size: 1.25rem; }
 .discussion-widget[open] summary span::after { content: "−"; }
-.discussion-body { width: 224px; padding: .8rem; text-align: center; color: var(--ink); }
+.discussion-body { width: 244px; max-width: 100%; padding: .8rem; text-align: center; color: var(--ink); }
 .discussion-body strong { font-size: .95rem; }
 .discussion-body p, .discussion-body small { display: block; font: 400 .78rem/1.4 var(--sans); color: var(--body); }
-.discussion-body img { display: block; width: 180px; max-width: 100%; height: auto; margin: .5rem auto; image-rendering: pixelated; }
+.discussion-code { width: 216px; max-width: 100%; aspect-ratio: 1; overflow: hidden; position: relative; margin: .5rem auto; }
+.discussion-code img {
+  /* Frame the 264px QR square at (48, 184) in the original 360px screenshot. */
+  position: absolute; width: 136.363636%; max-width: none; height: auto;
+  left: -18.181818%; top: -69.696970%;
+}
 @media print { .discussion-dock { display: none; } }
