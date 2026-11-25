@@ -10725,6 +10725,101 @@
         "L-goldbach-characters-odd-card",
         "L-goldbach-cross-block-l2-tail"
       ]
+    },
+    {
+      "id": "L-goldbach-coset-phase-fiber-factor",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_phase_fiber_factor.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_phase_fiber_factor",
+      "statement": "let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let A := fun n q r : ℕ => ∑ k ∈ F n q r, w k; let j := fun n q r : ℕ => (n+q-r)%q; let B := fun n s : ℕ => ∑ k ∈ (Finset.range (n+1)).filter (fun k => k ≤ s ∧ s-k ≤ n), w k*w (s-k); let Y := fun (n q : ℕ) (z : ℂ) => (B n n:ℂ) + ∑ h ∈ Finset.Icc 1 (n/q), ((B n (n+h*q):ℂ)*z^h + (B n (n-h*q):ℂ)*(z⁻¹)^h); ∀ (n q : ℕ) (u : ℂ), 0<q → u≠0 → u^n*Y n q (u^q) = ∑ r ∈ Finset.range q, (∑ k ∈ F n q r, (w k:ℂ)*u^k)*(∑ k ∈ F n q (j n q r), (w k:ℂ)*u^k)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0082 · 把偏移相位分配到原始的两个素数余类和引理",
+        "en": "New route · Theta reflection · TH-0082 · Factor the signed shift phase across the two original prime fibers"
+      },
+      "brief": {
+        "zh": "把每个有序对的权写为 u^(p+p′)，目标项带 u^n，负偏移则必须出现逆相位。 建议先读 L-goldbach-coset-zero-shift-share, L-goldbach-reflection-phase。",
+        "en": "Use u^(p+p′) before regrouping by residues; the central coefficient carries u^n and negative offsets require inverse phases. Read first: L-goldbach-coset-zero-shift-share, L-goldbach-reflection-phase."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-coset-zero-shift-share",
+        "L-goldbach-reflection-phase"
+      ]
+    },
+    {
+      "id": "L-goldbach-coset-phase-decimation",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_phase_decimation.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_phase_decimation",
+      "statement": "let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let B := fun n s : ℕ => ∑ k ∈ (Finset.range (n+1)).filter (fun k => k ≤ s ∧ s-k ≤ n), w k*w (s-k); let Z := fun n q : ℕ => ∑ s ∈ (Finset.range (2*n+1)).filter (fun s => s%q=n%q), B n s; let Y := fun (n q : ℕ) (z : ℂ) => (B n n:ℂ) + ∑ h ∈ Finset.Icc 1 (n/q), ((B n (n+h*q):ℂ)*z^h + (B n (n-h*q):ℂ)*(z⁻¹)^h); ∀ (n q L : ℕ) (z : ℂ), 0<q → 0<L → IsPrimitiveRoot z L → (∑ j ∈ Finset.range L, Y n q (z^j))/(L:ℂ)=(Z n (q*L):ℂ)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0083 · 平移相位取有限平均后仅保留倍数偏移引理",
+        "en": "New route · Theta reflection · TH-0083 · Root-of-unity averaging selects divisible aliases"
+      },
+      "brief": {
+        "zh": "使用原始 L 次单位根的正交性，同时检查负偏移和 h=0。这个任务给相位投影提供可独立核验的尺度转移。 建议先读 L-goldbach-coset-phase-fiber-factor, L-goldbach-coset-alias-mass。",
+        "en": "Use root orthogonality for positive, negative and zero shifts to identify the coarser frequency sampling with a refined arithmetic modulus. Read first: L-goldbach-coset-phase-fiber-factor, L-goldbach-coset-alias-mass."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-coset-phase-fiber-factor",
+        "L-goldbach-coset-alias-mass"
+      ]
+    },
+    {
+      "id": "L-goldbach-coset-twist-l2",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_twist_l2.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_twist_l2",
+      "statement": "let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let B := fun n s : ℕ => ∑ k ∈ (Finset.range (n+1)).filter (fun k => k ≤ s ∧ s-k ≤ n), w k*w (s-k); let Y := fun (n q : ℕ) (z : ℂ) => (B n n:ℂ) + ∑ h ∈ Finset.Icc 1 (n/q), ((B n (n+h*q):ℂ)*z^h + (B n (n-h*q):ℂ)*(z⁻¹)^h); ∀ (n q L : ℕ) (z : ℂ), 0<q → 2*(n/q)<L → IsPrimitiveRoot z L → (∑ j ∈ Finset.range L, ‖Y n q (z^j)-(B n n:ℂ)‖^2)/(L:ℝ) = ∑ h ∈ Finset.Icc 1 (n/q), (B n (n+h*q))^2+(B n (n-h*q))^2",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0084 · 去掉中心项后相位能量等于邻和平方质量引理",
+        "en": "New route · Theta reflection · TH-0084 · Energy of the twisted alias error equals neighboring coefficient energy"
+      },
+      "brief": {
+        "zh": "采样数应使正负偏移彼此不碰撞。Parseval 给的是邻和能量，可以衡量仅看无扭曲模型会损失多少信息。 建议先读 L-goldbach-coset-phase-decimation。",
+        "en": "Choose enough samples to separate both signs and apply finite Parseval to the centered polynomial. Read first: L-goldbach-coset-phase-decimation."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-coset-phase-decimation"
+      ]
+    },
+    {
+      "id": "L-goldbach-coset-phase-collision-correction",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_phase_collision_correction.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_phase_collision_correction",
+      "statement": "let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let B := fun n s : ℕ => ∑ k ∈ (Finset.range (n+1)).filter (fun k => k ≤ s ∧ s-k ≤ n), w k*w (s-k); let Y := fun (n q : ℕ) (z : ℂ) => (B n n:ℂ) + ∑ h ∈ Finset.Icc 1 (n/q), ((B n (n+h*q):ℂ)*z^h + (B n (n-h*q):ℂ)*(z⁻¹)^h); ∀ (n q L : ℕ) (z : ℂ), 0<q → 0<L → IsPrimitiveRoot z L → let H := n/q; let c := fun i : ℕ => if H≤i then B n (n+(i-H)*q) else B n (n-(H-i)*q); (∑ j ∈ Finset.range L, ‖Y n q (z^j)‖^2)/(L:ℝ) = ∑ r ∈ Finset.range L, (∑ i ∈ (Finset.range (2*H+1)).filter (fun i => i%L=r), c i)^2",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0085 · 低采样率的二阶矩含有可计算的交叉偏移引理",
+        "en": "New route · Theta reflection · TH-0085 · Resolve the cross-shift terms under undersampled phase measurements"
+      },
+      "brief": {
+        "zh": "平移索引到 [0,2H] 后分余类；不同偏移落在同一桶时必须先求和再平方。 建议先读 L-goldbach-coset-phase-decimation, L-goldbach-coset-twist-l2。",
+        "en": "Move to nonnegative indices before grouping by residue. Coincident sampled frequencies add coherently inside each bucket. Read first: L-goldbach-coset-phase-decimation, L-goldbach-coset-twist-l2."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-coset-phase-decimation",
+        "L-goldbach-coset-twist-l2"
+      ]
     }
   ],
   "tracks": [
