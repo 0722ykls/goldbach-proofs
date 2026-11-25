@@ -9892,8 +9892,8 @@
         "en": "New route · Theta reflection · TH-0064 · Uniform prime mass in progressions up to logarithmic moduli"
       },
       "brief": {
-        "zh": "走 Siegel–Walfisz 方向并将 Mangoldt 权换成真素数权；h、b 在取阈值之前固定。常数不要求有效。 建议先读 L-goldbach-pp-uniform-removal。",
-        "en": "Seek the Siegel–Walfisz range with true prime weights, fixing both exponents before choosing the threshold. Read first: L-goldbach-pp-uniform-removal."
+        "zh": "走 Siegel–Walfisz 方向并将 Mangoldt 权换成真素数权；h、b 在取阈值之前固定。常数不要求有效。 建议先读 L-goldbach-coset-primepower-ap-budget。",
+        "en": "Seek the Siegel–Walfisz range with true prime weights, fixing both exponents before choosing the threshold. Read first: L-goldbach-coset-primepower-ap-budget."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -9902,7 +9902,7 @@
       "track": "theta-reflection",
       "role": "lemma",
       "depends_on": [
-        "L-goldbach-pp-uniform-removal"
+        "L-goldbach-coset-primepower-ap-budget"
       ]
     },
     {
@@ -9929,6 +9929,151 @@
         "L-goldbach-coset-rounding-singular",
         "L-goldbach-coset-l2-transfer",
         "L-goldbach-coset-mean-square-rounding"
+      ]
+    },
+    {
+      "id": "L-goldbach-coset-primepower-ap-budget",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_primepower_ap_budget.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_primepower_ap_budget",
+      "statement": "let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let A := fun n q r : ℕ => ∑ k ∈ F n q r, w k; ∃ C : ℝ, 0<C ∧ ∀ n q r : ℕ, 2≤n → 0<q → r<q → let d := (∑ k ∈ F n q r, ArithmeticFunction.vonMangoldt k)-A n q r; 0≤d ∧ d ≤ C*Real.sqrt (n:ℝ)*(Real.log (2*(n:ℝ)))^2",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0066 · 统一模数下的真素数与 Mangoldt 质量差引理",
+        "en": "New route · Theta reflection · TH-0066 · Uniform square-root budget for replacing Mangoldt by prime mass"
+      },
+      "brief": {
+        "zh": "把真素数幂贡献全部计入单个上界。统一于所有剩余类的平方根级损失可被任意固定对数幂节省吸收。 建议先读 L-goldbach-pp-count-squares, L-goldbach-pp-count-cubes, L-goldbach-pp-exp-cutoff。",
+        "en": "Dominate every class by total proper-power mass, retaining a square-root loss with explicit log powers. Read first: L-goldbach-pp-count-squares, L-goldbach-pp-count-cubes, L-goldbach-pp-exp-cutoff."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-pp-count-squares",
+        "L-goldbach-pp-count-cubes",
+        "L-goldbach-pp-exp-cutoff"
+      ]
+    },
+    {
+      "id": "L-goldbach-coset-primepower-ap-energy",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_primepower_ap_energy.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_primepower_ap_energy",
+      "statement": "let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let A := fun n q r : ℕ => ∑ k ∈ F n q r, w k; ∃ C : ℝ, 0<C ∧ ∀ n q : ℕ, 2≤n → 0<q → (∑ r ∈ Finset.range q, ((∑ k ∈ F n q r, ArithmeticFunction.vonMangoldt k)-A n q r)^2) ≤ C*(n:ℝ)*(Real.log (2*(n:ℝ)))^4",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0067 · 同一模数上的素数幂误差能量界引理",
+        "en": "New route · Theta reflection · TH-0067 · Squared prime-power leakage across all classes without a modulus loss"
+      },
+      "brief": {
+        "zh": "将非负的误差按余类分割；平方和不超过总质量平方。逐类套上界再相加会多损失一个 q。 建议先读 L-goldbach-coset-primepower-ap-budget。",
+        "en": "Partition the nonnegative proper-power mass and square its total once, avoiding a loss of q. Read first: L-goldbach-coset-primepower-ap-budget."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-coset-primepower-ap-budget"
+      ]
+    },
+    {
+      "id": "L-goldbach-coset-full-period-floor",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_full_period_floor.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_full_period_floor",
+      "statement": "let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let A := fun n q r : ℕ => ∑ k ∈ F n q r, w k; let μ := fun q r : ℕ => if r.Coprime q then (q:ℝ)/(q.totient:ℝ) else 0; let v := fun n q r : ℕ => A n q r-((F n q r).card:ℝ)*μ q r; let E := fun n q => ∑ r ∈ Finset.range q, (v n q r)^2/((F n q r).card:ℝ); ∀ n q : ℕ, 0<q → 2*q≤n → E n q ≤ (2*(q:ℝ)/(n:ℝ))*∑ r ∈ Finset.range q, (v n q r)^2",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0068 · 带反权的余类均方误差转为普通平方和引理",
+        "en": "New route · Theta reflection · TH-0068 · Transfer inverse fiber weighting to ordinary residue variance"
+      },
+      "brief": {
+        "zh": "条件保证每一类至少覆盖 n/(2q) 个整数，避免对极短纤维失控。 建议先读 L-goldbach-coset-rounding-profile。",
+        "en": "Uniformly bound the inverse fiber size in a range where two full periods fit. Read first: L-goldbach-coset-rounding-profile."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-coset-rounding-profile"
+      ]
+    },
+    {
+      "id": "L-goldbach-coset-bdh-calibration",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_bdh_calibration.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_bdh_calibration",
+      "statement": "let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let A := fun n q r : ℕ => ∑ k ∈ F n q r, w k; let Q := fun n : ℕ => n/(Nat.log 2 n)^8; let D := fun n q => Finset.sum (Finset.range q) (fun r => (A n q r-(if r.Coprime q then (n:ℝ)/(q.totient:ℝ) else 0))^2); ∃ C : ℝ, 0<C ∧ ∃ X : ℕ, ∀ n≥X, (∑ q ∈ Finset.Ioc (Q n) (2*Q n), D n q) ≤ C*(n:ℝ)*(Q n:ℝ)*Real.log (n:ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0069 · 大模数平均上的素数余类方差预算引理",
+        "en": "New route · Theta reflection · TH-0069 · A dyadic large-modulus variance budget for prime residue masses"
+      },
+      "brief": {
+        "zh": "以 Barban–Davenport–Halberstam 型均方定理为入口，须核对真素数与非单位类的代价。有界区间 q 约为 n/log⁸ n，结论容许个别坏模数。 建议先读 L-goldbach-coset-nonunit-l2, L-goldbach-coset-sparse-power-block。",
+        "en": "Use an AP mean-square theorem in the large-modulus range, accounting for prime-only weights and nonunit classes. Individual bad moduli are allowed. Read first: L-goldbach-coset-nonunit-l2, L-goldbach-coset-sparse-power-block."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-coset-nonunit-l2",
+        "L-goldbach-coset-sparse-power-block"
+      ]
+    },
+    {
+      "id": "L-goldbach-coset-most-weighted",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_most_weighted.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_most_weighted",
+      "statement": "let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let A := fun n q r : ℕ => ∑ k ∈ F n q r, w k; let μ := fun q r : ℕ => if r.Coprime q then (q:ℝ)/(q.totient:ℝ) else 0; let v := fun n q r : ℕ => A n q r-((F n q r).card:ℝ)*μ q r; let E := fun n q => ∑ r ∈ Finset.range q, (v n q r)^2/((F n q r).card:ℝ); let Q := fun n : ℕ => n/(Nat.log 2 n)^8; ∀ ε : ℝ, 0<ε → ∃ X : ℕ, ∀ n≥X, ((((Finset.Ioc (Q n) (2*Q n)).filter (fun q => ε*(n:ℝ) ≤ E n q)).card:ℝ) ≤ ε*(Q n:ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0070 · 大多数模数上的纤维加权误差小于目标尺度引理",
+        "en": "New route · Theta reflection · TH-0070 · Sublinear fiber-weighted error for almost all moduli in the block"
+      },
+      "brief": {
+        "zh": "把余类方差转为实际纤维加权的平方误差，然后对模数应用 Markov 不等式。量词允许坏模数随 n 变化。 建议先读 L-goldbach-coset-bdh-calibration, L-goldbach-coset-full-period-floor, L-goldbach-coset-mean-square-rounding。",
+        "en": "Transfer AP variance to inverse fiber weights and apply Markov over the moduli; the exceptional set may depend on n. Read first: L-goldbach-coset-bdh-calibration, L-goldbach-coset-full-period-floor, L-goldbach-coset-mean-square-rounding."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-coset-bdh-calibration",
+        "L-goldbach-coset-full-period-floor",
+        "L-goldbach-coset-mean-square-rounding"
+      ]
+    },
+    {
+      "id": "L-goldbach-coset-sparse-power-block",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_sparse_power_block.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_sparse_power_block",
+      "statement": "let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let A := fun n q r : ℕ => ∑ k ∈ F n q r, w k; let Q := fun n : ℕ => n/(Nat.log 2 n)^8; ∃ X : ℕ, ∀ n≥X, (∑ q ∈ Finset.Ioc (Q n) (2*Q n), ∑ r ∈ Finset.range q, ((∑ k ∈ F n q r, ArithmeticFunction.vonMangoldt k)-A n q r)^2) ≤ (n:ℝ)*(Q n:ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0071 · 稀疏素数幂在长模数块上的能量损失引理",
+        "en": "New route · Theta reflection · TH-0071 · Preserve the BDH logarithm when removing sparse prime powers"
+      },
+      "brief": {
+        "zh": "每个纤维仅有 O(log⁸ n) 项；Cauchy 后对所有真幂平方权求和，平方根级稀疏性可吸收这些对数损失。 建议先读 L-goldbach-coset-rounding-profile, L-goldbach-pp-count-squares, L-goldbach-pp-count-cubes。",
+        "en": "Use the polylogarithmic fiber length and sparsity of proper powers before summing over the block. Read first: L-goldbach-coset-rounding-profile, L-goldbach-pp-count-squares, L-goldbach-pp-count-cubes."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-coset-rounding-profile",
+        "L-goldbach-pp-count-squares",
+        "L-goldbach-pp-count-cubes"
       ]
     }
   ],
