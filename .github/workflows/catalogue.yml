@@ -5,6 +5,7 @@ on:
     paths:
       - deploy/publish_catalogue.py
       - deploy/test_publish_catalogue.py
+      - research/ROADMAP.md
       - research/gaps.json
       - research/problems.json
       - .github/workflows/catalogue.yml
@@ -13,6 +14,7 @@ on:
     paths:
       - deploy/publish_catalogue.py
       - deploy/test_publish_catalogue.py
+      - research/ROADMAP.md
       - research/gaps.json
       - research/problems.json
       - research/test_catalogue.py

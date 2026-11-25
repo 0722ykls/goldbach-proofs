@@ -145,7 +145,7 @@ def main():
         (STORE / "pending").unlink()
     for sha in git("rev-list", "--first-parent", "--reverse", base+"..FETCH_HEAD").decode().splitlines():
         parent = sha+"^1"
-        if not git("diff", "--name-only", parent, sha, "--", *["research/"+f for f in FILES]).strip():
+        if not git("diff", "--name-only", parent, sha, "--", "research/ROADMAP.md", *["research/"+f for f in FILES]).strip():
             continue
         authorization = approved(sha)
         if authorization is None:

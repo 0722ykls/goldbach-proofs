@@ -1,4 +1,5 @@
 import json
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -22,6 +23,7 @@ class CataloguePublisherTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 pub.approved(sha)
 
+    @unittest.skipUnless(os.name == "posix", "Production switches directory symlinks on Linux")
     def test_publish_and_rollback(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
