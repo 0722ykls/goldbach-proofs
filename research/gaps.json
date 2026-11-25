@@ -10801,7 +10801,7 @@
       "id": "L-goldbach-coset-phase-collision-correction",
       "file": "lean/PEqualNP/Outside/L_goldbach_coset_phase_collision_correction.lean",
       "module": "PEqualNP.Outside.L_goldbach_coset_phase_collision_correction",
-      "statement": "let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let B := fun n s : ℕ => ∑ k ∈ (Finset.range (n+1)).filter (fun k => k ≤ s ∧ s-k ≤ n), w k*w (s-k); let Y := fun (n q : ℕ) (z : ℂ) => (B n n:ℂ) + ∑ h ∈ Finset.Icc 1 (n/q), ((B n (n+h*q):ℂ)*z^h + (B n (n-h*q):ℂ)*(z⁻¹)^h); ∀ (n q L : ℕ) (z : ℂ), 0<q → 0<L → IsPrimitiveRoot z L → let H := n/q; let c := fun i : ℕ => if H≤i then B n (n+(i-H)*q) else B n (n-(H-i)*q); (∑ j ∈ Finset.range L, ‖Y n q (z^j)‖^2)/(L:ℝ) = ∑ r ∈ Finset.range L, (∑ i ∈ (Finset.range (2*H+1)).filter (fun i => i%L=r), c i)^2",
+      "statement": "let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let B := fun n s : ℕ => ∑ k ∈ (Finset.range (n+1)).filter (fun k => k ≤ s ∧ s-k ≤ n), w k*w (s-k); let Y := fun (n q : ℕ) (z : ℂ) => (B n n:ℂ) + ∑ h ∈ Finset.Icc 1 (n/q), ((B n (n+h*q):ℂ)*z^h + (B n (n-h*q):ℂ)*(z⁻¹)^h); ∀ (n q L : ℕ) (z : ℂ), 0<q → 0<L → IsPrimitiveRoot z L → let H := n/q; let c := fun i : ℕ => if H ≤ i then B n (n+(i-H)*q) else B n (n-(H-i)*q); (∑ j ∈ Finset.range L, ‖Y n q (z^j)‖^2)/(L:ℝ) = ∑ r ∈ Finset.range L, (∑ i ∈ (Finset.range (2*H+1)).filter (fun i => i%L=r), c i)^2",
       "plain_statement": {
         "zh": "新路线 · Theta 反射 · TH-0085 · 低采样率的二阶矩含有可计算的交叉偏移引理",
         "en": "New route · Theta reflection · TH-0085 · Resolve the cross-shift terms under undersampled phase measurements"
