@@ -8642,7 +8642,7 @@
       "id": "L-goldbach-height-near-phase",
       "file": "lean/PEqualNP/Outside/L_goldbach_height_near_phase.lean",
       "module": "PEqualNP.Outside.L_goldbach_height_near_phase",
-      "statement": "∀ a b x : ℝ, ‖Complex.exp ((((a-b)*x : ℝ) : ℂ)*Complex.I)-1‖ ≤ |a-b|*|x|",
+      "statement": "∀ a b x : ℝ, ‖Complex.exp ((((a-b)*x : ℝ) : ℂ)*Complex.I)-1‖ ≤ |a-b| * |x|",
       "plain_statement": {
         "zh": "新路线 · 奇特征干涉 · OC-0037 · 近邻零点相位偏离一的线性界引理",
         "en": "New route · Odd-character interference · OC-0037 · Linear phase deviation for nearby zeros"
@@ -9226,7 +9226,7 @@
       "id": "L-goldbach-sieve-square-majorant",
       "file": "lean/PEqualNP/Outside/L_goldbach_sieve_square_majorant.lean",
       "module": "PEqualNP.Outside.L_goldbach_sieve_square_majorant",
-      "statement": "∀ (P m : ℕ) (D : Finset ℕ) (λw : ℕ → ℝ), 1∈D → λw 1=1 → (∀ d ∈ D, d∣P) → (if m.Coprime P then (1:ℝ) else 0) ≤ (∑ d ∈ D.filter (fun d => d∣m), λw d)^2",
+      "statement": "∀ (P m : ℕ) (D : Finset ℕ) (weights : ℕ → ℝ), 1∈D → weights 1=1 → (∀ d ∈ D, d∣P) → (if m.Coprime P then (1:ℝ) else 0) ≤ (∑ d ∈ D.filter (fun d => d∣m), weights d)^2",
       "plain_statement": {
         "zh": "新路线 · Theta 反射 · TH-0033 · Selberg 平方权支配双素筛的幸存指标引理",
         "en": "New route · Theta reflection · TH-0033 · Selberg square majorizes the sieve survivor indicator"
