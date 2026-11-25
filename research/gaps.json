@@ -10988,7 +10988,7 @@
       "id": "L-goldbach-residual-polynomial-order",
       "file": "lean/PEqualNP/Outside/L_goldbach_residual_polynomial_order.lean",
       "module": "PEqualNP.Outside.L_goldbach_residual_polynomial_order",
-      "statement": "let F := fun x q r : ℕ => (Finset.range (x+1)).filter (fun k => k%q=r); let C := fun (x : ℕ) (a b : ℕ → ℝ) s => ∑ k ∈ (Finset.range (x+1)).filter (fun k => k ≤ s ∧ s-k ≤ x), a k*b (s-k); ∀ (x q c m l d : ℕ) (a b : ℕ → ℝ), 0<q → d<m+l → (∀ r<q, ∀ j<m, (∑ i ∈ F x q r, (i:ℝ)^j*a i)=0) → (∀ r<q, ∀ j<l, (∑ i ∈ F x q r, (i:ℝ)^j*b i)=0) → (∑ s ∈ (Finset.range (2*x+1)).filter (fun s => s%q=c), (s:ℝ)^d*C x a b s)=0",
+      "statement": "let F := fun x q r : ℕ => (Finset.range (x+1)).filter (fun k => k%q=r); let C := fun (x : ℕ) (a b : ℕ → ℝ) s => ∑ k ∈ (Finset.range (x+1)).filter (fun k => k ≤ s ∧ s-k ≤ x), a k*b (s-k); ∀ (x q c m l d : ℕ) (a b : ℕ → ℝ), 0<q → d < m + l → (∀ r<q, ∀ j < m, (∑ i ∈ F x q r, (i:ℝ)^j*a i)=0) → (∀ r<q, ∀ j < l, (∑ i ∈ F x q r, (i:ℝ)^j*b i)=0) → (∑ s ∈ (Finset.range (2*x+1)).filter (fun s => s%q=c), (s:ℝ)^d*C x a b s)=0",
       "plain_statement": {
         "zh": "新路线 · Theta 反射 · TH-0088 · 高阶中心化后卷积的消矩阶数相加引理",
         "en": "New route · Theta reflection · TH-0088 · Convolution adds the cancellation orders of local moments"
