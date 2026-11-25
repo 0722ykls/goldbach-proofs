@@ -72,6 +72,35 @@ class DeskScaleTest(unittest.TestCase):
         self.server.wait(timeout=10)
         self.server.stdout.close()
 
+    def test_agent_attribution_across_problem_desks(self):
+        for index, path in enumerate(("", "/problems/log-rank")):
+            claim = self.request(path + "/api/desk/claim", {"handle": "alice"}, expected=201)
+            gap, token = claim["gap"], claim["lease"]["token"]
+            agent = {"model": "model-test-v1", "harness": "codex", "harness_version": "1.2.3"}
+            submission = {"pr": 40 + index, "head": "a" * 40, "agent": agent}
+            self.request(path + "/api/desk/submit", submission, token=token)
+            self.request(path + "/api/desk/submit", submission, token=token)
+            self.request(path + "/api/desk/submit", {**submission, "agent": {**agent, "model": "other"}}, token=token, expected=409)
+            run_id = 500 + index
+            self.request("/api/desk/authorize", {"gap": gap["id"], "pr": 40 + index, "head": "a" * 40,
+                         "handle": "alice", "run_id": run_id,
+                         "statement_sha256": hashlib.sha256(gap["statement"].encode()).hexdigest()}, signed=True)
+            record = {"lemma_id": gap["id"], "run_id": run_id, "run_attempt": 1, "verdict": "ACCEPTED",
+                      "manifest": {"rests_on": [{"module": gap["module"], "sha256": "a" * 64}], "defs": []}}
+            self.request("/api/verdict", record, signed=True)
+            self.request("/api/verdict", record, signed=True)
+            status = self.request(path + "/api/status")
+            self.assertEqual(status["results"][0]["agent"], {**agent, "source": "self_reported"})
+            self.assertEqual(status["desk"]["agent_rankings"], {
+                "models": [{"name": "model-test-v1", "accepted": 1}],
+                "harnesses": [{"name": "codex", "accepted": 1}], "proofs": 1})
+            self.assertEqual(status["desk"]["rankings"]["proofs"], 1)
+            for lang in ("zh", "en"):
+                page = self.request(path + "/?lang=" + lang, text=True)
+                self.assertIn('data-ranking-mode="agents"', page)
+                guide = self.request(path + "/join" + ("-zh" if lang == "zh" else "") + ".txt", text=True)
+                self.assertIn('--model MODEL_ID --harness HARNESS', guide)
+
     def test_page_views_count_only_successful_page_gets(self):
         def total():
             return self.request("/api/presence")["page_views"]
@@ -150,12 +179,12 @@ class DeskScaleTest(unittest.TestCase):
                     tokens = [item["lease"]["token"] for item in claims]
                     gaps = {item["gap"]["id"] for item in claims}
                     catalogue = json.loads((ROOT / "research/gaps.json").read_text(encoding="utf-8"))["gaps"]
-                    self.assertEqual(gaps, {entry["id"] for entry in catalogue})
+                    self.assertTrue(gaps <= {entry["id"] for entry in catalogue})
+                    self.assertEqual(len(gaps), min(SESSIONS, len(catalogue)))
                     for entry in catalogue:
                         count = sum(item["gap"]["id"] == entry["id"] for item in claims)
                         if not entry.get("parallel"):
-                            self.assertEqual(count, 1)
-                    self.assertGreater(SESSIONS, len(gaps))
+                            self.assertLessEqual(count, 1)
                     self.assertEqual(len(set(tokens)), SESSIONS)
                     status = self.request("/api/status")["desk"]
                     self.assertEqual(set(status["assignments"]), gaps)
@@ -165,7 +194,7 @@ class DeskScaleTest(unittest.TestCase):
                         self.request(api + "claim", {"handle": "outsider"}, ticket=ticket, expected=401)
                     self.wave(pool, mode, "renewals", lambda i: self.request(api + "beat", {}, token=tokens[i]))
                     self.wave(pool, mode, "submissions", lambda i: self.request(
-                        api + "submit", {"pr": i + 1, "head": f"{i + 1:040x}"}, token=tokens[i],
+                        api + "submit", {"pr": i + 1, "head": f"{i + 1:040x}", "agent": {"model": "test-model", "harness": "codex"}}, token=tokens[i],
                     ))
                     pending = []
                     for _ in range(0, SESSIONS, QUEUE_BATCH):
@@ -199,7 +228,7 @@ class DeskScaleTest(unittest.TestCase):
             token = claim["lease"]["token"]
             next_path = paths[(i + 1) % len(paths)]
             self.request(next_path + "/api/desk/beat", {}, token=token, expected=401)
-            self.request(path + "/api/desk/submit", {"pr": i + 1, "head": f"{i + 1:040x}"}, token=token)
+            self.request(path + "/api/desk/submit", {"pr": i + 1, "head": f"{i + 1:040x}", "agent": {"model": "test-model", "harness": "codex"}}, token=token)
         pending = self.request("/api/desk/pending", {}, signed=True)["pending"]
         self.assertEqual({row["gap"] for row in pending}, {claim["gap"]["id"] for claim in claims})
 
@@ -255,7 +284,7 @@ class DeskScaleTest(unittest.TestCase):
                 self.assertTrue(set(expected) <= catalogue)
                 self.assertEqual(len(set(expected)), min(len(expected), len(catalogue)))
             self.wave(pool, f"{len(paths)} problems", "submissions", lambda i: self.request(
-                claims[i][0] + "/api/desk/submit", {"pr": i + 1, "head": f"{i + 1:040x}"}, token=claims[i][1]
+                claims[i][0] + "/api/desk/submit", {"pr": i + 1, "head": f"{i + 1:040x}", "agent": {"model": "test-model", "harness": "codex"}}, token=claims[i][1]
             ))
             queued = []
             remaining = expected_claims.copy()
