@@ -2,6 +2,7 @@ import hashlib
 import hmac
 import ipaddress
 import json
+import gzip
 import os
 import re
 import sqlite3
@@ -495,7 +496,7 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
-    def reply(self, status, body, content_type="application/json", language=None):
+    def reply(self, status, body, content_type="application/json", language=None, encoding=None):
         if status == 200 and self.command == "GET" and content_type == "text/html":
             try:
                 with closing(sqlite3.connect(PAGE_VIEWS_DB)) as conn, conn:
@@ -511,6 +512,8 @@ class Handler(BaseHTTPRequestHandler):
         if content_type == "application/json" or content_type.startswith("text/"):
             content_type += "; charset=utf-8"
         self.send_header("Content-Type", content_type)
+        if encoding:
+            self.send_header("Content-Encoding", encoding)
         self.send_header("Cache-Control", "no-store")
         self.send_header("X-Content-Type-Options", "nosniff")
         self.send_header("Content-Length", str(len(body)))
@@ -584,10 +587,18 @@ class Handler(BaseHTTPRequestHandler):
             return self.reply(200, b'{"status":"ok"}')
         if path == "/api/status":
             try:
-                body = json.dumps(research_status(desk), ensure_ascii=False, separators=(",", ":")).encode()
+                status = research_status(desk)
+                web_view = parse_qs(url.query).get("view") == ["web-gzip"]
+                if web_view:
+                    for gap in status["gaps"]:
+                        if gap["latest"]:
+                            gap["latest"] = {k: v for k, v in gap["latest"].items() if k != "manifest"}
+                body = json.dumps(status, ensure_ascii=False, separators=(",", ":")).encode()
             except sqlite3.Error as error:
                 self.log_error("Unable to read verdicts: %s", error)
                 return self.reply(503, b'{"error":"verdicts unavailable"}')
+            if web_view:
+                return self.reply(200, gzip.compress(body, compresslevel=3), encoding="gzip")
             return self.reply(200, body)
         if path == "/platform-logo.svg":
             path = "/goldbach-icon.svg"
@@ -637,7 +648,8 @@ class Handler(BaseHTTPRequestHandler):
         if slug != "goldbach":
             page = problem_page(page, slug, lang)
         else:
-            page = page.replace('<ol class="roadmap">', goldbach_task_routes(lang) + '<ol class="roadmap">', 1)
+            page = re.sub(r'(<ol class="roadmap">.*?</ol>)',
+                          lambda match: match[0] + goldbach_task_routes(lang), page, count=1, flags=re.S)
         prefix = "" if slug == "goldbach" else "../../"
         page = page.replace("<!-- account -->", ZHIHU.account_link(self.headers, lang), 1)
         hero = '<section class="hero" aria-labelledby="page-title">'
