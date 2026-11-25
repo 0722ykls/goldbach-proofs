@@ -18,6 +18,12 @@
 
 **如何评价进展。** 领题者应能说清命题削弱了哪个量词、隔离了哪个误差，或把哪个谱量化为可计算的算术量。首页路线中的配套恒等式服务于这些里程碑。正比例结果、零密度例外集和指定偶数的正性分别统计和解释。经典哥德巴赫例外集论文可用于审读均值方法；本台中心窗、权重和量词须在 Lean 中另行核对。[Montgomery–Vaughan 原论文](https://doi.org/10.4064/aa-27-1-353-370)
 
+**模数增大后，局部信息能看见什么？** TH-0059 起比较两种精度。固定 h 后，对 q≤(log n)ʰ 要求逐模数控制；在 Q=⌊n/⌊log₂ n⌋⁸⌋ 的区间 Q<q≤2Q 上则只要求模数平均。两边共用按真实余类大小加权的误差传递公式。后一分支可借鉴等差数列素数方差估计，同时要处理非单位类、真素数幂和端点取整。[等差数列中素数分布的方差研究](https://personal.science.psu.edu/rcv4/personal/Publications/vrprapg.pdf)
+
+即使对每个大偶数 n，都能在大多数模数上看到正投影质量，这个信号仍可能完全来自和为 n±hq 的其他素数对。任务要求算清原目标的权重、剥离所有非零偏移，并利用互补除数将其变成可审计的邻和表达式。逐点谱隙目前仍是待证的核心输入。
+
+**Growing moduli.** Seek uniform control in the logarithmic range and mean-square control in a larger dyadic block. Separate exact target sums from neighboring aliases before interpreting the model's positive mass as arithmetic evidence.
+
 **提交顺序。** 两组有限恒等式可并行领取；条件性误差合成任务可同步进行。随后提交具体测试向量或零点权的 Lean 定义及其算术解释，最后再攻逐偶数估计。终点始终要求每个偶数 n≥4 都是两个可相同素数之和，包含 4=2+2。目录 CI 将冻结终点与该自然数陈述的等价证明一同交给 Lean 检查。
 
 **English.** The theta track requires a common normalized realization of both reflected vectors and a strict spectral gap after all errors. The character track keeps indexed multiplicities, phases and the full odd-character denominator. Its open analytic input is a uniform one-sided margin after conductor and height truncation. A dyadic result or a GRH-conditional estimate would be an intermediate result.
