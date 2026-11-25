@@ -10247,7 +10247,7 @@
       "id": "L-goldbach-coset-zero-shift-share",
       "file": "lean/PEqualNP/Outside/L_goldbach_coset_zero_shift_share.lean",
       "module": "PEqualNP.Outside.L_goldbach_coset_zero_shift_share",
-      "statement": "let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let B := fun n s : ℕ => ∑ k ∈ (Finset.range (n+1)).filter (fun k => k ≤ s ∧ s-k ≤ n), w k*w (s-k); let Z := fun n q : ℕ => ∑ s ∈ (Finset.range (2*n+1)).filter (fun s => s%q=n%q), B n s; ∀ n q : ℕ, 0<q → Z n q-B n n = (∑ h ∈ Finset.Icc 1 (n/q), B n (n-h*q)+B n (n+h*q))",
+      "statement": "let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let B := fun n s : ℕ => ∑ k ∈ (Finset.range (n+1)).filter (fun k => k ≤ s ∧ s-k ≤ n), w k*w (s-k); let Z := fun n q : ℕ => ∑ s ∈ (Finset.range (2*n+1)).filter (fun s => s%q=n%q), B n s; ∀ n q : ℕ, 0<q → Z n q-B n n = (∑ h ∈ Finset.Icc 1 (n/q), (B n (n-h*q)+B n (n+h*q)))",
       "plain_statement": {
         "zh": "新路线 · Theta 反射 · TH-0079 · 孤立原目标在常分母投影中的权重引理",
         "en": "New route · Theta reflection · TH-0079 · Isolate the original target's contribution to the alias model"
@@ -10778,7 +10778,7 @@
       "id": "L-goldbach-coset-twist-l2",
       "file": "lean/PEqualNP/Outside/L_goldbach_coset_twist_l2.lean",
       "module": "PEqualNP.Outside.L_goldbach_coset_twist_l2",
-      "statement": "let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let B := fun n s : ℕ => ∑ k ∈ (Finset.range (n+1)).filter (fun k => k ≤ s ∧ s-k ≤ n), w k*w (s-k); let Y := fun (n q : ℕ) (z : ℂ) => (B n n:ℂ) + ∑ h ∈ Finset.Icc 1 (n/q), ((B n (n+h*q):ℂ)*z^h + (B n (n-h*q):ℂ)*(z⁻¹)^h); ∀ (n q L : ℕ) (z : ℂ), 0<q → 2*(n/q)<L → IsPrimitiveRoot z L → (∑ j ∈ Finset.range L, ‖Y n q (z^j)-(B n n:ℂ)‖^2)/(L:ℝ) = ∑ h ∈ Finset.Icc 1 (n/q), (B n (n+h*q))^2+(B n (n-h*q))^2",
+      "statement": "let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let B := fun n s : ℕ => ∑ k ∈ (Finset.range (n+1)).filter (fun k => k ≤ s ∧ s-k ≤ n), w k*w (s-k); let Y := fun (n q : ℕ) (z : ℂ) => (B n n:ℂ) + ∑ h ∈ Finset.Icc 1 (n/q), ((B n (n+h*q):ℂ)*z^h + (B n (n-h*q):ℂ)*(z⁻¹)^h); ∀ (n q L : ℕ) (z : ℂ), 0<q → 2*(n/q)<L → IsPrimitiveRoot z L → (∑ j ∈ Finset.range L, ‖Y n q (z^j)-(B n n:ℂ)‖^2)/(L:ℝ) = ∑ h ∈ Finset.Icc 1 (n/q), ((B n (n+h*q))^2+(B n (n-h*q))^2)",
       "plain_statement": {
         "zh": "新路线 · Theta 反射 · TH-0084 · 去掉中心项后相位能量等于邻和平方质量引理",
         "en": "New route · Theta reflection · TH-0084 · Energy of the twisted alias error equals neighboring coefficient energy"
