@@ -92,6 +92,16 @@ class CatalogueTests(unittest.TestCase):
                 graph.add(g["id"], *g["depends_on"])
         list(graph.static_order())
 
+    def test_mellin_windows_allow_nonzero_compactly_supported_functions(self):
+        # At the pinned Mathlib revision the top ContDiff order denotes analyticity.
+        mellin = {g["id"]: g["statement"] for g in GAPS
+                  if g["id"].startswith("L-goldbach-mellin-")}
+        witness = mellin["L-goldbach-mellin-admissible-witness"]
+        self.assertIn("∃ φ : ℝ → ℝ, Adm φ", witness)
+        self.assertIn("φ u=1", witness)
+        for statement in mellin.values():
+            self.assertNotRegex(statement, r"ContDiff\s+ℝ\s+⊤")
+
     def test_analytic_programs_and_context(self):
         self.assertEqual({g["program"] for g in GAPS},
                          {"foundation", "grh", "correlation", "exceptions"})

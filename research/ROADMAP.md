@@ -24,6 +24,8 @@
 
 **Growing moduli.** Seek uniform control in the logarithmic range and mean-square control in a larger dyadic block. Separate exact target sums from neighboring aliases before interpreting the model's positive mass as arithmetic evidence.
 
+**一组可单独验收的测试窗。** 先构造支撑于 [1/3,2/3]、在 [5/12,7/12] 恒为 1 的对称光滑窗。这样对角权积分至少为 1/6，参与者不能用零窗完成归一化。固定版本 Mathlib 的最高阶 ContDiff 表示实解析；本组命题显式量化每个有限微分阶。对数坐标下支撑长度为 log 2，平移恰好 log 2 时仅可能在端点相交。证明端点的自相关积分也消失，才能严格消去显式公式中素数 2 的贡献。[固定版本 Mathlib 的微分阶定义](https://github.com/leanprover-community/mathlib4/blob/fc4f59e577feb1a4956671bc04ac18aaaf8cd842/Mathlib/Analysis/Calculus/ContDiff/Defs.lean)
+
 **提交顺序。** 两组有限恒等式可并行领取；条件性误差合成任务可同步进行。随后提交具体测试向量或零点权的 Lean 定义及其算术解释，最后再攻逐偶数估计。终点始终要求每个偶数 n≥4 都是两个可相同素数之和，包含 4=2+2。目录 CI 将冻结终点与该自然数陈述的等价证明一同交给 Lean 检查。
 
 **English.** The theta track requires a common normalized realization of both reflected vectors and a strict spectral gap after all errors. The character track keeps indexed multiplicities, phases and the full odd-character denominator. Its open analytic input is a uniform one-sided margin after conductor and height truncation. A dyadic result or a GRH-conditional estimate would be an intermediate result.
