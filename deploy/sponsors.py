@@ -79,12 +79,16 @@ def logo_png(raw):
 def wall(path, lang, prefix):
     with closing(sqlite3.connect(path)) as db:
         rows = db.execute("SELECT id,name FROM sponsor_logos WHERE state='approved' ORDER BY id").fetchall()
-    cards = "".join(f'<figure><img loading="lazy" src="{prefix}sponsors/logo/{i}.png" alt=""><figcaption>{escape(n)}</figcaption></figure>' for i,n in rows)
+    cards = "".join(
+        f'<figure><img loading="{"eager" if index < 4 else "lazy"}" src="{prefix}sponsors/logo/{i}.png" alt="">'
+        f'<figcaption>{escape(name)}</figcaption></figure>'
+        for index, (i, name) in enumerate(rows)
+    )
     zh = lang == "zh"
-    return (f'<section class="shell sponsor-wall"><h2>{"赞助单位" if zh else "Sponsors"}</h2>'
-            f'<div class="sponsor-grid">{cards}</div>'
+    grid = f'<div class="sponsor-grid">{cards}</div>' if cards else ""
+    return (f'<section class="shell sponsor-wall"><div class="sponsor-heading"><h2>{"赞助单位" if zh else "Sponsors"}</h2>'
             f'<a class="text-link" href="{ORIGIN}{DESK}?lang={lang}">'
-            + ("提交单位 Logo" if zh else "Submit an organization logo") + ' ↗</a></section>')
+            + ("提交单位 Logo" if zh else "Submit an organization logo") + f' ↗</a></div>{grid}</section>')
 
 
 def public_logo(path, ident):

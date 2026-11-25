@@ -618,7 +618,8 @@ class Handler(BaseHTTPRequestHandler):
             page = page.replace('<ol class="roadmap">', goldbach_task_routes(lang) + '<ol class="roadmap">', 1)
         prefix = "" if slug == "goldbach" else "../../"
         page = page.replace("<!-- account -->", ZHIHU.account_link(self.headers, lang), 1)
-        page = page.replace('<footer class="footer shell">', sponsors.wall(ZHIHU.db,lang,prefix) + '<footer class="footer shell">', 1)
+        hero = '<section class="hero" aria-labelledby="page-title">'
+        page = page.replace(hero, sponsors.wall(ZHIHU.db, lang, prefix) + hero, 1)
         page = page.replace("</body>", site_dock(lang, prefix) + "</body>", 1)
         self.reply(200, page.encode(), "text/html", lang)
 
