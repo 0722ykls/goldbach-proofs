@@ -9766,6 +9766,170 @@
         "L-goldbach-coset-primepower-lift",
         "L-goldbach-coset-unit-crt"
       ]
+    },
+    {
+      "id": "L-goldbach-coset-rounding-profile",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_rounding_profile.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_rounding_profile",
+      "statement": "let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); ∀ n q : ℕ, 0<q → let s := (n+1)%q; (∑ r ∈ Finset.range q, (((F n q r).card:ℝ)-(n+1:ℕ)/(q:ℝ))^2) = (s:ℝ)*((q:ℝ)-s)/q",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0059 · 端点余类计数的中心化平方和引理",
+        "en": "New route · Theta reflection · TH-0059 · Squared rounding error over all endpoint classes"
+      },
+      "brief": {
+        "zh": "将 n+1 个整数分为完整周期和一个长度 s 的余段。这个精确二阶量用于追踪模数随规模变化时的取整误差。",
+        "en": "Separate complete periods from the terminal segment; retain the exact finite-population variance."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-coset-rounding-singular",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_rounding_singular.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_rounding_singular",
+      "statement": "let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let j := fun n q r : ℕ => (n+q-r)%q; let μ := fun q r : ℕ => if r.Coprime q then (q:ℝ)/(q.totient:ℝ) else 0; let K := fun n q => ∑ r ∈ Finset.range q, ((F n q r).card:ℝ)*μ q r*μ q (j n q r); let R := fun n q : ℕ => ((Finset.range q).filter (fun r => r.Coprime q ∧ ((n+q-r)%q).Coprime q)).card; ∀ n q : ℕ, 0<q → |K n q - ((n+1:ℕ):ℝ)*(q:ℝ)*(R n q:ℝ)/(q.totient:ℝ)^2| ≤ ((q:ℝ)/(q.totient:ℝ))^2*(R n q:ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0060 · 局部主项取整误差依赖于有效余类数引理",
+        "en": "New route · Theta reflection · TH-0060 · Rounding loss for the reflected singular coefficient"
+      },
+      "brief": {
+        "zh": "只计算两个端点均为单位的余类。每类基数与均匀模型相差至多 1。 建议先读 L-goldbach-coset-normalized-euler。",
+        "en": "Charge at most one endpoint discrepancy for each doubly admissible class. Read first: L-goldbach-coset-normalized-euler."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-coset-normalized-euler"
+      ]
+    },
+    {
+      "id": "L-goldbach-coset-l2-transfer",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_l2_transfer.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_l2_transfer",
+      "statement": "let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let A := fun n q r : ℕ => ∑ k ∈ F n q r, w k; let j := fun n q r : ℕ => (n+q-r)%q; let μ := fun q r : ℕ => if r.Coprime q then (q:ℝ)/(q.totient:ℝ) else 0; let v := fun n q r : ℕ => A n q r-((F n q r).card:ℝ)*μ q r; let G := fun n q => ∑ r ∈ Finset.range q, A n q r*A n q (j n q r)/((F n q r).card:ℝ); let U := fun n q => ∑ r ∈ Finset.range q, ((F n q r).card:ℝ)*(μ q r)^2; let E := fun n q => ∑ r ∈ Finset.range q, (v n q r)^2/((F n q r).card:ℝ); let K := fun n q => ∑ r ∈ Finset.range q, ((F n q r).card:ℝ)*μ q r*μ q (j n q r); ∀ n q : ℕ, 0<q → |G n q-K n q| ≤ 2*Real.sqrt (U n q*E n q)+E n q",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0061 · 用余类素数质量的均方误差控制反射主项引理",
+        "en": "New route · Theta reflection · TH-0061 · Weighted mean-square transfer to the reflected model"
+      },
+      "brief": {
+        "zh": "按真实纤维基数加权；反射保持该基数。分别对两个混合项用 Cauchy–Schwarz，再保留二次余项。此估计对可变 q 也成立。 建议先读 L-goldbach-coset-prime-gram, L-goldbach-coset-sum-reflection。",
+        "en": "Use invariant fiber sizes in two Cauchy–Schwarz estimates and a quadratic remainder. No fixed-modulus limit is assumed. Read first: L-goldbach-coset-prime-gram, L-goldbach-coset-sum-reflection."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-coset-prime-gram",
+        "L-goldbach-coset-sum-reflection"
+      ]
+    },
+    {
+      "id": "L-goldbach-coset-nonunit-l2",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_nonunit_l2.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_nonunit_l2",
+      "statement": "let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let A := fun n q r : ℕ => ∑ k ∈ F n q r, w k; ∀ n q : ℕ, 0<q → (∑ r ∈ (Finset.range q).filter (fun r => ¬r.Coprime q), (A n q r)^2) ≤ (∑ p ∈ q.primeFactors, Real.log (p:ℝ))^2",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0062 · 所有非单位类的平方污染统一受素因子质量控制引理",
+        "en": "New route · Theta reflection · TH-0062 · Control total squared leakage into nonunit classes"
+      },
+      "brief": {
+        "zh": "先证明各坏类的总质量上界再平方，避免按类重复收费 q 次。 建议先读 L-goldbach-coset-nonunit-bias。",
+        "en": "Combine the disjoint bad classes before squaring so prime divisors are charged only once. Read first: L-goldbach-coset-nonunit-bias."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-coset-nonunit-bias"
+      ]
+    },
+    {
+      "id": "L-goldbach-coset-mean-square-rounding",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_mean_square_rounding.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_mean_square_rounding",
+      "statement": "let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let A := fun n q r : ℕ => ∑ k ∈ F n q r, w k; let μ := fun q r : ℕ => if r.Coprime q then (q:ℝ)/(q.totient:ℝ) else 0; let v := fun n q r : ℕ => A n q r-((F n q r).card:ℝ)*μ q r; ∀ n q : ℕ, 0<q → let t := fun r : ℕ => if r.Coprime q then ((n+1:ℕ):ℝ)/(q.totient:ℝ) else 0; (∑ r ∈ Finset.range q, (v n q r)^2) ≤ 2*(∑ r ∈ Finset.range q, (A n q r-t r)^2) + 2*((q:ℝ)/(q.totient:ℝ))^2*(q:ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0063 · 从标准素数主项过渡到按纤维基数的均方预算引理",
+        "en": "New route · Theta reflection · TH-0063 · Move an AP variance bound to exact fiber normalization"
+      },
+      "brief": {
+        "zh": "标准等差数列估计以长度除 φ(q) 为主项。把这项换成实际纤维基数乘局部密度，同时跟踪取整代价。 建议先读 L-goldbach-coset-rounding-profile, L-goldbach-coset-nonunit-l2。",
+        "en": "Convert the usual interval-length main term into fiber-count normalization, retaining the full rounding cost. Read first: L-goldbach-coset-rounding-profile, L-goldbach-coset-nonunit-l2."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-coset-rounding-profile",
+        "L-goldbach-coset-nonunit-l2"
+      ]
+    },
+    {
+      "id": "L-goldbach-coset-logrange-ap",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_logrange_ap.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_logrange_ap",
+      "statement": "let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let A := fun n q r : ℕ => ∑ k ∈ F n q r, w k; ∀ h b : ℕ, ∃ C : ℝ, 0<C ∧ ∃ X : ℕ, ∀ n≥X, ∀ q : ℕ, 0<q → (q:ℝ) ≤ (Real.log (n:ℝ))^h → ∀ r<q, r.Coprime q → |A n q r - (n:ℝ)/(q.totient:ℝ)| ≤ C*(n:ℝ)/(Real.log (n:ℝ))^b",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0064 · 对数幂模数范围的统一余类素数质量估计引理",
+        "en": "New route · Theta reflection · TH-0064 · Uniform prime mass in progressions up to logarithmic moduli"
+      },
+      "brief": {
+        "zh": "走 Siegel–Walfisz 方向并将 Mangoldt 权换成真素数权；h、b 在取阈值之前固定。常数不要求有效。 建议先读 L-goldbach-pp-uniform-removal。",
+        "en": "Seek the Siegel–Walfisz range with true prime weights, fixing both exponents before choosing the threshold. Read first: L-goldbach-pp-uniform-removal."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-pp-uniform-removal"
+      ]
+    },
+    {
+      "id": "L-goldbach-coset-logrange-model",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_logrange_model.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_logrange_model",
+      "statement": "let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let A := fun n q r : ℕ => ∑ k ∈ F n q r, w k; let j := fun n q r : ℕ => (n+q-r)%q; let G := fun n q => ∑ r ∈ Finset.range q, A n q r*A n q (j n q r)/((F n q r).card:ℝ); let R := fun n q : ℕ => ((Finset.range q).filter (fun r => r.Coprime q ∧ ((n+q-r)%q).Coprime q)).card; ∀ h : ℕ, ∀ ε : ℝ, 0<ε → ∃ X : ℕ, ∀ n≥X, ∀ q : ℕ, 0<q → (q:ℝ) ≤ (Real.log (n:ℝ))^h → |G n q/(n:ℝ) - (q:ℝ)*(R n q:ℝ)/(q.totient:ℝ)^2| < ε",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0065 · 反射局部主项在对数幂模数上一致成立引理",
+        "en": "New route · Theta reflection · TH-0065 · Uniform reflected local main term on logarithmic moduli"
+      },
+      "brief": {
+        "zh": "将均方传递、取整和非单位项与可选对数节省合成。余类范围现在可随 n 增长，结论仍仅涉及投影模型。 建议先读 L-goldbach-coset-logrange-ap, L-goldbach-coset-rounding-singular, L-goldbach-coset-l2-transfer, L-goldbach-coset-mean-square-rounding。",
+        "en": "Combine adjustable log savings, weighted transfer and rounding. The modulus range now grows with n, while the signed residual remains separate. Read first: L-goldbach-coset-logrange-ap, L-goldbach-coset-rounding-singular, L-goldbach-coset-l2-transfer, L-goldbach-coset-mean-square-rounding."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-coset-logrange-ap",
+        "L-goldbach-coset-rounding-singular",
+        "L-goldbach-coset-l2-transfer",
+        "L-goldbach-coset-mean-square-rounding"
+      ]
     }
   ],
   "tracks": [
