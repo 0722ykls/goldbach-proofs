@@ -9398,7 +9398,7 @@
       "id": "L-goldbach-bulk-exception-budget",
       "file": "lean/PEqualNP/Outside/L_goldbach_bulk_exception_budget.lean",
       "module": "PEqualNP.Outside.L_goldbach_bulk_exception_budget",
-      "statement": "∀ (s : Finset ℕ) (r m : ℕ → ℝ) (L : ℝ), 0<L → (∀ n∈s, L≤m n) → (((s.filter (fun n => r n=0)).card : ℝ)*L^2) ≤ ∑ n ∈ s, (r n-m n)^2",
+      "statement": "∀ (s : Finset ℕ) (r m : ℕ → ℝ) (L : ℝ), 0<L → (∀ n ∈ s, L ≤ m n) → (((s.filter (fun n => r n=0)).card : ℝ)*L^2) ≤ ∑ n ∈ s, (r n-m n)^2",
       "plain_statement": {
         "zh": "新路线 · Theta 反射 · TH-0041 · 模型均方误差控制零表示目标数引理",
         "en": "New route · Theta reflection · TH-0041 · Model mean-square error bounds exceptional targets"
