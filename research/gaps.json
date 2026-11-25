@@ -9483,6 +9483,144 @@
         "L-goldbach-bulk-no-alias",
         "L-goldbach-bulk-exception-budget"
       ]
+    },
+    {
+      "id": "L-goldbach-characters-odd-card",
+      "file": "lean/PEqualNP/Outside/L_goldbach_characters_odd_card.lean",
+      "module": "PEqualNP.Outside.L_goldbach_characters_odd_card",
+      "statement": "∀ (n : ℕ) [NeZero n], 2<n → let odd := (Finset.univ : Finset (DirichletCharacter ℂ n)).filter (fun χ => χ (-1) = -1); 2*odd.card=n.totient",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0049 · 模 n 奇特征的精确计数引理",
+        "en": "New route · Odd-character interference · OC-0049 · Exact number of odd characters at a fixed modulus"
+      },
+      "brief": {
+        "zh": "由 −1 处的全体特征正交及各特征在该点取 ±1 得到。用于验证 2/φ(n) 是全体奇特征的平均。",
+        "en": "Use full orthogonality at minus one and the two possible signs to recover the full averaging denominator."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-characters-odd-kernel",
+      "file": "lean/PEqualNP/Outside/L_goldbach_characters_odd_kernel.lean",
+      "module": "PEqualNP.Outside.L_goldbach_characters_odd_kernel",
+      "statement": "∀ (n : ℕ) [NeZero n], 2<n → let odd := (Finset.univ : Finset (DirichletCharacter ℂ n)).filter (fun χ => χ (-1) = -1); ∀ a b : (ZMod n)ˣ, ((2:ℂ)/(n.totient:ℂ))* (∑ χ ∈ odd, χ ((↑a : ZMod n)⁻¹)*χ (↑b : ZMod n)) = (if a=b then 1 else 0) - (if (↑a : ZMod n) = -(↑b : ZMod n) then 1 else 0)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0050 · 真实 Dirichlet 奇特征的有符号正交核引理",
+        "en": "New route · Odd-character interference · OC-0050 · Signed orthogonality kernel for actual odd Dirichlet characters"
+      },
+      "brief": {
+        "zh": "把奇投影写成 (1−χ(−1))/2，分别调用全特征正交。单位条件保证求逆合法。 建议先读 L-goldbach-characters-odd-card。",
+        "en": "Apply full orthogonality at the two signed units after projecting with (1−χ(−1))/2. Read first: L-goldbach-characters-odd-card."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-characters-odd-card"
+      ]
+    },
+    {
+      "id": "L-goldbach-characters-primitive-parity",
+      "file": "lean/PEqualNP/Outside/L_goldbach_characters_primitive_parity.lean",
+      "module": "PEqualNP.Outside.L_goldbach_characters_primitive_parity",
+      "statement": "∀ (n : ℕ) [NeZero n], 2<n → ∀ χ : DirichletCharacter ℂ n, χ (-1) = -1 → χ.primitiveCharacter (-1) = -1",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0051 · 原始诱导特征保持奇性引理",
+        "en": "New route · Odd-character interference · OC-0051 · Parity passes to the primitive parent"
+      },
+      "brief": {
+        "zh": "在模数变换恒等式中代入单位 −1。它允许零点按原始导子编组。 建议先读 L-goldbach-characters-odd-card。",
+        "en": "Evaluate the change-of-level identity at the unit minus one. Read first: L-goldbach-characters-odd-card."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-characters-odd-card"
+      ]
+    },
+    {
+      "id": "L-goldbach-characters-low-conductor-card",
+      "file": "lean/PEqualNP/Outside/L_goldbach_characters_low_conductor_card.lean",
+      "module": "PEqualNP.Outside.L_goldbach_characters_low_conductor_card",
+      "statement": "∀ (n : ℕ) [NeZero n], 2<n → let odd := (Finset.univ : Finset (DirichletCharacter ℂ n)).filter (fun χ => χ (-1) = -1); ∀ d : ℕ, d∣n → 2<d → 2*(odd.filter (fun χ => χ.conductor ∣ d)).card = d.totient",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0052 · 按整除关系计算低导子奇特征数引理",
+        "en": "New route · Odd-character interference · OC-0052 · Count odd characters whose conductor divides a divisor"
+      },
+      "brief": {
+        "zh": "在模 d 的奇特征和模 n 的低导子奇特征之间建立提升双射；这是按导子求和的计数基础。 建议先读 L-goldbach-characters-primitive-parity, L-goldbach-characters-odd-card。",
+        "en": "Identify the characters as the image of level change from odd characters modulo d. Read first: L-goldbach-characters-primitive-parity, L-goldbach-characters-odd-card."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-characters-primitive-parity",
+        "L-goldbach-characters-odd-card"
+      ]
+    },
+    {
+      "id": "L-goldbach-characters-dyadic-primitive-count",
+      "file": "lean/PEqualNP/Outside/L_goldbach_characters_dyadic_primitive_count.lean",
+      "module": "PEqualNP.Outside.L_goldbach_characters_dyadic_primitive_count",
+      "statement": "∀ k : ℕ, 3≤k → let n := 2^k; ((Finset.univ : Finset (DirichletCharacter ℂ n)).filter (fun χ => χ (-1) = -1 ∧ χ.conductor=n)).card=2^(k-3)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0053 · 二幂高层的本原奇特征数引理",
+        "en": "New route · Odd-character interference · OC-0053 · Count exact-conductor odd characters at dyadic levels"
+      },
+      "brief": {
+        "zh": "用相邻层的奇特征数作差；k=2 是单独的边界层。 建议先读 L-goldbach-characters-low-conductor-card。",
+        "en": "Take the difference between adjacent conductor levels, leaving level two separate. Read first: L-goldbach-characters-low-conductor-card."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-characters-low-conductor-card"
+      ]
+    },
+    {
+      "id": "L-goldbach-characters-dyadic-low-fraction",
+      "file": "lean/PEqualNP/Outside/L_goldbach_characters_dyadic_low_fraction.lean",
+      "module": "PEqualNP.Outside.L_goldbach_characters_dyadic_low_fraction",
+      "statement": "∀ k : ℕ, 4≤k → let n := 2^k; let X := (Finset.univ : Finset (DirichletCharacter ℂ n)).filter (fun χ => χ (-1) = -1); 2^(k/4)*(X.filter (fun χ => χ.conductor^4 ≤ n^3)).card ≤ X.card",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0054 · 二次幂子族低导子奇特征的比例界引理",
+        "en": "New route · Odd-character interference · OC-0054 · Power-saving fraction of low-conductor odd characters at dyadic moduli"
+      },
+      "brief": {
+        "zh": "阈值 d⁴≤N³ 在二次幂塔上转为导子层数，再对低层计数。比例小仍需与每个特征的振幅界合用。 建议先读 L-goldbach-characters-low-conductor-card, L-goldbach-conductor-high-edge。",
+        "en": "Translate the cutoff into a level bound. A small fraction still needs a bound for the amplitudes carried by those characters. Read first: L-goldbach-characters-low-conductor-card, L-goldbach-conductor-high-edge."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-characters-low-conductor-card",
+        "L-goldbach-conductor-high-edge"
+      ]
     }
   ],
   "tracks": [
