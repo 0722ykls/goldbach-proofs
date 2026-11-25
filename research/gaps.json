@@ -9556,6 +9556,121 @@
       "depends_on": [
         "L-goldbach-theta-fiber-projection"
       ]
+    },
+    {
+      "id": "L-goldbach-coset-sum-reflection",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_sum_reflection.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_sum_reflection",
+      "statement": "let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let j := fun n q r : ℕ => (n+q-r)%q; ∀ n q r : ℕ, 0<q → r<q → (F n q r).card=(F n q (j n q r)).card",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0050 · 区间余类反射的精确计数引理",
+        "en": "New route · Theta reflection · TH-0050 · Exact reflected class counts on a closed interval"
+      },
+      "brief": {
+        "zh": "利用 k↦n−k 的区间双射；余类大小由 n 本身决定，不能预设相等的均匀网格。 建议先读 L-goldbach-theta-reflected-fiber。",
+        "en": "Use interval reversal, which pairs exact finite class sizes even when the period does not divide the interval length. Read first: L-goldbach-theta-reflected-fiber."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-theta-reflected-fiber"
+      ]
+    },
+    {
+      "id": "L-goldbach-coset-prime-gram",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_prime_gram.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_prime_gram",
+      "statement": "let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let A := fun n q r : ℕ => ∑ k ∈ F n q r, w k; let j := fun n q r : ℕ => (n+q-r)%q; ∀ n q : ℕ, 0<q → let b := fun k => A n q (k%q)/((F n q (k%q)).card:ℝ); (∑ k ∈ Finset.range (n+1), b k*b (n-k)) = ∑ r ∈ Finset.range q, A n q r*A n q (j n q r)/((F n q r).card:ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0051 · 局部模型的素数反射质量化为余类和引理",
+        "en": "New route · Theta reflection · TH-0051 · Compute projected prime reflection from residue-class prime sums"
+      },
+      "brief": {
+        "zh": "将陪集投影的抽象恒等式专门化到真素数对数权，保留空纤维和 n−k 的余类。 建议先读 L-goldbach-coset-sum-reflection, L-goldbach-theta-fiber-projection。",
+        "en": "Compute the model on true logarithmic prime weights, accounting for empty classes and the reflected index. Read first: L-goldbach-coset-sum-reflection, L-goldbach-theta-fiber-projection."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-coset-sum-reflection",
+        "L-goldbach-theta-fiber-projection"
+      ]
+    },
+    {
+      "id": "L-goldbach-coset-ap-mass",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_ap_mass.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_ap_mass",
+      "statement": "let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let A := fun n q r : ℕ => ∑ k ∈ F n q r, w k; ∀ q : ℕ, 0<q → ∀ ε : ℝ, 0<ε → ∃ X : ℕ, ∀ n≥X, ∀ r<q, r.Coprime q → |A n q r/(n:ℝ)-1/(q.totient:ℝ)| ≤ ε",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0052 · 固定模数各单位余类的归一化素数质量引理",
+        "en": "New route · Theta reflection · TH-0052 · Uniform-in-residue Chebyshev mass at fixed modulus"
+      },
+      "brief": {
+        "zh": "由固定模数的等差数列素数定理得到，阈值允许依赖 q。不能用逐 q 的结论代替随 n 增长的模数估计。",
+        "en": "Invoke PNT in arithmetic progressions at fixed modulus; take the maximum of the finitely many residue thresholds."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-coset-nonunit-bias",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_nonunit_bias.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_nonunit_bias",
+      "statement": "let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let A := fun n q r : ℕ => ∑ k ∈ F n q r, w k; ∀ n q r : ℕ, 0<q → r<q → ¬r.Coprime q → A n q r ≤ ∑ p ∈ q.primeFactors, Real.log (p:ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0053 · 非单位余类的素数质量由模数素因子控制引理",
+        "en": "New route · Theta reflection · TH-0053 · Bound nonunit prime mass by the prime divisors of the fixed modulus"
+      },
+      "brief": {
+        "zh": "非单位类中的素数只能来自 q 的素因子，因此其质量对 n 一致有界。",
+        "en": "Every nonunit prime divides q; bound the whole contribution independently of the interval length."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-coset-model-limit",
+      "file": "lean/PEqualNP/Outside/L_goldbach_coset_model_limit.lean",
+      "module": "PEqualNP.Outside.L_goldbach_coset_model_limit",
+      "statement": "let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let A := fun n q r : ℕ => ∑ k ∈ F n q r, w k; let j := fun n q r : ℕ => (n+q-r)%q; ∀ q : ℕ, 0<q → ∀ ε : ℝ, 0<ε → ∃ X : ℕ, ∀ n≥X, let R := (Finset.range q).filter (fun r => r.Coprime q ∧ (j n q r).Coprime q); |(∑ r ∈ Finset.range q, A n q r*A n q (j n q r)/((F n q r).card:ℝ))/(n:ℝ) - (q:ℝ)*(R.card:ℝ)/(q.totient:ℝ)^2| ≤ ε",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0054 · 固定余类模型逼近显式反射局部主项引理",
+        "en": "New route · Theta reflection · TH-0054 · Explicit local main term for the fixed-modulus reflection model"
+      },
+      "brief": {
+        "zh": "单位余类给显式系数 q·#R/φ(q)²，坏类的素数质量有界。这里只计算投影模型；真实逐点卷积还带有符号残差。 建议先读 L-goldbach-coset-prime-gram, L-goldbach-coset-ap-mass, L-goldbach-coset-nonunit-bias, L-goldbach-theta-orthogonal-residual。",
+        "en": "Use AP mass in unit classes, bounded leakage in nonunit classes and exact fiber sizes. The signed residual remains for the true convolution. Read first: L-goldbach-coset-prime-gram, L-goldbach-coset-ap-mass, L-goldbach-coset-nonunit-bias, L-goldbach-theta-orthogonal-residual."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-coset-prime-gram",
+        "L-goldbach-coset-ap-mass",
+        "L-goldbach-coset-nonunit-bias",
+        "L-goldbach-theta-orthogonal-residual"
+      ]
     }
   ],
   "tracks": [
