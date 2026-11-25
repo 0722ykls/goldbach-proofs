@@ -14,6 +14,10 @@
 
 **Intermediate milestone.** Seek linear central prime mass on a positive proportion of even targets in each sufficiently large dyadic interval. An interior prime block supplies the first moment; an upper-bound sieve and the mean square of the local factor control the second. The remaining exceptional set needs a separate pointwise argument.
 
+**奇特征路线可先完成一个不依赖 GRH 的算术里程碑。** 给定偶数 N>2，把每个奇特征的 log(N/dχ) 按 N 的素因子和缺失的导子层展开。在商模 N/pʲ>2 时，通过提升双射计算该层的奇特征数；商模为 1 或 2 时该层为空。交换两个有限和，即得到一般偶模数的平均导子修正。这个量决定零点截断舍弃了多少低导子特征。进一步控制这些特征所承载的零点振幅仍需独立估计。可同时领取素数层展开、低导子提升计数、二幂塔独立复核三组任务。
+
+**如何评价进展。** 领题者应能说清命题削弱了哪个量词、隔离了哪个误差，或把哪个谱量化为可计算的算术量。首页路线中的配套恒等式服务于这些里程碑。正比例结果、零密度例外集和指定偶数的正性分别统计和解释。经典哥德巴赫例外集论文可用于审读均值方法；本台中心窗、权重和量词须在 Lean 中另行核对。[Montgomery–Vaughan 原论文](https://doi.org/10.4064/aa-27-1-353-370)
+
 **提交顺序。** 两组有限恒等式可并行领取；条件性误差合成任务可同步进行。随后提交具体测试向量或零点权的 Lean 定义及其算术解释，最后再攻逐偶数估计。终点始终要求每个偶数 n≥4 都是两个可相同素数之和，包含 4=2+2。目录 CI 将冻结终点与该自然数陈述的等价证明一同交给 Lean 检查。
 
 **English.** The theta track requires a common normalized realization of both reflected vectors and a strict spectral gap after all errors. The character track keeps indexed multiplicities, phases and the full odd-character denominator. Its open analytic input is a uniform one-sided margin after conductor and height truncation. A dyadic result or a GRH-conditional estimate would be an intermediate result.

@@ -9693,6 +9693,101 @@
         "L-goldbach-characters-low-conductor-card",
         "L-goldbach-conductor-dyadic-sum"
       ]
+    },
+    {
+      "id": "L-goldbach-conductor-deficit-layer",
+      "file": "lean/PEqualNP/Outside/L_goldbach_conductor_deficit_layer.lean",
+      "module": "PEqualNP.Outside.L_goldbach_conductor_deficit_layer",
+      "statement": "∀ (n : ℕ) [NeZero n], 2<n → ∀ χ : DirichletCharacter ℂ n, Real.log ((n:ℝ)/(χ.conductor:ℝ)) = ∑ p ∈ n.primeFactors, (Real.log (p:ℝ)) * (((Finset.Icc 1 (n.factorization p)).filter (fun j => χ.conductor ∣ n/p^j)).card : ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0058 · 每个特征的对数导子亏损按素数层分解引理",
+        "en": "New route · Odd-character interference · OC-0058 · Expand individual log-conductor loss by prime layers"
+      },
+      "brief": {
+        "zh": "以 χ.conductor∣n 为入口，逐素点计算 n/导子的赋值。每层只贡献一个 log p。 建议先读 L-goldbach-characters-primitive-parity。",
+        "en": "Use divisibility of the conductor and count its missing prime-power layers. Read first: L-goldbach-characters-primitive-parity."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-characters-primitive-parity"
+      ]
+    },
+    {
+      "id": "L-goldbach-conductor-exception-small-level",
+      "file": "lean/PEqualNP/Outside/L_goldbach_conductor_exception_small_level.lean",
+      "module": "PEqualNP.Outside.L_goldbach_conductor_exception_small_level",
+      "statement": "∀ (n : ℕ) [NeZero n], 2<n → let odd := (Finset.univ : Finset (DirichletCharacter ℂ n)).filter (fun χ => χ (-1) = -1); ∀ d:ℕ, d∣n → d≤2 → (odd.filter (fun χ => χ.conductor ∣ d)).card=0",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0059 · 小商模的奇特征层为空引理",
+        "en": "New route · Odd-character interference · OC-0059 · Small quotient moduli contribute no odd-character layer"
+      },
+      "brief": {
+        "zh": "由原始奇性排除导子 1、2，防止误加 φ(2) 的贡献。 建议先读 L-goldbach-characters-primitive-parity。",
+        "en": "Exclude conductors one and two via primitive parity; do not charge phi(2). Read first: L-goldbach-characters-primitive-parity."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-characters-primitive-parity"
+      ]
+    },
+    {
+      "id": "L-goldbach-conductor-mean-exact",
+      "file": "lean/PEqualNP/Outside/L_goldbach_conductor_mean_exact.lean",
+      "module": "PEqualNP.Outside.L_goldbach_conductor_mean_exact",
+      "statement": "∀ (n : ℕ) [NeZero n], 2<n → Even n → let odd := (Finset.univ : Finset (DirichletCharacter ℂ n)).filter (fun χ => χ (-1) = -1); (2/(n.totient:ℝ))*(∑ χ ∈ odd, Real.log ((n:ℝ)/(χ.conductor:ℝ))) = ∑ p ∈ n.primeFactors, Real.log (p:ℝ) * ∑ j ∈ Finset.Icc 1 (n.factorization p), (if 2<n/p^j then ((n/p^j).totient:ℝ)/(n.totient:ℝ) else 0)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0060 · 一般偶模数的平均对数导子亏损公式引理",
+        "en": "New route · Odd-character interference · OC-0060 · Exact mean logarithmic conductor deficit at a general even modulus"
+      },
+      "brief": {
+        "zh": "交换奇特征平均与素数层的有限和，逐层使用低导子计数和小商模例外。导子修正从谱量化为可独立计算的算术量。 建议先读 L-goldbach-conductor-deficit-layer, L-goldbach-conductor-exception-small-level, L-goldbach-characters-low-conductor-card。",
+        "en": "Swap the finite character and prime-layer sums, applying the low-conductor count except at quotient moduli one and two. Read first: L-goldbach-conductor-deficit-layer, L-goldbach-conductor-exception-small-level, L-goldbach-characters-low-conductor-card."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-conductor-deficit-layer",
+        "L-goldbach-conductor-exception-small-level",
+        "L-goldbach-characters-low-conductor-card"
+      ]
+    },
+    {
+      "id": "L-goldbach-conductor-small-markov",
+      "file": "lean/PEqualNP/Outside/L_goldbach_conductor_small_markov.lean",
+      "module": "PEqualNP.Outside.L_goldbach_conductor_small_markov",
+      "statement": "∀ (n : ℕ) [NeZero n], 2<n → let odd := (Finset.univ : Finset (DirichletCharacter ℂ n)).filter (fun χ => χ (-1) = -1); ((odd.filter (fun χ => χ.conductor^4≤n^3)).card : ℝ)*Real.log (n:ℝ) ≤ 4*∑ χ ∈ odd, Real.log ((n:ℝ)/(χ.conductor:ℝ))",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0061 · 对数导子亏损控制一般模数的低导子质量引理",
+        "en": "New route · Odd-character interference · OC-0061 · Bound low-conductor mass by the mean logarithmic deficit"
+      },
+      "brief": {
+        "zh": "对每个低导子特征收取至少 log n/4 的非负亏损。与精确均值合用，可逐模数诊断截断损失。 建议先读 L-goldbach-conductor-high-edge, L-goldbach-conductor-mean-exact。",
+        "en": "Charge a quarter of log n to each discarded character, using nonnegativity for all the others. Read first: L-goldbach-conductor-high-edge, L-goldbach-conductor-mean-exact."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-conductor-high-edge",
+        "L-goldbach-conductor-mean-exact"
+      ]
     }
   ],
   "tracks": [
