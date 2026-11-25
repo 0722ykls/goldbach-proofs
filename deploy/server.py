@@ -66,6 +66,7 @@ with closing(sqlite3.connect(PAGE_VIEWS_DB)) as conn, conn:
     conn.execute("INSERT OR IGNORE INTO page_views VALUES ('live', 0)")
 
 ASSETS = {
+    "/core-team-signup.png": "image/png",
     sponsors.STYLE: "text/css",
     sponsors.SCRIPT: "text/javascript",
     "/wechat.svg": "image/svg+xml",
@@ -97,6 +98,26 @@ def discussion_widget(lang, prefix):
 <div class="discussion-code"><img src="{prefix}discussion-qr.png" alt="{alt}" width="360" height="544"></div>
 <small>{validity}</small></div></details>
 <script src="{prefix}discussion.js" defer></script>"""
+
+
+def core_team_signup(lang, prefix):
+    if lang == "zh":
+        title = "中心组报名"
+        intro = "中心组由数学界专业人士和软件开发者组成。"
+        research = "数学专业研究者负责制定研究路线、拆解子命题证明任务，并动态调整证明路线。"
+        development = "软件开发者负责维护网站的基础设施。"
+        caption = "扫码报名中心组"
+    else:
+        title = "Join the core team"
+        intro = "The core team brings together professional mathematics researchers and software developers."
+        research = "Mathematics researchers set the research direction, break it into proof tasks, and adjust the roadmap as results come in."
+        development = "Software developers maintain the website infrastructure."
+        caption = "Scan to apply"
+    return f"""<section class="core-team-signup" id="core-team" aria-labelledby="core-team-title">
+<div><h2 id="core-team-title">{title}</h2><p>{intro}</p>
+<p><strong>{research}</strong> {development}</p></div>
+<figure><img src="{prefix}core-team-signup.png" width="176" height="176" alt="{caption}">
+<figcaption>{caption}</figcaption></figure></section>"""
 
 
 def site_dock(lang, prefix):
@@ -553,6 +574,7 @@ class Handler(BaseHTTPRequestHandler):
         if url.path == "/problems/":
             lang = self.language(url)
             directory = directory_page(lang).replace("</main>", "</main>" + sponsors.wall(ZHIHU.db,lang,"../"), 1)
+            directory = directory.replace('<div class="problem-list">', core_team_signup(lang, "../") + '<div class="problem-list">', 1)
             directory = directory.replace('</a></div></header>', '</a>'+ZHIHU.account_link(self.headers,lang)+'</div></header>',1)
             return self.reply(200, directory.encode(), "text/html", lang)
         desk, path, slug = self.scope(url.path)
@@ -619,7 +641,7 @@ class Handler(BaseHTTPRequestHandler):
         prefix = "" if slug == "goldbach" else "../../"
         page = page.replace("<!-- account -->", ZHIHU.account_link(self.headers, lang), 1)
         hero = '<section class="hero" aria-labelledby="page-title">'
-        page = page.replace(hero, sponsors.wall(ZHIHU.db, lang, prefix) + hero, 1)
+        page = page.replace(hero, sponsors.wall(ZHIHU.db, lang, prefix) + core_team_signup(lang, prefix) + hero, 1)
         page = page.replace("</body>", site_dock(lang, prefix) + "</body>", 1)
         self.reply(200, page.encode(), "text/html", lang)
 

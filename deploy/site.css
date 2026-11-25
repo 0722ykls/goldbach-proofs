@@ -405,6 +405,20 @@ main > .sponsor-wall { width: 100%; margin-top: 1.25rem; }
 .sponsor-grid figure > a { display: block; border-radius: .2rem; }
 .sponsor-grid figure > a:hover { outline: 1px solid var(--desk-gold); outline-offset: 3px; }
 .sponsor-grid figcaption { font-size: .8rem; overflow-wrap: anywhere; }
+.core-team-signup {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center;
+  gap: 1.1rem 2rem; margin-block: 1.25rem; padding: 1rem 1.25rem;
+  border: 1px solid var(--line); border-radius: .4rem; background: var(--sheet);
+}
+.core-team-signup h2 { margin: 0 0 .45rem; font: 650 1.35rem var(--serif); }
+.core-team-signup p + p { margin-top: .4rem; }
+.core-team-signup figure { margin: 0; text-align: center; }
+.core-team-signup img { display: block; width: 140px; height: 140px; padding: 10px; background: white; image-rendering: pixelated; }
+.core-team-signup figcaption { margin-top: .2rem; font-size: .8rem; }
+@media (max-width: 560px) {
+  .core-team-signup { grid-template-columns: 1fr; }
+  .core-team-signup figure { justify-self: start; }
+}
 .platform-credit { display: flex; align-items: center; gap: .65rem; }
 .platform-credit img { flex: none; }
 .footer:has(.platform-credit) { flex-wrap: wrap; gap: 1rem; }
