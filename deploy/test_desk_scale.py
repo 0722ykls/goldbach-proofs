@@ -1,5 +1,6 @@
 """Run with python -m unittest deploy.test_desk_scale -v (Python 3.11+ and OpenSSL)."""
 
+import gzip
 import hashlib
 import hmac
 import json
@@ -90,6 +91,17 @@ class DeskScaleTest(unittest.TestCase):
             self.request("/api/verdict", record, signed=True)
             self.request("/api/verdict", record, signed=True)
             status = self.request(path + "/api/status")
+            with closing(HTTPSConnection("127.0.0.1", self.port, context=self.context)) as conn:
+                conn.request("GET", path + "/api/status?view=web-gzip")
+                response = conn.getresponse()
+                self.assertEqual(response.status, 200)
+                self.assertEqual(response.getheader("Content-Encoding"), "gzip")
+                compact = json.loads(gzip.decompress(response.read()))
+            self.assertEqual(compact["results"], status["results"])
+            self.assertEqual(compact["counts"], status["counts"])
+            latest = next(g["latest"] for g in compact["gaps"] if g["id"] == gap["id"])
+            self.assertNotIn("manifest", latest)
+            self.assertEqual(latest["lemma_id"], gap["id"])
             self.assertEqual(status["results"][0]["agent"], {**agent, "source": "self_reported"})
             self.assertEqual(status["desk"]["agent_rankings"], {
                 "models": [{"name": "model-test-v1", "accepted": 1}],
