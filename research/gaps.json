@@ -10467,6 +10467,146 @@
       "depends_on": [
         "L-goldbach-mellin-unit-bin-budget"
       ]
+    },
+    {
+      "id": "L-goldbach-mellin-autocorr-diagonal",
+      "file": "lean/PEqualNP/Outside/L_goldbach_mellin_autocorr_diagonal.lean",
+      "module": "PEqualNP.Outside.L_goldbach_mellin_autocorr_diagonal",
+      "statement": "let F := fun (φ : ℝ → ℝ) x => Real.exp (x/2)*φ (Real.exp x); let R := fun (f : ℝ → ℝ) h => ∫ x : ℝ, f x*f (x+h); ∀ φ : ℝ → ℝ, Continuous φ → (∀ u : ℝ, u < 1/3 ∨ 2/3 < u → φ u=0) → R (F φ) 0 = intervalIntegral (fun u : ℝ => (φ u)^2) 0 1 MeasureTheory.volume",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0069 · 临界线的对数窗能量恰为中心权平方积分引理",
+        "en": "New route · Odd-character interference · OC-0069 · Critical-line window energy equals the arithmetic diagonal mass"
+      },
+      "brief": {
+        "zh": "将 F(x)² 中的 exp x 连同 dx 一起换为 du。它锁定显式公式中 log d 的系数。 建议先读 L-goldbach-mellin-log-identification。",
+        "en": "Use exp(x) dx = du in the squared log window to fix the coefficient of the log conductor. Read first: L-goldbach-mellin-log-identification."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-mellin-log-identification"
+      ]
+    },
+    {
+      "id": "L-goldbach-mellin-support-exact-edge",
+      "file": "lean/PEqualNP/Outside/L_goldbach_mellin_support_exact_edge.lean",
+      "module": "PEqualNP.Outside.L_goldbach_mellin_support_exact_edge",
+      "statement": "let F := fun (φ : ℝ → ℝ) x => Real.exp (x/2)*φ (Real.exp x); let R := fun (f : ℝ → ℝ) h => ∫ x : ℝ, f x*f (x+h); ∀ φ : ℝ → ℝ, Continuous φ → (∀ u : ℝ, u < 1/3 ∨ 2/3 < u → φ u=0) → ∀ h : ℝ, Real.log 2 ≤ |h| → R (F φ) h=0",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0070 · 临界位移 log 2 处的自相关也消失引理",
+        "en": "New route · Odd-character interference · OC-0070 · Autocorrelation vanishes even at the critical shift log two"
+      },
+      "brief": {
+        "zh": "两个对数支撑的长度恰为 log 2。等号时交集至多单点，必须在积分意义下处理；它决定素数 2 是否留下贡献。 建议先读 L-goldbach-mellin-log-support。",
+        "en": "At equality the translated supports can meet in one point only. Account for its zero measure to handle prime two. Read first: L-goldbach-mellin-log-support."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-mellin-log-support"
+      ]
+    },
+    {
+      "id": "L-goldbach-mellin-wiener-khinchin",
+      "file": "lean/PEqualNP/Outside/L_goldbach_mellin_wiener_khinchin.lean",
+      "module": "PEqualNP.Outside.L_goldbach_mellin_wiener_khinchin",
+      "statement": "let W := fun (f : ℝ → ℝ) (t : ℝ) => ∫ x : ℝ, (f x:ℂ)*Complex.exp (((t*x:ℝ):ℂ)*Complex.I); let R := fun (f : ℝ → ℝ) h => ∫ x : ℝ, f x*f (x+h); ∀ f : ℝ → ℝ, Continuous f → HasCompactSupport f → ∀ t : ℝ, (∫ h : ℝ, R f h*Real.cos (t*h)) = ‖W f t‖^2",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0071 · 有限窗自相关与平方频谱的精确变换引理",
+        "en": "New route · Odd-character interference · OC-0071 · Exact transform of the autocorrelation of a compact real window"
+      },
+      "brief": {
+        "zh": "用 Fubini 展开二重积分；实权使相反频率互为共轭。频率约定不含 2π。 建议先读 L-goldbach-mellin-log-identification。",
+        "en": "Expand the double integral and identify conjugate frequencies in the no-2π convention. Read first: L-goldbach-mellin-log-identification."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-mellin-log-identification"
+      ]
+    },
+    {
+      "id": "L-goldbach-mellin-parseval-constant",
+      "file": "lean/PEqualNP/Outside/L_goldbach_mellin_parseval_constant.lean",
+      "module": "PEqualNP.Outside.L_goldbach_mellin_parseval_constant",
+      "statement": "let F := fun (φ : ℝ → ℝ) x => Real.exp (x/2)*φ (Real.exp x); let W := fun (f : ℝ → ℝ) (t : ℝ) => ∫ x : ℝ, (f x:ℂ)*Complex.exp (((t*x:ℝ):ℂ)*Complex.I); ∀ φ : ℝ → ℝ, Continuous φ → (∀ u : ℝ, u < 1/3 ∨ 2/3 < u → φ u=0) → (∫ t : ℝ, ‖W (F φ) t‖^2) = 2*Real.pi*(intervalIntegral (fun u : ℝ => (φ u)^2) 0 1 MeasureTheory.volume)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0072 · 校准零点测试函数的 Plancherel 常数引理",
+        "en": "New route · Odd-character interference · OC-0072 · Calibrate the Plancherel normalization of the zero test"
+      },
+      "brief": {
+        "zh": "频率按 exp(itx) 定义，与 Mathlib 的 2π 约定换元。常数要与对角项 cφ 一致。 建议先读 L-goldbach-mellin-autocorr-diagonal, L-goldbach-mellin-wiener-khinchin。",
+        "en": "Convert the frequency convention explicitly and match the arithmetic cφ. Read first: L-goldbach-mellin-autocorr-diagonal, L-goldbach-mellin-wiener-khinchin."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-mellin-autocorr-diagonal",
+        "L-goldbach-mellin-wiener-khinchin"
+      ]
+    },
+    {
+      "id": "L-goldbach-mellin-eliminate-prime-side",
+      "file": "lean/PEqualNP/Outside/L_goldbach_mellin_eliminate_prime_side.lean",
+      "module": "PEqualNP.Outside.L_goldbach_mellin_eliminate_prime_side",
+      "statement": "let F := fun (φ : ℝ → ℝ) x => Real.exp (x/2)*φ (Real.exp x); let R := fun (f : ℝ → ℝ) h => ∫ x : ℝ, f x*f (x+h); ∀ (φ : ℝ → ℝ) (b : ℕ → ℂ), Continuous φ → (∀ u : ℝ, u < 1/3 ∨ 2/3 < u → φ u=0) → (∑' k : ℕ, (ArithmeticFunction.vonMangoldt k : ℂ)*b k*(R (F φ) (Real.log (k:ℝ)):ℂ))=0",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0073 · 中心窗使显式公式的素数幂侧完全消失引理",
+        "en": "New route · Odd-character interference · OC-0073 · Annihilation of the prime-power side by the central window"
+      },
+      "brief": {
+        "zh": "将紧支撑与整数 k≥2 的离散位置相交；k=2 取等号，k=0、1 核对 Λ 值。允许一般特征系数。 建议先读 L-goldbach-mellin-support-exact-edge, L-goldbach-mellin-wiener-khinchin。",
+        "en": "Apply the exact support edge at k=2 and the Mangoldt values at zero and one; character coefficients are unrestricted. Read first: L-goldbach-mellin-support-exact-edge, L-goldbach-mellin-wiener-khinchin."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-mellin-support-exact-edge",
+        "L-goldbach-mellin-wiener-khinchin"
+      ]
+    },
+    {
+      "id": "L-goldbach-mellin-archimedean-budget",
+      "file": "lean/PEqualNP/Outside/L_goldbach_mellin_archimedean_budget.lean",
+      "module": "PEqualNP.Outside.L_goldbach_mellin_archimedean_budget",
+      "statement": "let W := fun (f : ℝ → ℝ) (t : ℝ) => ∫ x : ℝ, (f x:ℂ)*Complex.exp (((t*x:ℝ):ℂ)*Complex.I); ∀ (f J : ℝ → ℝ), ContDiff ℝ ⊤ f → HasCompactSupport f → Continuous J → (∃ K : ℝ, ∀ t, |J t| ≤ K*(1+Real.log (2+|t|))) → MeasureTheory.Integrable (fun t : ℝ => ‖W f t‖^2*J t) MeasureTheory.volume",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0074 · 平方 Mellin 权乘对数增长仍可积引理",
+        "en": "New route · Odd-character interference · OC-0074 · Logarithmic archimedean growth is integrable against squared Mellin weight"
+      },
+      "brief": {
+        "zh": "把 Γ 对数导数的实际增长估计隔离为输入，独立控制无穷远积分。 建议先读 L-goldbach-mellin-decay-seminorm。",
+        "en": "Isolate the growth estimate for the logarithmic derivative of gamma before integrating against the window. Read first: L-goldbach-mellin-decay-seminorm."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-mellin-decay-seminorm"
+      ]
     }
   ],
   "tracks": [
