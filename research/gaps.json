@@ -7472,8 +7472,8 @@
         "en": "New route · Theta reflection · TH-0001 · Reflection energy difference equals four times the convolution"
       },
       "brief": {
-        "zh": "在区间 0 到 n 逐项展开，反射取 n−k。",
-        "en": "Expand pointwise on the interval from zero to n."
+        "zh": "配套引理。在区间 0 到 n 逐项展开，反射取 n−k。",
+        "en": "Supporting lemma. Expand pointwise on the interval from zero to n."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7493,8 +7493,8 @@
         "en": "New route · Theta reflection · TH-0002 · Fourier phase of interval reflection"
       },
       "brief": {
-        "zh": "换元 k ↦ n−k，同时追踪平移相位与频率反号。",
-        "en": "Reverse the finite sum and track the translation and inverse frequency."
+        "zh": "配套引理。换元 k ↦ n−k，同时追踪平移相位与频率反号。",
+        "en": "Supporting lemma. Reverse the finite sum and track the translation and inverse frequency."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7514,8 +7514,8 @@
         "en": "New route · Theta reflection · TH-0003 · Bound contamination outside prime support"
       },
       "brief": {
-        "zh": "给出确切污染项；真素数幂及其他非素数项随后要估计。",
-        "en": "Identify the exact error before estimating prime powers or other contamination."
+        "zh": "配套引理。给出确切污染项；真素数幂及其他非素数项随后要估计。",
+        "en": "Supporting lemma. Identify the exact error before estimating prime powers or other contamination."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7535,8 +7535,8 @@
         "en": "New route · Theta reflection · TH-0004 · Transfer a strict spectral gap to positivity"
       },
       "brief": {
-        "zh": "P、M 分别是固定测试向量的两个提升范数平方。需另证三个误差界，A 必须共用。",
-        "en": "P and M are squared norms of prescribed lifts. Prove the three error bounds separately using the same positive scale."
+        "zh": "条件归约。P、M 分别是固定测试向量的两个提升范数平方。需另证三个误差界，A 必须共用。",
+        "en": "Conditional reduction. P and M are squared norms of prescribed lifts. Prove the three error bounds separately using the same positive scale."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7556,8 +7556,8 @@
         "en": "New route · Odd-character interference · OC-0001 · Off-diagonal identity for indexed zeros"
       },
       "brief": {
-        "zh": "按索引删对角；不同副本即使高度相等也保留。",
-        "en": "Erase an index, retaining distinct copies even at identical heights."
+        "zh": "配套引理。按索引删对角；不同副本即使高度相等也保留。",
+        "en": "Supporting lemma. Erase an index, retaining distinct copies even at identical heights."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7577,8 +7577,8 @@
         "en": "New route · Odd-character interference · OC-0002 · Turn paired phases into a frequency difference"
       },
       "brief": {
-        "zh": "取 x 为 log N 后用于交叉项，需保留符号。",
-        "en": "Specialize x to log N in the signed cross term."
+        "zh": "配套引理。取 x 为 log N 后用于交叉项，需保留符号。",
+        "en": "Supporting lemma. Specialize x to log N in the signed cross term."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7598,8 +7598,8 @@
         "en": "New route · Odd-character interference · OC-0003 · Split by conductor with the original normalization"
       },
       "brief": {
-        "zh": "以 d⁴>N³ 表示导子阈值；两部分均按全部奇特征的原尺度计。",
-        "en": "Use the integral conductor cutoff and retain the same normalization in both sums."
+        "zh": "配套引理。以 d⁴>N³ 表示导子阈值；两部分均按全部奇特征的原尺度计。",
+        "en": "Supporting lemma. Use the integral conductor cutoff and retain the same normalization in both sums."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7619,8 +7619,8 @@
         "en": "New route · Odd-character interference · OC-0004 · Transfer a truncated margin past prime-power noise"
       },
       "brief": {
-        "zh": "G 是归一化 Mangoldt 卷积，pp 是非素数对污染上界；每个输入估计仍须独立证明。",
-        "en": "G is normalized Mangoldt mass and pp bounds non-prime-pair mass. The analytic inputs remain to be proved."
+        "zh": "条件归约。G 是归一化 Mangoldt 卷积，pp 是非素数对污染上界；每个输入估计仍须独立证明。",
+        "en": "Conditional reduction. G is normalized Mangoldt mass and pp bounds non-prime-pair mass. The analytic inputs remain to be proved."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7640,8 +7640,8 @@
         "en": "New route · Odd-character interference · OC-0005 · Positive central prime mass along powers of two"
       },
       "brief": {
-        "zh": "开放的较强诊断目标。先攻无限子族的定量质量；正的固定裕量和窗口支撑都需证明。",
-        "en": "Open quantitative diagnostic on an infinite subfamily. Prove a uniform positive margin inside the stated central window."
+        "zh": "探索目标。开放的较强诊断目标。先攻无限子族的定量质量；正的固定裕量和窗口支撑都需证明。",
+        "en": "Exploratory target. Open quantitative diagnostic on an infinite subfamily. Prove a uniform positive margin inside the stated central window."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7661,8 +7661,8 @@
         "en": "New route · Theta reflection · TH-0005 · The midpoint is the unique fixed point"
       },
       "brief": {
-        "zh": "在闭区间上用自然数减法；用于单列 p=q 的贡献。",
-        "en": "Use bounded subtraction to isolate the diagonal p=q."
+        "zh": "配套引理。在闭区间上用自然数减法；用于单列 p=q 的贡献。",
+        "en": "Supporting lemma. Use bounded subtraction to isolate the diagonal p=q."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7682,8 +7682,8 @@
         "en": "New route · Theta reflection · TH-0006 · Halve a reflected sum away from the midpoint"
       },
       "brief": {
-        "zh": "分成左半、右半和固定点。求和同时允许两个素数相等。 建议先读 L-goldbach-reflect-center。",
-        "en": "Pair left and right halves and retain the fixed point. Read first: L-goldbach-reflect-center."
+        "zh": "配套引理。分成左半、右半和固定点。求和同时允许两个素数相等。 建议先读 L-goldbach-reflect-center。",
+        "en": "Supporting lemma. Pair left and right halves and retain the fixed point. Read first: L-goldbach-reflect-center."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7705,8 +7705,8 @@
         "en": "New route · Theta reflection · TH-0007 · Reflection preserves interval energy"
       },
       "brief": {
-        "zh": "用 k ↦ n−k 建立有限区间双射，供投影能量计算使用。",
-        "en": "Reindex by interval reversal for the projection energy calculation."
+        "zh": "配套引理。用 k ↦ n−k 建立有限区间双射，供投影能量计算使用。",
+        "en": "Supporting lemma. Reindex by interval reversal for the projection energy calculation."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7726,8 +7726,8 @@
         "en": "New route · Theta reflection · TH-0008 · Real orthogonality of the reflection components"
       },
       "brief": {
-        "zh": "先展开为平方差，再换元消去。 建议先读 L-goldbach-reflect-isometry。",
-        "en": "Expand the difference of squares and reverse the index. Read first: L-goldbach-reflect-isometry."
+        "zh": "配套引理。先展开为平方差，再换元消去。 建议先读 L-goldbach-reflect-isometry。",
+        "en": "Supporting lemma. Expand the difference of squares and reverse the index. Read first: L-goldbach-reflect-isometry."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7749,8 +7749,8 @@
         "en": "New route · Theta reflection · TH-0009 · Endpoint alias correction under periodic extension"
       },
       "brief": {
-        "zh": "模 n 会识别 0 与 n，单列两端再对内点换元。",
-        "en": "Isolate both endpoints before using the cyclic model."
+        "zh": "配套引理。模 n 会识别 0 与 n，单列两端再对内点换元。",
+        "en": "Supporting lemma. Isolate both endpoints before using the cyclic model."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7770,8 +7770,8 @@
         "en": "New route · Theta reflection · TH-0010 · Coprimality is invariant under reflection"
       },
       "brief": {
-        "zh": "利用公因子同时整除 n 和 k 当且仅当同时整除 n 和 n−k。",
-        "en": "Transfer common divisors across subtraction."
+        "zh": "配套引理。利用公因子同时整除 n 和 k 当且仅当同时整除 n 和 n−k。",
+        "en": "Supporting lemma. Transfer common divisors across subtraction."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7791,8 +7791,8 @@
         "en": "New route · Theta reflection · TH-0011 · A prime pair removed by the unit sieve is diagonal"
       },
       "brief": {
-        "zh": "由 p 整除 p+q 推出 p 整除 q，再用 q 为素数。",
-        "en": "A prime divisor of p+q equal to p divides q."
+        "zh": "配套引理。由 p 整除 p+q 推出 p 整除 q，再用 q 为素数。",
+        "en": "Supporting lemma. A prime divisor of p+q equal to p divides q."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7812,8 +7812,8 @@
         "en": "New route · Theta reflection · TH-0012 · Diagonal correction to unit-restricted prime mass"
       },
       "brief": {
-        "zh": "承担从奇特征单位群到不受限终点的对角接口。 建议先读 L-goldbach-reflect-unit-support, L-goldbach-reflect-badpair-diagonal, L-goldbach-reflect-center。",
-        "en": "Reconnect the unit-group calculation to unrestricted prime mass. Read first: L-goldbach-reflect-unit-support, L-goldbach-reflect-badpair-diagonal, L-goldbach-reflect-center."
+        "zh": "中间里程碑。承担从奇特征单位群到不受限终点的对角接口。 建议先读 L-goldbach-reflect-unit-support, L-goldbach-reflect-badpair-diagonal, L-goldbach-reflect-center。",
+        "en": "Intermediate milestone. Reconnect the unit-group calculation to unrestricted prime mass. Read first: L-goldbach-reflect-unit-support, L-goldbach-reflect-badpair-diagonal, L-goldbach-reflect-center."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7837,8 +7837,8 @@
         "en": "New route · Odd-character interference · OC-0006 · Identify congruent indices in the open support interval"
       },
       "brief": {
-        "zh": "使用严格窗口上界把模 n 的对角还原为算术对角。",
-        "en": "Use strict support to unwrap the modular diagonal."
+        "zh": "配套引理。使用严格窗口上界把模 n 的对角还原为算术对角。",
+        "en": "Supporting lemma. Use strict support to unwrap the modular diagonal."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7858,8 +7858,8 @@
         "en": "New route · Odd-character interference · OC-0007 · Unwrap the negative congruence inside the support"
       },
       "brief": {
-        "zh": "和落在开区间 (0,2n)，其中 n 的正倍数只有一个。",
-        "en": "Locate the sum strictly between zero and twice the modulus."
+        "zh": "配套引理。和落在开区间 (0,2n)，其中 n 的正倍数只有一个。",
+        "en": "Supporting lemma. Locate the sum strictly between zero and twice the modulus."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7879,8 +7879,8 @@
         "en": "New route · Odd-character interference · OC-0008 · Unit diagonal and antidiagonal are disjoint above modulus two"
       },
       "brief": {
-        "zh": "处理奇特征正交核的两种指示函数会否重合。",
-        "en": "Cancel the unit a in the doubled congruence."
+        "zh": "配套引理。处理奇特征正交核的两种指示函数会否重合。",
+        "en": "Supporting lemma. Cancel the unit a in the doubled congruence."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7900,8 +7900,8 @@
         "en": "New route · Odd-character interference · OC-0009 · Extract reflected mass from the odd projection kernel"
       },
       "brief": {
-        "zh": "逐行收缩正对角和反对角，得到 D−G。 建议先读 L-goldbach-unit-diagonal-range, L-goldbach-unit-anti-range。",
-        "en": "Contract the two diagonals separately to obtain D−G. Read first: L-goldbach-unit-diagonal-range, L-goldbach-unit-anti-range."
+        "zh": "配套引理。逐行收缩正对角和反对角，得到 D−G。 建议先读 L-goldbach-unit-diagonal-range, L-goldbach-unit-anti-range。",
+        "en": "Supporting lemma. Contract the two diagonals separately to obtain D−G. Read first: L-goldbach-unit-diagonal-range, L-goldbach-unit-anti-range."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7924,8 +7924,8 @@
         "en": "New route · Odd-character interference · OC-0010 · Repeated indices at the same height contribute nonnegative mass"
       },
       "brief": {
-        "zh": "一个高度有 m 个副本时，有 m(m−1) 个有序非对角对。 建议先读 L-goldbach-zero-index-cross。",
-        "en": "Count ordered pairs in one height cluster. Read first: L-goldbach-zero-index-cross."
+        "zh": "配套引理。一个高度有 m 个副本时，有 m(m−1) 个有序非对角对。 建议先读 L-goldbach-zero-index-cross。",
+        "en": "Supporting lemma. Count ordered pairs in one height cluster. Read first: L-goldbach-zero-index-cross."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7947,8 +7947,8 @@
         "en": "New route · Odd-character interference · OC-0011 · Uniform translation of heights preserves the phase kernel"
       },
       "brief": {
-        "zh": "仅相位具有平移不变性；权 W 的自变量仍用原高度。 建议先读 L-goldbach-zero-phase-product。",
-        "en": "Only translate the phase inputs; evaluate the weight at the original height. Read first: L-goldbach-zero-phase-product."
+        "zh": "配套引理。仅相位具有平移不变性；权 W 的自变量仍用原高度。 建议先读 L-goldbach-zero-phase-product。",
+        "en": "Supporting lemma. Only translate the phase inputs; evaluate the weight at the original height. Read first: L-goldbach-zero-phase-product."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7970,8 +7970,8 @@
         "en": "New route · Odd-character interference · OC-0012 · Swapping a pair preserves the real part"
       },
       "brief": {
-        "zh": "交换索引时复乘积取共轭，用于上三角配对。",
-        "en": "Use conjugation to pass to unordered pairs."
+        "zh": "配套引理。交换索引时复乘积取共轭，用于上三角配对。",
+        "en": "Supporting lemma. Use conjugation to pass to unordered pairs."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -7991,8 +7991,8 @@
         "en": "New route · Odd-character interference · OC-0013 · Reduce the real cross term to its strict upper triangle"
       },
       "brief": {
-        "zh": "按索引而非高度排序，避免漏掉重零点。 建议先读 L-goldbach-cross-signed-swap, L-goldbach-zero-index-cross。",
-        "en": "Order indices, retaining repeated heights. Read first: L-goldbach-cross-signed-swap, L-goldbach-zero-index-cross."
+        "zh": "中间里程碑。按索引而非高度排序，避免漏掉重零点。 建议先读 L-goldbach-cross-signed-swap, L-goldbach-zero-index-cross。",
+        "en": "Intermediate milestone. Order indices, retaining repeated heights. Read first: L-goldbach-cross-signed-swap, L-goldbach-zero-index-cross."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8015,8 +8015,8 @@
         "en": "New route · Odd-character interference · OC-0014 · Recover mixed pairs omitted by a height cutoff"
       },
       "brief": {
-        "zh": "令 a、b 为截断内外的带相位总和。先恢复混合项，再估计尾项。",
-        "en": "Apply to the retained and omitted phase sums before bounding the tail."
+        "zh": "配套引理。令 a、b 为截断内外的带相位总和。先恢复混合项，再估计尾项。",
+        "en": "Supporting lemma. Apply to the retained and omitted phase sums before bounding the tail."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8036,8 +8036,8 @@
         "en": "New route · Odd-character interference · OC-0015 · Control the squared-amplitude truncation error"
       },
       "brief": {
-        "zh": "利用混合项实部的双边界，供截断到全和的预算使用。 建议先读 L-goldbach-cross-tail-mixed。",
-        "en": "Bound the real mixed product on both sides. Read first: L-goldbach-cross-tail-mixed."
+        "zh": "配套引理。利用混合项实部的双边界，供截断到全和的预算使用。 建议先读 L-goldbach-cross-tail-mixed。",
+        "en": "Supporting lemma. Bound the real mixed product on both sides. Read first: L-goldbach-cross-tail-mixed."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8059,8 +8059,8 @@
         "en": "New route · Odd-character interference · OC-0016 · Square-root cutoff for prime-power bases"
       },
       "brief": {
-        "zh": "先证明 p²≤pᵃ，再接自然数平方根界。",
-        "en": "Compare the power to its square before taking the natural square root."
+        "zh": "配套引理。先证明 p²≤pᵃ，再接自然数平方根界。",
+        "en": "Supporting lemma. Compare the power to its square before taking the natural square root."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8080,8 +8080,8 @@
         "en": "New route · Odd-character interference · OC-0017 · Logarithmic cutoff on exponents"
       },
       "brief": {
-        "zh": "比较 2ᵃ≤pᵃ 并保留整数取整。",
-        "en": "Compare the power to 2^a and retain integer rounding."
+        "zh": "配套引理。比较 2ᵃ≤pᵃ 并保留整数取整。",
+        "en": "Supporting lemma. Compare the power to 2^a and retain integer rounding."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8101,8 +8101,8 @@
         "en": "New route · Odd-character interference · OC-0018 · Cube-root cutoff for higher powers"
       },
       "brief": {
-        "zh": "用于把指数至少三的部分从平方项剥离。",
-        "en": "Use the cubic cutoff on the tail beginning at exponent three."
+        "zh": "配套引理。用于把指数至少三的部分从平方项剥离。",
+        "en": "Supporting lemma. Use the cubic cutoff on the tail beginning at exponent three."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8122,8 +8122,8 @@
         "en": "New route · Odd-character interference · OC-0019 · Unique prime base of a nontrivial prime power"
       },
       "brief": {
-        "zh": "用素因子整除乘幂，将 von Mangoldt 权写成底数对数。",
-        "en": "Use prime divisibility of a power to identify the logarithmic weight."
+        "zh": "配套引理。用素因子整除乘幂，将 von Mangoldt 权写成底数对数。",
+        "en": "Supporting lemma. Use prime divisibility of a power to identify the logarithmic weight."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8143,8 +8143,8 @@
         "en": "New route · Odd-character interference · OC-0020 · Unique exponent for a fixed prime base"
       },
       "brief": {
-        "zh": "底数至少二，幂关于指数严格递增。",
-        "en": "Use strict monotonicity in the exponent."
+        "zh": "配套引理。底数至少二，幂关于指数严格递增。",
+        "en": "Supporting lemma. Use strict monotonicity in the exponent."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8164,8 +8164,8 @@
         "en": "New route · Odd-character interference · OC-0021 · Reduce the unit test to the prime base"
       },
       "brief": {
-        "zh": "在计算污染项的计数前先过滤不合格底数。",
-        "en": "Filter bases before counting contamination."
+        "zh": "配套引理。在计算污染项的计数前先过滤不合格底数。",
+        "en": "Supporting lemma. Filter bases before counting contamination."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8185,8 +8185,8 @@
         "en": "New route · Odd-character interference · OC-0022 · Separate the base logarithm from its exponent"
       },
       "brief": {
-        "zh": "区分 Λ(pᵃ) 与 log(pᵃ) 的因子 a。",
-        "en": "Track the exponent when comparing log(p^a) with the Mangoldt weight."
+        "zh": "配套引理。区分 Λ(pᵃ) 与 log(pᵃ) 的因子 a。",
+        "en": "Supporting lemma. Track the exponent when comparing log(p^a) with the Mangoldt weight."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8206,8 +8206,8 @@
         "en": "New route · Odd-character interference · OC-0023 · Proper powers are outside prime support"
       },
       "brief": {
-        "zh": "给纯素数指标与真幂污染项建立互斥性。",
-        "en": "Prove support disjointness for the prime and contamination terms."
+        "zh": "配套引理。给纯素数指标与真幂污染项建立互斥性。",
+        "en": "Supporting lemma. Prove support disjointness for the prime and contamination terms."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8227,8 +8227,8 @@
         "en": "New route · Odd-character interference · OC-0024 · Count the square support"
       },
       "brief": {
-        "zh": "把每个平方对应到正底数，利用平方根截断。 建议先读 L-goldbach-pp-base-cutoff。",
-        "en": "Inject squares into their positive bases below the square root. Read first: L-goldbach-pp-base-cutoff."
+        "zh": "配套引理。把每个平方对应到正底数，利用平方根截断。 建议先读 L-goldbach-pp-base-cutoff。",
+        "en": "Supporting lemma. Inject squares into their positive bases below the square root. Read first: L-goldbach-pp-base-cutoff."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8250,8 +8250,8 @@
         "en": "New route · Odd-character interference · OC-0025 · Count admissible higher-power bases"
       },
       "brief": {
-        "zh": "正底数集合的最大值至少为其基数。 建议先读 L-goldbach-pp-cubic-base。",
-        "en": "Compare the number of positive bases to their maximal base. Read first: L-goldbach-pp-cubic-base."
+        "zh": "配套引理。正底数集合的最大值至少为其基数。 建议先读 L-goldbach-pp-cubic-base。",
+        "en": "Supporting lemma. Compare the number of positive bases to their maximal base. Read first: L-goldbach-pp-cubic-base."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8273,8 +8273,8 @@
         "en": "New route · Odd-character interference · OC-0026 · Bound a windowed contamination product"
       },
       "brief": {
-        "zh": "对缩放后 0 到 1 的窗口使用；L 取 log N。",
-        "en": "Use a unit-normalized window and specialize L to log N."
+        "zh": "配套引理。对缩放后 0 到 1 的窗口使用；L 取 log N。",
+        "en": "Supporting lemma. Use a unit-normalized window and specialize L to log N."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8294,8 +8294,8 @@
         "en": "New route · Odd-character interference · OC-0027 · Bound either-side contamination by twice the support"
       },
       "brief": {
-        "zh": "分别上界左边污染和右边污染；反射在区间内为单射。",
-        "en": "Bound both bad supports using injectivity of interval reversal."
+        "zh": "配套引理。分别上界左边污染和右边污染；反射在区间内为单射。",
+        "en": "Supporting lemma. Bound both bad supports using injectivity of interval reversal."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8315,8 +8315,8 @@
         "en": "New route · Odd-character interference · OC-0028 · Normalize the finite contamination budget"
       },
       "brief": {
-        "zh": "把坏支撑的基数估计与权上界相乘。 建议先读 L-goldbach-pp-product-window, L-goldbach-pp-reflected-union。",
-        "en": "Multiply the support bound by the pointwise bound before normalization. Read first: L-goldbach-pp-product-window, L-goldbach-pp-reflected-union."
+        "zh": "配套引理。把坏支撑的基数估计与权上界相乘。 建议先读 L-goldbach-pp-product-window, L-goldbach-pp-reflected-union。",
+        "en": "Supporting lemma. Multiply the support bound by the pointwise bound before normalization. Read first: L-goldbach-pp-product-window, L-goldbach-pp-reflected-union."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8339,8 +8339,8 @@
         "en": "New route · Theta reflection · TH-0013 · Central window is stable under reflection"
       },
       "brief": {
-        "zh": "中心窗使用整数不等式，包含两端。",
-        "en": "Keep both endpoints by working entirely with integer inequalities."
+        "zh": "配套引理。中心窗使用整数不等式，包含两端。",
+        "en": "Supporting lemma. Keep both endpoints by working entirely with integer inequalities."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8360,8 +8360,8 @@
         "en": "New route · Theta reflection · TH-0014 · Extract a unit prime pair from positive central mass"
       },
       "brief": {
-        "zh": "从正的有限和取一个非零项，保留窗口与单位条件。 建议先读 L-goldbach-central-window-reflection, L-goldbach-reflect-unit-support。",
-        "en": "Extract a nonzero summand with all support predicates intact. Read first: L-goldbach-central-window-reflection, L-goldbach-reflect-unit-support."
+        "zh": "配套引理。从正的有限和取一个非零项，保留窗口与单位条件。 建议先读 L-goldbach-central-window-reflection, L-goldbach-reflect-unit-support。",
+        "en": "Supporting lemma. Extract a nonzero summand with all support predicates intact. Read first: L-goldbach-central-window-reflection, L-goldbach-reflect-unit-support."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8384,8 +8384,8 @@
         "en": "New route · Theta reflection · TH-0015 · Even midpoint lies inside the central window"
       },
       "brief": {
-        "zh": "在中心窗中计算互素筛漏掉的对角项。 建议先读 L-goldbach-reflect-center。",
-        "en": "Include the midpoint when correcting the central unit sieve. Read first: L-goldbach-reflect-center."
+        "zh": "配套引理。在中心窗中计算互素筛漏掉的对角项。 建议先读 L-goldbach-reflect-center。",
+        "en": "Supporting lemma. Include the midpoint when correcting the central unit sieve. Read first: L-goldbach-reflect-center."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8407,8 +8407,8 @@
         "en": "New route · Theta reflection · TH-0016 · Sum of the two reflected energies recovers original energy"
       },
       "brief": {
-        "zh": "与能量差恒等式一同校准系数四。 建议先读 L-goldbach-reflect-isometry。",
-        "en": "Use the sum together with the difference to calibrate the factor four. Read first: L-goldbach-reflect-isometry."
+        "zh": "配套引理。与能量差恒等式一同校准系数四。 建议先读 L-goldbach-reflect-isometry。",
+        "en": "Supporting lemma. Use the sum together with the difference to calibrate the factor four. Read first: L-goldbach-reflect-isometry."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8430,8 +8430,8 @@
         "en": "New route · Theta reflection · TH-0017 · Complementary additive twists leave a single target phase"
       },
       "brief": {
-        "zh": "为双方使用同一相位时保留目标频率 n。",
-        "en": "Factor out the target phase when both inputs have the same twist."
+        "zh": "配套引理。为双方使用同一相位时保留目标频率 n。",
+        "en": "Supporting lemma. Factor out the target phase when both inputs have the same twist."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8451,8 +8451,8 @@
         "en": "New route · Theta reflection · TH-0018 · Inverse powers equal conjugate powers on the unit circle"
       },
       "brief": {
-        "zh": "把傅里叶反射式中的反号频率转成共轭时核查单位模前提。 建议先读 L-goldbach-reflection-phase。",
-        "en": "Check unit norm before conjugating the Fourier reflection formula. Read first: L-goldbach-reflection-phase."
+        "zh": "配套引理。把傅里叶反射式中的反号频率转成共轭时核查单位模前提。 建议先读 L-goldbach-reflection-phase。",
+        "en": "Supporting lemma. Check unit norm before conjugating the Fourier reflection formula. Read first: L-goldbach-reflection-phase."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8474,8 +8474,8 @@
         "en": "New route · Odd-character interference · OC-0029 · Positivity of the odd-character normalization"
       },
       "brief": {
-        "zh": "先确认平均因子为正再比较有符号和。",
-        "en": "Establish the sign before comparing signed sums."
+        "zh": "配套引理。先确认平均因子为正再比较有符号和。",
+        "en": "Supporting lemma. Establish the sign before comparing signed sums."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8495,8 +8495,8 @@
         "en": "New route · Odd-character interference · OC-0030 · Exact conductor loss for powers of two"
       },
       "brief": {
-        "zh": "模数降至 2 或 1 时无奇特征。其余项为截断的几何级数。",
-        "en": "Remove quotient moduli one and two and sum the remaining geometric progression."
+        "zh": "中间里程碑。模数降至 2 或 1 时无奇特征。其余项为截断的几何级数。",
+        "en": "Intermediate milestone. Remove quotient moduli one and two and sum the remaining geometric progression."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8516,8 +8516,8 @@
         "en": "New route · Odd-character interference · OC-0031 · Effective threshold for the dyadic conductor correction"
       },
       "brief": {
-        "zh": "给固定正裕量分配可检查的导子修正预算。 建议先读 L-goldbach-conductor-dyadic-sum。",
-        "en": "Allocate an explicit part of the positive margin to conductor loss. Read first: L-goldbach-conductor-dyadic-sum."
+        "zh": "配套引理。给固定正裕量分配可检查的导子修正预算。 建议先读 L-goldbach-conductor-dyadic-sum。",
+        "en": "Supporting lemma. Allocate an explicit part of the positive margin to conductor loss. Read first: L-goldbach-conductor-dyadic-sum."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8539,8 +8539,8 @@
         "en": "New route · Odd-character interference · OC-0032 · Odd sign projection is idempotent"
       },
       "brief": {
-        "zh": "这是奇特征正交算子的有限模型，先核对因子二。",
-        "en": "Check the half-normalization on the finite involution model."
+        "zh": "配套引理。这是奇特征正交算子的有限模型，先核对因子二。",
+        "en": "Supporting lemma. Check the half-normalization on the finite involution model."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8560,8 +8560,8 @@
         "en": "New route · Odd-character interference · OC-0033 · Identify antisymmetry of the odd projection"
       },
       "brief": {
-        "zh": "反号矩阵投影的像将在单位群上实现。 建议先读 L-goldbach-conductor-odd-split。",
-        "en": "Use this image condition for negation on the unit group. Read first: L-goldbach-conductor-odd-split."
+        "zh": "配套引理。反号矩阵投影的像将在单位群上实现。 建议先读 L-goldbach-conductor-odd-split。",
+        "en": "Supporting lemma. Use this image condition for negation on the unit group. Read first: L-goldbach-conductor-odd-split."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8583,8 +8583,8 @@
         "en": "New route · Odd-character interference · OC-0034 · Odd functions vanish at sign-fixed points"
       },
       "brief": {
-        "zh": "用于解释小模数的特殊项。 建议先读 L-goldbach-conductor-odd-image。",
-        "en": "Use at exceptional moduli with sign-fixed units. Read first: L-goldbach-conductor-odd-image."
+        "zh": "配套引理。用于解释小模数的特殊项。 建议先读 L-goldbach-conductor-odd-image。",
+        "en": "Supporting lemma. Use at exceptional moduli with sign-fixed units. Read first: L-goldbach-conductor-odd-image."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8606,8 +8606,8 @@
         "en": "New route · Odd-character interference · OC-0035 · Translate the strict conductor cutoff exactly"
       },
       "brief": {
-        "zh": "实幂与整数比较接轨，等号必须分配到低导子侧。",
-        "en": "Match the real-power cutoff, placing equality on the discarded side."
+        "zh": "配套引理。实幂与整数比较接轨，等号必须分配到低导子侧。",
+        "en": "Supporting lemma. Match the real-power cutoff, placing equality on the discarded side."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8627,8 +8627,8 @@
         "en": "New route · Odd-character interference · OC-0036 · Express the closed symmetric height window"
       },
       "brief": {
-        "zh": "用两条单侧条件构造闭窗，保留端点副本。",
-        "en": "Construct the window with both endpoints included."
+        "zh": "配套引理。用两条单侧条件构造闭窗，保留端点副本。",
+        "en": "Supporting lemma. Construct the window with both endpoints included."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8648,8 +8648,8 @@
         "en": "New route · Odd-character interference · OC-0037 · Linear phase deviation for nearby zeros"
       },
       "brief": {
-        "zh": "沿单位圆弧积分或用正弦界；取 x=log N 标定近邻尺度。 建议先读 L-goldbach-zero-phase-product。",
-        "en": "Use the unit circle chord bound, then take x=log N. Read first: L-goldbach-zero-phase-product."
+        "zh": "配套引理。沿单位圆弧积分或用正弦界；取 x=log N 标定近邻尺度。 建议先读 L-goldbach-zero-phase-product。",
+        "en": "Supporting lemma. Use the unit circle chord bound, then take x=log N. Read first: L-goldbach-zero-phase-product."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8671,8 +8671,8 @@
         "en": "New route · Odd-character interference · OC-0038 · Quadratic real-part loss for near frequencies"
       },
       "brief": {
-        "zh": "有符号和只取实部时应保存二阶误差。",
-        "en": "Preserve second-order accuracy in the real part."
+        "zh": "配套引理。有符号和只取实部时应保存二阶误差。",
+        "en": "Supporting lemma. Preserve second-order accuracy in the real part."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8692,8 +8692,8 @@
         "en": "New route · Odd-character interference · OC-0039 · Real interference with complex Mellin weights"
       },
       "brief": {
-        "zh": "保留虚部引起的正弦项，以便分别估计近邻与远邻。 建议先读 L-goldbach-zero-phase-product。",
-        "en": "Retain the sine contribution of the imaginary weight product. Read first: L-goldbach-zero-phase-product."
+        "zh": "配套引理。保留虚部引起的正弦项，以便分别估计近邻与远邻。 建议先读 L-goldbach-zero-phase-product。",
+        "en": "Supporting lemma. Retain the sine contribution of the imaginary weight product. Read first: L-goldbach-zero-phase-product."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8715,8 +8715,8 @@
         "en": "New route · Odd-character interference · OC-0040 · Product error when replacing a nearby weight"
       },
       "brief": {
-        "zh": "把一个邻点的权换到中心后量化误差。",
-        "en": "Factor the difference before using regularity of the Mellin weight."
+        "zh": "配套引理。把一个邻点的权换到中心后量化误差。",
+        "en": "Supporting lemma. Factor the difference before using regularity of the Mellin weight."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8736,8 +8736,8 @@
         "en": "New route · Odd-character interference · OC-0041 · Coherent energy budget inside one zero cluster"
       },
       "brief": {
-        "zh": "用 Cauchy–Schwarz 保留簇内重数代价。",
-        "en": "Use Cauchy–Schwarz without dropping multiplicities."
+        "zh": "配套引理。用 Cauchy–Schwarz 保留簇内重数代价。",
+        "en": "Supporting lemma. Use Cauchy–Schwarz without dropping multiplicities."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8757,8 +8757,8 @@
         "en": "New route · Odd-character interference · OC-0042 · Pairwise distances measure loss of coherence"
       },
       "brief": {
-        "zh": "证明精确恒等式，保留相位离散带来的能量下降。 建议先读 L-goldbach-cluster-coherent-energy。",
-        "en": "Quantify the deficit when the phase vectors do not coincide. Read first: L-goldbach-cluster-coherent-energy."
+        "zh": "中间里程碑。证明精确恒等式，保留相位离散带来的能量下降。 建议先读 L-goldbach-cluster-coherent-energy。",
+        "en": "Intermediate milestone. Quantify the deficit when the phase vectors do not coincide. Read first: L-goldbach-cluster-coherent-energy."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8780,8 +8780,8 @@
         "en": "New route · Odd-character interference · OC-0043 · Recover intercluster interference from block amplitudes"
       },
       "brief": {
-        "zh": "先在每个簇内求复和，再取簇间交叉，避免过早取绝对值。 建议先读 L-goldbach-zero-index-cross。",
-        "en": "Aggregate complex amplitudes before taking cross terms between clusters. Read first: L-goldbach-zero-index-cross."
+        "zh": "配套引理。先在每个簇内求复和，再取簇间交叉，避免过早取绝对值。 建议先读 L-goldbach-zero-index-cross。",
+        "en": "Supporting lemma. Aggregate complex amplitudes before taking cross terms between clusters. Read first: L-goldbach-zero-index-cross."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8803,8 +8803,8 @@
         "en": "New route · Odd-character interference · OC-0044 · Positive-spectrum upper bound for a fixed vector"
       },
       "brief": {
-        "zh": "负特征值有利于目标；只在上界中舍弃负谱。",
-        "en": "Discard negative eigenvalues only for the required upper bound."
+        "zh": "配套引理。负特征值有利于目标；只在上界中舍弃负谱。",
+        "en": "Supporting lemma. Discard negative eigenvalues only for the required upper bound."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8824,8 +8824,8 @@
         "en": "New route · Odd-character interference · OC-0045 · Charge high positive spectral modes separately"
       },
       "brief": {
-        "zh": "把危险方向的投影质量和谱超额相乘。 建议先读 L-goldbach-signed-positive-spectrum。",
-        "en": "Charge the spectral excess only against the projected vector mass. Read first: L-goldbach-signed-positive-spectrum."
+        "zh": "配套引理。把危险方向的投影质量和谱超额相乘。 建议先读 L-goldbach-signed-positive-spectrum。",
+        "en": "Supporting lemma. Charge the spectral excess only against the projected vector mass. Read first: L-goldbach-signed-positive-spectrum."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8847,8 +8847,8 @@
         "en": "New route · Odd-character interference · OC-0046 · A two-mode counterexample to using the norm as the signed form"
       },
       "brief": {
-        "zh": "构造负特征方向，检查范数与单侧上界的方向。",
-        "en": "Choose the negative eigendirection to calibrate the interpretation of the norm."
+        "zh": "配套引理。构造负特征方向，检查范数与单侧上界的方向。",
+        "en": "Supporting lemma. Choose the negative eigendirection to calibrate the interpretation of the norm."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8868,8 +8868,8 @@
         "en": "New route · Theta reflection · TH-0019 · Rescale a norm error by a positive common factor"
       },
       "brief": {
-        "zh": "用同一 A 除算术差和误差两侧。",
-        "en": "Divide both the arithmetic discrepancy and its error by the same scale."
+        "zh": "配套引理。用同一 A 除算术差和误差两侧。",
+        "en": "Supporting lemma. Divide both the arithmetic discrepancy and its error by the same scale."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8889,8 +8889,8 @@
         "en": "New route · Theta reflection · TH-0020 · Quantify bias from mismatched normalizations"
       },
       "brief": {
-        "zh": "在局部测度核对中追踪两侧尺度差产生的附加项。",
-        "en": "Track the extra negative-channel term from unequal local normalizations."
+        "zh": "配套引理。在局部测度核对中追踪两侧尺度差产生的附加项。",
+        "en": "Supporting lemma. Track the extra negative-channel term from unequal local normalizations."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8910,8 +8910,8 @@
         "en": "New route · Theta reflection · TH-0021 · Positivity of the finite local normalization"
       },
       "brief": {
-        "zh": "用于允许有限多个坏素点的公共归一化因子。",
-        "en": "Use for the finite product over exceptional places."
+        "zh": "配套引理。用于允许有限多个坏素点的公共归一化因子。",
+        "en": "Supporting lemma. Use for the finite product over exceptional places."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8931,8 +8931,8 @@
         "en": "New route · Theta reflection · TH-0022 · One vanishing local factor kills the finite product"
       },
       "brief": {
-        "zh": "诊断预指定测试数据在哪个坏点可能失去非零性。",
-        "en": "Detect a local obstruction for prescribed test data."
+        "zh": "配套引理。诊断预指定测试数据在哪个坏点可能失去非零性。",
+        "en": "Supporting lemma. Detect a local obstruction for prescribed test data."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8952,8 +8952,8 @@
         "en": "New route · Theta reflection · TH-0023 · Chebyshev mass of the interior prime block"
       },
       "brief": {
-        "zh": "区间为 [x/2,2x/3]。由切比雪夫 θ 函数的素数定理及两端误差推出；此处只需要一维素数分布。",
-        "en": "Subtract the two Chebyshev theta estimates at x/2 and 2x/3; only one-dimensional prime distribution is needed."
+        "zh": "中间里程碑。区间为 [x/2,2x/3]。由切比雪夫 θ 函数的素数定理及两端误差推出；此处只需要一维素数分布。",
+        "en": "Intermediate milestone. Subtract the two Chebyshev theta estimates at x/2 and 2x/3; only one-dimensional prime distribution is needed."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8973,8 +8973,8 @@
         "en": "New route · Theta reflection · TH-0024 · Transfer a short prime block into the first moment"
       },
       "brief": {
-        "zh": "重排为有序素数对；块内素数均为奇数，其和在 [x,2x]，两加数均在和的中心窗。对角只计一次。 建议先读 L-goldbach-central-window-reflection。",
-        "en": "Reindex ordered prime pairs by their sum. The two summands lie in the central window and all output sums are even. Read first: L-goldbach-central-window-reflection."
+        "zh": "中间里程碑。重排为有序素数对；块内素数均为奇数，其和在 [x,2x]，两加数均在和的中心窗。对角只计一次。 建议先读 L-goldbach-central-window-reflection。",
+        "en": "Intermediate milestone. Reindex ordered prime pairs by their sum. The two summands lie in the central window and all output sums are even. Read first: L-goldbach-central-window-reflection."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -8996,8 +8996,8 @@
         "en": "New route · Theta reflection · TH-0025 · First moment of central prime mass on even targets"
       },
       "brief": {
-        "zh": "合并窄素数块质量和一阶矩转移。该结论允许某些偶数的卷积为零。 建议先读 L-goldbach-central-block-prime-input, L-goldbach-central-block-moment-transfer。",
-        "en": "Combine block mass with the ordered-pair injection. Individual targets may still have zero mass. Read first: L-goldbach-central-block-prime-input, L-goldbach-central-block-moment-transfer."
+        "zh": "中间里程碑。合并窄素数块质量和一阶矩转移。该结论允许某些偶数的卷积为零。 建议先读 L-goldbach-central-block-prime-input, L-goldbach-central-block-moment-transfer。",
+        "en": "Intermediate milestone. Combine block mass with the ordered-pair injection. Individual targets may still have zero mass. Read first: L-goldbach-central-block-prime-input, L-goldbach-central-block-moment-transfer."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -9020,8 +9020,8 @@
         "en": "New route · Theta reflection · TH-0026 · Upper-bound sieve for the central log-weighted correlation"
       },
       "brief": {
-        "zh": "对 p 与 n−p 做二元上界筛，再恢复对数权。它约束表示数的尖峰，对没有表示的偶数仍然成立。",
-        "en": "Apply a two-dimensional upper-bound sieve and restore log weights. This controls spikes and allows zero counts."
+        "zh": "中间里程碑。对 p 与 n−p 做二元上界筛，再恢复对数权。它约束表示数的尖峰，对没有表示的偶数仍然成立。 建议先读 L-goldbach-sieve-residue-boundary, L-goldbach-sieve-lcm-quadratic。",
+        "en": "Intermediate milestone. Apply a two-dimensional upper-bound sieve and restore log weights. This controls spikes and allows zero counts. Read first: L-goldbach-sieve-residue-boundary, L-goldbach-sieve-lcm-quadratic."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -9029,7 +9029,10 @@
       "imports": [],
       "track": "theta-reflection",
       "role": "lemma",
-      "depends_on": []
+      "depends_on": [
+        "L-goldbach-sieve-residue-boundary",
+        "L-goldbach-sieve-lcm-quadratic"
+      ]
     },
     {
       "id": "L-goldbach-central-factor-square",
@@ -9041,8 +9044,8 @@
         "en": "New route · Theta reflection · TH-0027 · Bound the mean square of the local singular factor"
       },
       "brief": {
-        "zh": "按平方自由因子展开乘积，交换因子和与倍数计数；局部增量除以 p 后为 O(p⁻²)。",
-        "en": "Expand over squarefree divisors, then count multiples. The local increment divided by p is summable."
+        "zh": "中间里程碑。按平方自由因子展开乘积，交换因子和与倍数计数；局部增量除以 p 后为 O(p⁻²)。 建议先读 L-goldbach-sieve-euler-increment, L-goldbach-sieve-squarefree-average。",
+        "en": "Intermediate milestone. Expand over squarefree divisors, then count multiples. The local increment divided by p is summable. Read first: L-goldbach-sieve-euler-increment, L-goldbach-sieve-squarefree-average."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -9050,7 +9053,10 @@
       "imports": [],
       "track": "theta-reflection",
       "role": "lemma",
-      "depends_on": []
+      "depends_on": [
+        "L-goldbach-sieve-euler-increment",
+        "L-goldbach-sieve-squarefree-average"
+      ]
     },
     {
       "id": "L-goldbach-central-second-moment",
@@ -9062,8 +9068,8 @@
         "en": "New route · Theta reflection · TH-0028 · Cubic second-moment bound for central prime mass"
       },
       "brief": {
-        "zh": "将逐点上界平方，再使用局部因子二阶均值，控制一阶矩集中在少数目标上的可能性。 建议先读 L-goldbach-central-sieve-upper, L-goldbach-central-factor-square。",
-        "en": "Square the sieve envelope and average the local factor to control concentration. Read first: L-goldbach-central-sieve-upper, L-goldbach-central-factor-square."
+        "zh": "中间里程碑。将逐点上界平方，再使用局部因子二阶均值，控制一阶矩集中在少数目标上的可能性。 建议先读 L-goldbach-central-sieve-upper, L-goldbach-central-factor-square。",
+        "en": "Intermediate milestone. Square the sieve envelope and average the local factor to control concentration. Read first: L-goldbach-central-sieve-upper, L-goldbach-central-factor-square."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -9086,8 +9092,8 @@
         "en": "New route · Theta reflection · TH-0029 · Linear central mass on a positive proportion of even targets"
       },
       "brief": {
-        "zh": "用一阶矩给出总质量，再用二阶矩及 Cauchy–Schwarz 排除过度集中。剩余例外集仍是逐点路线的缺口。 建议先读 L-goldbach-central-first-moment, L-goldbach-central-second-moment。",
-        "en": "Apply a second-moment argument to the superlevel set. Exceptional even targets remain outside the conclusion. Read first: L-goldbach-central-first-moment, L-goldbach-central-second-moment."
+        "zh": "中间里程碑。用一阶矩给出总质量，再用二阶矩及 Cauchy–Schwarz 排除过度集中。剩余例外集仍是逐点路线的缺口。 建议先读 L-goldbach-central-first-moment, L-goldbach-central-second-moment。 建议先读 L-goldbach-sieve-moment-superlevel。",
+        "en": "Intermediate milestone. Apply a second-moment argument to the superlevel set. Exceptional even targets remain outside the conclusion. Read first: L-goldbach-central-first-moment, L-goldbach-central-second-moment. Read first: L-goldbach-sieve-moment-superlevel."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -9097,7 +9103,8 @@
       "role": "lemma",
       "depends_on": [
         "L-goldbach-central-first-moment",
-        "L-goldbach-central-second-moment"
+        "L-goldbach-central-second-moment",
+        "L-goldbach-sieve-moment-superlevel"
       ]
     },
     {
@@ -9110,8 +9117,8 @@
         "en": "New route · Odd-character interference · OC-0047 · Mean-square control of the mixed truncation error"
       },
       "brief": {
-        "zh": "截断内外的振幅按同一特征配对；应用跨特征 Cauchy–Schwarz，可避免要求所有特征都有同样好的尾界。 建议先读 L-goldbach-cross-tail-mixed。",
-        "en": "Pair retained and omitted amplitudes at the same character. Use an averaged tail budget instead of a uniform estimate per character. Read first: L-goldbach-cross-tail-mixed."
+        "zh": "中间里程碑。截断内外的振幅按同一特征配对；应用跨特征 Cauchy–Schwarz，可避免要求所有特征都有同样好的尾界。 建议先读 L-goldbach-cross-tail-mixed。",
+        "en": "Intermediate milestone. Pair retained and omitted amplitudes at the same character. Use an averaged tail budget instead of a uniform estimate per character. Read first: L-goldbach-cross-tail-mixed."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -9127,14 +9134,14 @@
       "id": "L-goldbach-pp-uniform-removal",
       "file": "lean/PEqualNP/Outside/L_goldbach_pp_uniform_removal.lean",
       "module": "PEqualNP.Outside.L_goldbach_pp_uniform_removal",
-      "statement": "let A := fun k : ℕ => if (Finset.Icc 2 (Nat.log 2 k)).any (fun a => decide (k.minFac ^ a=k)) then Real.log (k:ℝ) else 0; ∀ ε : ℝ, 0<ε → ∃ X : ℕ, ∀ n≥X, ∀ v : ℕ → ℝ, (∀ k, |v k|≤1) → |(∑ k ∈ Finset.range (n+1), A k*v k*Real.log ((n+1:ℕ):ℝ))/(n:ℝ)| < ε",
+      "statement": "let A := fun k : ℕ => if 0 < ((Finset.Icc 2 (Nat.log 2 k)).filter (fun a => k.minFac ^ a=k)).card then Real.log (k:ℝ) else 0; ∀ ε : ℝ, 0<ε → ∃ X : ℕ, ∀ n≥X, ∀ v : ℕ → ℝ, (∀ k, |v k|≤1) → |(∑ k ∈ Finset.range (n+1), A k*v k*Real.log ((n+1:ℕ):ℝ))/(n:ℝ)| < ε",
       "plain_statement": {
         "zh": "新路线 · 奇特征干涉 · OC-0048 · 对所有有界中心权统一消去真幂污染引理",
         "en": "New route · Odd-character interference · OC-0048 · Uniform removal of proper-power pollution for bounded windows"
       },
       "brief": {
-        "zh": "阈值须先于权 v 选定。按指数分离平方与高次幂，再将根号级支撑上界乘上对数损失。 建议先读 L-goldbach-pp-count-squares, L-goldbach-pp-count-cubes, L-goldbach-pp-exp-cutoff。",
-        "en": "Choose the threshold before the window. Separate squares from higher powers and absorb logarithmic losses. Read first: L-goldbach-pp-count-squares, L-goldbach-pp-count-cubes, L-goldbach-pp-exp-cutoff."
+        "zh": "中间里程碑。阈值须先于权 v 选定。按指数分离平方与高次幂，再将根号级支撑上界乘上对数损失。 建议先读 L-goldbach-pp-count-squares, L-goldbach-pp-count-cubes, L-goldbach-pp-exp-cutoff。",
+        "en": "Intermediate milestone. Choose the threshold before the window. Separate squares from higher powers and absorb logarithmic losses. Read first: L-goldbach-pp-count-squares, L-goldbach-pp-count-cubes, L-goldbach-pp-exp-cutoff."
       },
       "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
       "program": "correlation",
@@ -9147,6 +9154,203 @@
         "L-goldbach-pp-count-cubes",
         "L-goldbach-pp-exp-cutoff"
       ]
+    },
+    {
+      "id": "L-goldbach-sieve-residue-dimension",
+      "file": "lean/PEqualNP/Outside/L_goldbach_sieve_residue_dimension.lean",
+      "module": "PEqualNP.Outside.L_goldbach_sieve_residue_dimension",
+      "statement": "∀ n p : ℕ, p.Prime → ((Finset.range p).filter (fun k => k%p=0 ∨ k%p=n%p)).card = if p∣n then 1 else 2",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0030 · 双线性筛的局部禁类重合判别引理",
+        "en": "New route · Theta reflection · TH-0030 · Local dimension of the two-residue sieve"
+      },
+      "brief": {
+        "zh": "配套引理。每个素点排除 0 与 n 两个余类，在 p|n 时重合。所得密度决定筛的局部修正。",
+        "en": "Supporting lemma. Track the loss of one excluded class at primes dividing the target."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-sieve-residue-crt",
+      "file": "lean/PEqualNP/Outside/L_goldbach_sieve_residue_crt.lean",
+      "module": "PEqualNP.Outside.L_goldbach_sieve_residue_crt",
+      "statement": "let r := fun n q : ℕ => ((Finset.range q).filter (fun k => q ∣ k*(k+n))).card; ∀ n a b : ℕ, 0<a → 0<b → a.Coprime b → r n (a*b)=r n a*r n b",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0031 · 互素筛模的禁类根数乘法性引理",
+        "en": "New route · Theta reflection · TH-0031 · CRT multiplication of simultaneous root counts"
+      },
+      "brief": {
+        "zh": "中间里程碑。用 k↦−k 的余类代换处理正负号，在复合模上对两个线性因子的乘积求根。 建议先读 L-goldbach-sieve-residue-dimension。",
+        "en": "Intermediate milestone. Use CRT on roots of X(X+n); sign reversal matches the two excluded classes. Read first: L-goldbach-sieve-residue-dimension."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-sieve-residue-dimension"
+      ]
+    },
+    {
+      "id": "L-goldbach-sieve-residue-boundary",
+      "file": "lean/PEqualNP/Outside/L_goldbach_sieve_residue_boundary.lean",
+      "module": "PEqualNP.Outside.L_goldbach_sieve_residue_boundary",
+      "statement": "let r := fun n q : ℕ => ((Finset.range q).filter (fun k => q ∣ k*(k+n))).card; ∀ x n q : ℕ, 0<q → |((((Finset.range x).filter (fun k => q ∣ k*(k+n))).card : ℝ) - (x:ℝ)*(r n q:ℝ)/q)| ≤ (r n q:ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0032 · 有限区间筛余项由局部根数控制引理",
+        "en": "New route · Theta reflection · TH-0032 · Bound the incomplete-period error by the number of roots"
+      },
+      "brief": {
+        "zh": "中间里程碑。每个根类在长度 x 的区间中出现 ⌊x/q⌋ 或 ⌈x/q⌉ 次；误差按根类数收费。 建议先读 L-goldbach-sieve-residue-crt。",
+        "en": "Intermediate milestone. Count full periods and one incomplete period for each root class. Read first: L-goldbach-sieve-residue-crt."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-sieve-residue-crt"
+      ]
+    },
+    {
+      "id": "L-goldbach-sieve-square-majorant",
+      "file": "lean/PEqualNP/Outside/L_goldbach_sieve_square_majorant.lean",
+      "module": "PEqualNP.Outside.L_goldbach_sieve_square_majorant",
+      "statement": "∀ (P m : ℕ) (D : Finset ℕ) (λw : ℕ → ℝ), 1∈D → λw 1=1 → (∀ d ∈ D, d∣P) → (if m.Coprime P then (1:ℝ) else 0) ≤ (∑ d ∈ D.filter (fun d => d∣m), λw d)^2",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0033 · Selberg 平方权支配双素筛的幸存指标引理",
+        "en": "New route · Theta reflection · TH-0033 · Selberg square majorizes the sieve survivor indicator"
+      },
+      "brief": {
+        "zh": "配套引理。对互素的幸存者，唯一共同因子是 1。可取 m 为两个线性型的乘积。",
+        "en": "Supporting lemma. For a survivor only divisor one contributes. Apply to the product of the two linear forms."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-sieve-lcm-quadratic",
+      "file": "lean/PEqualNP/Outside/L_goldbach_sieve_lcm_quadratic.lean",
+      "module": "PEqualNP.Outside.L_goldbach_sieve_lcm_quadratic",
+      "statement": "∀ (x : ℕ) (m : ℕ → ℕ) (D : Finset ℕ) (w : ℕ → ℝ), (∑ k ∈ Finset.range x, (∑ d ∈ D.filter (fun d => d∣m k), w d)^2) = ∑ a ∈ D, ∑ b ∈ D, w a*w b*(((Finset.range x).filter (fun k => Nat.lcm a b∣m k)).card : ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0034 · 筛平方和展开为最小公倍数二次型引理",
+        "en": "New route · Theta reflection · TH-0034 · Expand Selberg's square into an lcm quadratic form"
+      },
+      "brief": {
+        "zh": "中间里程碑。这是局部根数估计进入上界筛的接口；保留交叉权的符号。 建议先读 L-goldbach-sieve-square-majorant。",
+        "en": "Intermediate milestone. Keep signed cross weights while routing divisibility through the lcm. Read first: L-goldbach-sieve-square-majorant."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-sieve-square-majorant"
+      ]
+    },
+    {
+      "id": "L-goldbach-sieve-euler-increment",
+      "file": "lean/PEqualNP/Outside/L_goldbach_sieve_euler_increment.lean",
+      "module": "PEqualNP.Outside.L_goldbach_sieve_euler_increment",
+      "statement": "∀ p : ℕ, p.Prime → 2<p → (((1+1/((p:ℝ)-2))^2-1)/(p:ℝ)) ≤ 9/(p:ℝ)^2",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0035 · 局部因子平方增量具有可求和加权主控引理",
+        "en": "New route · Theta reflection · TH-0035 · Summable majorant for the squared local-factor increment"
+      },
+      "brief": {
+        "zh": "配套引理。在 p=3 处常数 9 达到等号。按倍数计数带来额外的 1/p。",
+        "en": "Supporting lemma. The constant is sharp at three. Counting multiples supplies the extra 1/p."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-sieve-divisor-expansion",
+      "file": "lean/PEqualNP/Outside/L_goldbach_sieve_divisor_expansion.lean",
+      "module": "PEqualNP.Outside.L_goldbach_sieve_divisor_expansion",
+      "statement": "let S := fun n : ℕ => ∏ p ∈ n.primeFactors.filter (fun p => 2<p), (1+1/((p:ℝ)-2)); ∀ n : ℕ, (S n)^2 = ∑ t ∈ (n.primeFactors.filter (fun p => 2<p)).powerset, ∏ p ∈ t, ((1+1/((p:ℝ)-2))^2-1)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0036 · 奇异因子平方展开为平方自由除数和引理",
+        "en": "New route · Theta reflection · TH-0036 · Squarefree expansion of the squared singular factor"
+      },
+      "brief": {
+        "zh": "配套引理。展开有限 Euler 乘积，空集对应常数项，每个子集对应一个平方自由约数。",
+        "en": "Supporting lemma. Expand the finite Euler product, including the empty subset for the constant term."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-sieve-squarefree-average",
+      "file": "lean/PEqualNP/Outside/L_goldbach_sieve_squarefree_average.lean",
+      "module": "PEqualNP.Outside.L_goldbach_sieve_squarefree_average",
+      "statement": "∀ (x : ℕ) (b : ℕ → ℝ), (∀ d, 0≤b d) → (∑ n ∈ Finset.Icc 1 x, ∑ d ∈ n.divisors, b d) ≤ (x:ℝ)*∑ d ∈ Finset.Icc 1 x, b d/(d:ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0037 · 以非负除数权交换倍数平均引理",
+        "en": "New route · Theta reflection · TH-0037 · Average nonnegative divisor weights over multiples"
+      },
+      "brief": {
+        "zh": "中间里程碑。对正整数求和避开 n=0。界 ⌊x/d⌋≤x/d 后没有每个除数的附加常数。 建议先读 L-goldbach-sieve-divisor-expansion。",
+        "en": "Intermediate milestone. Average over positive targets and use floor(x/d) ≤ x/d without a per-divisor additive error. Read first: L-goldbach-sieve-divisor-expansion."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-sieve-divisor-expansion"
+      ]
+    },
+    {
+      "id": "L-goldbach-sieve-moment-superlevel",
+      "file": "lean/PEqualNP/Outside/L_goldbach_sieve_moment_superlevel.lean",
+      "module": "PEqualNP.Outside.L_goldbach_sieve_moment_superlevel",
+      "statement": "∀ (s : Finset ℕ) (a : ℕ → ℝ) (t : ℝ), (∀ i ∈ s, 0≤a i) → 0≤t → (s.card:ℝ)*t ≤ ∑ i ∈ s, a i → ((∑ i ∈ s, a i)-(s.card:ℝ)*t)^2 ≤ ((s.filter (fun i => t≤a i)).card:ℝ)*(∑ i ∈ s, (a i)^2)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0038 · 带阈值的二阶矩超水平集下界引理",
+        "en": "New route · Theta reflection · TH-0038 · Thresholded second-moment lower bound"
+      },
+      "brief": {
+        "zh": "配套引理。先扣除低于阈值者能承担的总质量，再对高值集合应用 Cauchy–Schwarz。",
+        "en": "Supporting lemma. Remove the low-mass budget before applying Cauchy–Schwarz on the superlevel set."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
     }
   ],
   "tracks": [
@@ -9157,8 +9361,8 @@
         "en": "Theta lifts and prime reflection"
       },
       "description": {
-        "zh": "固定测试向量，比较正负反射范数；核心缺口是同一归一化下的算术匹配与严格间隔。",
-        "en": "Fix both test vectors and compare their norms with one normalization. Arithmetic matching and strict separation remain open."
+        "zh": "固定测试向量，比较正负反射范数；核心缺口是同一归一化下的算术匹配与严格间隔。 建议从中心卷积一阶矩、上界筛或局部因子二阶均值开始；这些中间结果允许剩余例外。",
+        "en": "Fix both test vectors and compare their norms with one normalization. Arithmetic matching and strict separation remain open. Start with the central first moment, the sieve envelope or the local second moment; these allow exceptional targets."
       },
       "feeds": [
         "representations"
