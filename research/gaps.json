@@ -10820,6 +10820,122 @@
         "L-goldbach-coset-phase-decimation",
         "L-goldbach-coset-twist-l2"
       ]
+    },
+    {
+      "id": "L-goldbach-diagonal-abel-error",
+      "file": "lean/PEqualNP/Outside/L_goldbach_diagonal_abel_error.lean",
+      "module": "PEqualNP.Outside.L_goldbach_diagonal_abel_error",
+      "statement": "let p := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let θ := fun n : ℕ => ∑ k ∈ Finset.range (n+1), p k; let g := fun (φ : ℝ → ℝ) (n k : ℕ) => Real.log (k:ℝ)*(φ ((k:ℝ)/n))^2; ∀ (φ : ℝ → ℝ) (n : ℕ), 1≤n → (∀ u : ℝ, u < 1/3 ∨ 2/3 < u → φ u=0) → (∑ k ∈ Finset.Icc 1 n, (p k-1)*g φ n k) = - ∑ k ∈ Finset.range n, (θ k-(k:ℝ))*(g φ n (k+1)-g φ n k)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0080 · 用切比雪夫前缀误差精确表示加权素数对角偏差引理",
+        "en": "New route · Odd-character interference · OC-0080 · Abel identity for the weighted prime diagonal discrepancy"
+      },
+      "brief": {
+        "zh": "在 k=n 的端点窗口为零，左端切比雪夫误差也为零。公式允许使用一维素数定理估计对角。",
+        "en": "The terminal weight vanishes and the initial Chebyshev discrepancy is zero. Telescope the weighted prime discrepancy."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-diagonal-window-variation",
+      "file": "lean/PEqualNP/Outside/L_goldbach_diagonal_window_variation.lean",
+      "module": "PEqualNP.Outside.L_goldbach_diagonal_window_variation",
+      "statement": "let g := fun (φ : ℝ → ℝ) (n k : ℕ) => Real.log (k:ℝ)*(φ ((k:ℝ)/n))^2; ∀ φ : ℝ → ℝ, ContDiff ℝ 1 φ → (∀ u : ℝ, u < 1/3 ∨ 2/3 < u → φ u=0) → ∃ K : ℝ, 0<K ∧ ∀ n : ℕ, 2≤n → (∑ k ∈ Finset.range n, |g φ n (k+1)-g φ n k|) ≤ K*Real.log (2*(n:ℝ))",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0081 · 对角离散权的总变差只损失一个对数引理",
+        "en": "New route · Odd-character interference · OC-0081 · Total variation of the discrete logarithmic diagonal window"
+      },
+      "brief": {
+        "zh": "将 log k 与平滑窗分别作差。导数的尺度为 1/n，中心支撑保证 log 的导数避开原点。",
+        "en": "Difference the logarithm and the smooth cutoff separately, using central support to bound the derivative away from zero."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-diagonal-riemann-constant",
+      "file": "lean/PEqualNP/Outside/L_goldbach_diagonal_riemann_constant.lean",
+      "module": "PEqualNP.Outside.L_goldbach_diagonal_riemann_constant",
+      "statement": "let g := fun (φ : ℝ → ℝ) (n k : ℕ) => Real.log (k:ℝ)*(φ ((k:ℝ)/n))^2; let c := fun φ : ℝ → ℝ => intervalIntegral (fun u : ℝ => (φ u)^2) 0 1 MeasureTheory.volume; let b := fun φ : ℝ → ℝ => intervalIntegral (fun u : ℝ => (φ u)^2*Real.log u) 0 1 MeasureTheory.volume; ∀ φ : ℝ → ℝ, ContDiff ℝ 1 φ → (∀ u : ℝ, u < 1/3 ∨ 2/3 < u → φ u=0) → ∃ K : ℝ, 0<K ∧ ∀ n : ℕ, 2≤n → |(∑ k ∈ Finset.Icc 1 n, g φ n k)/(n:ℝ) - (c φ*Real.log (n:ℝ)+b φ)| ≤ K*Real.log (2*(n:ℝ))/(n:ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0082 · 等距采样恢复对角主项中的常数项引理",
+        "en": "New route · Odd-character interference · OC-0082 · Recover the constant term of the diagonal by a Riemann-sum estimate"
+      },
+      "brief": {
+        "zh": "在中心窗上拆 log k=log n+log(k/n)。控制两个离散积分误差，保留 bφ 的符号与归一化。 建议先读 L-goldbach-diagonal-window-variation。",
+        "en": "Split the logarithm inside the central window, then bound the two quadrature errors independently. Read first: L-goldbach-diagonal-window-variation."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-diagonal-window-variation"
+      ]
+    },
+    {
+      "id": "L-goldbach-diagonal-square-power-budget",
+      "file": "lean/PEqualNP/Outside/L_goldbach_diagonal_square_power_budget.lean",
+      "module": "PEqualNP.Outside.L_goldbach_diagonal_square_power_budget",
+      "statement": "let p := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let D := fun (φ : ℝ → ℝ) (n : ℕ) => (∑ k ∈ (Finset.range (n+1)).filter (fun k => k.Coprime n), (ArithmeticFunction.vonMangoldt k)^2*(φ ((k:ℝ)/n))^2)/(n:ℝ); ∃ K : ℝ, 0<K ∧ ∀ (n : ℕ) (φ : ℝ → ℝ), 2≤n → (∀ u, |φ u|≤1) → (∀ u : ℝ, u < 1/3 ∨ 2/3 < u → φ u=0) → |D φ n - (∑ k ∈ Finset.range (n+1), (p k)^2*(φ ((k:ℝ)/n))^2)/(n:ℝ)| ≤ K*(Real.log (2*(n:ℝ)))^3/Real.sqrt (n:ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0083 · 对角改用真素数时的归一化平方权损失引理",
+        "en": "New route · Odd-character interference · OC-0083 · Normalized squared-weight loss from replacing Mangoldt by prime weights"
+      },
+      "brief": {
+        "zh": "分别估计真幂平方权及被模数整除条件排除的素数质量，它们对差的符号相反。 建议先读 L-goldbach-primitive-ramified-square, L-goldbach-pp-count-squares, L-goldbach-pp-count-cubes。",
+        "en": "Separate the added proper powers from removed ramified primes; these enter with opposite signs. Read first: L-goldbach-primitive-ramified-square, L-goldbach-pp-count-squares, L-goldbach-pp-count-cubes."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-primitive-ramified-square",
+        "L-goldbach-pp-count-squares",
+        "L-goldbach-pp-count-cubes"
+      ]
+    },
+    {
+      "id": "L-goldbach-diagonal-quantitative-assembly",
+      "file": "lean/PEqualNP/Outside/L_goldbach_diagonal_quantitative_assembly.lean",
+      "module": "PEqualNP.Outside.L_goldbach_diagonal_quantitative_assembly",
+      "statement": "let p := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let θ := fun n : ℕ => ∑ k ∈ Finset.range (n+1), p k; let D := fun (φ : ℝ → ℝ) (n : ℕ) => (∑ k ∈ (Finset.range (n+1)).filter (fun k => k.Coprime n), (ArithmeticFunction.vonMangoldt k)^2*(φ ((k:ℝ)/n))^2)/(n:ℝ); let c := fun φ : ℝ → ℝ => intervalIntegral (fun u : ℝ => (φ u)^2) 0 1 MeasureTheory.volume; let b := fun φ : ℝ → ℝ => intervalIntegral (fun u : ℝ => (φ u)^2*Real.log u) 0 1 MeasureTheory.volume; (∃ A : ℝ, 0<A ∧ ∀ k : ℕ, 2≤k → |θ k-(k:ℝ)| ≤ A*Real.sqrt (k:ℝ)*(Real.log (2*(k:ℝ)))^2) → ∀ φ : ℝ → ℝ, ContDiff ℝ 1 φ → (∀ u, |φ u|≤1) → (∀ u : ℝ, u < 1/3 ∨ 2/3 < u → φ u=0) → ∃ K : ℝ, 0<K ∧ ∀ n : ℕ, 2≤n → |D φ n-(c φ*Real.log (n:ℝ)+b φ)| ≤ K*(Real.log (2*(n:ℝ)))^3/Real.sqrt (n:ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0084 · 一维切比雪夫平方根误差推出归一化对角的渐近式引理",
+        "en": "New route · Odd-character interference · OC-0084 · Transfer a one-dimensional square-root Chebyshev estimate to the diagonal"
+      },
+      "brief": {
+        "zh": "将一维解析输入明写为前提。将 Abel 变换、Riemann 和常数项及素数幂误差统一到同一尺度；没有使用二元素数对存在性。 建议先读 L-goldbach-diagonal-abel-error, L-goldbach-diagonal-window-variation, L-goldbach-diagonal-riemann-constant, L-goldbach-diagonal-square-power-budget。",
+        "en": "Keep the Chebyshev bound as an explicit input, combine variation, quadrature and prime-power loss on the same scale. Read first: L-goldbach-diagonal-abel-error, L-goldbach-diagonal-window-variation, L-goldbach-diagonal-riemann-constant, L-goldbach-diagonal-square-power-budget."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "conditional",
+      "depends_on": [
+        "L-goldbach-diagonal-abel-error",
+        "L-goldbach-diagonal-window-variation",
+        "L-goldbach-diagonal-riemann-constant",
+        "L-goldbach-diagonal-square-power-budget"
+      ]
     }
   ],
   "tracks": [
