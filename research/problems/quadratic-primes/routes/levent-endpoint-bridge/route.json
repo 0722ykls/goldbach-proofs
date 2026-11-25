@@ -1,0 +1,11 @@
+{
+  "id": "levent-endpoint-bridge",
+  "title": {
+    "zh": "中段节省的组合引理",
+    "en": "Bridge to middle-prime saving"
+  },
+  "description": {
+    "zh": "在同一无界尺度合并四个预算和两个精确恒等式。",
+    "en": "Combine four budgets and two exact identities on a common unbounded scale."
+  }
+}

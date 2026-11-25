@@ -1,0 +1,24 @@
+{
+  "id": "L-quadratic-primes-levent-root-prime-harmonic",
+  "file": "lean/PEqualNP/Outside/L_quadratic_primes_levent_root_prime_harmonic.lean",
+  "module": "PEqualNP.Outside.L_quadratic_primes_levent_root_prime_harmonic",
+  "statement": "let roots := fun a q : ℕ => (Finset.range q).filter (fun r => q ∣ r^2+a); let primes := fun x : ℕ => (Finset.Ioc x ((2*x)^2+1)).filter (fun p => Nat.Prime p ∧ p^100000 ≤ (2*x)^132301); ∃ X : ℕ, ∀ x ≥ X, (∑ p ∈ primes x, ((roots 1 p).card : ℝ) * Real.log (p : ℝ)/p) ≤ (2/5 : ℝ)*Real.log (x : ℝ)",
+  "plain_statement": {
+    "zh": "新路线 · Levent GRH 与自然扩张 · QP-0008 · 无条件控制整个中段的根加权素数调和和",
+    "en": "New route · Levent GRH and natural extensions · QP-0008 · Bound the root-weighted prime harmonic sum unconditionally"
+  },
+  "brief": {
+    "zh": "奇素数的根数为 0 或 2。模 4 素数定理与部分求和给出除以 log x 后的极限 0.32301，允许固定余量。",
+    "en": "Use the prime number theorem modulo four and partial summation. The limit after division by log x is 0.32301 and leaves room below 2/5."
+  },
+  "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/quadratic-primes-levent.md#levent-grh-inputs-and-scales",
+  "program": "correlation",
+  "imports": [],
+  "parallel": true,
+  "role": "target",
+  "depends_on": [
+    "L-quadratic-primes-levent-abel-reciprocal",
+    "L-quadratic-primes-levent-root-card-splitting",
+    "L-quadratic-primes-prime-divisors-mod-four"
+  ]
+}
