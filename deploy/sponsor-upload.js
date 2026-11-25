@@ -54,3 +54,60 @@ if (logoForm) {
     }
   });
 }
+
+const orderForm = document.querySelector('#sponsor-order');
+if (orderForm) {
+  const list = document.querySelector('#sponsor-sort-list');
+  const save = orderForm.querySelector('button');
+  const original = orderForm.elements.original.value;
+  let dragged = null;
+
+  function updateOrder() {
+    const entries = [...list.children];
+    for (const [index, entry] of entries.entries()) {
+      entry.querySelector('[data-move="-1"]').setAttribute('aria-disabled', index === 0);
+      entry.querySelector('[data-move="1"]').setAttribute('aria-disabled', index === entries.length - 1);
+    }
+    const order = entries.map(entry => entry.dataset.sponsorId).join(',');
+    orderForm.elements.order.value = order;
+    save.disabled = order === original;
+  }
+
+  list.addEventListener('dragstart', (event) => {
+    if (!event.target.matches('.drag-handle')) return;
+    dragged = event.target.closest('.submission');
+    event.dataTransfer.setData('text/plain', dragged.dataset.sponsorId);
+    event.dataTransfer.effectAllowed = 'move';
+    dragged.classList.add('dragging');
+  });
+  list.addEventListener('dragover', (event) => {
+    if (!dragged) return;
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+  });
+  list.addEventListener('drop', (event) => {
+    if (!dragged) return;
+    event.preventDefault();
+    const target = event.target.closest('.submission');
+    if (!target || dragged === target) return;
+    if (dragged.compareDocumentPosition(target) & Node.DOCUMENT_POSITION_FOLLOWING) target.after(dragged);
+    else target.before(dragged);
+    updateOrder();
+  });
+  list.addEventListener('dragend', () => {
+    dragged?.classList.remove('dragging');
+    dragged = null;
+  });
+  list.addEventListener('click', (event) => {
+    const move = event.target.closest('[data-move]');
+    if (!move || move.getAttribute('aria-disabled') === 'true') return;
+    const entry = move.closest('.submission');
+    if (move.dataset.move === '-1') entry.previousElementSibling.before(entry);
+    else entry.nextElementSibling.after(entry);
+    move.focus();
+    updateOrder();
+  });
+  for (const controls of list.querySelectorAll('.sort-controls')) controls.hidden = false;
+  orderForm.hidden = false;
+  updateOrder();
+}

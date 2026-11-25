@@ -16,6 +16,7 @@ DESK = "/auth/zhihu/sponsors"
 STYLE = "/sponsor-settings.css"
 SCRIPT = "/sponsor-upload.js"
 PUBLIC = "/sponsors/logo/"
+DISPLAY_ORDER = "display_position IS NULL, display_position, id"
 ORIGIN = "https://www.goldbach.tech"
 FILE_LIMIT = 4 * 1024 * 1024
 LIMIT = FILE_LIMIT + 16 * 1024
@@ -33,8 +34,11 @@ def setup(db):
     """)
     with db:
         db.execute("BEGIN IMMEDIATE")
-        if not any(row[1] == "website" for row in db.execute("PRAGMA table_info(sponsor_logos)")):
+        columns = {row[1] for row in db.execute("PRAGMA table_info(sponsor_logos)")}
+        if "website" not in columns:
             db.execute("ALTER TABLE sponsor_logos ADD COLUMN website TEXT NOT NULL DEFAULT ''")
+        if "display_position" not in columns:
+            db.execute("ALTER TABLE sponsor_logos ADD COLUMN display_position INTEGER")
 
 
 def bootstrap(db, profile, registered_profile, uid=None):
@@ -106,7 +110,7 @@ def logo_png(raw):
 
 def wall(path, lang, prefix):
     with closing(sqlite3.connect(path)) as db:
-        rows = db.execute("SELECT id,name,website FROM sponsor_logos WHERE state='approved' ORDER BY id").fetchall()
+        rows = db.execute(f"SELECT id,name,website FROM sponsor_logos WHERE state='approved' ORDER BY {DISPLAY_ORDER}").fetchall()
     cards = []
     for index, (ident, name, website) in enumerate(rows):
         alt = escape(name) if website else ""
@@ -221,6 +225,20 @@ def handle(method, path, params, headers, db, row, lang, redirect):
                 (decision,uid,int(time.time()),decision,params.get("id"),expected)).rowcount
             if not changed:
                 return msg(409, tr("状态已变更，请刷新。","State changed. Refresh the page."))
+        elif path == DESK + "/order":
+            if not admin:
+                return msg(403, tr("需要管理员权限。", "Administrator access required."))
+            original = params.get("original", "").split(",")
+            order = params.get("order", "").split(",")
+            db.execute("BEGIN IMMEDIATE")
+            current = [str(item[0]) for item in db.execute(
+                f"SELECT id FROM sponsor_logos WHERE state='approved' ORDER BY {DISPLAY_ORDER}")]
+            if original != current:
+                return msg(409, tr("展示列表已变更，请返回「已展示」重新排序。", "The display list changed. Reorder it from the Approved tab."))
+            if len(order) != len(current) or set(order) != set(current):
+                return msg(400, tr("排序数据不完整，请返回列表重试。", "The order is incomplete. Return to the list and retry."))
+            db.executemany("UPDATE sponsor_logos SET display_position=? WHERE id=?", enumerate(order))
+            return redirect(DESK + "?view=approved")
         else:
             return msg(404, "404")
         return redirect(DESK)
@@ -241,7 +259,8 @@ def handle(method, path, params, headers, db, row, lang, redirect):
             f'<p class="upload-feedback" role="alert" hidden></p>'
             f'<button class="primary">{tr("提交审核","Submit for review")}</button></form></section>')
     labels = {"pending":tr("待审核","Pending"),"approved":tr("已展示","Approved"),"rejected":tr("已拒绝","Rejected"),"withdrawn":tr("已撤下","Withdrawn")}
-    items = db.execute("SELECT id,name,state,website FROM sponsor_logos WHERE owner=? OR ? ORDER BY (state='pending') DESC,id DESC",
+    items = db.execute(f"""SELECT id,name,state,website FROM sponsor_logos WHERE owner=? OR ?
+        ORDER BY (state='pending') DESC, CASE WHEN state='approved' THEN 0 ELSE 1 END, {DISPLAY_ORDER}""",
                        (uid,bool(admin))).fetchall()
     selected = params.get("view")
     filters = {"all": tr("全部","All"), **labels}
@@ -255,13 +274,26 @@ def handle(method, path, params, headers, db, row, lang, redirect):
                    f'{label} <span>{counts[key]}</span></a>' for key, label in filters.items())
     heading = tr("管理员审核","Administrator review") if admin else tr("我的投稿","My submissions")
     queue = [f'<section class="card queue"><h2>{heading}</h2><nav class="filters" aria-label="{heading}">{tabs}</nav>']
+    sorting = admin and selected == "approved" and counts["approved"] > 1
+    if sorting:
+        original = ",".join(str(ident) for ident, _, state, _ in items if state == "approved")
+        queue.append(f'<form id="sponsor-order" method="post" action="{DESK}/order" hidden>{csrf}'
+                     f'<input type="hidden" name="original" value="{original}">'
+                     f'<input type="hidden" name="order" value="{original}">'
+                     f'<p class="hint">{tr("拖动排序手柄，或用上移、下移按钮。","Drag the handle or use the move buttons.")}</p>'
+                     f'<button class="primary" disabled>{tr("保存顺序","Save order")}</button></form>'
+                     '<div id="sponsor-sort-list">')
     if not counts[selected]:
         queue.append(f'<p class="empty">{tr("暂无符合条件的投稿。","No submissions in this view.")}</p>')
     actions = {"approved":tr("通过","Approve"),"rejected":tr("拒绝","Reject"),"withdrawn":tr("撤下","Withdraw")}
     for i, name, state, website in items:
         if selected not in ("all", state):
             continue
-        queue.append('<article class="submission">')
+        queue.append(f'<article class="submission" data-sponsor-id="{i}">' if sorting else '<article class="submission">')
+        if sorting:
+            queue.append(f'<div class="sort-controls" hidden><span class="drag-handle" draggable="true" aria-hidden="true">⠿</span>'
+                         f'<button type="button" data-move="-1" aria-label="{tr("上移","Move up")} {escape(name)}">↑</button>'
+                         f'<button type="button" data-move="1" aria-label="{tr("下移","Move down")} {escape(name)}">↓</button></div>')
         if state in ("pending","approved"):
             queue.append(f'<div class="preview"><img loading="lazy" src="{DESK}/preview/{i}" alt=""></div>')
         link = f'<p class="hint">{website_link(website, escape(website))}</p>' if website else ""
@@ -276,6 +308,8 @@ def handle(method, path, params, headers, db, row, lang, redirect):
                 queue.append(f'<button class="{style}" name="decision" value="{value}">{actions[value]}</button>')
             queue.append('</form>')
         queue.append('</article>')
+    if sorting:
+        queue.append('</div>')
     queue.append('</section>')
     account = (f'<section class="card account"><h2>{tr("知乎账号","Zhihu account")}</h2>'
                f'<p class="hint">UID {escape(row["subject"])}</p>'
