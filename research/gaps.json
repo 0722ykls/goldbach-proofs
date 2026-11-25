@@ -9788,6 +9788,120 @@
         "L-goldbach-conductor-high-edge",
         "L-goldbach-conductor-mean-exact"
       ]
+    },
+    {
+      "id": "L-goldbach-theta-coset-factor",
+      "file": "lean/PEqualNP/Outside/L_goldbach_theta_coset_factor.lean",
+      "module": "PEqualNP.Outside.L_goldbach_theta_coset_factor",
+      "statement": "∀ (p n : ℕ), p.Prime → ((Finset.range p).filter (fun k => k%p≠0 ∧ k%p≠n%p)).card = if p∣n then p-1 else p-2",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0045 · 局部单位指标的反射相关精确计数引理",
+        "en": "New route · Theta reflection · TH-0045 · Reflected correlation of the local unit indicator"
+      },
+      "brief": {
+        "zh": "给 theta 局部陪集测试一个可校准的内积。先算单素点，再取复合模；这一步只检验单位支撑。 建议先读 L-goldbach-sieve-residue-dimension。",
+        "en": "Calibrate the coset-test inner product at one prime before combining moduli; the support here is only the unit sieve. Read first: L-goldbach-sieve-residue-dimension."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-sieve-residue-dimension"
+      ]
+    },
+    {
+      "id": "L-goldbach-theta-fiber-projection",
+      "file": "lean/PEqualNP/Outside/L_goldbach_theta_fiber_projection.lean",
+      "module": "PEqualNP.Outside.L_goldbach_theta_fiber_projection",
+      "statement": "∀ (m r : ℕ) (c : Fin m → Fin r) (a : Fin m → ℝ) (b : Fin r → ℝ), let F := fun j => Finset.univ.filter (fun i => c i=j); let μ := fun j => (∑ i ∈ F j, a i)/((F j).card:ℝ); (∑ i, (a i-μ (c i))^2) ≤ ∑ i, (a i-b (c i))^2",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0046 · 陪集平均是平方误差最小的近似引理",
+        "en": "New route · Theta reflection · TH-0046 · Coset means minimize quadratic reconstruction error"
+      },
+      "brief": {
+        "zh": "用各纤维的方差恒等式。得到给定局部标签可达到的最佳重建误差，空纤维不会贡献。",
+        "en": "Compute the least possible reconstruction error for a fixed local label by a fiberwise variance decomposition."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-theta-reflected-fiber",
+      "file": "lean/PEqualNP/Outside/L_goldbach_theta_reflected_fiber.lean",
+      "module": "PEqualNP.Outside.L_goldbach_theta_reflected_fiber",
+      "statement": "∀ (m r : ℕ) (c : Fin m → Fin r) (R : Fin m ≃ Fin m) (S : Fin r ≃ Fin r) (a : Fin m → ℝ), (∀ i, c (R i)=S (c i)) → let F := fun j => Finset.univ.filter (fun i => c i=j); ∀ j, (∑ i ∈ F j, a (R i))/((F j).card:ℝ) = (∑ i ∈ F (S j), a i)/((F (S j)).card:ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0047 · 反射交换的纤维平均保持正负分量引理",
+        "en": "New route · Theta reflection · TH-0047 · Equivariant fiber averaging transports reflected components"
+      },
+      "brief": {
+        "zh": "先构造反射给出的纤维双射，再比较两侧归一化。两侧纤维大小相等也是证明的一部分。 建议先读 L-goldbach-theta-fiber-projection。",
+        "en": "Transport the entire fiber with its counting normalization, not just the numerator. Read first: L-goldbach-theta-fiber-projection."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-theta-fiber-projection"
+      ]
+    },
+    {
+      "id": "L-goldbach-theta-orthogonal-residual",
+      "file": "lean/PEqualNP/Outside/L_goldbach_theta_orthogonal_residual.lean",
+      "module": "PEqualNP.Outside.L_goldbach_theta_orthogonal_residual",
+      "statement": "∀ (m r : ℕ) (c : Fin m → Fin r) (R : Fin m ≃ Fin m) (S : Fin r ≃ Fin r) (a : Fin m → ℝ), (∀ i, c (R i)=S (c i)) → let F := fun j => Finset.univ.filter (fun i => c i=j); let b := fun i => (∑ k ∈ F (c i), a k)/((F (c i)).card:ℝ); (∑ i, a i*a (R i)) - (∑ i, b i*b (R i)) = ∑ i, (a i-b i)*(a (R i)-b (R i))",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0048 · 等变纤维模型的反射误差等于残差自相关引理",
+        "en": "New route · Theta reflection · TH-0048 · Exact residual correlation for an equivariant fiber model"
+      },
+      "brief": {
+        "zh": "两项混合内积均因纤维内残差均值为零而消失。将待控误差缩小为真正的素数残差相关。 建议先读 L-goldbach-theta-reflected-fiber, L-goldbach-theta-fiber-projection。",
+        "en": "Both mixed terms vanish fiberwise. The remaining signed residual correlation isolates what a local model cannot see. Read first: L-goldbach-theta-reflected-fiber, L-goldbach-theta-fiber-projection."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-theta-reflected-fiber",
+        "L-goldbach-theta-fiber-projection"
+      ]
+    },
+    {
+      "id": "L-goldbach-theta-partition-refinement",
+      "file": "lean/PEqualNP/Outside/L_goldbach_theta_partition_refinement.lean",
+      "module": "PEqualNP.Outside.L_goldbach_theta_partition_refinement",
+      "statement": "∀ (m r s : ℕ) (c : Fin m → Fin r) (h : Fin r → Fin s) (a : Fin m → ℝ), let B := fun (q : ℕ) (f : Fin m → Fin q) i => let F := Finset.univ.filter (fun k => f k=f i); (∑ k ∈ F, a k)/(F.card:ℝ); (∑ i, (a i-B s (h ∘ c) i)^2) - (∑ i, (a i-B r c i)^2) = ∑ i, (B r c i-B s (h ∘ c) i)^2",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0049 · 细化局部标签时的平方误差递减量引理",
+        "en": "New route · Theta reflection · TH-0049 · Exact reduction in reconstruction error under partition refinement"
+      },
+      "brief": {
+        "zh": "比较同一批素数权的不同局部精度，量出新增局部数据实际解释的能量。 建议先读 L-goldbach-theta-fiber-projection。",
+        "en": "Quantify how much energy a refined local descriptor explains on the very same input. Read first: L-goldbach-theta-fiber-projection."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-theta-fiber-projection"
+      ]
     }
   ],
   "tracks": [
