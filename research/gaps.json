@@ -10030,7 +10030,7 @@
       "id": "L-goldbach-coset-most-weighted",
       "file": "lean/PEqualNP/Outside/L_goldbach_coset_most_weighted.lean",
       "module": "PEqualNP.Outside.L_goldbach_coset_most_weighted",
-      "statement": "let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let A := fun n q r : ℕ => ∑ k ∈ F n q r, w k; let μ := fun q r : ℕ => if r.Coprime q then (q:ℝ)/(q.totient:ℝ) else 0; let v := fun n q r : ℕ => A n q r-((F n q r).card:ℝ)*μ q r; let E := fun n q => ∑ r ∈ Finset.range q, (v n q r)^2/((F n q r).card:ℝ); let Q := fun n : ℕ => n/(Nat.log 2 n)^8; ∀ ε : ℝ, 0<ε → ∃ X : ℕ, ∀ n≥X, ((((Finset.Ioc (Q n) (2*Q n)).filter (fun q => ε*(n:ℝ) ≤ E n q)).card:ℝ) ≤ ε*(Q n:ℝ)",
+      "statement": "let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let A := fun n q r : ℕ => ∑ k ∈ F n q r, w k; let μ := fun q r : ℕ => if r.Coprime q then (q:ℝ)/(q.totient:ℝ) else 0; let v := fun n q r : ℕ => A n q r-((F n q r).card:ℝ)*μ q r; let E := fun n q => ∑ r ∈ Finset.range q, (v n q r)^2/((F n q r).card:ℝ); let Q := fun n : ℕ => n/(Nat.log 2 n)^8; ∀ ε : ℝ, 0<ε → ∃ X : ℕ, ∀ n≥X, (((Finset.Ioc (Q n) (2*Q n)).filter (fun q => ε*(n:ℝ) ≤ E n q)).card:ℝ) ≤ ε*(Q n:ℝ)",
       "plain_statement": {
         "zh": "新路线 · Theta 反射 · TH-0070 · 大多数模数上的纤维加权误差小于目标尺度引理",
         "en": "New route · Theta reflection · TH-0070 · Sublinear fiber-weighted error for almost all moduli in the block"
@@ -10175,7 +10175,7 @@
       "id": "L-goldbach-coset-block-most-positive",
       "file": "lean/PEqualNP/Outside/L_goldbach_coset_block_most_positive.lean",
       "module": "PEqualNP.Outside.L_goldbach_coset_block_most_positive",
-      "statement": "let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let A := fun n q r : ℕ => ∑ k ∈ F n q r, w k; let j := fun n q r : ℕ => (n+q-r)%q; let G := fun n q => ∑ r ∈ Finset.range q, A n q r*A n q (j n q r)/((F n q r).card:ℝ); let Q := fun n : ℕ => n/(Nat.log 2 n)^8; ∀ ε : ℝ, 0<ε → ∃ X : ℕ, ∀ n≥X, Even n → ((((Finset.Ioc (Q n) (2*Q n)).filter (fun q => G n q ≤ (n:ℝ)/4)).card : ℝ) ≤ ε*(Q n:ℝ)",
+      "statement": "let F := fun n q r : ℕ => (Finset.range (n+1)).filter (fun k => k%q=r); let w := fun k : ℕ => if k.Prime then Real.log (k:ℝ) else 0; let A := fun n q r : ℕ => ∑ k ∈ F n q r, w k; let j := fun n q r : ℕ => (n+q-r)%q; let G := fun n q => ∑ r ∈ Finset.range q, A n q r*A n q (j n q r)/((F n q r).card:ℝ); let Q := fun n : ℕ => n/(Nat.log 2 n)^8; ∀ ε : ℝ, 0<ε → ∃ X : ℕ, ∀ n≥X, Even n → (((Finset.Ioc (Q n) (2*Q n)).filter (fun q => G n q ≤ (n:ℝ)/4)).card : ℝ) ≤ ε*(Q n:ℝ)",
       "plain_statement": {
         "zh": "新路线 · Theta 反射 · TH-0076 · 每个大偶数在几乎所有该块模数上具有正投影质量引理",
         "en": "New route · Theta reflection · TH-0076 · Positive projected mass at most block moduli for each large even target"
