@@ -34,7 +34,7 @@ class DeskScaleTest(unittest.TestCase):
         self.secret = secrets.token_hex(32).encode()
         (folder / "webhook").write_bytes(self.secret)
         (folder / "china-apnic.txt").write_bytes(b"")
-        for source in ("deploy/server.py", "deploy/desk.py", "deploy/landau.py", "deploy/presence.py", "deploy/join.txt", "deploy/join-zh.txt",
+        for source in ("deploy/server.py", "deploy/site.js", "deploy/site.css", "deploy/desk.py", "deploy/landau.py", "deploy/presence.py", "deploy/join.txt", "deploy/join-zh.txt",
                        "deploy/zhihu_oauth.py", "deploy/sponsors.py", "deploy/github_identity.py", "deploy/zh.html", "deploy/en.html",
                        "research/gaps.json", "research/problems.json"):
             shutil.copy(ROOT / source, folder)
@@ -345,6 +345,15 @@ class DeskScaleTest(unittest.TestCase):
         self.assertIn(f"Lean 已核验 0/{total} · {total - 1} 条可领取",
                       self.request("/problems/?lang=zh", text=True))
         for lang, suffix in (("en", ""), ("zh", "-zh")):
+            gap = problem["gaps"][0]["id"]
+            title = next((stage[lang][0] for stage in problem["roadmap"]
+                          if any(task["id"] == gap for task in stage["tasks"])),
+                         "未分路线的命题" if lang == "zh" else "Unassigned tasks")
+            directory = self.request(f"/problems/?lang={lang}", text=True)
+            self.assertIn(("进行中 · " if lang == "zh" else "In progress · ") + title, directory)
+            page = self.request(f"{path}/?lang={lang}", text=True)
+            for task in problem["gaps"]:
+                self.assertIn(f'data-roadmap-task="{task["id"]}"', page)
             guide = self.request(f"{path}/join{suffix}.txt", text=True)
             self.assertIn(f"python tools/goldbach.py claim --problem {slug}\n", guide)
             self.assertNotIn("python tools/goldbach.py claim\n", guide)

@@ -218,6 +218,32 @@ mapReset.addEventListener('click', () => {
   chooseProgram('');
 });
 
+function updateRouteActivity(gaps) {
+  const byId = new Map(gaps.map(gap => [gap.id, gap]));
+  for (const panel of document.querySelectorAll('.route-panel')) {
+    const counts = { working: 0, submitted: 0, checking: 0, proved: 0 };
+    for (const link of panel.querySelectorAll('[data-roadmap-task]')) {
+      const gap = byId.get(link.dataset.roadmapTask);
+      if (!gap) continue;
+      const state = gap.proved ? 'proved' : assignments[gap.id];
+      if (Object.hasOwn(counts, state)) counts[state]++;
+      const badge = link.querySelector('.task-activity');
+      if (Object.hasOwn(strings.assignments, state)) {
+        const current = badge || element('small', '', 'task-activity');
+        current.textContent = strings.assignments[state];
+        if (!badge) link.append(current);
+      } else if (badge) badge.remove();
+    }
+    const active = counts.working + counts.submitted + counts.checking;
+    panel.classList.toggle('route-active', active > 0);
+    const parts = ['working', 'submitted', 'checking']
+      .filter(key => counts[key]).map(key => counts[key] + ' ' + strings.assignments[key]);
+    if (!active) parts.push(lang === 'zh' ? '暂无进行中任务' : 'No active tasks');
+    parts.push(counts.proved + (lang === 'zh' ? ' 已核验' : ' verified'));
+    panel.querySelector('[data-route-status]').textContent = ' · ' + parts.join(' · ');
+  }
+}
+
 function openGap(id) {
   selectedGap = id;
   renderGapDetail();
@@ -875,6 +901,7 @@ async function loadStatus() {
     const gapsSnapshot = JSON.stringify([gaps, assignments]);
     if (lastGaps !== gapsSnapshot) {
       publishedGaps = gaps;
+      updateRouteActivity(gaps);
       renderProgramCounts();
       renderLemmas();
       if (lemmaDialog.open) renderGapDetail();
