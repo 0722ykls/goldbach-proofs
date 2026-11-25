@@ -121,9 +121,9 @@ def wall(path, lang, prefix):
         cards.append(f'<figure>{image}<figcaption>{escape(name)}</figcaption></figure>')
     zh = lang == "zh"
     grid = f'<div class="sponsor-grid">{"".join(cards)}</div>' if cards else ""
-    return (f'<section class="shell sponsor-wall"><div class="sponsor-heading"><h2>{"赞助单位" if zh else "Sponsors"}</h2>'
+    return (f'<section class="shell sponsor-wall"><div class="sponsor-heading"><h2>{"参与单位" if zh else "Participating organizations"}</h2>'
             f'<a class="text-link" href="{ORIGIN}{DESK}?lang={lang}">'
-            + ("提交单位 Logo" if zh else "Submit an organization logo") + f' ↗</a></div>{grid}</section>')
+            + ("提交参与单位 Logo" if zh else "Submit a participating organization’s logo") + f' ↗</a></div>{grid}</section>')
 
 
 def public_logo(path, ident):
@@ -162,7 +162,7 @@ def upload_notice(status, lang, text):
 def handle(method, path, params, headers, db, row, lang, redirect):
     def tr(zh, en):
         return en if lang == "en" else zh
-    title = tr("赞助单位 Logo", "Sponsor logos")
+    title = tr("参与单位 Logo", "Participating organization logos")
     def msg(code, text):
         if path == DESK + "/upload":
             return upload_notice(code, lang, text)
@@ -249,7 +249,7 @@ def handle(method, path, params, headers, db, row, lang, redirect):
         return (200,{"Content-Type":"image/png"},image[0]) if image else msg(404,"404")
     if path != DESK:
         return msg(404, "404")
-    upload = (f'<section class="card upload"><h2>{tr("提交单位 Logo","Submit a logo")}</h2>'
+    upload = (f'<section class="card upload"><h2>{tr("提交参与单位 Logo","Submit a participating organization’s logo")}</h2>'
             f'<form id="logo-upload" data-max-bytes="{FILE_LIMIT}" method="post" action="{DESK}/upload?lang={lang}" enctype="multipart/form-data">{csrf}'
             f'<label>{tr("单位名称","Organization")} <input name="name" maxlength="80" required></label>'
             f'<label>{tr("官网地址（选填）","Official website (optional)")} '

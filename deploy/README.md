@@ -20,7 +20,7 @@
 
 `china-apnic.txt` 保存本次线上核对的 10,845 条 APNIC 分配记录。更新时，从 APNIC 的标准 `delegated-apnic-latest` 中选取注册机构为 `apnic`、国家代码为 `CN`、类型为 `ipv4` 或 `ipv6`、状态为 `allocated` 或 `assigned` 的完整记录，保留竖线分隔格式。国家代码表示地址资源登记分配地，本站将其用作默认语言提示。APNIC 对数据准确性不作保证，使用者按其发布条件承担使用风险。[APNIC 数据与格式说明](https://ftp.apnic.net/stats/apnic/)
 
-### 知乎账号与赞助单位
+### 知乎账号与参与单位
 
 生产站的初始 lifesize 账号配置见 `deploy/sponsor-admin.conf`，安装到 goldbach-web.service.d/ 后重载 systemd 并重启 goldbach-web。
 
