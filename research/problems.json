@@ -12629,6 +12629,78 @@
         "program": "correlation",
         "parallel": true,
         "imports": []
+      },
+      {
+        "id": "L-quadratic-primes-mid-square-quotient",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_mid_square_quotient.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_mid_square_quotient",
+        "statement": "∀ x n p:ℕ,x<n → n≤2*x → x<p → Nat.Prime p → p^2∣n^2+1 → n^2+1=2*p^2 ∨ n^2+1=3*p^2",
+        "plain_statement": {
+          "zh": "中段重复素因子的商只能是 2 或 3",
+          "en": "A repeated middle prime leaves quotient two or three"
+        },
+        "brief": {
+          "zh": "由 n<2p 将商限制到 1、2、3，再用相邻平方排除 1。",
+          "en": "Bound the quotient by three, then exclude one between consecutive squares."
+        },
+        "source": "https://www.goldbach.tech/problems/quadratic-primes/?lemma=L-quadratic-primes-middle-prime-saving#roadmap",
+        "program": "correlation",
+        "parallel": true,
+        "imports": []
+      },
+      {
+        "id": "L-quadratic-primes-mid-square-mod-three",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_mid_square_mod_three.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_mid_square_mod_three",
+        "statement": "∀ n p:ℕ,n^2+1≠3*p^2",
+        "plain_statement": {
+          "zh": "排除商为 3 的负 Pell 分支",
+          "en": "Exclude the quotient-three branch"
+        },
+        "brief": {
+          "zh": "在模 3 下检查平方剩余。",
+          "en": "Reduce squares modulo three."
+        },
+        "source": "https://www.goldbach.tech/problems/quadratic-primes/?lemma=L-quadratic-primes-middle-prime-saving#roadmap",
+        "program": "correlation",
+        "parallel": true,
+        "imports": []
+      },
+      {
+        "id": "L-quadratic-primes-mid-pell-spacing",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_mid_pell_spacing.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_mid_pell_spacing",
+        "statement": "∀ a b u v:ℕ,0<a → a<b → a^2+1=2*u^2 → b^2+1=2*v^2 → 2*a<b",
+        "plain_statement": {
+          "zh": "负 Pell 解的下一项至少翻倍",
+          "en": "Distinct positive negative-Pell solutions are separated"
+        },
+        "brief": {
+          "zh": "考察解的比值对应的正范数一单位；也可从 bv、au 的整数关系推出间距。",
+          "en": "Use the quotient of two negative-norm solutions as a positive norm-one unit."
+        },
+        "source": "https://www.goldbach.tech/problems/quadratic-primes/?lemma=L-quadratic-primes-middle-prime-saving#roadmap",
+        "program": "correlation",
+        "parallel": true,
+        "imports": []
+      },
+      {
+        "id": "L-quadratic-primes-mid-square-sparse",
+        "file": "lean/PEqualNP/Outside/L_quadratic_primes_mid_square_sparse.lean",
+        "module": "PEqualNP.Outside.L_quadratic_primes_mid_square_sparse",
+        "statement": "∀ x:ℕ, ((Finset.Ioc x (2*x)).filter (fun n => ((n^2+1).primeFactors.filter (fun p => x<p ∧ p^2∣n^2+1)).Nonempty)).card≤1",
+        "plain_statement": {
+          "zh": "二进区间内最多一个值含有重复中段素因子",
+          "en": "At most one argument with a repeated middle prime per dyadic block"
+        },
+        "brief": {
+          "zh": "把商限制和模 3 排除与负 Pell 间距合并，可用于剥离中段权重中的重数。",
+          "en": "Combine quotient reduction and Pell spacing to isolate the multiplicity correction."
+        },
+        "source": "https://www.goldbach.tech/problems/quadratic-primes/?lemma=L-quadratic-primes-middle-prime-saving#roadmap",
+        "program": "correlation",
+        "parallel": true,
+        "imports": []
       }
     ],
     "roadmap": [
@@ -13680,6 +13752,26 @@
             "id": "L-quadratic-primes-mid-compatible",
             "zh": "一般预算之和小于一时推出原题节省",
             "en": "Transfer compatible budgets with sum below one"
+          },
+          {
+            "id": "L-quadratic-primes-mid-square-quotient",
+            "zh": "中段重复素因子的商只能是 2 或 3",
+            "en": "A repeated middle prime leaves quotient two or three"
+          },
+          {
+            "id": "L-quadratic-primes-mid-square-mod-three",
+            "zh": "排除商为 3 的负 Pell 分支",
+            "en": "Exclude the quotient-three branch"
+          },
+          {
+            "id": "L-quadratic-primes-mid-pell-spacing",
+            "zh": "负 Pell 解的下一项至少翻倍",
+            "en": "Distinct positive negative-Pell solutions are separated"
+          },
+          {
+            "id": "L-quadratic-primes-mid-square-sparse",
+            "zh": "二进区间内最多一个值含有重复中段素因子",
+            "en": "At most one argument with a repeated middle prime per dyadic block"
           }
         ]
       }
