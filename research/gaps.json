@@ -9621,6 +9621,78 @@
         "L-goldbach-characters-low-conductor-card",
         "L-goldbach-conductor-high-edge"
       ]
+    },
+    {
+      "id": "L-goldbach-characters-odd-parseval",
+      "file": "lean/PEqualNP/Outside/L_goldbach_characters_odd_parseval.lean",
+      "module": "PEqualNP.Outside.L_goldbach_characters_odd_parseval",
+      "statement": "∀ (n : ℕ) [NeZero n], 2<n → let odd := (Finset.univ : Finset (DirichletCharacter ℂ n)).filter (fun χ => χ (-1) = -1); ∀ f : (ZMod n)ˣ → ℝ, (2/(n.totient : ℝ))*(∑ χ ∈ odd, ‖∑ a : (ZMod n)ˣ, (f a : ℂ)*χ (a : ZMod n)‖^2) = (∑ a : (ZMod n)ˣ, (f a)^2) - ∑ a : (ZMod n)ˣ, f a*f (-a)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0055 · 单位群奇特征 Parseval 的反对角修正引理",
+        "en": "New route · Odd-character interference · OC-0055 · Odd-character Parseval with the antidiagonal correction"
+      },
+      "brief": {
+        "zh": "在真实全体奇特征上展开平方，调用有符号核，保持实权；把频谱功率精确接回算术反射。 建议先读 L-goldbach-characters-odd-kernel, L-goldbach-odd-kernel-quadratic。",
+        "en": "Expand the squared amplitudes over actual odd characters and contract the signed kernel for real weights. Read first: L-goldbach-characters-odd-kernel, L-goldbach-odd-kernel-quadratic."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-characters-odd-kernel",
+        "L-goldbach-odd-kernel-quadratic"
+      ]
+    },
+    {
+      "id": "L-goldbach-characters-diagonal-correction",
+      "file": "lean/PEqualNP/Outside/L_goldbach_characters_diagonal_correction.lean",
+      "module": "PEqualNP.Outside.L_goldbach_characters_diagonal_correction",
+      "statement": "∀ (n : ℕ) [NeZero n], 2<n → ∀ w : ℕ → ℝ, (∑ a : (ZMod n)ˣ, w (a : ZMod n).val * w ((-a : (ZMod n)ˣ) : ZMod n).val) = ∑ k ∈ (Finset.range n).filter (fun k => k.Coprime n), w k*w (n-k)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0056 · 单位群反射卷积拉回自然数闭区间引理",
+        "en": "New route · Odd-character interference · OC-0056 · Lift reflected unit-group correlation back to the interval"
+      },
+      "brief": {
+        "zh": "对单位 a 的标准代表证明 (−a).val=n−a.val；换元到互素剩余类。 建议先读 L-goldbach-reflect-unit-support, L-goldbach-unit-anti-range。",
+        "en": "Use canonical representatives and the exact reflected representative for a unit. Read first: L-goldbach-reflect-unit-support, L-goldbach-unit-anti-range."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-reflect-unit-support",
+        "L-goldbach-unit-anti-range"
+      ]
+    },
+    {
+      "id": "L-goldbach-characters-power-weighted-loss",
+      "file": "lean/PEqualNP/Outside/L_goldbach_characters_power_weighted_loss.lean",
+      "module": "PEqualNP.Outside.L_goldbach_characters_power_weighted_loss",
+      "statement": "∀ k : ℕ, 2≤k → let n := 2^k; let X := (Finset.univ : Finset (DirichletCharacter ℂ n)).filter (fun χ => χ (-1) = -1); (2/(n.totient : ℝ))*(∑ χ ∈ X, Real.log ((n:ℝ)/(χ.conductor:ℝ))) = (1-4/(2:ℝ)^k)*Real.log 2",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0057 · 二幂模数上奇特征的平均对数导子亏损引理",
+        "en": "New route · Odd-character interference · OC-0057 · Exact average logarithmic conductor loss at powers of two"
+      },
+      "brief": {
+        "zh": "将每个导子亏损写成跨层指标之和，计算各层的奇特征数，与算术公式独立对表。 建议先读 L-goldbach-characters-low-conductor-card, L-goldbach-conductor-dyadic-sum。",
+        "en": "Sum conductor deficits by levels and compare the character-side answer with the independent divisor formula. Read first: L-goldbach-characters-low-conductor-card, L-goldbach-conductor-dyadic-sum."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-characters-low-conductor-card",
+        "L-goldbach-conductor-dyadic-sum"
+      ]
     }
   ],
   "tracks": [
