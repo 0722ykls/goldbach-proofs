@@ -8,16 +8,17 @@
     "en": "New route · Levent GRH and natural extensions · QP-0034 · Bound a truncated zero tail from counts in unit windows"
   },
   "brief": {
-    "zh": "将每个纵坐标单位窗的带重零点数代入可求和的衰减核。",
-    "en": "Insert the multiplicity count from each ordinate window into the summable decay kernel."
+    "zh": "TP-0022 已给出带相同衰减核的统一尾界。取其序列 m=b，并整理自然数到实数的强制转换。",
+    "en": "TP-0022 states a uniform bound for the same tail. Set m=b and simplify the coercions to the real numbers."
   },
   "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/fcb6eac7534875d32d68030967e2deae6d686151/src/Development/AbelianVarietyTheory/PublishedTheorems/AutomorphicForms₂/ZeroCount.lean#L51",
   "program": "correlation",
   "imports": [],
-  "parallel": true,
+  "parallel": false,
   "role": "lemma",
   "depends_on": [
     "L-quadratic-primes-levent-dirichlet-zero-line",
     "L-quadratic-primes-levent-mellin-window-decay"
-  ]
+  ],
+  "challenge_only": true
 }

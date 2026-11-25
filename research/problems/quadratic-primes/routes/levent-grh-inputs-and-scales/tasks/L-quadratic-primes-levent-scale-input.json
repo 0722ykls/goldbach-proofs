@@ -15,7 +15,7 @@
   "program": "correlation",
   "imports": [],
   "parallel": true,
-  "role": "target",
+  "role": "lemma",
   "depends_on": [
     "L-quadratic-primes-levent-root-prime-harmonic"
   ]

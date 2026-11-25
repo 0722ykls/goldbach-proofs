@@ -8,16 +8,17 @@
     "en": "New route · Levent GRH and natural extensions · QP-0040 · Budget 1/5 uniformly for the signed low modes"
   },
   "brief": {
-    "zh": "在两个阈值的最大值处合并互斥素数段，3/25+2/25=1/5。",
-    "en": "Take the larger threshold for the two disjoint ranges and add 3/25 to 2/25."
+    "zh": "条件组合由 QP-0038、0039 给出。总上界本身仍开放，合并时取两个最终阈值的最大值并相加 3/25 与 2/25。",
+    "en": "The aggregate bound is open. Given QP-0038 and QP-0039, use the larger threshold and add 3/25 and 2/25."
   },
   "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/quadratic-primes-levent.md#levent-explicit-correlation",
   "program": "correlation",
   "imports": [],
-  "parallel": true,
+  "parallel": false,
   "role": "target",
   "depends_on": [
     "L-quadratic-primes-levent-low-inner-primes",
     "L-quadratic-primes-levent-low-outer-primes"
-  ]
+  ],
+  "challenge_only": true
 }

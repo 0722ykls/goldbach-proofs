@@ -97,3 +97,13 @@ For each positive a the valuation identity separates first incidences and repeat
 在 (x,2x] 中，n²+1 位于相邻平方之间。复合的 Mangoldt 支撑只能来自 pᵏ，k 为不小于 3 的奇数。因此底数为 O(x^{2/3})，每个底数对应 O(log x) 个指数，每个 (p,k) 至多对应一个 n。由此可尝试证明真幂质量为 O(x^{2/3}log²x)=o(x)。剩余的 QP-0069 要求某个固定 c>0 使得无界多个 x 满足 ΣΛ(n²+1)≥cx。QP-0071 取 ε=c/2，便能在同一窗口提取素数值 n²+1。由于每个素数项权重至多 log(4x²+1)，这个输入甚至给出这些窗口中至少 cx/[2 log(4x²+1)] 个素数值。
 
 A composite prime power on the quadratic sequence must have odd exponent at least three. Bounding its base and exponent gives a route to negligible proper-power mass. If QP-0069 supplies a linear Mangoldt lower bound along unbounded windows, take ε=c/2 in QP-0067 and use QP-0068 and QP-0070 to select a prime value. Each prime term weighs at most log(4x²+1), so such a window contains at least cx/[2 log(4x²+1)] prime values. Any one yields p=n²+1 in the frozen exponent-two endpoint. [Prime-value endpoint](https://www.movan.tech/goldbach/problems/quadratic-primes/?lemma=L-quadratic-primes-lpf-endpoint#roadmap) · [Accepted endpoint equivalence](https://github.com/CGandGameEngineLearner/goldbach-proofs/actions/runs/45360591435)
+
+## 逻辑强度与领取 / Logical strength and task selection
+
+QP-0069 蕴含父题 `lpf-endpoint`。它在无界多个窗口内给出量级 $x/\log x$ 的素数值，已退出默认派发。中段节省则是大素因子路线。QP-0038、0039 的低频界、合计 QP-0040 和高频界 QP-0052 均须显式领取。已知其余项时，高频项逐点等于 $M-Z-L-E$，所以高频预算正是该分解下留给总质量的剩余预算。新输入需要对实际二次根与移动窗口跨素数求和，或构造同归一化的两支 Θ 测试并控制误差。QP-0008 用固定模 4 的素数定理，QP-0009 用窗口长度界，两条仍可按配套引理领取。
+
+QP-0069 implies the prime-value endpoint and gives at least a constant times $x/\log x$ prime values on unbounded windows. It requires explicit selection. The middle saving concerns large prime factors. The low-mode bounds QP-0038 and QP-0039, their aggregate QP-0040, and the high-mode bound QP-0052 also require explicit selection. With the other terms specified, the high mode equals $M-Z-L-E$ pointwise. An estimate requires cancellation across primes for the actual quadratic roots and moving windows, or two theta tests with a common normalization and a bound on their errors. QP-0008 follows from the prime number theorem modulo four, and QP-0009 uses the window length. Both stay in the supporting queue.
+
+[Lean 参考证明 / Lean reference proofs](quadratic-primes-bridges.lean) 覆盖 QP-0063 和 QP-0071 的条件组合。两条编号留作路线引用，其证明收录在研究资料中。任意平移公式 QP-0042 和归一误差界 QP-0050 分别涵盖孪生素数路线的 TP-0049、0047。QP-0034 引用 TP-0022 的统一尾界。
+
+The Lean reference proofs cover the conditional reductions QP-0063 and QP-0071. The route uses these identifiers to refer to the proofs. The catalogue offers the remaining inputs as tasks. The general shift formula QP-0042 and error bound QP-0050 cover TP-0049 and TP-0047, respectively. QP-0034 is a specialization of the uniform tail bound TP-0022.

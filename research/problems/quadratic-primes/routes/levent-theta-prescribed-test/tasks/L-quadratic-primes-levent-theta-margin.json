@@ -8,17 +8,18 @@
     "en": "New route · Levent GRH and natural extensions · QP-0052 · Budget 19/50 for the actual high modes on unbounded scales"
   },
   "brief": {
-    "zh": "研究同一 x 上两支指定有限范数的差。采用自守提升时还须控制与这两支测试的匹配误差。",
-    "en": "Estimate the difference of the two prescribed norms on one scale. An automorphic lift must also control the errors against these exact tests."
+    "zh": "中段节省路线的开放高频预算。QP-0051 给出同一个高频和的有限范数差。自守方法另需构造两支测试并控制共同尺度上的匹配误差。",
+    "en": "This is the open high-mode budget in the middle saving. QP-0051 expresses this sum as a finite difference of squared norms. An automorphic proof needs both tests and a bound on their matching errors at a common scale."
   },
   "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/fcb6eac7534875d32d68030967e2deae6d686151/src/Development/AutomorphicArithmetic/ThetaCorrespondence/ThetaPairLifts/LocalTypeDictionary/ThetaLiftPeterssonNormEqRallisIntegral.lean#L972",
   "program": "correlation",
   "imports": [],
-  "parallel": true,
+  "parallel": false,
   "role": "target",
   "depends_on": [
     "L-quadratic-primes-levent-root-mask-energy",
     "L-quadratic-primes-levent-rallis-difference-error",
     "L-quadratic-primes-levent-theta-arithmetic-match"
-  ]
+  ],
+  "challenge_only": true
 }

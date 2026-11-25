@@ -12907,35 +12907,6 @@
         ]
       },
       {
-        "id": "L-quadratic-primes-levent-middle-saving-bridge",
-        "file": "lean/PEqualNP/Outside/L_quadratic_primes_levent_middle_saving_bridge.lean",
-        "module": "PEqualNP.Outside.L_quadratic_primes_levent_middle_saving_bridge",
-        "statement": "(let block := fun x : ℕ => Finset.Ioc x (2*x); let budget := fun x : ℕ => (x : ℝ) * Real.log (x : ℝ); let roots := fun a q : ℕ => (Finset.range q).filter (fun r => q ∣ r^2+a); let primes := fun x : ℕ => (Finset.Ioc x ((2*x)^2+1)).filter (fun p => Nat.Prime p ∧ p^100000 ≤ (2*x)^132301); let window := fun x p : ℕ => (block x).filter (fun n => p^100000 ≤ n^132301); let model := fun a x : ℕ => ∑ p ∈ primes x, ((window x p).card : ℝ) * ((roots a p).card : ℝ) / p * Real.log (p : ℝ); ∃ X : ℕ, ∀ x ≥ X, model 1 x ≤ (2/5 : ℝ)*budget x) → (let block := fun x : ℕ => Finset.Ioc x (2*x); let roots := fun a q : ℕ => (Finset.range q).filter (fun r => q ∣ r^2+a); let primes := fun x : ℕ => (Finset.Ioc x ((2*x)^2+1)).filter (fun p => Nat.Prime p ∧ p^100000 ≤ (2*x)^132301); let window := fun x p : ℕ => (block x).filter (fun n => p^100000 ≤ n^132301); let countHits := fun a x p : ℕ => ((window x p).filter (fun n => p ∣ n^2+a)).card; let inc := fun a x : ℕ => ∑ p ∈ primes x, (countHits a x p : ℝ) * Real.log (p : ℝ); let model := fun a x : ℕ => ∑ p ∈ primes x, ((window x p).card : ℝ) * ((roots a p).card : ℝ) / p * Real.log (p : ℝ); let angle := fun p k : ℕ => fun t : ℝ => 2 * Real.pi * k * t / p; let coef := fun a x p k : ℕ => (∑ r ∈ roots a p, ∑ n ∈ window x p, Real.cos (angle p k ((n : ℝ) - r))) / p; let freqs := fun (p : ℕ) (low : Bool) => (Finset.Ico 1 p).filter (fun k => if low then min k (p-k) ≤ Nat.sqrt p else Nat.sqrt p < min k (p-k)); let part := fun (a x p : ℕ) (low : Bool) => (∑ k ∈ freqs p low, coef a x p k) * Real.log (p : ℝ); let modes := fun (a x : ℕ) (low : Bool) => ∑ p ∈ primes x, part a x p low; ∀ x : ℕ, inc 1 x = model 1 x + modes 1 x true + modes 1 x false) → (let block := fun x : ℕ => Finset.Ioc x (2*x); let budget := fun x : ℕ => (x : ℝ) * Real.log (x : ℝ); let band := fun a x n : ℕ => (n^2+a).primeFactors.filter (fun p => x<p ∧ p^100000 ≤ n^132301); let excess := fun a x : ℕ => ∑ n ∈ block x, ∑ p ∈ band a x n, (((n^2+a).factorization p - 1 : ℕ) : ℝ) * Real.log (p : ℝ); ∃ X : ℕ, ∀ x ≥ X, excess 1 x ≤ (1/100 : ℝ)*budget x) → (let block := fun x : ℕ => Finset.Ioc x (2*x); let budget := fun x : ℕ => (x : ℝ) * Real.log (x : ℝ); let roots := fun a q : ℕ => (Finset.range q).filter (fun r => q ∣ r^2+a); let primes := fun x : ℕ => (Finset.Ioc x ((2*x)^2+1)).filter (fun p => Nat.Prime p ∧ p^100000 ≤ (2*x)^132301); let window := fun x p : ℕ => (block x).filter (fun n => p^100000 ≤ n^132301); let angle := fun p k : ℕ => fun t : ℝ => 2 * Real.pi * k * t / p; let coef := fun a x p k : ℕ => (∑ r ∈ roots a p, ∑ n ∈ window x p, Real.cos (angle p k ((n : ℝ) - r))) / p; let freqs := fun (p : ℕ) (low : Bool) => (Finset.Ico 1 p).filter (fun k => if low then min k (p-k) ≤ Nat.sqrt p else Nat.sqrt p < min k (p-k)); let part := fun (a x p : ℕ) (low : Bool) => (∑ k ∈ freqs p low, coef a x p k) * Real.log (p : ℝ); let modes := fun (a x : ℕ) (low : Bool) => ∑ p ∈ primes x, part a x p low; ∃ X : ℕ, ∀ x ≥ X, modes 1 x true ≤ (1/5 : ℝ)*budget x) → (let block := fun x : ℕ => Finset.Ioc x (2*x); let budget := fun x : ℕ => (x : ℝ) * Real.log (x : ℝ); let roots := fun a q : ℕ => (Finset.range q).filter (fun r => q ∣ r^2+a); let primes := fun x : ℕ => (Finset.Ioc x ((2*x)^2+1)).filter (fun p => Nat.Prime p ∧ p^100000 ≤ (2*x)^132301); let window := fun x p : ℕ => (block x).filter (fun n => p^100000 ≤ n^132301); let angle := fun p k : ℕ => fun t : ℝ => 2 * Real.pi * k * t / p; let coef := fun a x p k : ℕ => (∑ r ∈ roots a p, ∑ n ∈ window x p, Real.cos (angle p k ((n : ℝ) - r))) / p; let freqs := fun (p : ℕ) (low : Bool) => (Finset.Ico 1 p).filter (fun k => if low then min k (p-k) ≤ Nat.sqrt p else Nat.sqrt p < min k (p-k)); let part := fun (a x p : ℕ) (low : Bool) => (∑ k ∈ freqs p low, coef a x p k) * Real.log (p : ℝ); let modes := fun (a x : ℕ) (low : Bool) => ∑ p ∈ primes x, part a x p low; ∀ B : ℕ, ∃ x : ℕ, B<x ∧ modes 1 x false ≤ (19/50 : ℝ)*budget x) → (let block := fun x : ℕ => Finset.Ioc x (2*x); let primes := fun x : ℕ => (Finset.Ioc x ((2*x)^2+1)).filter (fun p => Nat.Prime p ∧ p^100000 ≤ (2*x)^132301); let window := fun x p : ℕ => (block x).filter (fun n => p^100000 ≤ n^132301); let countHits := fun a x p : ℕ => ((window x p).filter (fun n => p ∣ n^2+a)).card; let band := fun a x n : ℕ => (n^2+a).primeFactors.filter (fun p => x<p ∧ p^100000 ≤ n^132301); let mass := fun a x : ℕ => ∑ n ∈ block x, ∑ p ∈ band a x n, ((n^2+a).factorization p : ℝ) * Real.log (p : ℝ); let excess := fun a x : ℕ => ∑ n ∈ block x, ∑ p ∈ band a x n, (((n^2+a).factorization p - 1 : ℕ) : ℝ) * Real.log (p : ℝ); let inc := fun a x : ℕ => ∑ p ∈ primes x, (countHits a x p : ℝ) * Real.log (p : ℝ); ∀ a x : ℕ, 0<a → mass a x = inc a x + excess a x) → (let w := fun (n p : ℕ) => (((n^2+1).factorization p : ℕ) : ℝ) * Real.log (p:ℝ); let middle := fun (x : ℕ) => Finset.sum (Finset.Ioc x (2*x)) (fun n => Finset.sum ((n^2+1).primeFactors.filter (fun p => x < p ∧ p^100000 ≤ n^132301)) (w n)); ∃ d : ℝ, 0 < d ∧ ∀ B : ℕ, ∃ x : ℕ, B < x ∧ middle x ≤ (1-d)*(x:ℝ)*Real.log (x:ℝ))",
-        "plain_statement": {
-          "zh": "新路线 · Levent GRH 与自然扩张 · QP-0063 · 从六项输入推出冻结父题的 1/100 节省",
-          "en": "New route · Levent GRH and natural extensions · QP-0063 · Deduce a 1/100 saving for the frozen parent from six inputs"
-        },
-        "brief": {
-          "zh": "将三个最终阈值与 B 取最大，再选满足高频估计的 x。四份预算 0.40+0.01+0.20+0.38=0.99。",
-          "en": "Choose a recurrent high-mode scale above B and all three eventual thresholds. The four allowances add to 0.99."
-        },
-        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/quadratic-primes-levent.md#levent-endpoint-bridge",
-        "program": "correlation",
-        "imports": [],
-        "parallel": true,
-        "role": "conditional",
-        "depends_on": [
-          "L-quadratic-primes-levent-scale-input",
-          "L-quadratic-primes-levent-root-system",
-          "L-quadratic-primes-levent-sieve-margin",
-          "L-quadratic-primes-levent-correlation-margin",
-          "L-quadratic-primes-levent-theta-margin",
-          "L-quadratic-primes-levent-natural-extension-margin"
-        ],
-        "track": "levent-endpoint-bridge",
-        "route_source": "levent-endpoint-bridge"
-      },
-      {
         "id": "L-quadratic-primes-levent-conjugate-frequency",
         "file": "lean/PEqualNP/Outside/L_quadratic_primes_levent_conjugate_frequency.lean",
         "module": "PEqualNP.Outside.L_quadratic_primes_levent_conjugate_frequency",
@@ -12969,18 +12940,19 @@
           "en": "New route · Levent GRH and natural extensions · QP-0040 · Budget 1/5 uniformly for the signed low modes"
         },
         "brief": {
-          "zh": "在两个阈值的最大值处合并互斥素数段，3/25+2/25=1/5。",
-          "en": "Take the larger threshold for the two disjoint ranges and add 3/25 to 2/25."
+          "zh": "条件组合由 QP-0038、0039 给出。总上界本身仍开放，合并时取两个最终阈值的最大值并相加 3/25 与 2/25。",
+          "en": "The aggregate bound is open. Given QP-0038 and QP-0039, use the larger threshold and add 3/25 and 2/25."
         },
         "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/quadratic-primes-levent.md#levent-explicit-correlation",
         "program": "correlation",
         "imports": [],
-        "parallel": true,
+        "parallel": false,
         "role": "target",
         "depends_on": [
           "L-quadratic-primes-levent-low-inner-primes",
           "L-quadratic-primes-levent-low-outer-primes"
         ],
+        "challenge_only": true,
         "track": "levent-explicit-correlation",
         "route_source": "levent-explicit-correlation"
       },
@@ -13019,19 +12991,20 @@
           "en": "New route · Levent GRH and natural extensions · QP-0038 · Bound signed low modes for p⁵≤x⁶"
         },
         "brief": {
-          "zh": "对较短素数段的根相位作平均；取绝对值过早会丢失抵消。",
-          "en": "Average the root phases over the shorter prime range and retain cancellation before taking norms."
+          "zh": "这是中段节省路线的开放估计。在此素数段需对实际移动窗与二次根的相位作跨素数抵消，现有单模恒等式和几何和界给出了被估计的量。",
+          "en": "This open estimate contributes to the middle-prime saving. It needs cancellation across primes for the actual moving windows and quadratic roots in this range."
         },
         "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/quadratic-primes-levent.md#levent-explicit-correlation",
         "program": "correlation",
         "imports": [],
-        "parallel": true,
+        "parallel": false,
         "role": "target",
         "depends_on": [
           "L-quadratic-primes-levent-root-phase-reality",
           "L-quadratic-primes-levent-low-mode-energy",
           "L-quadratic-primes-levent-incomplete-phase-bound"
         ],
+        "challenge_only": true,
         "track": "levent-explicit-correlation",
         "route_source": "levent-explicit-correlation"
       },
@@ -13069,19 +13042,20 @@
           "en": "New route · Levent GRH and natural extensions · QP-0039 · Bound signed low modes for x⁶<p⁵"
         },
         "brief": {
-          "zh": "用原幂阈值留下的根窗长度加权，研究较大素数上的低频抵消。",
-          "en": "Use the exact moving-window length in the outer prime range to seek low-mode cancellation."
+          "zh": "这是中段节省路线的开放估计。证明须同时使用实际移动窗和二次根，在较大素数段取得所需的带符号抵消。",
+          "en": "This open estimate contributes to the middle-prime saving. Obtain signed cancellation in the larger prime range with the actual moving windows and quadratic roots."
         },
         "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/quadratic-primes-levent.md#levent-explicit-correlation",
         "program": "correlation",
         "imports": [],
-        "parallel": true,
+        "parallel": false,
         "role": "target",
         "depends_on": [
           "L-quadratic-primes-levent-root-phase-reality",
           "L-quadratic-primes-levent-low-mode-energy",
           "L-quadratic-primes-levent-incomplete-phase-bound"
         ],
+        "challenge_only": true,
         "track": "levent-explicit-correlation",
         "route_source": "levent-explicit-correlation"
       },
@@ -13167,18 +13141,19 @@
           "en": "New route · Levent GRH and natural extensions · QP-0034 · Bound a truncated zero tail from counts in unit windows"
         },
         "brief": {
-          "zh": "将每个纵坐标单位窗的带重零点数代入可求和的衰减核。",
-          "en": "Insert the multiplicity count from each ordinate window into the summable decay kernel."
+          "zh": "TP-0022 已给出带相同衰减核的统一尾界。取其序列 m=b，并整理自然数到实数的强制转换。",
+          "en": "TP-0022 states a uniform bound for the same tail. Set m=b and simplify the coercions to the real numbers."
         },
         "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/fcb6eac7534875d32d68030967e2deae6d686151/src/Development/AbelianVarietyTheory/PublishedTheorems/AutomorphicForms₂/ZeroCount.lean#L51",
         "program": "correlation",
         "imports": [],
-        "parallel": true,
+        "parallel": false,
         "role": "lemma",
         "depends_on": [
           "L-quadratic-primes-levent-dirichlet-zero-line",
           "L-quadratic-primes-levent-mellin-window-decay"
         ],
+        "challenge_only": true,
         "track": "levent-explicit-correlation",
         "route_source": "levent-explicit-correlation"
       },
@@ -13621,14 +13596,14 @@
           "en": "New route · Levent GRH and natural extensions · QP-0008 · Bound the root-weighted prime harmonic sum unconditionally"
         },
         "brief": {
-          "zh": "奇素数的根数为 0 或 2。模 4 素数定理与部分求和给出除以 log x 后的极限 0.32301，允许固定余量。",
-          "en": "Use the prime number theorem modulo four and partial summation. The limit after division by log x is 0.32301 and leaves room below 2/5."
+          "zh": "已知定理的推论。对固定模 4 的素数定理做 Abel 求和，根加权和除以 log x 后趋于 0.32301。",
+          "en": "Apply Abel summation to the prime number theorem in the fixed progression 1 mod 4. The root-weighted sum divided by log x tends to 0.32301."
         },
         "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/quadratic-primes-levent.md#levent-grh-inputs-and-scales",
         "program": "correlation",
         "imports": [],
         "parallel": true,
-        "role": "target",
+        "role": "lemma",
         "depends_on": [
           "L-quadratic-primes-levent-abel-reciprocal",
           "L-quadratic-primes-levent-root-card-splitting",
@@ -13654,7 +13629,7 @@
         "program": "correlation",
         "imports": [],
         "parallel": true,
-        "role": "target",
+        "role": "lemma",
         "depends_on": [
           "L-quadratic-primes-levent-root-prime-harmonic"
         ],
@@ -13911,33 +13886,6 @@
         "route_source": "levent-natural-quadratic-extensions"
       },
       {
-        "id": "L-quadratic-primes-levent-prime-values-bridge",
-        "file": "lean/PEqualNP/Outside/L_quadratic_primes_levent_prime_values_bridge.lean",
-        "module": "PEqualNP.Outside.L_quadratic_primes_levent_prime_values_bridge",
-        "statement": "(let block := fun x : ℕ => Finset.Ioc x (2*x); let pp := fun x : ℕ => ∑ n ∈ (block x).filter (fun n => ¬ Nat.Prime (n^2+1)), ArithmeticFunction.vonMangoldt (n^2+1); ∀ ε : ℝ, 0<ε → ∃ X : ℕ, ∀ x ≥ X, pp x ≤ ε*x) → (let block := fun x : ℕ => Finset.Ioc x (2*x); let lam := fun x : ℕ => ∑ n ∈ block x, ArithmeticFunction.vonMangoldt (n^2+1); let pp := fun x : ℕ => ∑ n ∈ (block x).filter (fun n => ¬ Nat.Prime (n^2+1)), ArithmeticFunction.vonMangoldt (n^2+1); let primeMass := fun x : ℕ => ∑ n ∈ (block x).filter (fun n => Nat.Prime (n^2+1)), Real.log ((n^2+1 : ℕ) : ℝ); ∀ x : ℕ, lam x = primeMass x + pp x) → (let block := fun x : ℕ => Finset.Ioc x (2*x); let lam := fun x : ℕ => ∑ n ∈ block x, ArithmeticFunction.vonMangoldt (n^2+1); ∃ c : ℝ, 0<c ∧ ∀ B : ℕ, ∃ x : ℕ, B<x ∧ c*x ≤ lam x) → (let block := fun x : ℕ => Finset.Ioc x (2*x); let primeMass := fun x : ℕ => ∑ n ∈ (block x).filter (fun n => Nat.Prime (n^2+1)), Real.log ((n^2+1 : ℕ) : ℝ); ∀ x : ℕ, 0 < primeMass x → ∃ n ∈ block x, ∃ p : ℕ, p.Prime ∧ n^2+1=p) → (∀ B : ℕ, ∃ n p : ℕ, B < n ∧ Nat.Prime p ∧ p ∣ n ^ 2 + 1 ∧ n ^ 2 < p ^ 1)",
-        "plain_statement": {
-          "zh": "新路线 · Levent GRH 与自然扩张 · QP-0071 · 由无界正质量与真幂误差推出素数值终点",
-          "en": "New route · Levent GRH and natural extensions · QP-0071 · Deduce the prime-value endpoint from recurrent mass and the proper-power error"
-        },
-        "brief": {
-          "zh": "取 ε=c/2，再选 x 超过误差阈值和 B，使纯素数权为正，令 p=n²+1。",
-          "en": "Take ε=c/2 and choose x above B and the error threshold. A positive prime term gives p=n²+1."
-        },
-        "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/quadratic-primes-levent.md#levent-prime-values",
-        "program": "correlation",
-        "imports": [],
-        "parallel": true,
-        "role": "conditional",
-        "depends_on": [
-          "L-quadratic-primes-levent-prime-values-power-mass",
-          "L-quadratic-primes-levent-prime-values-weight-split",
-          "L-quadratic-primes-levent-prime-values-recurrent-mass",
-          "L-quadratic-primes-levent-prime-values-cofactor-mass"
-        ],
-        "track": "levent-prime-values",
-        "route_source": "levent-prime-values"
-      },
-      {
         "id": "L-quadratic-primes-levent-prime-values-cofactor-mass",
         "file": "lean/PEqualNP/Outside/L_quadratic_primes_levent_prime_values_cofactor_mass.lean",
         "module": "PEqualNP.Outside.L_quadratic_primes_levent_prime_values_cofactor_mass",
@@ -14063,15 +14011,16 @@
           "en": "New route · Levent GRH and natural extensions · QP-0069 · Seek a linear lower bound for quadratic Mangoldt mass on unbounded windows"
         },
         "brief": {
-          "zh": "这是额外的奇偶障碍。分析 u↦u²+1 上的素数权，需要超过线性进程 GRH 的输入。",
-          "en": "This is the parity-sensitive input. A lower bound on prime weights along u²+1 needs information beyond GRH in linear progressions."
+          "zh": "结合 QP-0067 至 0068 和 QP-0071，此下界蕴含无穷多个 n²+1 型素数。扣除真幂后，在无界多个窗口内至少得到量级 x/log x 的素数值。",
+          "en": "With QP-0067, QP-0068 and QP-0071, this lower bound implies infinitely many primes of the form n²+1. Removing proper powers gives at least a constant times x/log x prime values on unbounded windows."
         },
         "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/quadratic-primes-levent.md#levent-prime-values",
         "program": "correlation",
         "imports": [],
-        "parallel": true,
+        "parallel": false,
         "role": "target",
         "depends_on": [],
+        "challenge_only": true,
         "track": "levent-prime-values",
         "route_source": "levent-prime-values"
       },
@@ -14616,19 +14565,20 @@
           "en": "New route · Levent GRH and natural extensions · QP-0052 · Budget 19/50 for the actual high modes on unbounded scales"
         },
         "brief": {
-          "zh": "研究同一 x 上两支指定有限范数的差。采用自守提升时还须控制与这两支测试的匹配误差。",
-          "en": "Estimate the difference of the two prescribed norms on one scale. An automorphic lift must also control the errors against these exact tests."
+          "zh": "中段节省路线的开放高频预算。QP-0051 给出同一个高频和的有限范数差。自守方法另需构造两支测试并控制共同尺度上的匹配误差。",
+          "en": "This is the open high-mode budget in the middle saving. QP-0051 expresses this sum as a finite difference of squared norms. An automorphic proof needs both tests and a bound on their matching errors at a common scale."
         },
         "source": "https://github.com/leanprover-community/riemann-hypothesis/blob/fcb6eac7534875d32d68030967e2deae6d686151/src/Development/AutomorphicArithmetic/ThetaCorrespondence/ThetaPairLifts/LocalTypeDictionary/ThetaLiftPeterssonNormEqRallisIntegral.lean#L972",
         "program": "correlation",
         "imports": [],
-        "parallel": true,
+        "parallel": false,
         "role": "target",
         "depends_on": [
           "L-quadratic-primes-levent-root-mask-energy",
           "L-quadratic-primes-levent-rallis-difference-error",
           "L-quadratic-primes-levent-theta-arithmetic-match"
         ],
+        "challenge_only": true,
         "track": "levent-theta-prescribed-test",
         "route_source": "levent-theta-prescribed-test"
       }
@@ -15730,25 +15680,6 @@
       },
       {
         "en": [
-          "Bridge to middle-prime saving",
-          "Combine four budgets and two exact identities on a common unbounded scale."
-        ],
-        "zh": [
-          "中段节省的组合引理",
-          "在同一无界尺度合并四个预算和两个精确恒等式。"
-        ],
-        "tasks": [
-          {
-            "id": "L-quadratic-primes-levent-middle-saving-bridge",
-            "zh": "新路线 · Levent GRH 与自然扩张 · QP-0063 · 从六项输入推出冻结父题的 1/100 节省",
-            "en": "New route · Levent GRH and natural extensions · QP-0063 · Deduce a 1/100 saving for the frozen parent from six inputs",
-            "route_source": "levent-endpoint-bridge"
-          }
-        ],
-        "route_source": "levent-endpoint-bridge"
-      },
-      {
-        "en": [
           "Explicit truncation and low-frequency root phases",
           "Keep the phases of the actual roots and bound the low modes in two prime ranges."
         ],
@@ -16049,12 +15980,6 @@
           "用真幂稀疏性将无界正质量转成素数值，单列仍缺的二次序列下界。"
         ],
         "tasks": [
-          {
-            "id": "L-quadratic-primes-levent-prime-values-bridge",
-            "zh": "新路线 · Levent GRH 与自然扩张 · QP-0071 · 由无界正质量与真幂误差推出素数值终点",
-            "en": "New route · Levent GRH and natural extensions · QP-0071 · Deduce the prime-value endpoint from recurrent mass and the proper-power error",
-            "route_source": "levent-prime-values"
-          },
           {
             "id": "L-quadratic-primes-levent-prime-values-cofactor-mass",
             "zh": "新路线 · Levent GRH 与自然扩张 · QP-0070 · 从单位余因子质量提取区间内的素数值",

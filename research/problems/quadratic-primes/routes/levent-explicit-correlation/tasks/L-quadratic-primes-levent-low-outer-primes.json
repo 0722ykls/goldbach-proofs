@@ -8,17 +8,18 @@
     "en": "New route · Levent GRH and natural extensions · QP-0039 · Bound signed low modes for x⁶<p⁵"
   },
   "brief": {
-    "zh": "用原幂阈值留下的根窗长度加权，研究较大素数上的低频抵消。",
-    "en": "Use the exact moving-window length in the outer prime range to seek low-mode cancellation."
+    "zh": "这是中段节省路线的开放估计。证明须同时使用实际移动窗和二次根，在较大素数段取得所需的带符号抵消。",
+    "en": "This open estimate contributes to the middle-prime saving. Obtain signed cancellation in the larger prime range with the actual moving windows and quadratic roots."
   },
   "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/quadratic-primes-levent.md#levent-explicit-correlation",
   "program": "correlation",
   "imports": [],
-  "parallel": true,
+  "parallel": false,
   "role": "target",
   "depends_on": [
     "L-quadratic-primes-levent-root-phase-reality",
     "L-quadratic-primes-levent-low-mode-energy",
     "L-quadratic-primes-levent-incomplete-phase-bound"
-  ]
+  ],
+  "challenge_only": true
 }

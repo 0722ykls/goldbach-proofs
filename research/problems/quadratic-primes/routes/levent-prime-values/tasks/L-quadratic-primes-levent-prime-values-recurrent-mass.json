@@ -8,13 +8,14 @@
     "en": "New route · Levent GRH and natural extensions · QP-0069 · Seek a linear lower bound for quadratic Mangoldt mass on unbounded windows"
   },
   "brief": {
-    "zh": "这是额外的奇偶障碍。分析 u↦u²+1 上的素数权，需要超过线性进程 GRH 的输入。",
-    "en": "This is the parity-sensitive input. A lower bound on prime weights along u²+1 needs information beyond GRH in linear progressions."
+    "zh": "结合 QP-0067 至 0068 和 QP-0071，此下界蕴含无穷多个 n²+1 型素数。扣除真幂后，在无界多个窗口内至少得到量级 x/log x 的素数值。",
+    "en": "With QP-0067, QP-0068 and QP-0071, this lower bound implies infinitely many primes of the form n²+1. Removing proper powers gives at least a constant times x/log x prime values on unbounded windows."
   },
   "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/quadratic-primes-levent.md#levent-prime-values",
   "program": "correlation",
   "imports": [],
-  "parallel": true,
+  "parallel": false,
   "role": "target",
-  "depends_on": []
+  "depends_on": [],
+  "challenge_only": true
 }

@@ -8,17 +8,18 @@
     "en": "New route · Levent GRH and natural extensions · QP-0038 · Bound signed low modes for p⁵≤x⁶"
   },
   "brief": {
-    "zh": "对较短素数段的根相位作平均；取绝对值过早会丢失抵消。",
-    "en": "Average the root phases over the shorter prime range and retain cancellation before taking norms."
+    "zh": "这是中段节省路线的开放估计。在此素数段需对实际移动窗与二次根的相位作跨素数抵消，现有单模恒等式和几何和界给出了被估计的量。",
+    "en": "This open estimate contributes to the middle-prime saving. It needs cancellation across primes for the actual moving windows and quadratic roots in this range."
   },
   "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/quadratic-primes-levent.md#levent-explicit-correlation",
   "program": "correlation",
   "imports": [],
-  "parallel": true,
+  "parallel": false,
   "role": "target",
   "depends_on": [
     "L-quadratic-primes-levent-root-phase-reality",
     "L-quadratic-primes-levent-low-mode-energy",
     "L-quadratic-primes-levent-incomplete-phase-bound"
-  ]
+  ],
+  "challenge_only": true
 }
