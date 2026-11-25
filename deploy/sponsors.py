@@ -8,6 +8,7 @@ from contextlib import closing
 from email import policy
 from email.parser import BytesParser
 from html import escape
+from urllib.parse import urlsplit
 
 from PIL import Image, UnidentifiedImageError
 
@@ -26,10 +27,14 @@ def setup(db):
         CREATE TABLE IF NOT EXISTS sponsor_logos(
             id INTEGER PRIMARY KEY, owner TEXT NOT NULL, name TEXT NOT NULL, png BLOB,
             state TEXT NOT NULL DEFAULT 'pending', submitted INTEGER NOT NULL,
-            reviewer TEXT, reviewed INTEGER);
+            reviewer TEXT, reviewed INTEGER, website TEXT NOT NULL DEFAULT '');
         CREATE INDEX IF NOT EXISTS sponsor_state ON sponsor_logos(state,id);
         CREATE INDEX IF NOT EXISTS sponsor_owner ON sponsor_logos(owner,submitted);
     """)
+    with db:
+        db.execute("BEGIN IMMEDIATE")
+        if not any(row[1] == "website" for row in db.execute("PRAGMA table_info(sponsor_logos)")):
+            db.execute("ALTER TABLE sponsor_logos ADD COLUMN website TEXT NOT NULL DEFAULT ''")
 
 
 def bootstrap(db, profile, registered_profile, uid=None):
@@ -46,14 +51,37 @@ def upload_fields(content_type, raw):
         raise ValueError("invalid multipart form")
     for part in msg.iter_parts():
         key = part.get_param("name", header="content-disposition")
-        if (key not in ("name", "csrf", "logo") or key in fields or part.is_multipart()
+        if (key not in ("name", "csrf", "logo", "website") or key in fields or part.is_multipart()
                 or part.defects or part.get_content_disposition() != "form-data"):
             raise ValueError("invalid form")
         value = part.get_payload(decode=True)
         fields[key] = value if key == "logo" else value.decode("utf-8")
-    if set(fields) != {"name", "csrf", "logo"}:
+    if not {"name", "csrf", "logo"} <= fields.keys():
         raise ValueError("incomplete form")
     return fields
+
+
+def website_url(value):
+    value = value.strip()
+    if not value:
+        return ""
+    if len(value) > 2048 or any(c.isspace() or ord(c) < 32 or ord(c) == 127 or c == "\\" for c in value):
+        raise ValueError("invalid website")
+    parts = urlsplit(value)
+    if (parts.scheme not in ("http", "https") or not parts.hostname
+            or parts.username is not None or parts.port == 0):
+        raise ValueError("invalid website")
+    host = parts.hostname.rstrip(".").encode("idna").decode("ascii")
+    label = r"[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?"
+    tld = host.rsplit(".", 1)[-1]
+    if (not re.fullmatch(rf"(?:{label}\.)+{label}", host, re.IGNORECASE)
+            or not tld[0].isalpha() or re.fullmatch(r"0x[0-9a-f]*", tld, re.IGNORECASE)):
+        raise ValueError("invalid website host")
+    return value
+
+
+def website_link(url, label):
+    return f'<a href="{escape(url)}" target="_blank" rel="noopener noreferrer ugc nofollow">{label}</a>'
 
 
 class InvalidLogo(ValueError):
@@ -78,14 +106,17 @@ def logo_png(raw):
 
 def wall(path, lang, prefix):
     with closing(sqlite3.connect(path)) as db:
-        rows = db.execute("SELECT id,name FROM sponsor_logos WHERE state='approved' ORDER BY id").fetchall()
-    cards = "".join(
-        f'<figure><img loading="{"eager" if index < 4 else "lazy"}" src="{prefix}sponsors/logo/{i}.png" alt="">'
-        f'<figcaption>{escape(name)}</figcaption></figure>'
-        for index, (i, name) in enumerate(rows)
-    )
+        rows = db.execute("SELECT id,name,website FROM sponsor_logos WHERE state='approved' ORDER BY id").fetchall()
+    cards = []
+    for index, (ident, name, website) in enumerate(rows):
+        alt = escape(name) if website else ""
+        image = (f'<img loading="{"eager" if index < 4 else "lazy"}" '
+                 f'src="{prefix}sponsors/logo/{ident}.png" alt="{alt}">')
+        if website:
+            image = website_link(website, image)
+        cards.append(f'<figure>{image}<figcaption>{escape(name)}</figcaption></figure>')
     zh = lang == "zh"
-    grid = f'<div class="sponsor-grid">{cards}</div>' if cards else ""
+    grid = f'<div class="sponsor-grid">{"".join(cards)}</div>' if cards else ""
     return (f'<section class="shell sponsor-wall"><div class="sponsor-heading"><h2>{"赞助单位" if zh else "Sponsors"}</h2>'
             f'<a class="text-link" href="{ORIGIN}{DESK}?lang={lang}">'
             + ("提交单位 Logo" if zh else "Submit an organization logo") + f' ↗</a></div>{grid}</section>')
@@ -153,6 +184,11 @@ def handle(method, path, params, headers, db, row, lang, redirect):
             name = params.get("name","").strip()
             if not 1 <= len(name) <= 80:
                 return msg(400, tr("单位名须为 1–80 字。","Use a name of 1–80 characters."))
+            try:
+                website = website_url(params.get("website", ""))
+            except ValueError:
+                return msg(400, tr("请输入以 https:// 或 http:// 开头、带域名的完整官网地址，或留空。",
+                                   "Enter a full website URL starting with https:// or http://, or leave it blank."))
             if len(params.get("logo", b"")) > FILE_LIMIT:
                 return upload_error(lang)
             try:
@@ -171,7 +207,8 @@ def handle(method, path, params, headers, db, row, lang, redirect):
             count = db.execute("SELECT count(*) FROM sponsor_logos WHERE owner=? AND (state='pending' OR submitted>?)",(uid,now-86400)).fetchone()[0]
             if count >= 3:
                 return msg(429, tr("待审或近一天的投稿已达三份。","Limit of three pending or recent submissions reached."))
-            db.execute("INSERT INTO sponsor_logos(owner,name,png,submitted) VALUES(?,?,?,?)",(uid,name,png,now))
+            db.execute("INSERT INTO sponsor_logos(owner,name,png,submitted,website) VALUES(?,?,?,?,?)",
+                       (uid, name, png, now, website))
         elif path == DESK+"/review":
             if not admin:
                 return msg(403, tr("需要管理员权限。","Administrator access required."))
@@ -197,19 +234,21 @@ def handle(method, path, params, headers, db, row, lang, redirect):
     upload = (f'<section class="card upload"><h2>{tr("提交单位 Logo","Submit a logo")}</h2>'
             f'<form id="logo-upload" data-max-bytes="{FILE_LIMIT}" method="post" action="{DESK}/upload?lang={lang}" enctype="multipart/form-data">{csrf}'
             f'<label>{tr("单位名称","Organization")} <input name="name" maxlength="80" required></label>'
+            f'<label>{tr("官网地址（选填）","Official website (optional)")} '
+            '<input name="website" type="url" maxlength="2048" placeholder="https://example.org"></label>'
             '<label>Logo <input type="file" name="logo" accept="image/png,image/jpeg,image/webp" required></label>'
             f'<p class="hint">{tr("PNG、JPEG 或 WebP，最大 4 MiB、800 万像素，单边最多 4096 像素。仅上传获授权的标识，审核通过后公开。","PNG, JPEG or WebP, up to 4 MiB, 8 MP and 4096 px per side. Submit authorized artwork for public display after review.")}</p>'
             f'<p class="upload-feedback" role="alert" hidden></p>'
             f'<button class="primary">{tr("提交审核","Submit for review")}</button></form></section>')
     labels = {"pending":tr("待审核","Pending"),"approved":tr("已展示","Approved"),"rejected":tr("已拒绝","Rejected"),"withdrawn":tr("已撤下","Withdrawn")}
-    items = db.execute("SELECT id,name,state FROM sponsor_logos WHERE owner=? OR ? ORDER BY (state='pending') DESC,id DESC",
+    items = db.execute("SELECT id,name,state,website FROM sponsor_logos WHERE owner=? OR ? ORDER BY (state='pending') DESC,id DESC",
                        (uid,bool(admin))).fetchall()
     selected = params.get("view")
     filters = {"all": tr("全部","All"), **labels}
     if selected not in filters:
         selected = "all"
     counts = {key: 0 for key in labels}
-    for _, _, state in items:
+    for _, _, state, _ in items:
         counts[state] += 1
     counts["all"] = len(items)
     tabs = "".join(f'<a href="{DESK}?view={key}"{(" aria-current=page" if selected == key else "")}>'
@@ -219,14 +258,15 @@ def handle(method, path, params, headers, db, row, lang, redirect):
     if not counts[selected]:
         queue.append(f'<p class="empty">{tr("暂无符合条件的投稿。","No submissions in this view.")}</p>')
     actions = {"approved":tr("通过","Approve"),"rejected":tr("拒绝","Reject"),"withdrawn":tr("撤下","Withdraw")}
-    for i, name, state in items:
+    for i, name, state, website in items:
         if selected not in ("all", state):
             continue
         queue.append('<article class="submission">')
         if state in ("pending","approved"):
             queue.append(f'<div class="preview"><img loading="lazy" src="{DESK}/preview/{i}" alt=""></div>')
+        link = f'<p class="hint">{website_link(website, escape(website))}</p>' if website else ""
         queue.append(f'<div class="submission-info"><strong>{escape(name)}</strong>'
-                     f'<span class="status {state}">{labels[state]}</span></div>')
+                     f'<span class="status {state}">{labels[state]}</span>{link}</div>')
         if admin and state in ("pending","approved"):
             buttons = ("approved","rejected") if state == "pending" else ("withdrawn",)
             queue.append(f'<form class="review" method="post" action="{DESK}/review">{csrf}'

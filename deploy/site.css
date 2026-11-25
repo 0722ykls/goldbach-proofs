@@ -402,6 +402,8 @@ main > .sponsor-wall { width: 100%; margin-top: 1.25rem; }
 .sponsor-grid { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: .6rem; }
 .sponsor-grid figure { display: grid; place-items: center; gap: .25rem; margin: 0; padding: .48rem .75rem; max-width: 100%; border: 1px solid var(--line); border-radius: .35rem; background: white; text-align: center; }
 .sponsor-grid img { width: 7rem; height: 3rem; object-fit: contain; }
+.sponsor-grid figure > a { display: block; border-radius: .2rem; }
+.sponsor-grid figure > a:hover { outline: 1px solid var(--desk-gold); outline-offset: 3px; }
 .sponsor-grid figcaption { font-size: .8rem; overflow-wrap: anywhere; }
 .platform-credit { display: flex; align-items: center; gap: .65rem; }
 .platform-credit img { flex: none; }
