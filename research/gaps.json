@@ -10310,6 +10310,163 @@
         "L-goldbach-coset-divisor-switch",
         "L-goldbach-coset-zero-shift-share"
       ]
+    },
+    {
+      "id": "L-goldbach-mellin-log-support",
+      "file": "lean/PEqualNP/Outside/L_goldbach_mellin_log_support.lean",
+      "module": "PEqualNP.Outside.L_goldbach_mellin_log_support",
+      "statement": "∀ (φ : ℝ → ℝ) (a b : ℝ), 0<a → a<b → (∀ u, u<a ∨ b<u → φ u=0) → let F := fun x => Real.exp (x/2)*φ (Real.exp x); (∀ x, x<Real.log a ∨ Real.log b<x → F x=0) ∧ HasCompactSupport F",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0062 · 对数坐标中的对称窗实际支撑引理",
+        "en": "New route · Odd-character interference · OC-0062 · Transport a central prime window to compact log support"
+      },
+      "brief": {
+        "zh": "端点 a>0 保证对数窗紧。加权因子来自临界线 1/2 的 Mellin 测度。",
+        "en": "Track the compact support after taking logs and inserting the critical-line Jacobian."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-mellin-log-identification",
+      "file": "lean/PEqualNP/Outside/L_goldbach_mellin_log_identification.lean",
+      "module": "PEqualNP.Outside.L_goldbach_mellin_log_identification",
+      "statement": "let W := fun (F : ℝ → ℝ) (t : ℝ) => ∫ x : ℝ, (F x:ℂ)*Complex.exp (((t*x:ℝ):ℂ)*Complex.I); ∀ (φ : ℝ → ℝ) (a b t : ℝ), 0<a → a<b → Continuous φ → (∀ u, u<a ∨ b<u → φ u=0) → W (fun x => Real.exp (x/2)*φ (Real.exp x)) t = intervalIntegral (fun u : ℝ => ((φ u/Real.sqrt u:ℝ):ℂ)*Complex.exp (((t*Real.log u:ℝ):ℂ)*Complex.I)) a b MeasureTheory.volume",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0063 · 临界线 Mellin 权的实对数变量积分公式引理",
+        "en": "New route · Odd-character interference · OC-0063 · Identify the critical-line Mellin weight after logarithmic substitution"
+      },
+      "brief": {
+        "zh": "用 u=exp x 换元并核对正号相位、平方根权和体积元素。 建议先读 L-goldbach-mellin-log-support。",
+        "en": "Change variables u=exp(x), preserving the positive Fourier sign and the inverse square-root density. Read first: L-goldbach-mellin-log-support."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-mellin-log-support"
+      ]
+    },
+    {
+      "id": "L-goldbach-mellin-derivative-transport",
+      "file": "lean/PEqualNP/Outside/L_goldbach_mellin_derivative_transport.lean",
+      "module": "PEqualNP.Outside.L_goldbach_mellin_derivative_transport",
+      "statement": "let W := fun (F : ℝ → ℝ) (t : ℝ) => ∫ x : ℝ, (F x:ℂ)*Complex.exp (((t*x:ℝ):ℂ)*Complex.I); ∀ F : ℝ → ℝ, ContDiff ℝ ⊤ F → HasCompactSupport F → ∀ t : ℝ, W (deriv F) t = -((t:ℂ)*Complex.I)*W F t",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0064 · 对数窗导数在零点频率侧的乘子引理",
+        "en": "New route · Odd-character interference · OC-0064 · Exact spectral multiplier of the log-window derivative"
+      },
+      "brief": {
+        "zh": "先证一次分部积分的无边界项公式；乘子的负号决定随后反演的相位。",
+        "en": "Integrate by parts with compact support; calibrate the multiplier sign before iterating."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-mellin-decay-seminorm",
+      "file": "lean/PEqualNP/Outside/L_goldbach_mellin_decay_seminorm.lean",
+      "module": "PEqualNP.Outside.L_goldbach_mellin_decay_seminorm",
+      "statement": "let W := fun (F : ℝ → ℝ) (t : ℝ) => ∫ x : ℝ, (F x:ℂ)*Complex.exp (((t*x:ℝ):ℂ)*Complex.I); ∀ (F : ℝ → ℝ) (m : ℕ), ContDiff ℝ ⊤ F → HasCompactSupport F → ∀ t : ℝ, |t|^m*‖W F t‖ ≤ ∫ x : ℝ, |iteratedDeriv m F x|",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0065 · 由导数半范数给出可核对的频率衰减引理",
+        "en": "New route · Odd-character interference · OC-0065 · Bound Mellin frequency decay by the actual derivative norm"
+      },
+      "brief": {
+        "zh": "保留导数积分作为显式常数。对 t=0 同时处理 m=0；大频尾估计需要 m 可选。 建议先读 L-goldbach-mellin-derivative-transport。",
+        "en": "Iterate the derivative identity and retain its derivative L1 cost, including the zero-frequency cases. Read first: L-goldbach-mellin-derivative-transport."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-mellin-derivative-transport"
+      ]
+    },
+    {
+      "id": "L-goldbach-mellin-phase-regularity",
+      "file": "lean/PEqualNP/Outside/L_goldbach_mellin_phase_regularity.lean",
+      "module": "PEqualNP.Outside.L_goldbach_mellin_phase_regularity",
+      "statement": "let W := fun (F : ℝ → ℝ) (t : ℝ) => ∫ x : ℝ, (F x:ℂ)*Complex.exp (((t*x:ℝ):ℂ)*Complex.I); ∀ F : ℝ → ℝ, Continuous F → HasCompactSupport F → ∀ t u : ℝ, ‖W F t-W F u‖ ≤ |t-u| * ∫ x : ℝ, |x*F x|",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0066 · 由对数窗一阶矩控制近邻零点的 Mellin 权差引理",
+        "en": "New route · Odd-character interference · OC-0066 · Control nearby zero weights by the first absolute log-window moment"
+      },
+      "brief": {
+        "zh": "在积分号下应用弦长界。常数仅依赖窗口；它补上近邻零点的复权变化。 建议先读 L-goldbach-height-near-phase。",
+        "en": "Apply the chord bound inside the integral to control weight variation as well as phase variation. Read first: L-goldbach-height-near-phase."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-height-near-phase"
+      ]
+    },
+    {
+      "id": "L-goldbach-mellin-unit-bin-budget",
+      "file": "lean/PEqualNP/Outside/L_goldbach_mellin_unit_bin_budget.lean",
+      "module": "PEqualNP.Outside.L_goldbach_mellin_unit_bin_budget",
+      "statement": "let Z := fun (m k : ℕ) (γ : Fin m → ℝ) => Finset.univ.filter (fun j => (k:ℝ) ≤ |γ j| ∧ |γ j| < (k+1:ℕ)); ∀ (m k a : ℕ) (γ : Fin m → ℝ) (W : ℝ → ℂ) (K : ℝ), 0≤K → (∀ t, ‖W t‖ ≤ K/(1+|t|)^a) → (∑ j ∈ Z m k γ, ‖W (γ j)‖) ≤ ((Z m k γ).card:ℝ)*K/((k+1:ℕ):ℝ)^a",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0067 · 带重数单位高度块的衰减质量估计引理",
+        "en": "New route · Odd-character interference · OC-0067 · Weighted mass in a unit absolute-height shell"
+      },
+      "brief": {
+        "zh": "使用半开高度块使每个副本唯一归属，同时允许不同索引有相同高度。 建议先读 L-goldbach-mellin-decay-seminorm。",
+        "en": "Use half-open absolute-height bins so every copy is counted exactly once. Read first: L-goldbach-mellin-decay-seminorm."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-mellin-decay-seminorm"
+      ]
+    },
+    {
+      "id": "L-goldbach-mellin-weight-tail",
+      "file": "lean/PEqualNP/Outside/L_goldbach_mellin_weight_tail.lean",
+      "module": "PEqualNP.Outside.L_goldbach_mellin_weight_tail",
+      "statement": "let Z := fun (m k : ℕ) (γ : Fin m → ℝ) => Finset.univ.filter (fun j => (k:ℝ) ≤ |γ j| ∧ |γ j| < (k+1:ℕ)); ∀ a : ℕ, ∃ C : ℝ, 0<C ∧ ∀ (m d H : ℕ) (γ : Fin m → ℝ) (W : ℝ → ℂ) (K L : ℝ), 1≤d → 0≤K → 0≤L → (∀ t, ‖W t‖ ≤ K/(1+|t|)^(a+4)) → (∀ k, ((Z m k γ).card:ℝ) ≤ L*Real.log ((d*(k+2):ℕ):ℝ)) → (∑ j ∈ Finset.univ.filter (fun i => (H:ℝ) ≤ |γ i|), ‖W (γ j)‖) ≤ C*K*L*Real.log ((d*(H+2):ℕ):ℝ)/((H+1:ℕ):ℝ)^(a+2)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0068 · 由局部零点计数推出带重数高尾一致界引理",
+        "en": "New route · Odd-character interference · OC-0068 · Uniform absolute tail bound from local zero counts"
+      },
+      "brief": {
+        "zh": "按单位高度块求和后，把 log(d(k+2)) 切成起始高度项和剩余增长项。常数必须与家族大小、导子和截断高度无关。 建议先读 L-goldbach-mellin-unit-bin-budget。",
+        "en": "Sum over the shells, splitting conductor and height growth. The constant must be independent of family size, conductor and cutoff. Read first: L-goldbach-mellin-unit-bin-budget."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-mellin-unit-bin-budget"
+      ]
     }
   ],
   "tracks": [
