@@ -8048,6 +8048,421 @@
       "depends_on": [
         "L-goldbach-cross-tail-mixed"
       ]
+    },
+    {
+      "id": "L-goldbach-pp-base-cutoff",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pp_base_cutoff.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pp_base_cutoff",
+      "statement": "∀ p a n : ℕ, 2≤p → 2≤a → p^a≤n → p≤Nat.sqrt n",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0016 · 素数幂底数的平方根界引理",
+        "en": "New route · Odd-character interference · OC-0016 · Square-root cutoff for prime-power bases"
+      },
+      "brief": {
+        "zh": "先证明 p²≤pᵃ，再接自然数平方根界。",
+        "en": "Compare the power to its square before taking the natural square root."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-pp-exp-cutoff",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pp_exp_cutoff.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pp_exp_cutoff",
+      "statement": "∀ p a n : ℕ, 2≤p → p^a≤n → a≤Nat.log 2 n",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0017 · 真幂指数的对数上界引理",
+        "en": "New route · Odd-character interference · OC-0017 · Logarithmic cutoff on exponents"
+      },
+      "brief": {
+        "zh": "比较 2ᵃ≤pᵃ 并保留整数取整。",
+        "en": "Compare the power to 2^a and retain integer rounding."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-pp-cubic-base",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pp_cubic_base.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pp_cubic_base",
+      "statement": "∀ p a n : ℕ, 1≤p → 3≤a → p^a≤n → p^3≤n",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0018 · 高次幂底数的立方根界引理",
+        "en": "New route · Odd-character interference · OC-0018 · Cube-root cutoff for higher powers"
+      },
+      "brief": {
+        "zh": "用于把指数至少三的部分从平方项剥离。",
+        "en": "Use the cubic cutoff on the tail beginning at exponent three."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-pp-base-unique",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pp_base_unique.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pp_base_unique",
+      "statement": "∀ p q a b : ℕ, p.Prime → q.Prime → 0<a → 0<b → p^a=q^b → p=q",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0019 · 非平凡素数幂的底数唯一引理",
+        "en": "New route · Odd-character interference · OC-0019 · Unique prime base of a nontrivial prime power"
+      },
+      "brief": {
+        "zh": "用素因子整除乘幂，将 von Mangoldt 权写成底数对数。",
+        "en": "Use prime divisibility of a power to identify the logarithmic weight."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-pp-exp-unique",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pp_exp_unique.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pp_exp_unique",
+      "statement": "∀ p a b : ℕ, p.Prime → p^a=p^b → a=b",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0020 · 固定素数底数时指数唯一引理",
+        "en": "New route · Odd-character interference · OC-0020 · Unique exponent for a fixed prime base"
+      },
+      "brief": {
+        "zh": "底数至少二，幂关于指数严格递增。",
+        "en": "Use strict monotonicity in the exponent."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-pp-divisor-coprime",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pp_divisor_coprime.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pp_divisor_coprime",
+      "statement": "∀ p a n : ℕ, 0<a → ((p^a).Coprime n ↔ p.Coprime n)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0021 · 素数幂单位筛化为底数单位筛引理",
+        "en": "New route · Odd-character interference · OC-0021 · Reduce the unit test to the prime base"
+      },
+      "brief": {
+        "zh": "在计算污染项的计数前先过滤不合格底数。",
+        "en": "Filter bases before counting contamination."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-pp-log-power",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pp_log_power.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pp_log_power",
+      "statement": "∀ p a : ℕ, p.Prime → Real.log ((p^a : ℕ) : ℝ) = (a : ℝ)*Real.log (p : ℝ)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0022 · 素数幂的对数权分解引理",
+        "en": "New route · Odd-character interference · OC-0022 · Separate the base logarithm from its exponent"
+      },
+      "brief": {
+        "zh": "区分 Λ(pᵃ) 与 log(pᵃ) 的因子 a。",
+        "en": "Track the exponent when comparing log(p^a) with the Mangoldt weight."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-pp-true-nonprime",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pp_true_nonprime.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pp_true_nonprime",
+      "statement": "∀ p a : ℕ, p.Prime → 2≤a → ¬ Nat.Prime (p^a)",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0023 · 真素数幂与素数支撑不交引理",
+        "en": "New route · Odd-character interference · OC-0023 · Proper powers are outside prime support"
+      },
+      "brief": {
+        "zh": "给纯素数指标与真幂污染项建立互斥性。",
+        "en": "Prove support disjointness for the prime and contamination terms."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-pp-count-squares",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pp_count_squares.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pp_count_squares",
+      "statement": "∀ n : ℕ, ((Finset.range (n+1)).filter (fun m => ∃ p ∈ Finset.range (n+1), Nat.Prime p ∧ p^2=m)).card ≤ Nat.sqrt n",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0024 · 平方污染支撑基数界引理",
+        "en": "New route · Odd-character interference · OC-0024 · Count the square support"
+      },
+      "brief": {
+        "zh": "把每个平方对应到正底数，利用平方根截断。 建议先读 L-goldbach-pp-base-cutoff。",
+        "en": "Inject squares into their positive bases below the square root. Read first: L-goldbach-pp-base-cutoff."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-pp-base-cutoff"
+      ]
+    },
+    {
+      "id": "L-goldbach-pp-count-cubes",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pp_count_cubes.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pp_count_cubes",
+      "statement": "∀ n : ℕ, let s := (Finset.range (n+1)).filter (fun p => p.Prime ∧ p^3≤n); s.card^3 ≤ n",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0025 · 高次幂候选底数的稀疏性引理",
+        "en": "New route · Odd-character interference · OC-0025 · Count admissible higher-power bases"
+      },
+      "brief": {
+        "zh": "正底数集合的最大值至少为其基数。 建议先读 L-goldbach-pp-cubic-base。",
+        "en": "Compare the number of positive bases to their maximal base. Read first: L-goldbach-pp-cubic-base."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-pp-cubic-base"
+      ]
+    },
+    {
+      "id": "L-goldbach-pp-product-window",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pp_product_window.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pp_product_window",
+      "statement": "∀ u v a b L : ℝ, 0≤u → u≤1 → 0≤v → v≤1 → 0≤a → a≤L → 0≤b → b≤L → 0≤u*v*a*b ∧ u*v*a*b≤L^2",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0026 · 双权窗口受单个算术污染界控制引理",
+        "en": "New route · Odd-character interference · OC-0026 · Bound a windowed contamination product"
+      },
+      "brief": {
+        "zh": "对缩放后 0 到 1 的窗口使用；L 取 log N。",
+        "en": "Use a unit-normalized window and specialize L to log N."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-pp-reflected-union",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pp_reflected_union.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pp_reflected_union",
+      "statement": "∀ (n : ℕ) (s : Finset ℕ), ((Finset.range (n+1)).filter (fun k => k∈s ∨ n-k∈s)).card ≤ 2*s.card",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0027 · 反射污染支撑的并集计数引理",
+        "en": "New route · Odd-character interference · OC-0027 · Bound either-side contamination by twice the support"
+      },
+      "brief": {
+        "zh": "分别上界左边污染和右边污染；反射在区间内为单射。",
+        "en": "Bound both bad supports using injectivity of interval reversal."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-pp-l1-budget",
+      "file": "lean/PEqualNP/Outside/L_goldbach_pp_l1_budget.lean",
+      "module": "PEqualNP.Outside.L_goldbach_pp_l1_budget",
+      "statement": "∀ (n : ℕ) (s : Finset ℕ) (b : ℕ → ℝ) (L : ℝ), 0<n → (∀ k ∈ s, b k≤L^2) → (∑ k ∈ s, b k)/(n : ℝ) ≤ (s.card : ℝ)*L^2/n",
+      "plain_statement": {
+        "zh": "新路线 · 奇特征干涉 · OC-0028 · 归一化有限污染和的上界引理",
+        "en": "New route · Odd-character interference · OC-0028 · Normalize the finite contamination budget"
+      },
+      "brief": {
+        "zh": "把坏支撑的基数估计与权上界相乘。 建议先读 L-goldbach-pp-product-window, L-goldbach-pp-reflected-union。",
+        "en": "Multiply the support bound by the pointwise bound before normalization. Read first: L-goldbach-pp-product-window, L-goldbach-pp-reflected-union."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "odd-character-interference",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-pp-product-window",
+        "L-goldbach-pp-reflected-union"
+      ]
+    },
+    {
+      "id": "L-goldbach-central-window-reflection",
+      "file": "lean/PEqualNP/Outside/L_goldbach_central_window_reflection.lean",
+      "module": "PEqualNP.Outside.L_goldbach_central_window_reflection",
+      "statement": "∀ n k : ℕ, k≤n → ((n≤3*k ∧ 3*k≤2*n) ↔ (n≤3*(n-k) ∧ 3*(n-k)≤2*n))",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0013 · 中心窗支撑在反射下封闭引理",
+        "en": "New route · Theta reflection · TH-0013 · Central window is stable under reflection"
+      },
+      "brief": {
+        "zh": "中心窗使用整数不等式，包含两端。",
+        "en": "Keep both endpoints by working entirely with integer inequalities."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-central-window-units",
+      "file": "lean/PEqualNP/Outside/L_goldbach_central_window_units.lean",
+      "module": "PEqualNP.Outside.L_goldbach_central_window_units",
+      "statement": "∀ (n : ℕ) (w : ℕ → ℝ), (∀ k, ¬Nat.Prime k → w k=0) → 0 < (∑ k ∈ (Finset.range (n+1)).filter (fun k => n≤3*k ∧ 3*k≤2*n ∧ k.Coprime n), w k*w (n-k)) → ∃ p q : ℕ, p.Prime ∧ q.Prime ∧ p+q=n ∧ n≤3*p ∧ 3*p≤2*n ∧ p.Coprime n",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0014 · 中心窗单位筛的素数对提取引理",
+        "en": "New route · Theta reflection · TH-0014 · Extract a unit prime pair from positive central mass"
+      },
+      "brief": {
+        "zh": "从正的有限和取一个非零项，保留窗口与单位条件。 建议先读 L-goldbach-central-window-reflection, L-goldbach-reflect-unit-support。",
+        "en": "Extract a nonzero summand with all support predicates intact. Read first: L-goldbach-central-window-reflection, L-goldbach-reflect-unit-support."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-central-window-reflection",
+        "L-goldbach-reflect-unit-support"
+      ]
+    },
+    {
+      "id": "L-goldbach-central-window-diagonal",
+      "file": "lean/PEqualNP/Outside/L_goldbach_central_window_diagonal.lean",
+      "module": "PEqualNP.Outside.L_goldbach_central_window_diagonal",
+      "statement": "∀ n : ℕ, Even n → n≤3*(n/2) ∧ 3*(n/2)≤2*n",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0015 · 偶数中点属于中心窗引理",
+        "en": "New route · Theta reflection · TH-0015 · Even midpoint lies inside the central window"
+      },
+      "brief": {
+        "zh": "在中心窗中计算互素筛漏掉的对角项。 建议先读 L-goldbach-reflect-center。",
+        "en": "Include the midpoint when correcting the central unit sieve. Read first: L-goldbach-reflect-center."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-reflect-center"
+      ]
+    },
+    {
+      "id": "L-goldbach-reflection-even-odd-energy",
+      "file": "lean/PEqualNP/Outside/L_goldbach_reflection_even_odd_energy.lean",
+      "module": "PEqualNP.Outside.L_goldbach_reflection_even_odd_energy",
+      "statement": "∀ (n : ℕ) (b : ℕ → ℝ), (∑ k ∈ Finset.range (n+1), (b k+b (n-k))^2) + (∑ k ∈ Finset.range (n+1), (b k-b (n-k))^2) = 4*∑ k ∈ Finset.range (n+1), (b k)^2",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0016 · 正负反射能量之和恢复原范数引理",
+        "en": "New route · Theta reflection · TH-0016 · Sum of the two reflected energies recovers original energy"
+      },
+      "brief": {
+        "zh": "与能量差恒等式一同校准系数四。 建议先读 L-goldbach-reflect-isometry。",
+        "en": "Use the sum together with the difference to calibrate the factor four. Read first: L-goldbach-reflect-isometry."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-reflect-isometry"
+      ]
+    },
+    {
+      "id": "L-goldbach-reflection-unit-twist",
+      "file": "lean/PEqualNP/Outside/L_goldbach_reflection_unit_twist.lean",
+      "module": "PEqualNP.Outside.L_goldbach_reflection_unit_twist",
+      "statement": "∀ (n k : ℕ) (z : ℂ), k≤n → z^k*z^(n-k)=z^n",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0017 · 加法扭曲在互补位置仅留下目标相位引理",
+        "en": "New route · Theta reflection · TH-0017 · Complementary additive twists leave a single target phase"
+      },
+      "brief": {
+        "zh": "为双方使用同一相位时保留目标频率 n。",
+        "en": "Factor out the target phase when both inputs have the same twist."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": []
+    },
+    {
+      "id": "L-goldbach-reflection-conjugate-phase",
+      "file": "lean/PEqualNP/Outside/L_goldbach_reflection_conjugate_phase.lean",
+      "module": "PEqualNP.Outside.L_goldbach_reflection_conjugate_phase",
+      "statement": "∀ (z : ℂ) (k : ℕ), ‖z‖=1 → (z⁻¹)^k=star (z^k)",
+      "plain_statement": {
+        "zh": "新路线 · Theta 反射 · TH-0018 · 单位圆相位反号等于共轭引理",
+        "en": "New route · Theta reflection · TH-0018 · Inverse powers equal conjugate powers on the unit circle"
+      },
+      "brief": {
+        "zh": "把傅里叶反射式中的反号频率转成共轭时核查单位模前提。 建议先读 L-goldbach-reflection-phase。",
+        "en": "Check unit norm before conjugating the Fourier reflection formula. Read first: L-goldbach-reflection-phase."
+      },
+      "source": "https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md",
+      "program": "correlation",
+      "parallel": true,
+      "imports": [],
+      "track": "theta-reflection",
+      "role": "lemma",
+      "depends_on": [
+        "L-goldbach-reflection-phase"
+      ]
     }
   ],
   "tracks": [
