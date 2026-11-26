@@ -535,7 +535,8 @@ def problem_card(slug, data, lang):
             "当前无活跃路线" if zh else "No active routes")
         progress += f'<span class="desk-running">{escape(activity)}</span>'
     url = "../" if slug == "goldbach" else slug + "/"
-    return (f'<a class="problem-card" href="{url}?lang={lang}#roadmap"><span class="problem-formula">{escape(data["formula"])}</span>'
+    anchor = "#lemmas" if slug == "goldbach" else "#roadmap"
+    return (f'<a class="problem-card" href="{url}?lang={lang}{anchor}"><span class="problem-formula">{escape(data["formula"])}</span>'
             f'<h2>{escape(data["title"][lang])}</h2><p>{escape(data["question"][lang])}</p>'
             f'<p class="problem-progress">{progress}</p></a>')
 
