@@ -275,10 +275,20 @@ def desk_routes(slug, lang):
 # Shared by the map, claim receipt and public verification records.
 TASK_ROUTE = {task: key for slug in DESKS for key, _, _, tasks, _ in desk_routes(slug, "en") for task in tasks}
 
+def route_refutations(slug, tasks, lang):
+    labels = {"pending": ("反证待核验", "Refutation under review"), "verified": ("已证伪", "Refuted")}
+    notes = []
+    for task in tasks:
+        ref = DESKS[slug].gaps[task].get("refutation")
+        if ref:
+            notes.append(f'{labels[ref["status"]][lang != "zh"]} · #{int(ref["pr"])}')
+    return f'<small class="route-meta">{escape(" · ".join(notes))}</small>' if notes else ""
+
+
 def route_filters(slug, lang):
     return "".join(
         f'<button type="button" class="map-program-button" data-program="{escape(key)}" aria-pressed="false">'
-        f'<strong class="program-name">{escape(title)}</strong><span class="program-count">{len(tasks)} '
+        f'<strong class="program-name">{escape(title)}</strong>{route_refutations(slug, tasks, lang)}<span class="program-count">{len(tasks)} '
         f'{"题" if lang == "zh" else "tasks"}</span></button>'
         for key, title, _, tasks, _ in desk_routes(slug, lang)
     )
@@ -299,7 +309,7 @@ def route_panels(slug, lang):
         targets = " · ".join(f'<a href="#track-{escape(k)}">{escape(v)}</a>' for k, v in feeds)
         following = f'<p>{"用于" if zh else "Feeds into"}　{targets}</p>' if targets else ""
         sections.append(f'<details class="route-panel" id="track-{escape(key)}"><summary>'
-                        f'<strong>{escape(title)}</strong><span class="route-meta">{len(tasks)} '
+                        f'<strong>{escape(title)}</strong>{route_refutations(slug, tasks, lang)}<span class="route-meta">{len(tasks)} '
                         f'{"题" if zh else "tasks"}<span data-route-status></span></span></summary>'
                         f'<p>{escape(description)}</p>{following}<div class="roadmap-tasks">{"".join(links)}</div></details>')
     return '<div class="goldbach-tracks"><h3>' + ("按子命题领取" if zh else "Choose a proof task") + '</h3>' + "".join(sections) + '</div>'

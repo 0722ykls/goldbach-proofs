@@ -12061,7 +12061,11 @@
       "parallel": true,
       "imports": [],
       "track": "frontier-moment-antispike",
-      "role": "target"
+      "role": "target",
+      "refutation": {
+        "status": "pending",
+        "pr": 2508
+      }
     },
     {
       "id": "L-goldbach-frontier-deep-three-quarters-saving",
@@ -13895,8 +13899,8 @@
         "en": "Frontier 3: Fourth-moment, 3/4 power-saving, and anti-spike transfer conjectures"
       },
       "description": {
-        "zh": "结合无条件 X^(8/3+η) 二阶矩，提出四阶矩、3/4 逐点幂节省以及局部加权反尖峰传递三条独立攻关路径，绕开逐点绝对值与双线性分解，直接以均值能量消灭孤立坏偶数。",
-        "en": "Pair the unconditional X^(8/3+η) second moment with fourth-moment, 3/4-saving, and anti-spike local averaging conjectures to rule out isolated worst-case even spikes."
+        "zh": "深次弧四阶矩上界收到反证（#2508），暂停该题的正向领取，等待 Lean 对冻结声明的否定进行核验。3/4 逐点估计与二阶矩—反尖峰传递仍分别开放。",
+        "en": "A refutation of the deep fourth-moment bound is under review (#2508). Positive claims on that task are paused pending kernel verification. The three-quarters estimate and second-moment/anti-spike transfer remain open."
       },
       "feeds": [
         "arc-budget"
