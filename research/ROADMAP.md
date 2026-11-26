@@ -2,6 +2,8 @@
 
 2026-11-24 · [English](#english) · [实时研究台](https://www.movan.tech/goldbach/#lemmas) · [冻结命题](gaps.json)
 
+2026-11-26 · [中间命题：GRH 下每个偶数的 1+4 表示](checkpoint/2026-11-26-one-plus-four/proof.md)。原证明稿与计算证书的核心贡献者为千早爱音（Visio-Vanitas）。58 个区间、两套尾段参数及替代级数检验均得到正下界，全体偶数的解析证明待独立审定。[复现记录](checkpoint/2026-11-26-one-plus-four/README.md)
+
 对每个偶数 $n\ge4$，要证明存在素数 $p,q$ 使 $p+q=n$。取素数权 $w(p)=\log p$，非素数处令 $w=0$。定义 $R(n)=\sum_{p=0}^n w(p)w(n-p)$。每项非负，每个真正的素数对贡献严格正值，故目标精确地等价于 $R(n)>0$。这给出了所有分析任务共用的终点。[强哥德巴赫命题](strong-goldbach.lean)
 
 ## 2026-11-25 · 两条可检验的新路线 / Two proposed routes
