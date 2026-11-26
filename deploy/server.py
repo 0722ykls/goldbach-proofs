@@ -772,10 +772,16 @@ class Handler(BaseHTTPRequestHandler):
                 nav.append(f'<a href="?lang={lang}&amp;end={min(end+20,len(entries))}">{"上一页" if zh else "Previous"}</a>')
             if start:
                 nav.append(f'<a href="?lang={lang}&amp;end={start}">{"下一页" if zh else "Next"}</a>')
+            def run_url(row):
+                run = int(row["run"])
+                if row.get("provider") == "circleci":
+                    return f"https://app.circleci.com/pipelines/github/CGandGameEngineLearner/goldbach-proofs/{run}"
+                return f"{repo}/actions/runs/{run}"
+
             rows = "".join(
                 f'<li><time>{escape(row["at"])}</time> · <a href="{repo}/pull/{int(row["pr"])}">'
                 f'{escape(row["title"])}</a> · {escape(row["actor"])} · '
-                f'<a href="{repo}/actions/runs/{int(row["run"])}">CI</a></li>'
+                f'<a href="{run_url(row)}">CI</a></li>'
                 for row in reversed(entries[start:end]))
             empty = "尚无自动发布记录。" if zh else "No automated releases yet."
             page = (f'<!doctype html><html lang="{"zh" if zh else "en"}"><meta charset="utf-8">'
