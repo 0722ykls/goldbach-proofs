@@ -960,18 +960,32 @@ function update(data, incoming){
 return {update,setProgram(value){field=value;if(initialized&&!currentTrack)renderBoard()}};
 })();
 
+let cachedTracks = [];
+let cachedRevision;
+
 async function loadStatus() {
   if (loading || document.hidden) return;
   loading = true;
   const request = new AbortController();
   const timeout = window.setTimeout(() => request.abort(), 30000);
   try {
-    const response = await fetch('api/status?view=board-gzip', {
+    const incremental = lastGaps !== null && Boolean(cachedRevision);
+    const response = await fetch(incremental ? 'api/status?view=board-delta-gzip' : 'api/status?view=board-gzip', {
       headers: { Accept: 'application/json' },
       signal: request.signal,
     });
     if (!response.ok) throw new Error('Status request failed');
-    const { gaps, tracks = [], counts, results, desk, lpf_record, catalogue_revision } = await response.json();
+    const data = await response.json();
+    const { counts, results, desk, lpf_record, catalogue_revision } = data;
+    if (incremental && cachedRevision !== catalogue_revision) {
+      window.location.reload();
+      return;
+    }
+    const delta = incremental ? new Map(data.gaps.map(gap => [gap.id, gap])) : null;
+    const gaps = delta ? publishedGaps.map(gap => ({ ...gap, ...delta.get(gap.id) })) : data.gaps;
+    const tracks = incremental ? cachedTracks : (data.tracks || []);
+    cachedTracks = tracks;
+    cachedRevision = catalogue_revision;
     const pageRevision = document.querySelector('meta[name="catalogue-revision"]')?.content;
     if (pageRevision && catalogue_revision && pageRevision !== catalogue_revision) {
       window.location.reload();
@@ -1100,5 +1114,5 @@ if (participation) {
 }
 
 loadStatus();
-window.setInterval(loadStatus, exponentPanel ? 15000 : 45000);
+window.setInterval(loadStatus, 120000);
 document.addEventListener('visibilitychange', loadStatus);
