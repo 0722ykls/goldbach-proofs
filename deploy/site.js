@@ -177,6 +177,10 @@ function assigned(gap) {
   return !gap.proved && Object.hasOwn(strings.assignments, assignments[gap.id]);
 }
 
+function closedClaimLabel() {
+  return lang === 'zh' ? '已停止新领取' : 'Closed to new claims';
+}
+
 function gapStatus(gap) {
   if (gap.refutation) {
     const verified = gap.refutation.status === 'verified';
@@ -187,11 +191,12 @@ function gapStatus(gap) {
   if (assigned(gap)) {
     return { label: strings.assignments[assignments[gap.id]], kind: 'occupied', style: 'in-progress' };
   }
+  if (gap.claims_closed) return { label: closedClaimLabel(), kind: 'closed', style: '' };
   return { label: strings.open, kind: 'available', style: '' };
 }
 
 function canClaim(gap) {
-  return !gap.refutation && !gap.proved && (!assigned(gap) || gap.parallel === true);
+  return !gap.claims_closed && !gap.refutation && !gap.proved && (!assigned(gap) || gap.parallel === true);
 }
 
 function renderProgramCounts() {
@@ -284,7 +289,7 @@ function renderGapDetail() {
     target: lang === 'zh' ? '待突破的解析估计' : 'Open analytic target',
     conditional: lang === 'zh' ? '需使用命题中所列假设' : 'Conditional on the stated hypotheses'
   }[gap.role];
-  const challenge = gap.challenge_only && (lang === 'zh' ? '核心开放难题 · 仅按 ID 主动挑战' : 'Open research challenge · claim explicitly by ID');
+  const challenge = gap.challenge_only && !gap.claims_closed && (lang === 'zh' ? '核心开放难题 · 仅按 ID 主动挑战' : 'Open research challenge · claim explicitly by ID');
   const context = [programName(programOf(gap)), role, challenge].filter(Boolean).join(' · ');
   detailContent.replaceChildren(
     identity,
@@ -295,7 +300,7 @@ function renderGapDetail() {
 
   if (gap.brief?.[lang]) detailContent.append(element('p', gap.brief[lang], 'detail-context'));
   if (gap.source) detailContent.append(anchor(lang === 'zh' ? '阅读来源 ↗' : 'Read the source ↗', gap.source, 'evidence-link'));
-  if (!gap.refutation && !gap.proved && gap.parallel) detailContent.append(element('p',
+  if (canClaim(gap) && gap.parallel) detailContent.append(element('p',
     lang === 'zh' ? '此问题开放给多个参与者独立试证。' : 'This problem accepts independent proof attempts in parallel.', 'detail-context'));
   if (gap.file) {
     const file = element('p', undefined, 'detail-file');
@@ -310,7 +315,8 @@ function renderGapDetail() {
     return;
   }
   if (!canClaim(gap)) {
-    detailContent.append(element('p', gap.proved ? strings.alreadyVerified : strings.occupied, 'detail-context'));
+    const reason = gap.proved ? strings.alreadyVerified : gap.claims_closed ? closedClaimLabel() : strings.occupied;
+    detailContent.append(element('p', reason, 'detail-context'));
     return;
   }
   const join = element('div', undefined, 'detail-join');
@@ -908,8 +914,8 @@ const palette={foundation:'#a0c6a1',grh:'#9ab9d7',correlation:'#ebc883',exceptio
 function dist(id,seen=new Set()){if(distance.has(id))return distance.get(id);if(seen.has(id))throw Error('路线存在循环依赖');let next=new Set(seen);next.add(id);let out=T.get(id).feeds||[],d=out.length?1+Math.max(...out.map(x=>dist(x,next))):0;distance.set(id,d);return d}
 function closure(id,next){let set=new Set(),stack=[id];while(stack.length){let x=stack.pop();if(set.has(x))continue;set.add(x);for(const v of next(x))stack.push(v)}return set}
 let focus=null,hover=null,onlyChain=false,compact=true,horizontal=false,field=null,globalFilter='all',savedScrollY=0,currentTrack=null,observer=null,pendingGap=null,expanded=null,localFilter='all',localSearch='',indexMode=false;
-function status(g){if(g.refutation)return 'progress';if(g.proved)return 'verified';if(assigned(g))return 'progress';return g.role==='target'?'target':'available'}
-function statusText(g){if(g.refutation){const v=g.refutation.status==='verified';return lang==='zh'?(v?'已证伪':'反证待核验'):(v?'Refuted':'Refutation under review')}return ({verified:lang==='zh'?'已核查':'Verified',progress:lang==='zh'?'处理中':'In progress',target:lang==='zh'?'待突破':'Open target',available:lang==='zh'?'可领取':'Available'})[status(g)]}
+function status(g){if(g.refutation)return 'progress';if(g.proved)return 'verified';if(assigned(g))return 'progress';if(g.claims_closed)return 'closed';return g.role==='target'?'target':'available'}
+function statusText(g){if(status(g)==='closed')return closedClaimLabel();if(g.refutation){const v=g.refutation.status==='verified';return lang==='zh'?(v?'已证伪':'反证待核验'):(v?'Refuted':'Refutation under review')}return ({verified:lang==='zh'?'已核查':'Verified',progress:lang==='zh'?'处理中':'In progress',target:lang==='zh'?'待突破':'Open target',available:lang==='zh'?'可领取':'Available'})[status(g)]}
 function stateOK(g,v){return v==='all'||(v==='open'&&status(g)!=='verified')||(v==='target'&&g.role==='target'&&status(g)!=='verified')}
 function counts(gs){let verified=gs.filter(g=>status(g)==='verified').length;return {verified,progress:gs.filter(g=>status(g)==='progress').length,available:gs.filter(g=>status(g)==='available').length,target:gs.filter(g=>status(g)==='target').length,pct:gs.length?100*verified/gs.length:0}}
 function program(t){let c={};for(const g of groups.get(t.id))c[g.program]=(c[g.program]||0)+1;return Object.keys(c).sort((a,b)=>c[b]-c[a])[0]||'foundation'}
@@ -927,7 +933,7 @@ function renderFocus(){let bar=root.querySelector('#map-focusbar');bar.hidden=!f
 function gapGraph(id){let all=groups.get(id),set=new Set(all.map(g=>g.id)),parents=new Map(all.map(g=>[g.id,[]])),depths=new Map();for(const g of all)for(const d of g.depends_on||[])if(set.has(d))parents.get(d).push(g.id);function depth(g,seen=new Set()){if(depths.has(g.id))return depths.get(g.id);if(seen.has(g.id))return 0;let ns=new Set(seen);ns.add(g.id);let ds=(g.depends_on||[]).filter(x=>set.has(x)).map(x=>depth(G.get(x),ns));let n=ds.length?1+Math.max(...ds):0;depths.set(g.id,n);return n}all.forEach(g=>depth(g));return {set,parents,depths,hasEdges:all.some(g=>(g.depends_on||[]).some(x=>set.has(x)))}}
 function gapRelated(id,graph){if(!id)return new Set();let a=closure(id,x=>(G.get(x)?.depends_on||[]).filter(d=>graph.set.has(d))),b=closure(id,x=>graph.parents.get(x)||[]);return new Set([...a,...b])}
 function ordered(id,graph){let rank=g=>g.role==='target'?2:g.role==='conditional'?1:0;return [...groups.get(id)].sort((a,b)=>rank(b)-rank(a)||graph.depths.get(b.id)-graph.depths.get(a.id)||a.id.localeCompare(b.id,undefined,{numeric:true}))}
-function details(g){let parents=gaps.filter(x=>(x.depends_on||[]).includes(g.id)),links=ids=>ids.length?ids.map(id=>`<button data-gap-jump="${esc(id)}">${esc(id)}</button>`).join(' · '):tr('无','None');return `<div class="detail-inline"><div class="detail-title"><b>${esc(g.id)}</b><span class="state ${status(g)}">● ${statusText(g)}</span><span class="role">${esc(roleName[g.role]||tr('命题','Statement'))}</span></div><p>${esc(g.plain_statement?.[lang]||tr('无中文说明','No statement available'))}</p>${g.brief?.[lang]?`<p class="muted">${esc(g.brief[lang])}</p>`:''}<div class="related"><b>${tr('上游依赖：','Prerequisites: ')}</b>${links(g.depends_on||[])}<br><b>${tr('下游影响：','Supports: ')}</b>${links(parents.map(x=>x.id))}</div><p class="muted">${tr('文件路径：','File: ')}${esc(g.file||tr('未指定','Not specified'))}</p><b>${tr('Lean 表述','Lean statement')}</b>${g.latest?runLink(g.latest,strings.latestRun).outerHTML:''}${g.source && /^https?:\/\//i.test(g.source)?` <a href="${esc(g.source)}" rel="noopener noreferrer">${tr('阅读来源 ↗','Read source ↗')}</a>`:''}<pre>${esc(g.statement||tr('未提供','Not provided'))}</pre></div>`}
+function details(g){let parents=gaps.filter(x=>(x.depends_on||[]).includes(g.id)),links=ids=>ids.length?ids.map(id=>`<button data-gap-jump="${esc(id)}">${esc(id)}</button>`).join(' · '):tr('无','None');return `<div class="detail-inline"><div class="detail-title"><b>${esc(g.id)}</b><span class="state ${status(g)}">● ${statusText(g)}</span><span class="role">${esc(roleName[g.role]||tr('命题','Statement'))}</span></div><p>${esc(g.plain_statement?.[lang]||tr('无中文说明','No statement available'))}</p>${g.brief?.[lang]?`<p class="muted">${esc(g.brief[lang])}</p>`:''}<div class="related"><b>${tr('上游依赖：','Prerequisites: ')}</b>${links(g.depends_on||[])}<br><b>${tr('下游影响：','Supports: ')}</b>${links(parents.map(x=>x.id))}</div><p class="muted">${tr('文件路径：','File: ')}${esc(g.file||tr('未指定','Not specified'))}</p><b>${tr('Lean 表述','Lean statement')}</b>${g.latest?runLink(g.latest,strings.latestRun).outerHTML:''}${g.refutation?` <a href="${repository}/pull/${Number(g.refutation.pr)}">${statusText(g)} · PR #${Number(g.refutation.pr)}</a>`:''}${g.source && /^https?:\/\//i.test(g.source)?` <a href="${esc(g.source)}" rel="noopener noreferrer">${tr('阅读来源 ↗','Read source ↗')}</a>`:''}<pre>${esc(g.statement||tr('未提供','Not provided'))}</pre></div>`}
 function renderTrack(){if(!currentTrack)return;observer?.disconnect();let id=currentTrack,t=T.get(id),all=groups.get(id),graph=gapGraph(id),ct=counts(all),q=localSearch.trim().toLowerCase(),related=gapRelated(expanded,graph),shown=ordered(id,graph).filter(g=>stateOK(g,localFilter==='chain'?'all':localFilter)&&(!q||`${g.id} ${g.plain_statement?.[lang]||''} ${g.brief?.[lang]||''}`.toLowerCase().includes(q))&&(localFilter!=='chain'||related.has(g.id))),toButton=(x)=>`<button data-nav="${esc(x)}">${esc(T.get(x).title[lang])}</button>`,feed=t?.feeds||[],ups=upstream.get(id)||[];
 let toolbar=[['all',`${tr('全部','All')} ${all.length}`],['open',tr('仅未通过','Not verified')],['target',tr('仅待突破','Open targets')],...(graph.hasEdges?[['chain',tr('仅依赖链','Dependency chain')]]:[])].map(([k,v])=>`<button data-filter="${k}" class="${localFilter===k?'active':''}">${v}</button>`).join('');
 let rows=shown.map(g=>`<div class="item" data-item="${esc(g.id)}"><div class="row ${expanded===g.id?'active':''}" data-row="${esc(g.id)}" role="button" tabindex="0" aria-expanded="${expanded===g.id}"><span class="lemma-id" title="${esc(g.id)}">${esc(g.id.replace(/^L-goldbach-/,''))}</span><span class="state ${status(g)}">● ${statusText(g)}</span><span class="role">${esc(roleName[g.role]||tr('命题','Statement'))}</span><span class="statement">${esc(g.plain_statement?.[lang]||g.brief?.[lang]||tr('无中文说明','No statement available'))}</span><span class="expand">${expanded===g.id?tr('收起 ▴','Collapse ▴'):tr('展开 ▾','Expand ▾')}</span></div>${expanded===g.id?details(g):''}</div>`).join('');

@@ -1177,7 +1177,7 @@ body:not([data-problem]) .hero .open-status { vertical-align: middle; }
 .research-map-v4 .legend{margin-left:auto;display:flex;gap:9px;flex-wrap:wrap}
 .research-map-v4 .verified{color:#4a8154}
 .research-map-v4 .progress{color:#ad801f}
-.research-map-v4 .available{color:#858a82}
+.research-map-v4 .available,.research-map-v4 .closed{color:#858a82}
 .research-map-v4 .target{color:#a77b20}
 .research-map-v4 .toolbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:16px 0 8px}
 .research-map-v4 .toolbar button.active{background:#1b3a2c;border-color:#1b3a2c;color:white}
