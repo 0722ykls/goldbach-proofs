@@ -50,4 +50,4 @@ workflows:
       - lean-catalogue:
           filters:
             branches:
-              only: codex/circleci-catalogue
+              only: main
