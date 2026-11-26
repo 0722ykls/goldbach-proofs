@@ -1381,6 +1381,8 @@ main > .sponsor-wall { width: 100%; }
 .rankings, .contribute { margin-block: var(--rhythm) 0; }
 .rankings { padding-block: 0; border-block: 0; }
 .footer { margin-top: var(--rhythm); }
+.heading-links { display: flex; flex-wrap: wrap; align-items: baseline; gap: .35rem 1.25rem; }
+.road-section > .goldbach-story:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
 .problem-directory > .problem-formula { width: min(100%, 30rem); }
 .problem-directory > .problem-formula + h1 { margin-top: 1.1rem; }
 .problem-directory > section { max-width: 74ch; margin-top: 1.8rem; }

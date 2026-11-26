@@ -416,21 +416,21 @@ def route_panels(slug, lang):
 
 
 def goldbach_roadmap_page(page, lang):
-    # Catalogue order sets the two featured routes; the map contains the full catalogue.
+    # The research map shows every catalogue route, so the home page keeps only the story under #roadmap.
     if RELEASE_SHA:
         page = page.replace("</head>", f'<meta name="catalogue-revision" content="{escape(RELEASE_SHA)}"></head>', 1)
-    featured = GOLDBACH_CATALOGUE.get("tracks", [])[:2]
-    stages = []
-    for track in featured:
-        key = escape(track["id"])
-        title = escape(track["title"][lang])
-        summary = escape(track["description"][lang])
-        count = sum(g.get("track") == track["id"] for g in GAPS)
-        tasks = f"{count} 个子命题" if lang == "zh" else f"{count} proof tasks"
-        stages.append(f'<li><h3>{title}</h3><p>{summary}</p><a href="#route={key}">{tasks}</a></li>')
-    overview = '<ul class="roadmap topic-roadmap">' + "".join(stages) + '</ul>'
-    return page.replace("<!-- catalogue filters -->", goldbach_program_filters(lang)).replace(
-        "<!-- catalogue roadmap -->", overview)
+    zh = lang == "zh"
+    changes = "研究路线变更记录" if zh else "Research change history"
+    full = "查看完整路线" if zh else "Read the full roadmap"
+    links = (f'<div class="heading-links"><a class="text-link" href="research-changes?lang={lang}">{changes}</a>'
+             '<a class="text-link" href="https://github.com/CGandGameEngineLearner/goldbach-proofs/blob/main/research/ROADMAP.md">'
+             f'{full} <span aria-hidden="true">↗</span></a></div>')
+    page = page.replace("<!-- map links -->", links, 1)
+    page = re.sub(r'(<nav class="navigation"[^>]*>.*?)<a href="#roadmap">[^<]*</a>',
+                  lambda m: m[1] + f'<a href="#research-story">{"背景故事" if zh else "Story"}</a>', page, count=1, flags=re.S)
+    page = re.sub(r'(<header class="target-header">.*?)<a href="#roadmap">',
+                  lambda m: m[1] + '<a href="#lemmas">', page, count=1, flags=re.S)
+    return page.replace("<!-- catalogue filters -->", goldbach_program_filters(lang))
 
 
 def problem_page(page, slug, lang):
@@ -508,6 +508,7 @@ def problem_page(page, slug, lang):
                   lambda _: f'<aside class="method-note"><h2>{note_title}</h2><p>{note_body}</p>{references}</aside>',
                   page, count=1, flags=re.S)
     page = page.replace("<!-- catalogue filters -->", route_filters(slug, lang))
+    page = page.replace("<!-- map links -->", "", 1)
     stages = route_panels(slug, lang)
     page = re.sub(r'<section class="section road-section" id="roadmap".*?</section>',
                   lambda _: f'<section class="section road-section" id="roadmap"><div class="section-heading"><div>'
