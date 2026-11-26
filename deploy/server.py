@@ -97,49 +97,48 @@ def compressed_asset(content):
 DISCUSSION_EXPIRES = datetime.fromisoformat("2026-12-02T00:00:00+08:00")
 
 
-def discussion_widget(lang, prefix):
+def discussion_copy(lang):
     if time.time() >= DISCUSSION_EXPIRES.timestamp():
-        return ""
+        return None
     zh = lang == "zh"
-    label = "扫码进群 讨论进度" if zh else "Join WeChat group"
-    name = "知乎 AI4S 讨论组（哥猜 3 群）" if zh else "Zhihu AI4S Goldbach discussion group 3"
-    instructions = "微信扫码，讨论研究进度" if zh else "Scan in WeChat to discuss research progress"
     cutoff = DISCUSSION_EXPIRES.date()
-    validity = f"{cutoff.month} 月 {cutoff.day} 日前有效" if zh else f"Valid before {cutoff:%Y-%m-%d} (UTC+8)"
-    alt = "知乎 AI4S 讨论组（哥猜 3 群）微信群二维码" if zh else "WeChat QR code for the Zhihu AI4S Goldbach discussion group 3"
-    return f"""<details class="discussion-widget" id="wechat-discussion" name="research-qr" aria-label="{name}"><summary><img class="wechat-mark" src="{prefix}wechat.svg" width="34" height="34" alt="">{label}<span aria-hidden="true"></span></summary>
-<div class="discussion-body"><strong>{name}</strong><p>{instructions}</p>
-<div class="discussion-code"><img loading="lazy" src="{prefix}discussion-qr.png" alt="{alt}" width="800" height="1198"></div>
-<small>{validity}</small></div></details>"""
+    return {
+        "short": "扫码进群" if zh else "WeChat group",
+        "label": "扫码进群 · 讨论进度" if zh else "Join WeChat group",
+        "name": "知乎 AI4S 讨论组（哥猜 3 群）" if zh else "Zhihu AI4S Goldbach group 3",
+        "instructions": "微信扫码，讨论研究进度" if zh else "Scan in WeChat to discuss progress",
+        "validity": f"{cutoff.month} 月 {cutoff.day} 日前有效" if zh else f"Valid before {cutoff:%Y-%m-%d} (UTC+8)",
+        "alt": "知乎 AI4S 讨论组（哥猜 3 群）微信群二维码" if zh else "WeChat QR code for the Zhihu AI4S Goldbach discussion group 3",
+    }
 
 
-def core_team_signup(lang, prefix):
+def core_team_copy(lang):
     if lang == "zh":
-        title = "中心组报名"
-        intro = "中心组由数学界专业人士和软件开发者组成。"
-        research = "数学专业研究者负责制定研究路线、拆解子命题证明任务，并动态调整证明路线。"
-        development = "软件开发者负责维护网站的基础设施。"
-        caption = "扫码报名中心组"
-    else:
-        title = "Join the core team"
-        intro = "The core team brings together professional mathematics researchers and software developers."
-        research = "Mathematics researchers set the research direction, break it into proof tasks, and adjust the roadmap as results come in."
-        development = "Software developers maintain the website infrastructure."
-        caption = "Scan to apply"
-    return f"""<details class="discussion-widget" id="core-team" name="research-qr">
-<summary>{title}<span aria-hidden="true"></span></summary>
-<div class="core-team-signup"><p>{intro}</p>
-<p><strong>{research}</strong> {development}</p>
-<figure><img loading="lazy" src="{prefix}core-team-signup.png" width="176" height="176" alt="{caption}">
-<figcaption>{caption}</figcaption></figure></div></details>"""
+        return {
+            "title": "中心组报名",
+            "short_desc": "数学研究者制定路线 · 开发者维护设施",
+            "intro": "中心组由数学界专业人士和软件开发者组成。",
+            "research": "数学专业研究者负责制定研究路线、拆解子命题证明任务，并动态调整证明路线。",
+            "development": "软件开发者负责维护网站的基础设施。",
+            "caption": "扫码报名中心组",
+        }
+    return {
+        "title": "Join the core team",
+        "short_desc": "Math researchers plan routes · developers maintain the site",
+        "intro": "The core team brings together professional mathematics researchers and software developers.",
+        "research": "Mathematics researchers set the research direction, break it into proof tasks, and adjust the roadmap as results come in.",
+        "development": "Software developers maintain the website infrastructure.",
+        "caption": "Scan to apply",
+    }
 
 
-def site_dock(lang, prefix):
+def presence_widget(lang, prefix, *, variant="inline"):
     zh = lang == "zh"
-    visitors = "在线访客" if zh else "Visitors online"
-    agents = "在研 Agent" if zh else "Working agents"
-    views = "累计浏览量" if zh else "Total page views"
-    ips = "累计独立 IP" if zh else "Unique IP addresses"
+    visitors = "在线访客" if zh else "Visitors"
+    agents = "在研 Agent" if zh else "Agents"
+    views = "累计浏览" if zh else "Views"
+    ips = "独立 IP" if zh else "Unique IPs"
+    heading = "研究台实时统计" if zh else "Live desk stats"
     detail = ("累计浏览量统计首页、问题目录和研究页的成功访问，刷新也计一次。近 90 秒内浏览可见页面的浏览器，同一域名多标签合计一次。"
               "累计独立 IP 包含历史日志中可确认的页面访问，两个域名下同一来源 IP 合计一次。"
               "在研 Agent 按尚未提交且有效的任务租约计，每份一席。每 30 秒刷新。" if zh else
@@ -147,15 +146,73 @@ def site_dock(lang, prefix):
               "Online visitors have a visible page in the last 90 seconds. Tabs on the same domain count once. "
               "Unique IPs include historical page visits matched to access logs. Each source IP counts once across both domains. "
               "Each active, unsubmitted research lease counts as one agent seat. Updates every 30 seconds.")
-    return f"""<aside class="discussion-dock" aria-label="{'研究台动态' if zh else 'Research desk activity'}">
-<details class="presence-widget" data-endpoint="{prefix}api/presence" hidden>
-<summary><span><i aria-hidden="true"></i>{visitors} <b data-count="visitors">—</b></span>
-<span>{agents} <b data-count="agents">—</b></span>
-<span class="total-views">{views} <b data-count="page_views">—</b></span>
-<span class="total-views">{ips} <b data-count="unique_ips">—</b></span></summary>
-<p>{detail}</p></details>
-{discussion_widget(lang, prefix)}{core_team_signup(lang, prefix)}</aside>
-<script src="{prefix}discussion.js" defer></script><script src="{prefix}presence.js" defer></script>"""
+    title_html = f'<strong class="presence-heading">{heading}</strong>' if variant == "footer" else ""
+    return (
+        f'<details class="presence-widget presence-{variant}" data-endpoint="{prefix}api/presence" hidden>'
+        f'<summary>{title_html}<span class="presence-items">'
+        f'<span><i aria-hidden="true"></i>{visitors} <b data-count="visitors">—</b></span>'
+        f'<span>{agents} <b data-count="agents">—</b></span>'
+        f'<span>{views} <b data-count="page_views">—</b></span>'
+        f'<span>{ips} <b data-count="unique_ips">—</b></span>'
+        f'</span></summary><p>{detail}</p></details>'
+    )
+
+
+def hero_community_card(lang, prefix):
+    zh = lang == "zh"
+    disc = discussion_copy(lang)
+    core = core_team_copy(lang)
+    items = []
+    if disc:
+        items.append(
+            f'<details class="community-item" id="wechat-discussion" open aria-label="{disc["name"]}">'
+            f'<summary class="community-summary"><img class="wechat-mark" src="{prefix}wechat.svg" width="22" height="22" alt="">'
+            f'<span>{disc["short"]}</span><i aria-hidden="true"></i></summary>'
+            f'<div class="community-item-body"><div class="community-copy">'
+            f'<strong class="community-title"><img class="wechat-mark" src="{prefix}wechat.svg" width="22" height="22" alt="">{disc["label"]}</strong>'
+            f'<p>{disc["name"]}</p><small>{disc["validity"]}</small></div>'
+            f'<div class="community-qr discussion-code"><img loading="lazy" src="{prefix}discussion-qr.png" alt="{disc["alt"]}" width="800" height="1198"></div>'
+            f'</div></details>'
+        )
+    items.append(
+        f'<details class="community-item" id="core-team" open aria-label="{core["title"]}">'
+        f'<summary class="community-summary"><span class="core-mark" aria-hidden="true">✦</span>'
+        f'<span>{core["title"]}</span><i aria-hidden="true"></i></summary>'
+        f'<div class="community-item-body"><div class="community-copy">'
+        f'<strong class="community-title"><span class="core-mark" aria-hidden="true">✦</span>{core["title"]}</strong>'
+        f'<p>{core["short_desc"]}</p><small>{core["caption"]}</small></div>'
+        f'<div class="community-qr core-qr"><img loading="lazy" src="{prefix}core-team-signup.png" width="176" height="176" alt="{core["caption"]}"></div>'
+        f'</div></details>'
+    )
+    label = "社区交流与中心组报名" if zh else "Community discussion and core team signup"
+    return f'<aside class="hero-community" aria-label="{label}">{"".join(items)}</aside>'
+
+
+def site_dock(lang, prefix):
+    zh = lang == "zh"
+    disc = discussion_copy(lang)
+    core = core_team_copy(lang)
+    cells = [f'<div class="community-band-cell band-stats">{presence_widget(lang, prefix, variant="footer")}</div>']
+    if disc:
+        cells.append(
+            f'<div class="community-band-cell band-qr">'
+            f'<div class="community-copy"><strong class="community-title"><img class="wechat-mark" src="{prefix}wechat.svg" width="22" height="22" alt="">{disc["label"]}</strong>'
+            f'<p>{disc["name"]}</p><small>{disc["validity"]}</small></div>'
+            f'<div class="community-qr discussion-code"><img loading="lazy" src="{prefix}discussion-qr.png" alt="{disc["alt"]}" width="800" height="1198"></div>'
+            f'</div>'
+        )
+    cells.append(
+        f'<div class="community-band-cell band-qr">'
+        f'<div class="community-copy"><strong class="community-title"><span class="core-mark" aria-hidden="true">✦</span>{core["title"]}</strong>'
+        f'<p>{core["short_desc"]}</p><small>{core["intro"]}</small></div>'
+        f'<div class="community-qr core-qr"><img loading="lazy" src="{prefix}core-team-signup.png" width="176" height="176" alt="{core["caption"]}"></div>'
+        f'</div>'
+    )
+    label = "研究台动态与社区交流" if zh else "Research desk stats and community"
+    return (
+        f'<aside class="community-band shell" aria-label="{label}">{"".join(cells)}</aside>'
+        f'<script src="{prefix}discussion.js" defer></script><script src="{prefix}presence.js" defer></script>'
+    )
 
 
 def research_status(desk=DESK, *, compact=False, board=False):
@@ -925,9 +982,11 @@ class Handler(BaseHTTPRequestHandler):
             page = goldbach_roadmap_page(page, lang)
         prefix = "" if slug == "goldbach" else "../../"
         page = page.replace("<!-- account -->", ZHIHU.account_link(self.headers, lang), 1)
+        page = page.replace("<!-- presence strip -->", presence_widget(lang, prefix, variant="inline"), 1)
+        page = page.replace("<!-- hero community -->", hero_community_card(lang, prefix), 1)
         hero = '<section class="hero" aria-labelledby="page-title">'
         page = page.replace(hero, sponsors.wall(ZHIHU.db, lang, prefix) + hero, 1)
-        page = page.replace("</body>", site_dock(lang, prefix) + "</body>", 1)
+        page = page.replace("</main>", "</main>" + site_dock(lang, prefix), 1)
         self.reply(200, page.encode(), "text/html", lang)
 
     do_HEAD = do_GET
