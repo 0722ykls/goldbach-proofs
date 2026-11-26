@@ -709,7 +709,6 @@ main > .sponsor-wall { width: 100%; margin-top: 1.25rem; }
   .log-entry > .log-main { grid-column: 1 / -1; }
   .log-entry .verdict { justify-self: start; }
   .log-entry .evidence-link { justify-self: end; }
-  .agent-attribution { padding-inline: .75rem; }
   .manifest { margin-inline: .75rem; }
   .roadmap li { padding-inline: .72rem; }
 }
@@ -1867,4 +1866,8 @@ main > .sponsor-wall { width: 100%; }
 @media (max-width: 520px) {
   .news-strip a { font-size: .78rem; }
   .masthead-actions .repository-link { display: none; }
+}
+
+@media (max-width: 430px) {
+  .agent-attribution { padding-inline: .75rem; }
 }

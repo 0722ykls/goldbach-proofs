@@ -883,6 +883,7 @@ function showRecordSlice(sub) {
   const maxSub = Math.max(0, Math.ceil(recordBatchResults.length / recordPageSize) - 1);
   recordSubPage = sub < 0 ? maxSub : Math.min(sub, maxSub);
   currentRecordPage = recordBatchIndex * 2 + recordSubPage;
+  recordRetry.hidden = true;
   const start = recordSubPage * recordPageSize;
   renderResults(recordBatchResults.slice(start, start + recordPageSize));
   recordPage.textContent = lang === 'zh'
