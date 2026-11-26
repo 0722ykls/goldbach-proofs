@@ -185,10 +185,10 @@ def hero_community_card(lang, prefix):
         f'</div></details>'
     )
     label = "社区交流与中心组报名" if zh else "Community discussion and core team signup"
-    return f'<aside class="hero-community" aria-label="{label}">{"".join(items)}</aside>'
+    return f'<aside class="hero-community desk-rail" aria-label="{label}">{"".join(items)}</aside>'
 
 
-def site_dock(lang, prefix):
+def site_dock(lang, prefix, *, inline=False):
     zh = lang == "zh"
     disc = discussion_copy(lang)
     core = core_team_copy(lang)
@@ -210,7 +210,7 @@ def site_dock(lang, prefix):
     )
     label = "研究台动态与社区交流" if zh else "Research desk stats and community"
     return (
-        f'<aside class="community-band shell" aria-label="{label}">{"".join(cells)}</aside>'
+        f'<aside class="community-band{" community-band-inline" if inline else " shell"}" aria-label="{label}">{"".join(cells)}</aside>'
         f'<script src="{prefix}discussion.js" defer></script><script src="{prefix}presence.js" defer></script>'
     )
 
@@ -986,7 +986,10 @@ class Handler(BaseHTTPRequestHandler):
         page = page.replace("<!-- hero community -->", hero_community_card(lang, prefix), 1)
         hero = '<section class="hero" aria-labelledby="page-title">'
         page = page.replace(hero, sponsors.wall(ZHIHU.db, lang, prefix) + hero, 1)
-        page = page.replace("</main>", "</main>" + site_dock(lang, prefix), 1)
+        if "<!-- site dock -->" in page:
+            page = page.replace("<!-- site dock -->", site_dock(lang, prefix, inline=True), 1)
+        else:
+            page = page.replace("</main>", "</main>" + site_dock(lang, prefix), 1)
         self.reply(200, page.encode(), "text/html", lang)
 
     do_HEAD = do_GET
