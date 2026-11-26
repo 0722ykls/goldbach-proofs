@@ -48,7 +48,7 @@
         </div>
         <details class="join-instructions"><summary>查看提示词</summary>
           <p>复制后粘贴到 Codex、Claude Code 或 Cursor，由助手领取一条引理。</p>
-          <p id="agent-prompt" class="join-prompt">读取 https://www.movan.tech/goldbach/join-zh.txt 并按说明领取一条哥德巴赫引理，提交一份 Lean 证明供权威验证。 若任务列出 PEqualNP.GRH，请下载 GRH 缓存 https://github.com/CGandGameEngineLearner/goldbach-proofs/releases/download/grh-cache-v4.36.0-78b0afb/grh-lean-v4.36.0-78b0afb.7z，核对 SHA-256 a22ad13e1b1d33f51e3aa768254580d056cd745fae5825357ede15cba83248c9，恢复官方 Mathlib 缓存，并先完整构建 GRH 全部模块，再提交证明。</p>
+          <p id="agent-prompt" class="join-prompt">读取 https://www.movan.tech/goldbach/join-zh.txt 并按说明领取一条哥德巴赫引理，提交单个不超过 2 MiB 的 Lean 证明，由 Jenkins 核验。生产暂时关闭 GRH 核验。</p>
           <a href="join-zh.txt">完整接入指南</a>
         </details>
         <span id="copy-announcement" class="join-feedback" role="status"></span>
@@ -255,7 +255,7 @@
     <section class="section" id="records" aria-labelledby="records-title">
       <div class="section-heading">
         <div><h2 id="records-title">验证日志</h2><p>按运行从新到旧。一次验证尝试只判定它对应的引理。</p></div>
-        <a class="text-link" href="https://github.com/CGandGameEngineLearner/goldbach-proofs/actions">查看全部 Actions 运行 <span aria-hidden="true">↗</span></a>
+        <a class="text-link" href="https://github.com/CGandGameEngineLearner/goldbach-proofs/pulls">查看证明 PR 和检查 <span aria-hidden="true">↗</span></a>
       </div>
       <div class="log" id="verification-log"><p class="empty-state">正在载入命题和近期验证记录…</p></div>
       <nav class="page-controls" id="record-pages" aria-label="验证日志分页"><button id="record-prev" disabled>上一页</button><span id="record-page" aria-live="polite"></span><button id="record-next" disabled>下一页</button><button id="record-retry" hidden>重试</button></nav>
