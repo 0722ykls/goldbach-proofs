@@ -176,6 +176,11 @@ function assigned(gap) {
 }
 
 function gapStatus(gap) {
+  if (gap.refutation) {
+    const verified = gap.refutation.status === 'verified';
+    const label = lang === 'zh' ? (verified ? '已证伪' : '反证待核验') : (verified ? 'Refuted' : 'Refutation under review');
+    return { label, kind: 'occupied', style: 'in-progress' };
+  }
   if (gap.proved) return { label: strings.proved, kind: 'verified', style: 'accepted' };
   if (assigned(gap)) {
     return { label: strings.assignments[assignments[gap.id]], kind: 'occupied', style: 'in-progress' };
@@ -184,7 +189,7 @@ function gapStatus(gap) {
 }
 
 function canClaim(gap) {
-  return !gap.proved && (!assigned(gap) || gap.parallel === true);
+  return !gap.refutation && !gap.proved && (!assigned(gap) || gap.parallel === true);
 }
 
 function renderProgramCounts() {
@@ -287,7 +292,7 @@ function renderGapDetail() {
 
   if (gap.brief?.[lang]) detailContent.append(element('p', gap.brief[lang], 'detail-context'));
   if (gap.source) detailContent.append(anchor(lang === 'zh' ? '阅读来源 ↗' : 'Read the source ↗', gap.source, 'evidence-link'));
-  if (!gap.proved && gap.parallel) detailContent.append(element('p',
+  if (!gap.refutation && !gap.proved && gap.parallel) detailContent.append(element('p',
     lang === 'zh' ? '此问题开放给多个参与者独立试证。' : 'This problem accepts independent proof attempts in parallel.', 'detail-context'));
   if (gap.file) {
     const file = element('p', undefined, 'detail-file');
@@ -296,6 +301,10 @@ function renderGapDetail() {
   }
   if (gap.latest) {
     detailContent.append(runLink(gap.latest, strings.latestRun));
+  }
+  if (gap.refutation) {
+    detailContent.append(anchor(status.label + ' · PR #' + gap.refutation.pr, repository + '/pull/' + gap.refutation.pr, 'evidence-link'));
+    return;
   }
   if (!canClaim(gap)) {
     detailContent.append(element('p', gap.proved ? strings.alreadyVerified : strings.occupied, 'detail-context'));
