@@ -416,12 +416,14 @@ function renderLogEntry(run) {
   article.dataset.run = run.run_id + '/' + run.run_attempt;
   const row = element('div', undefined, 'log-entry');
   const judgement = run.verdict === 'ACCEPTED' ? 'accepted' : 'rejected';
-  const label = element('div');
-  label.append(
-    element('code', run.lemma_id, 'log-id'),
-    element('span', strings.attempt + ' ' + run.run_attempt + ' · #' + run.run_id, 'log-note')
-  );
-  appendRouteLink(label, run.lemma_id);
+  const label = element('div', undefined, 'log-main');
+  const meta = element('div', undefined, 'log-meta');
+  meta.append(element('span', strings.attempt + ' ' + run.run_attempt + ' · #' + run.run_id, 'log-note'));
+  const route = gapRoutes.get(run.lemma_id);
+  if (route && programs.has(route)) {
+    meta.append(element('span', '·', 'log-sep'), anchor(programName(route), '#track-' + route, 'log-note'));
+  }
+  label.append(element('code', run.lemma_id, 'log-id'), meta);
   row.append(label, verdictTag(strings[judgement], judgement), runLink(run, strings.run));
   article.append(row);
   if (run.agent) {
@@ -784,8 +786,48 @@ function renderDesk(desk) {
   }));
   if (!desk.activities.length) frontier.textContent = strings.noActivity;
   document.getElementById('desk-sessions').textContent = desk.sessions.toLocaleString(locale);
-  deskActivity.replaceChildren(...(desk.activities.length
-    ? desk.activities.map(renderActivity) : [element('li', strings.noActivity, 'empty-state')]));
+  activityItems = desk.activities;
+  renderActivityPage();
+}
+
+const activityPageSize = 6;
+const activityPages = document.getElementById('activity-pages');
+const activityPrev = document.getElementById('activity-prev');
+const activityNext = document.getElementById('activity-next');
+const activityPageLabel = document.getElementById('activity-page');
+let activityItems = [];
+let activityPage = 0;
+
+function renderActivityPage() {
+  const totalPages = Math.max(1, Math.ceil(activityItems.length / activityPageSize));
+  if (activityPage >= totalPages) activityPage = totalPages - 1;
+  const start = activityPage * activityPageSize;
+  const slice = activityItems.slice(start, start + activityPageSize);
+  deskActivity.replaceChildren(...(slice.length
+    ? slice.map(renderActivity) : [element('li', strings.noActivity, 'empty-state')]));
+  if (activityPages) {
+    activityPages.hidden = activityItems.length <= activityPageSize;
+    activityPrev.disabled = activityPage === 0;
+    activityNext.disabled = activityPage >= totalPages - 1;
+    activityPageLabel.textContent = lang === 'zh'
+      ? '第 ' + (activityPage + 1) + ' / ' + totalPages + ' 页'
+      : 'Page ' + (activityPage + 1) + ' / ' + totalPages;
+  }
+}
+
+if (activityPrev && activityNext) {
+  activityPrev.addEventListener('click', () => {
+    if (activityPage > 0) {
+      activityPage -= 1;
+      renderActivityPage();
+    }
+  });
+  activityNext.addEventListener('click', () => {
+    if ((activityPage + 1) * activityPageSize < activityItems.length) {
+      activityPage += 1;
+      renderActivityPage();
+    }
+  });
 }
 
 function renderResults(results) {
@@ -807,22 +849,51 @@ function renderResults(results) {
 }
 
 // Each cursor identifies a boundary in this desk's immutable (run, attempt) order.
+// The API returns 12 records per cursor batch; display 6 per UI page to keep the card compact.
+const recordPageSize = 6;
 const recordStarts = [''];
 const recordPrev = document.getElementById('record-prev');
 const recordNext = document.getElementById('record-next');
 const recordRetry = document.getElementById('record-retry');
 const recordPage = document.getElementById('record-page');
+let recordBatchIndex = -1;
+let recordBatchResults = [];
+let recordSubPage = 0;
 let currentRecordPage = 0;
 let nextRecordCursor = null;
 let recordPending = false;
 let recordVisible = false;
-let retryPage = 0;
+let retryBatch = 0;
+let retrySub = 0;
 let latestRecordKey = '';
 let displayedHead = null;
 
-async function loadRecordPage(index) {
+function syncRecordControls() {
+  if (recordBatchIndex < 0) {
+    recordPrev.disabled = true;
+    recordNext.disabled = true;
+    return;
+  }
+  const hasNextInBatch = (recordSubPage + 1) * recordPageSize < recordBatchResults.length;
+  recordPrev.disabled = recordBatchIndex === 0 && recordSubPage === 0;
+  recordNext.disabled = !(hasNextInBatch || nextRecordCursor);
+}
+
+function showRecordSlice(sub) {
+  const maxSub = Math.max(0, Math.ceil(recordBatchResults.length / recordPageSize) - 1);
+  recordSubPage = sub < 0 ? maxSub : Math.min(sub, maxSub);
+  currentRecordPage = recordBatchIndex * 2 + recordSubPage;
+  const start = recordSubPage * recordPageSize;
+  renderResults(recordBatchResults.slice(start, start + recordPageSize));
+  recordPage.textContent = lang === 'zh'
+    ? '第 ' + (currentRecordPage + 1) + ' 页'
+    : 'Page ' + (currentRecordPage + 1);
+  syncRecordControls();
+}
+
+async function loadRecordPage(batchIndex, targetSub = 0) {
   if (recordPending) return;
-  const cursor = recordStarts[index];
+  const cursor = recordStarts[batchIndex];
   const requestedHead = latestRecordKey;
   recordPending = true;
   recordPrev.disabled = recordNext.disabled = true;
@@ -832,32 +903,44 @@ async function loadRecordPage(index) {
       {signal: AbortSignal.timeout(15000)});
     if (!response.ok) throw new Error('Records unavailable');
     const page = await response.json();
-    renderResults(page.results);
-    currentRecordPage = index;
-    recordStarts.length = index + 1;
+    recordBatchIndex = batchIndex;
+    recordBatchResults = Array.isArray(page.results) ? page.results : [];
+    recordStarts.length = batchIndex + 1;
     nextRecordCursor = page.next;
-    if (!index) displayedHead = requestedHead;
-    recordPage.textContent = lang === 'zh' ? '第 ' + (index + 1) + ' 页' : 'Page ' + (index + 1);
+    if (!batchIndex && targetSub === 0) displayedHead = requestedHead;
+    showRecordSlice(targetSub);
   } catch {
-    retryPage = index;
+    retryBatch = batchIndex;
+    retrySub = targetSub;
     recordRetry.hidden = false;
     recordPage.textContent = strings.failure;
   } finally {
     recordPending = false;
-    recordPrev.disabled = currentRecordPage === 0;
-    recordNext.disabled = !nextRecordCursor;
+    syncRecordControls();
   }
 }
 
-recordPrev.addEventListener('click', () => loadRecordPage(currentRecordPage - 1));
-recordNext.addEventListener('click', () => {
-  recordStarts[currentRecordPage + 1] = nextRecordCursor;
-  loadRecordPage(currentRecordPage + 1);
+recordPrev.addEventListener('click', () => {
+  if (recordPending || recordBatchIndex < 0) return;
+  if (recordSubPage > 0) {
+    showRecordSlice(recordSubPage - 1);
+  } else if (recordBatchIndex > 0) {
+    loadRecordPage(recordBatchIndex - 1, -1);
+  }
 });
-recordRetry.addEventListener('click', () => loadRecordPage(retryPage));
+recordNext.addEventListener('click', () => {
+  if (recordPending || recordBatchIndex < 0) return;
+  if ((recordSubPage + 1) * recordPageSize < recordBatchResults.length) {
+    showRecordSlice(recordSubPage + 1);
+  } else if (nextRecordCursor) {
+    recordStarts[recordBatchIndex + 1] = nextRecordCursor;
+    loadRecordPage(recordBatchIndex + 1, 0);
+  }
+});
+recordRetry.addEventListener('click', () => loadRecordPage(retryBatch, retrySub));
 new IntersectionObserver(([entry]) => {
   recordVisible = entry.isIntersecting;
-  if (recordVisible && !currentRecordPage && displayedHead !== latestRecordKey) loadRecordPage(0);
+  if (recordVisible && !currentRecordPage && displayedHead !== latestRecordKey) loadRecordPage(0, 0);
 }, {rootMargin: '200px'}).observe(verificationLog);
 
 lemmaSearch.addEventListener('input', () => setPage(1));
@@ -936,9 +1019,9 @@ function enterTrack(id,gap){if(!groups.has(id))return;if(!currentTrack)savedScro
 function goOverview(){if(currentTrack)location.hash='';else renderRoute()}
 function renderRoute(){let wasTrack=currentTrack;let m=location.hash.match(/^#route=(.+)$/),id=m?decodeURIComponent(m[1]):null;if(id&&!groups.has(id))id=null;currentTrack=id;observer?.disconnect();if(id){localFilter='all';localSearch='';indexMode=false;expanded=pendingGap;pendingGap=null;root.querySelector('#map-overview').hidden=true;root.querySelector('#map-route-view').hidden=false;root.querySelector('#map-focusbar').hidden=true;renderTrack();root.scrollIntoView({block:'start',behavior:'instant'});if(expanded)requestAnimationFrame(()=>root.querySelector(`[data-item="${CSS.escape(expanded)}"]`)?.scrollIntoView({block:'center'}));}else{root.querySelector('#map-overview').hidden=false;root.querySelector('#map-route-view').hidden=true;root.querySelector('#map-route-view').innerHTML='';renderBoard();renderFocus();if(wasTrack)scrollRestore()}}
 function renderBoard(){let html='';let active=focus||hover,sets=active?trackSets(active):null,board=root.querySelector('#rm-board'),isHorizontal=horizontal&&window.innerWidth>640;board.classList.toggle('horizontal',isHorizontal);board.classList.toggle('chain-horizontal',isHorizontal&&onlyChain&&!!focus);for(let d=0;d<=Math.max(...distance.values());d++){let list=tracks.filter(t=>dist(t.id)===d).filter(t=>!onlyChain||!focus||sets.up.has(t.id)||sets.down.has(t.id)).filter(t=>groups.get(t.id).some(g=>(!field||(topic?programOf(g)===field:g.program===field))&&stateOK(g,globalFilter))).sort((a,b)=>Number(b.id.startsWith('frontier-'))-Number(a.id.startsWith('frontier-'))||a.title[lang].localeCompare(b.title[lang],locale));if(!list.length)continue;html+=`<section class="level" data-depth="${d}"><h3>${lang==='zh'?'第 '+(d+1)+' 层':'Layer '+(d+1)} · ${d===0?tr('直接汇合','Direct convergence'):`${tr('依赖深度','Dependency depth')} ${d}`}</h3><div class="grid count-${Math.min(list.length,4)}">`;for(const t of list){let gs=groups.get(t.id),c=counts(gs),n=gs.filter(g=>g.role==='target'&&status(g)!=='verified').length,muted=active&&!sets.up.has(t.id)&&!sets.down.has(t.id);html+=`<div class="track ${compact?'compact':'full'} ${focus===t.id?'selected':''} ${muted?'dim':''}" data-track="${esc(t.id)}" style="--c:${palette[program(t)]}" tabindex="0" role="button" aria-label="${tr('聚焦','Focus')} ${esc(t.title[lang])}" title="${esc(t.description[lang])}"><div class="track-title"><strong>${esc(t.title[lang])}</strong>${n?`<span class="target-badge">${lang==='zh'?`${n} 待突破`:`${n} open target${n===1?'':'s'}`}</span>`:''}</div>${compact?'':`<span class="description">${esc(t.description[lang])}</span>`}<span class="stats">${tr('已核查 / 全部','Verified / Total')}：${c.verified} / ${gs.length}</span><span class="bar"><i style="width:${c.pct}%"></i></span><button class="enter-small" data-enter="${esc(t.id)}">${tr('查看','View')} ${gs.length} ${tr('条引理','lemmas')} →</button></div>`}html+='</div></section>'}root.querySelector('#rm-levels').innerHTML=html;requestAnimationFrame(drawBoard)}
-function drawBoard(){if(currentTrack)return;let board=root.querySelector('#rm-board'),svg=root.querySelector('#rm-board-svg');if(!board||!svg)return;let rect=board.getBoundingClientRect();svg.setAttribute('viewBox',`0 0 ${rect.width} ${rect.height}`);let active=focus||hover,sets=active?trackSets(active):null,isHorizontal=board.classList.contains('horizontal'),center=el=>{let r=el.getBoundingClientRect();return{x:r.left-rect.left+r.width/2,y:r.top-rect.top+r.height/2,left:r.left-rect.left,right:r.right-rect.left,top:r.top-rect.top,bottom:r.bottom-rect.top}},nodes=new Map([...board.querySelectorAll('[data-track]')].map(x=>[x.dataset.track,center(x)])),goal=center(root.querySelector('#rm-goal')),paths='';function edge(a,b,gold,op,from,to){let d;if(isHorizontal){let dx=Math.max(20,(b.left-a.right)*.5);d=`M ${a.right} ${a.y} C ${a.right+dx} ${a.y}, ${b.left-dx} ${b.y}, ${b.left} ${b.y}`}else{let dy=Math.max(25,(a.top-b.bottom)*.5);d=`M ${a.x} ${a.top} C ${a.x} ${a.top-dy}, ${b.x} ${b.bottom+dy}, ${b.x} ${b.bottom}`}paths+=`<path data-from="${esc(from)}" data-to="${esc(to)}" d="${d}" stroke="${gold?'#e3c580':'#a0c6a1'}" stroke-width="${active?2:0.85}" stroke-opacity="${op}" fill="none" marker-end="url(#arr-${gold?'gold':'mint'})"/>`}
+function drawBoard(){if(currentTrack)return;let board=root.querySelector('#rm-board'),svg=root.querySelector('#rm-board-svg');if(!board||!svg)return;let rect=board.getBoundingClientRect();svg.setAttribute('viewBox',`0 0 ${rect.width} ${rect.height}`);let active=focus||hover,sets=active?trackSets(active):null,isHorizontal=board.classList.contains('horizontal'),center=el=>{let r=el.getBoundingClientRect();return{x:r.left-rect.left+r.width/2,y:r.top-rect.top+r.height/2,left:r.left-rect.left,right:r.right-rect.left,top:r.top-rect.top,bottom:r.bottom-rect.top}},nodes=new Map([...board.querySelectorAll('[data-track]')].map(x=>[x.dataset.track,center(x)])),goal=center(root.querySelector('#rm-goal')),paths='';function edge(a,b,gold,op,from,to){let d;if(isHorizontal){let x1=a.right,x2=b.left-2,span=Math.max(0,x2-x1),lead=Math.min(12,Math.max(6,span*.22)),ex=x2-lead,dx=Math.max(8,(ex-x1)*.5);d=`M ${x1} ${a.y} C ${x1+dx} ${a.y}, ${ex-dx} ${b.y}, ${ex} ${b.y} L ${x2} ${b.y}`}else{let y1=a.top,y2=b.bottom+2,span=Math.max(0,y1-y2),lead=Math.min(12,Math.max(6,span*.22)),ey=y2+lead,dy=Math.max(10,(y1-ey)*.5);d=`M ${a.x} ${y1} C ${a.x} ${y1-dy}, ${b.x} ${ey+dy}, ${b.x} ${ey} L ${b.x} ${y2}`}paths+=`<path data-from="${esc(from)}" data-to="${esc(to)}" d="${d}" stroke="${gold?'#e3c580':'#a0c6a1'}" stroke-width="${active?2:0.85}" stroke-opacity="${op}" fill="none" marker-end="url(#arr-${gold?'gold':'mint'})"/>`}
 for(const t of tracks){if(!nodes.has(t.id))continue;for(const f of t.feeds||[]){if(!nodes.has(f))continue;let down=active&&sets.down.has(t.id)&&sets.down.has(f),up=active&&sets.up.has(t.id)&&sets.up.has(f);if(!active||down||up)edge(nodes.get(t.id),nodes.get(f),!!down,active?.95:.2,t.id,f)}if(!(t.feeds||[]).length&&(!active||sets.down.has(t.id)))edge(nodes.get(t.id),goal,!!active,active?.95:.2,t.id,'goal')}
-for(const el of board.querySelectorAll('[data-track]')){el.classList.toggle('selected',focus===el.dataset.track);el.classList.toggle('dim',!!active&&!sets.up.has(el.dataset.track)&&!sets.down.has(el.dataset.track))}svg.innerHTML=`<defs><marker id="arr-gold" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#e3c580"/></marker><marker id="arr-mint" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#a0c6a1"/></marker></defs>${paths}`}
+for(const el of board.querySelectorAll('[data-track]')){el.classList.toggle('selected',focus===el.dataset.track);el.classList.toggle('dim',!!active&&!sets.up.has(el.dataset.track)&&!sets.down.has(el.dataset.track))}svg.innerHTML=`<defs><marker id="arr-gold" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="5.5" markerHeight="5.5" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#e3c580"/></marker><marker id="arr-mint" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="5.5" markerHeight="5.5" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#a0c6a1"/></marker></defs>${paths}`}
 function setFocus(id){let rebuild=onlyChain;focus=id;hover=null;if(!id)onlyChain=false;if(rebuild)renderBoard();else drawBoard();renderFocus()}
 function renderFocus(){let bar=root.querySelector('#map-focusbar');bar.hidden=!focus||!!currentTrack;if(bar.hidden)return;let t=T.get(focus),up=upstream.get(focus)||[],down=t.feeds||[],buttons=a=>a.map(x=>`<button class="flow-focus" data-focus="${esc(x)}">${esc(T.get(x).title[lang])}</button>`).join('、'),summarize=a=>a.length>3?`${buttons(a.slice(0,3))} ${lang==='zh'?'等 '+a.length+' 条':'and '+a.length+' total'}`:buttons(a);bar.innerHTML=`<div class="focus-inner"><div class="focus-copy"><div class="flowline">${up.length?`${summarize(up)} → `:''}<b>${lang==='zh'?`【当前：${esc(t.title[lang])}】`:`Current: ${esc(t.title[lang])}`}</b>${down.length?` → ${summarize(down)}`:''} → ${esc(goalTitle())}</div></div><div class="focus-actions"><button id="chain-toggle" aria-pressed="${onlyChain}">${onlyChain?tr('显示全部路线','Show all routes'):tr('仅看相关链路','Related routes only')}</button><button data-enter="${esc(focus)}" class="primary">${tr('查看','View')} ${groups.get(focus).length} ${tr('条引理','lemmas')} →</button><button id="clear-focus">${tr('取消聚焦','Clear focus')}</button></div></div>`}
 function gapGraph(id){let all=groups.get(id),set=new Set(all.map(g=>g.id)),parents=new Map(all.map(g=>[g.id,[]])),depths=new Map();for(const g of all)for(const d of g.depends_on||[])if(set.has(d))parents.get(d).push(g.id);function depth(g,seen=new Set()){if(depths.has(g.id))return depths.get(g.id);if(seen.has(g.id))return 0;let ns=new Set(seen);ns.add(g.id);let ds=(g.depends_on||[]).filter(x=>set.has(x)).map(x=>depth(G.get(x),ns));let n=ds.length?1+Math.max(...ds):0;depths.set(g.id,n);return n}all.forEach(g=>depth(g));return {set,parents,depths,hasEdges:all.some(g=>(g.depends_on||[]).some(x=>set.has(x)))}}
