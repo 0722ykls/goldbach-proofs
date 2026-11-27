@@ -935,21 +935,55 @@ class Handler(BaseHTTPRequestHandler):
         if path == "/api/records":
             query = parse_qs(url.query, keep_blank_values=True)
             before = query.get("before", [])
-            if query and (set(query) != {"before"} or len(before) != 1 or
-                          not re.fullmatch(r"[0-9]{1,18}-[0-9]{1,18}", before[0])):
-                return self.reply(400, b'{"error":"invalid cursor"}')
+            page_param = query.get("page", [])
+            limit_param = query.get("limit", [])
+            if query:
+                keys = set(query)
+                if keys == {"before"}:
+                    if len(before) != 1 or not re.fullmatch(r"[0-9]{1,18}-[0-9]{1,18}", before[0]):
+                        return self.reply(400, b'{"error":"invalid cursor"}')
+                elif keys <= {"page", "limit"}:
+                    if ((page_param and (len(page_param) != 1 or not re.fullmatch(r"[1-9][0-9]{0,5}", page_param[0])))
+                            or (limit_param and (len(limit_param) != 1 or not re.fullmatch(r"[1-9][0-9]{0,2}", limit_param[0])))):
+                        return self.reply(400, b'{"error":"invalid page"}')
+                else:
+                    return self.reply(400, b'{"error":"invalid cursor"}')
+            use_page = bool(page_param or limit_param)
+            limit = int(limit_param[0]) if limit_param else 12
+            if use_page and not 1 <= limit <= 24:
+                return self.reply(400, b'{"error":"invalid page"}')
+            page_num = int(page_param[0]) if page_param else 1
             cursor = tuple(map(int, before[0].split("-"))) if before else ()
-            where = "WHERE (run_id, attempt) < (?, ?)" if cursor else ""
             try:
                 with desk.transaction() as conn:
                     rows = []
+                    total = 0
                     if conn.execute("SELECT 1 FROM sqlite_master WHERE name='verdicts'").fetchone():
-                        rows = conn.execute(f"SELECT run_id, attempt, body FROM verdicts {where} "
-                                            "ORDER BY run_id DESC, attempt DESC LIMIT 13", cursor).fetchall()
-                    results = [json.loads(row[2]) for row in rows[:12]]
+                        total = conn.execute("SELECT COUNT(*) FROM verdicts").fetchone()[0]
+                        if use_page:
+                            total_pages = max(1, (total + limit - 1) // limit)
+                            page_num = min(page_num, total_pages)
+                            offset = (page_num - 1) * limit
+                            rows = conn.execute(
+                                "SELECT run_id, attempt, body FROM verdicts "
+                                "ORDER BY run_id DESC, attempt DESC LIMIT ? OFFSET ?",
+                                (limit + 1, offset),
+                            ).fetchall()
+                        else:
+                            where = "WHERE (run_id, attempt) < (?, ?)" if cursor else ""
+                            rows = conn.execute(
+                                f"SELECT run_id, attempt, body FROM verdicts {where} "
+                                "ORDER BY run_id DESC, attempt DESC LIMIT 13",
+                                cursor,
+                            ).fetchall()
+                    results = [json.loads(row[2]) for row in rows[:limit]]
                     desk.annotate_verdicts(results, conn)
-                following = f"{rows[11][0]}-{rows[11][1]}" if len(rows) == 13 else None
-                body = json.dumps({"results": results, "next": following}, ensure_ascii=False).encode()
+                following = f"{rows[limit - 1][0]}-{rows[limit - 1][1]}" if len(rows) > limit else None
+                payload = {"results": results, "next": following, "total": total}
+                if use_page:
+                    total_pages = max(1, (total + limit - 1) // limit)
+                    payload.update({"page": min(page_num, total_pages), "limit": limit, "pages": total_pages})
+                body = json.dumps(payload, ensure_ascii=False).encode()
                 if "gzip" in (t.strip() for t in self.headers.get("Accept-Encoding", "").lower().split(",")):
                     return self.reply(200, gzip.compress(body, compresslevel=3), encoding="gzip")
                 return self.reply(200, body)
