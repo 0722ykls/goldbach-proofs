@@ -927,9 +927,10 @@ main > .sponsor-wall { width: 100%; margin-top: 1.25rem; }
 .ranking-github { width: fit-content; color: var(--muted); font-size: .77rem; overflow-wrap: anywhere; }
 .ranking-attribution a { color: var(--ink); text-decoration: underline; text-underline-offset: .17em; }
 .ranking-time { color: var(--muted); font-size: .75rem; }
-.ranking-result { display: flex; align-items: baseline; gap: .4rem; justify-self: end; }
-.ranking-score { color: var(--ink); font: 530 1.65rem/1 var(--serif); }
-.ranking-period { color: var(--muted); font-size: .7rem; white-space: nowrap; }
+.ranking-result { display: grid; justify-items: end; gap: .18rem; justify-self: end; text-align: end; }
+.ranking-score { color: var(--ink); font: 530 1.48rem/1 var(--serif); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ranking-unit { margin-inline-start: .18rem; color: var(--muted); font: 500 .78rem/1 var(--sans); }
+.ranking-period { color: var(--muted); font-size: .74rem; line-height: 1.25; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .ranking-candidate {
   display: grid;
   grid-template-columns: 1.6rem 2.38rem minmax(0, 1fr) auto;
