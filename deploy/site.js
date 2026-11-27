@@ -31,7 +31,7 @@ const strings = {
     noHourContributors: '最近一小时暂无首次通过的引理。',
     rankingsUnavailable: '暂时无法获取贡献榜。',
     rankingsCount: n => '共 ' + n + ' 位贡献者。',
-    rankingsSummary: (people, proofs) => people + ' 位贡献者的 ' + proofs + ' 条引理已通过权威 Lean 验证。',
+    rankingsSummary: (people, proofs) => people + ' 位贡献者共通过 ' + proofs + ' 条引理，按首次核验积分排列。',
     rankingPeriods: { hour: '最近一小时', all_time: '累计' },
     justNow: '刚刚',
     participant: '参与者',
@@ -40,7 +40,8 @@ const strings = {
       released: '归还引理', accepted: '验证通过', rejected: '验证拒绝', expired: '任务凭证过期'
     },
     event: '任务状态更新',
-    verifiedCount: n => '通过 ' + n + ' 条',
+    verifiedCount: n => n.toLocaleString(locale) + ' 题',
+    pointsUnit: '分',
     pullRequest: '查看 PR',
     allPrograms: '全部路线',
     programCount: (verified, published) => verified + ' / ' + published + ' 已通过',
@@ -69,7 +70,7 @@ const strings = {
     rankingsUnavailable: 'The leaderboard is temporarily unavailable.',
     rankingsCount: n => n + (n === 1 ? ' contributor.' : ' contributors.'),
     rankingsSummary: (people, proofs) => people + (people === '1' ? ' contributor has ' : ' contributors have ') +
-      proofs + (proofs === '1' ? ' proof accepted by Lean.' : ' proofs accepted by Lean.'),
+      proofs + (proofs === '1' ? ' accepted proof, ranked by points.' : ' accepted proofs, ranked by points.'),
     rankingPeriods: { hour: 'This hour', all_time: 'All time' },
     justNow: 'Just now',
     participant: 'Participant',
@@ -78,7 +79,8 @@ const strings = {
       released: 'Returned a lemma', accepted: 'Proof accepted', rejected: 'Proof rejected', expired: 'Lease expired'
     },
     event: 'Task status changed',
-    verifiedCount: n => n === 1 ? '1 accepted' : n + ' accepted',
+    verifiedCount: n => n.toLocaleString(locale) + (n === 1 ? ' proof' : ' proofs'),
+    pointsUnit: 'pts',
     pullRequest: 'View PR',
     allPrograms: 'All programs',
     programCount: (verified, published) => verified + ' / ' + published + ' verified',
@@ -541,13 +543,21 @@ function renderRankingRow(contributor, index, mode) {
     time.title = eventTime.format(date);
     identity.append(time);
   }
-  const score = element('div', undefined, 'ranking-result');
-  const figure = element('span', '+' + (contributor.points ?? contributor.accepted).toLocaleString(locale), 'ranking-score');
-  figure.setAttribute('aria-hidden', 'true');
-  score.append(figure, element('span', strings.verifiedCount(contributor.accepted), 'sr-only'),
-    element('span', strings.rankingPeriods[mode], 'ranking-period'));
+  const score = renderRankingResult(contributor, strings.rankingPeriods[mode]);
   item.append(rank, avatar, identity, score);
   return item;
+}
+
+function renderRankingResult(entry, period) {
+  const result = element('div', undefined, 'ranking-result');
+  const hasPoints = Number.isSafeInteger(entry.points);
+  const score = element('span', '+' + (hasPoints ? entry.points : entry.accepted).toLocaleString(locale), 'ranking-score');
+  if (hasPoints) score.append(element('span', strings.pointsUnit, 'ranking-unit'));
+  const detail = hasPoints && Number.isSafeInteger(entry.accepted)
+    ? strings.verifiedCount(entry.accepted) + ' · ' + period
+    : period;
+  result.append(score, element('span', detail, 'ranking-period'));
+  return result;
 }
 
 function updateRankingTimes() {
@@ -662,11 +672,8 @@ function renderAgentRankingRow(entry, index) {
   const item = element('li', undefined, 'ranking-row agent-ranking-row');
   const name = element('strong', undefined, 'ranking-name agent-brand-name');
   name.append(agentBrandIcon(entry.name), element('span', agentName(entry.name)));
-  item.append(element('span', index + 1, 'ranking-position'), name);
-  const result = element('div', undefined, 'ranking-result');
-  result.append(element('span', '+' + (entry.points ?? entry.accepted).toLocaleString(locale), 'ranking-score'),
-    element('span', strings.rankingPeriods.all_time, 'ranking-period'));
-  item.append(result);
+  item.append(element('span', index + 1, 'ranking-position'), name,
+    renderRankingResult(entry, strings.rankingPeriods.all_time));
   return item;
 }
 
